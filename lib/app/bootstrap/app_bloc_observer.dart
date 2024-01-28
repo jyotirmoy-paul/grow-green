@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:growgreen/services/log/log.dart';
+import '../../services/log/log.dart';
 
 class AppBlocObserver extends BlocObserver {
   @override
