@@ -1,4 +1,4 @@
-package com.example.growgreen
+package art.brainstorm.growgreen
 
 import io.flutter.embedding.android.FlutterActivity
 

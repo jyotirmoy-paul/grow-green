@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1008482153863",
+    "project_id": "growgreen-8468f",
+    "storage_bucket": "growgreen-8468f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1008482153863:android:3016d483416a21dfc6cf22",
+        "android_client_info": {
+          "package_name": "art.brainstorm.growgreen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcyKzZeCQCf7g6B7mSJQy7H5zMNb877Mg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1008482153863:android:b262ecffe75b8b05c6cf22",
+        "android_client_info": {
+          "package_name": "com.example.growgreen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcyKzZeCQCf7g6B7mSJQy7H5zMNb877Mg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
