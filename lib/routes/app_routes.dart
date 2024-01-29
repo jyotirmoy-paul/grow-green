@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'routes.dart';
+
 import '../screens/landing_screen/view/landing_screen.dart';
 import '../screens/splash_screen/view/splash_screen.dart';
 import '../utils/extensions/string_extensions.dart';
+import 'routes.dart';
 
 part 'fade_page_route_builder.dart';
 

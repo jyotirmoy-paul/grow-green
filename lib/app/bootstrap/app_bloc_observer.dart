@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+
 import '../../services/log/log.dart';
 
 class AppBlocObserver extends BlocObserver {

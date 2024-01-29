@@ -1,0 +1,4 @@
+enum UserAuthType {
+  google,
+  apple,
+}

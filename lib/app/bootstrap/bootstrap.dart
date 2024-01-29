@@ -4,9 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import '../../firebase_options.dart';
 import '../../services/log/log.dart';
 import 'app_bloc_observer.dart';
-import 'firebase_options.dart';
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   FlutterError.onError = (details) {
