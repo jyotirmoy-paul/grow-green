@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart' as fauth;
 import 'package:firebase_core/firebase_core.dart' as fcore;
+import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import '../../firebase_options.dart';
 import '../log/log.dart';
 import '../utils/service_action.dart';
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:growgreen/models/auth/user.dart';
 import 'package:growgreen/models/auth/user_auth_type.dart';
+import 'package:growgreen/screens/landing_screen/cubit/landing_screen_cubit.dart';
 import '../../../services/auth/auth.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -9,41 +11,108 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          /// Background image
+    return BlocProvider(
+      create: (_) => LandingScreenCubit(),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            /// Background image
 
-          /// View
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            reverseDuration: const Duration(milliseconds: 300),
-            child: BlocBuilder<AuthBloc, AuthState>(
+            /// View
+            BlocBuilder<AuthBloc, AuthState>(
               builder: (context, authState) {
-                if (authState is AuthLoggedIn) {
-                  return const _LoggedInView(
-                    key: ValueKey('logged-in-view'),
-                  );
-                }
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  reverseDuration: const Duration(milliseconds: 300),
+                  child: () {
+                    if (authState is AuthLoginProcessing) {
+                      return const Align(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(
+                          key: ValueKey('processing-view'),
+                        ),
+                      );
+                    }
 
-                return const _NotLoggedInView(
-                  key: ValueKey('not-logged-in-view'),
+                    if (authState is AuthLoggedIn) {
+                      return _LoggedInView(
+                        key: const ValueKey('logged-in-view'),
+                        user: authState.user,
+                      );
+                    }
+
+                    return const _NotLoggedInView(
+                      key: ValueKey('not-logged-in-view'),
+                    );
+                  }(),
                 );
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 class _LoggedInView extends StatelessWidget {
-  const _LoggedInView({super.key});
+  final User user;
+  const _LoggedInView({
+    super.key,
+    required this.user,
+  });
+
+  void onLogout(BuildContext context) {
+    context.read<AuthBloc>().add(AuthLogoutEvent());
+  }
+
+  void onStartGame(BuildContext context) {
+    context.read<LandingScreenCubit>().onStartGame();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Align(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Hi ${user.name}",
+            style: const TextStyle(
+              color: Colors.blue,
+              fontSize: 40.0,
+              letterSpacing: 2.0,
+            ),
+          ),
+          const Gap(40.0),
+          ElevatedButton(
+            onPressed: () {
+              onStartGame(context);
+            },
+            child: const Text(
+              'Start Game',
+              style: TextStyle(
+                fontSize: 20.0,
+                letterSpacing: 2.0,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              onLogout(context);
+            },
+            child: const Text(
+              'Logout',
+              style: TextStyle(
+                fontSize: 20.0,
+                letterSpacing: 2.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

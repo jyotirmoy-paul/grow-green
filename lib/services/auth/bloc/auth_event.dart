@@ -20,4 +20,15 @@ class AuthLoginEvent extends AuthEvent {
   List<Object> get props => [authType];
 }
 
+class AuthUserUpdateEvent extends AuthEvent {
+  final User user;
+
+  const AuthUserUpdateEvent({
+    required this.user,
+  });
+
+  @override
+  List<Object> get props => [user];
+}
+
 class AuthLogoutEvent extends AuthEvent {}

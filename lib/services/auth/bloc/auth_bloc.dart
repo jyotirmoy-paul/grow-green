@@ -11,29 +11,26 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   static const tag = "AuthBloc";
-  final authService = AuthServiceFactory.build(SupportedAuthService.firebase);
+  final _authService = AuthServiceFactory.build(SupportedAuthService.firebase);
 
   AuthBloc() : super(AuthInitial()) {
     on<AuthInitializeEvent>(_onInitialize);
     on<AuthLoginEvent>(_onLogin);
     on<AuthLogoutEvent>(_onLogout);
+    on<AuthUserUpdateEvent>(_onUserUpdate);
   }
 
   void _onInitialize(_, Emitter<AuthState> emit) {
     /// Check if a logged in user is available
-    if (authService.isLoggedIn()) {
-      emit(AuthLoggedIn(user: authService.currentUser()));
-    } else {
+    if (!_authService.isLoggedIn()) {
       emit(AuthNotLoggedIn());
     }
 
     /// Start listening for user state changes
-    authService.userChanges().listen(
+    _authService.userChanges().listen(
       (user) {
         if (user != null) {
-          emit(AuthLoggedIn(user: user));
-        } else {
-          emit(AuthNotLoggedIn());
+          add(AuthUserUpdateEvent(user: user));
         }
       },
       onError: (e) {
@@ -50,11 +47,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     switch (authType) {
       case UserAuthType.google:
-        serviceAction = await authService.signInWithGoogle();
+        serviceAction = await _authService.signInWithGoogle();
         break;
 
       case UserAuthType.apple:
-        serviceAction = await authService.signInWithApple();
+        serviceAction = await _authService.signInWithApple();
         break;
     }
 
@@ -64,6 +61,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onLogout(AuthLogoutEvent event, Emitter<AuthState> emit) {
-    authService.logout();
+    _authService.logout();
+    emit(AuthNotLoggedIn());
+  }
+
+  void _onUserUpdate(AuthUserUpdateEvent event, Emitter<AuthState> emit) {
+    emit(AuthLoggedIn(user: event.user));
   }
 }

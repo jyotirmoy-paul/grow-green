@@ -1,4 +1,4 @@
-part of 'landing_screen_bloc.dart';
+part of 'landing_screen_cubit.dart';
 
 sealed class LandingScreenState extends Equatable {
   const LandingScreenState();

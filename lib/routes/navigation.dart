@@ -7,6 +7,6 @@ abstract class Navigation {
   static NavigatorState get _navigatorState => navigationKey.currentState!;
 
   static Future<void> pushReplacement(RouteName routeName) {
-    return _navigatorState.pushNamed(routeName.name);
+    return _navigatorState.pushReplacementNamed(routeName.name);
   }
 }

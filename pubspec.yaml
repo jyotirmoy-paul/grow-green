@@ -19,6 +19,8 @@ dependencies:
   logger: ^2.0.2+1
   firebase_auth: ^4.16.0
   gap: ^3.0.1
+  google_sign_in: ^6.1.6
+  sign_in_with_apple: ^5.0.0
 
 dev_dependencies:
   flutter_test:

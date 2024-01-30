@@ -1,3 +1,5 @@
+import 'package:growgreen/utils/extensions/string_extensions.dart';
+
 class User {
   final String id;
   final String name;
@@ -7,5 +9,5 @@ class User {
     required this.id,
     String? name,
     this.displayPicture,
-  }) : name = name ?? 'User';
+  }) : name = name.isEmptyOrNull ? "User" : name!;
 }
