@@ -21,6 +21,8 @@ dependencies:
   gap: ^3.0.1
   google_sign_in: ^6.1.6
   sign_in_with_apple: ^5.0.0
+  flame: ^1.14.0
+  flame_tiled: ^1.18.3
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +32,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/tile_maps/
+    - assets/images/tiles/
+    - assets/exp/
 
   fonts:
     - family: Pina Colada Creation

@@ -1,4 +1,4 @@
-import 'package:growgreen/utils/extensions/string_extensions.dart';
+import '../../utils/extensions/string_extensions.dart';
 
 class User {
   final String id;

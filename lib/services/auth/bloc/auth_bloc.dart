@@ -1,10 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../../models/auth/user.dart';
 import '../../../models/auth/user_auth_type.dart';
-import '../auth.dart';
 import '../../log/log.dart';
 import '../../utils/service_action.dart';
+import '../auth.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';

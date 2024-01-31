@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import '../../../services/auth/auth.dart';
+
 import '../../../routes/routes.dart';
+import '../../../services/auth/auth.dart';
 
 part 'splash_screen_state.dart';
 
