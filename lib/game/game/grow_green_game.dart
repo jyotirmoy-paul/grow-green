@@ -50,45 +50,30 @@ class GrowGreenGame extends FlameGame with ScaleDetector, TapCallbacks {
     ]);
   }
 
-  Vector2 transformPoint(Vector2 point) {
-    // Translate the point
-    double x1 = point.x - 2048;
-    double y1 = -point.y;
-
-    double alphax = math.atan(320 / 512);
-    // Apply the rotation
-    double x2 = x1 * math.cos(alphax) - y1 * math.sin(alphax);
-    double y2 = x1 * math.sin(alphax) + y1 * math.cos(alphax);
-
-    double side = 603.779;
-    // Apply the scaling
-    // double x3 = x2 * side / 1024;
-    // double y3 = y2 * side / 640;x
-
-    // Return the transformed point
-    return Vector2(x2, -y2);
-  }
-
   Vector2 cartToIso(Vector2 p, [double alpha = 32]) {
-    var p1 = p;
-    p1.x = p.x - 2048;
-    p1.y = p.y.abs();
+    // translation
+    Vector2 p1 = Vector2.copy(p) - Vector2(2048, 0);
 
-    double sin64 = math.sin(radians(alpha * 2));
-    double r = p1.length;
-    double sinRatio = r / sin64;
-    double atan = math.atan(p1.x.abs() / p1.y);
+    // calculate sine ratio
+    double atan = math.atan2(p1.x, p1.y), r = p1.length;
+    double alpharad = radians(alpha);
+    double sinRatio = r / math.sin(alpharad * 2);
 
-    double sinX = math.cos(atan + radians(alpha));
-    double sinY = math.cos(radians(alpha) - atan);
+    // using sine rule to find other edges
+    double y1 = math.cos(alpharad + atan) * sinRatio;
+    double x1 = math.cos(alpharad - atan) * sinRatio;
 
-    double a = sinX * sinRatio;
-    double b = sinY * sinRatio;
-    if (p1.x < 0) return Vector2(a, b);
-    return Vector2(b, a);
+    return Vector2(x1, y1);
   }
 
-  Vector2 transformPointScaleOnly(Vector2 point) {
+  Vector2 isoToCart(Vector2 v, [double alpha = 32]) {
+    double alpharad = radians(alpha);
+    double x = v.x * math.cos(alpharad) - v.y * math.cos(alpharad);
+    double y = v.x * math.sin(alpharad) + v.y * math.sin(alpharad);
+    return Vector2(x + 2048, y);
+  }
+
+  Vector2 gameToIso(Vector2 point) {
     double side = 603.8;
     // Apply the scaling
     double x3 = point.x * side / 640;
@@ -97,77 +82,35 @@ class GrowGreenGame extends FlameGame with ScaleDetector, TapCallbacks {
     return Vector2(x3, y3);
   }
 
-  Vector2 reverseTransformPoint(Vector2 point) {
-    point = Vector2(point.x, -point.y);
-    // Rotate back by the negative angle
-    double alphax = (90 - 32) * math.pi / 180;
-    double x1 = point.x * math.cos(-alphax) - point.y * math.sin(-alphax);
-    double y1 = point.x * math.sin(-alphax) + point.y * math.cos(-alphax);
-
-    // Translate the point back
-    double x = x1 + 2048;
-    double y = -y1;
-
-    // Return the original point
-    return Vector2(x, -y);
-  }
-
-  Vector2 isoToCart(Vector2 p, [double alpha = 32]) {
-    // Assuming `a` and `b` are the isometric coordinates to be converted back to Cartesian
-    double a = p.x;
-    double b = p.y;
-
-    // Reverse the angle adjustment and ratio calculations
-    double sin64 = math.sin(radians(alpha * 2));
-    // Assuming an average or combined length `r` based on `a` and `b` for the inversion
-    double r = (a + b) / 2; // This might need adjustment based on your specific isometric setup
-    double sinRatio = r * sin64; // Reversing the division to multiplication for the ratio
-
-    // Reverse trigonometric transformations to estimate original x and y
-    // The exact reversal might depend on the specific transformations applied in `cartToIso`
-    double atanX = math.atan(a / sinRatio);
-    double atanY = math.atan(b / sinRatio);
-
-    // Reverse the angle adjustment to compute original Cartesian coordinates
-    double x = sinRatio * math.cos(atanX - radians(alpha));
-    double y = sinRatio * math.cos(atanY + radians(alpha));
-
-    // Adjust based on the original transformation logic in `cartToIso`
-    // This might require further refinement
-    x += 2048; // Assuming an offset was applied in cartToIso
-    y = y.abs(); // Adjusting y based on its absolute value treatment in cartToIso
-
-    return Vector2(x, y);
-  }
-
-  double radians(double degrees) {
-    return degrees * math.pi / 180;
-  }
-
   @override
   void onTapDown(TapDownEvent event) async {
     final tappedPosition = cam.viewfinder.parentToLocal(event.devicePosition);
     final isometricPosition = cartToIso(tappedPosition);
+    final isoToCartP = isoToCart(isometricPosition);
     Log.i('cart: $tappedPosition');
     Log.i('iso : $isometricPosition');
+
+    Log.i("isoToCart : $isoToCartP");
 
     final map = ggworld.mapp.tileMap.map;
 
     // Log.i('tile: $map');
 
     for (final f in ggworld.farms.objects) {
-      final farmXIso = transformPointScaleOnly(Vector2(f.x, f.y));
+      final farmXIso = gameToIso(Vector2(f.x, f.y));
 
       final rect = Rect.fromLTWH(farmXIso.x, farmXIso.y, 603.779, 603.779);
+
       final isContained = rect.contains(isometricPosition.toOffset());
       if (isContained) {
         final farmBottomXCart = f.x + f.width;
         final farmBottomYCart = f.y + f.height;
-        final farmBottomPosCart = Vector2(farmBottomXCart, farmBottomYCart);
-
+        final farmBottomPosGame = Vector2(farmBottomXCart, farmBottomYCart);
+        final farmBottomIso = gameToIso(farmBottomPosGame);
+        final farmBottomCart = isoToCart(farmBottomIso);
         Log.i("farm  ${f.name} tapped with iso cordinates : ${rect.toString()}");
         // Log.i("farm  ${f.name} tapped with  bottomCart : $farmPositionInGameWorld");
-        // ggworld.selector.position = farmBottomPosCart;
+        ggworld.selector.position = farmBottomCart;
         break;
       }
     }
