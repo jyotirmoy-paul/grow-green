@@ -25,19 +25,19 @@ class LandingScreen extends StatelessWidget {
                   duration: const Duration(milliseconds: 300),
                   reverseDuration: const Duration(milliseconds: 300),
                   child: () {
-                    if (authState is AuthLoginProcessing) {
-                      return const Align(
-                        alignment: Alignment.center,
-                        child: CircularProgressIndicator(
-                          key: ValueKey('processing-view'),
-                        ),
-                      );
-                    }
+                    // if (authState is AuthLoginProcessing) {
+                    //   return const Align(
+                    //     alignment: Alignment.center,
+                    //     child: CircularProgressIndicator(
+                    //       key: ValueKey('processing-view'),
+                    //     ),
+                    //   );
+                    // }
 
-                    if (authState is AuthLoggedIn) {
+                    if (true) {
                       return _LoggedInView(
                         key: const ValueKey('logged-in-view'),
-                        user: authState.user,
+                        user: User(id: "id"),
                       );
                     }
 

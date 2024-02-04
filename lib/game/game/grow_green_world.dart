@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/image_composition.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:growgreen/game/game/grow_green_game.dart';
 
 class GrowGreenWorld extends World with HasGameRef<GrowGreenGame> {
   late TiledComponent mapp;
   late ObjectGroup farms;
+  late Selector selector;
   Function(Vector2 center) getCenter;
 
   GrowGreenWorld(
@@ -37,10 +39,32 @@ class GrowGreenWorld extends World with HasGameRef<GrowGreenGame> {
       farms = farmsObjectGroup;
     }
 
-    // for (final farm in farms.objects) {
-    //   // farm.polygon.contains();
-    // }
+    selector = Selector(
+      await gameRef.images.load('tiles/selector.png'),
+    );
+    selector.show = true;
+    add(selector);
 
     return super.onLoad();
+  }
+}
+
+class Selector extends SpriteComponent {
+  bool show = true;
+
+  Selector(Image image)
+      : super(
+          sprite: Sprite(image, srcSize: Vector2(1024, 1466)),
+          anchor: Anchor.bottomCenter,
+          position: Vector2(2048, 640),
+        );
+
+  @override
+  void render(Canvas canvas) {
+    if (!show) {
+      return;
+    }
+
+    super.render(canvas);
   }
 }
