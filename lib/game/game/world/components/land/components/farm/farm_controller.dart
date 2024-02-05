@@ -8,6 +8,9 @@ class FarmController {
   late final String farmName;
   late final Rectangle farmRect;
 
+  bool _isFarmSelected = false;
+  set isFarmSelected(bool v) => _isFarmSelected = v;
+
   Future<List<Component>> initialize({
     required GrowGreenGame game,
     required String farmName,
