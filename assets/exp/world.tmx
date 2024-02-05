@@ -3,18 +3,18 @@
  <tileset firstgid="1" source="measured.tsx"/>
  <layer id="1" name="Ground" width="4" height="4">
   <data encoding="csv">
-9,1,2,2,
-2,9,9,2,
-1,2,9,1,
-1,9,1,9
+4,5,6,5,
+6,4,4,6,
+5,6,4,5,
+6,4,5,4
 </data>
  </layer>
  <objectgroup id="2" name="Farms">
   <object id="1" name="farm-1" x="0" y="0" width="640" height="640"/>
   <object id="2" name="farm-2" x="640" y="640" width="640" height="640"/>
   <object id="5" name="farm-3" x="1280" y="640" width="640" height="640"/>
-  <object id="8" name="farm-4" x="640" y="1920" width="640" height="640"/>
-  <object id="10" name="farm-5" x="1280" y="1280" width="640" height="640"/>
+  <object id="8" name="farm-5" x="640" y="1920" width="640" height="640"/>
+  <object id="10" name="farm-4" x="1280" y="1280" width="640" height="640"/>
   <object id="11" name="farm-6" x="1920" y="1920" width="640" height="640"/>
  </objectgroup>
 </map>
