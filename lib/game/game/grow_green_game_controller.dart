@@ -2,11 +2,12 @@ import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import '../components/world/grow_green_world.dart';
-import '../utils/game_extensions.dart';
-import '../../services/log/log.dart';
+import 'package:flutter/foundation.dart';
 
+import '../../services/log/log.dart';
+import '../utils/game_extensions.dart';
 import '../utils/game_utils.dart';
+import 'world/world/grow_green_world.dart';
 
 class GrowGreenGameController {
   static const tag = 'GrowGreenGameController';
@@ -18,21 +19,22 @@ class GrowGreenGameController {
   static const _maxZoomStable = GameUtils.maxZoom;
   static const _maxZoom = _maxZoomStable * 1.6;
 
-  /// adjust the camera after world is loaded
-  void _onWorldLoad(Vector2 absoluteCenter) {
+  /// called from `grow_green_land_controller` after the world is loaded
+  /// gets world's absolute center to adjust the camera zoom & position
+  void onWorldLoad(Vector2 worldCenter) {
     final worldSize = GameUtils().gameWorldSize;
     _minZoom = camera.viewport.size.length / worldSize.length;
 
     // TODO: We can pick last user zoom level & position from storage
     camera.viewfinder
       ..anchor = Anchor.center
-      ..position = absoluteCenter
+      ..position = worldCenter
       ..zoom = _minZoom;
   }
 
-  /// initialize components of the world
+  /// initialize components of the game
   Future<List<Component>> initialize() async {
-    world = GrowGreenWorld()..onWorldLoad = _onWorldLoad;
+    world = GrowGreenWorld();
     camera = CameraComponent(world: world);
 
     return [
@@ -57,6 +59,7 @@ class GrowGreenGameController {
   set _position(Vector2 v) => camera.viewfinder.position = _getClampedPosition(v);
 
   Vector2 _getClampedPosition(Vector2 position) {
+    if (kDebugMode) return position;
     final halfViewPortSize = camera.viewport.size.scaled(1 / _zoom).half().toSize();
     final halfWorldSize = GameUtils().gameWorldSize.half().toSize();
 
