@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flame/game.dart';
-import 'package:growgreen/game/utils/game_utils.dart';
+import 'game_utils.dart';
 
 extension GameExtension on Vector2 {
   Vector2 half() {

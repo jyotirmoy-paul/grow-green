@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../../routes/routes.dart';
 
 part 'landing_screen_state.dart';

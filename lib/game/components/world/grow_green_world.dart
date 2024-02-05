@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
-import 'package:flame/sprite.dart';
-import 'package:flame/src/game/notifying_vector2.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:growgreen/game/game/grow_green_game.dart';
-import 'package:growgreen/game/utils/game_utils.dart';
+import '../../game/grow_green_game.dart';
+import 'land/land.dart';
+import '../../utils/game_utils.dart';
 
 class GrowGreenWorld extends World with HasGameRef<GrowGreenGame> {
   late TiledComponent worldMap;
@@ -41,15 +40,18 @@ class GrowGreenWorld extends World with HasGameRef<GrowGreenGame> {
       GameUtils.tileSize,
       prefix: 'assets/exp/',
     )
-      ..anchor = Anchor.topLeft;
+      ..anchor = Anchor.center;
 
     selector = Selector(
       await gameRef.images.load('tiles/selector.png'),
     );
 
+    final land = Land();
+
     await addAll([
       worldMap,
       selector,
+      land,
     ]);
 
     _initialize();

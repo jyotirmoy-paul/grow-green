@@ -15,7 +15,7 @@ class SplashScreenCubit extends Cubit<SplashScreenState> {
   }) : super(SplashScreenInitial());
 
   Future<void> init() async {
-    /// TODO: Initialize assets
+    /// TODO: On web: Pre fetch the assets
 
     /// Initialize authentication
     authBloc.add(AuthInitializeEvent());
