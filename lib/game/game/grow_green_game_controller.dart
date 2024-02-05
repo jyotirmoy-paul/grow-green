@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../services/log/log.dart';
 import '../utils/game_extensions.dart';
@@ -16,14 +15,19 @@ class GrowGreenGameController {
   late final GrowGreenWorld world;
 
   late final double _minZoom;
+  late final Vector2 worldCenter;
+
   static const _maxZoomStable = GameUtils.maxZoom;
   static const _maxZoom = _maxZoomStable * 1.6;
 
   /// called from `grow_green_land_controller` after the world is loaded
   /// gets world's absolute center to adjust the camera zoom & position
   void onWorldLoad(Vector2 worldCenter) {
+    this.worldCenter = worldCenter;
     final worldSize = GameUtils().gameWorldSize;
-    _minZoom = camera.viewport.size.length / worldSize.length;
+
+    /// TODO: We may need to adjust min zoom as per final map
+    _minZoom = camera.viewport.size.length / worldSize.half().length;
 
     // TODO: We can pick last user zoom level & position from storage
     camera.viewfinder
@@ -58,18 +62,23 @@ class GrowGreenGameController {
   Vector2 get _position => camera.viewfinder.position;
   set _position(Vector2 v) => camera.viewfinder.position = _getClampedPosition(v);
 
+  /// TODO: Refactor this
   Vector2 _getClampedPosition(Vector2 position) {
-    if (kDebugMode) return position;
     final halfViewPortSize = camera.viewport.size.scaled(1 / _zoom).half().toSize();
-    final halfWorldSize = GameUtils().gameWorldSize.half().toSize();
+    final halfWorldSize = GameUtils().gameWorldSize.half().half().toSize();
 
-    final widthFreedom = (halfWorldSize.width - halfViewPortSize.width).abs();
-    final heightFreedom = (halfWorldSize.height - halfViewPortSize.height).abs();
+    final leftBoundary = worldCenter.x - halfWorldSize.width;
+    final rightBoundary = worldCenter.x + halfWorldSize.width;
+    final topBoundary = worldCenter.y - halfWorldSize.height;
+    final bottomBoundary = worldCenter.y + halfWorldSize.height;
 
-    final clampedX = position.x.clamp(-widthFreedom, widthFreedom);
-    final clampedY = position.y.clamp(-heightFreedom, heightFreedom);
+    final l = leftBoundary + halfViewPortSize.width;
+    final r = rightBoundary - halfViewPortSize.width;
+    final t = topBoundary + halfViewPortSize.height;
+    final b = bottomBoundary - halfViewPortSize.height;
 
-    Log.i('position: $position $clampedX, $clampedY}');
+    final clampedX = position.x.clamp(l < r ? l : r, l > r ? l : r);
+    final clampedY = position.y.clamp(t < b ? t : b, t > b ? t : b);
 
     return Vector2(clampedX, clampedY);
   }
