@@ -4,7 +4,9 @@ import 'package:flame/components.dart';
 import 'game_extensions.dart';
 
 class GameUtils {
-  static Vector2 tileSize = Vector2(1024, 640);
+  /// constants
+  static final tileSize = Vector2(1024, 640);
+  static const maxZoom = 0.8;
 
   final Vector2 gameWorldSize;
   final double isoAngle;

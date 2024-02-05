@@ -2,8 +2,8 @@ import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:growgreen/game/game/grow_green_game.dart';
-import 'package:growgreen/screens/game_screen/bloc/game_bloc.dart';
+import '../../../game/game/grow_green_game.dart';
+import '../bloc/game_bloc.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
