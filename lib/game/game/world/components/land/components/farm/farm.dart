@@ -39,4 +39,9 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame> {
 
     addAll(components);
   }
+
+  @override
+  String toString() {
+    return farmName;
+  }
 }
