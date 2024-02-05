@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+
 import '../../../models/auth/user.dart';
 import '../../../models/auth/user_auth_type.dart';
-import '../cubit/landing_screen_cubit.dart';
 import '../../../services/auth/auth.dart';
+import '../cubit/landing_screen_cubit.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
