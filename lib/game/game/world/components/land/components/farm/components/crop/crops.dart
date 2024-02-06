@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
-import 'enums/crop_type.dart';
+
 import '../../../../../../../grow_green_game.dart';
 import 'crops_controller.dart';
+import 'enums/crop_type.dart';
 
 class Crops extends PositionComponent with HasGameRef<GrowGreenGame> {
   final CropType cropType;

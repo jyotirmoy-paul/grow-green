@@ -6,11 +6,13 @@ import 'package:flame/events.dart';
 import '../../services/log/log.dart';
 import '../utils/game_extensions.dart';
 import '../utils/game_utils.dart';
+import 'grow_green_game.dart';
 import 'world/world/grow_green_world.dart';
 
 class GrowGreenGameController {
   static const tag = 'GrowGreenGameController';
 
+  late final GrowGreenGame game;
   late final CameraComponent camera;
   late final GrowGreenWorld world;
 
@@ -37,7 +39,9 @@ class GrowGreenGameController {
   }
 
   /// initialize components of the game
-  Future<List<Component>> initialize() async {
+  Future<List<Component>> initialize({required GrowGreenGame game}) async {
+    this.game = game;
+
     world = GrowGreenWorld();
     camera = CameraComponent(world: world);
 

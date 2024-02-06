@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/foundation.dart';
 
 import 'grow_green_game_controller.dart';
 
@@ -11,8 +10,8 @@ class GrowGreenGame extends FlameGame with ScaleDetector {
 
   @override
   FutureOr<void> onLoad() async {
-    debugMode = kDebugMode;
-    final components = await gameController.initialize();
+    debugMode = false;
+    final components = await gameController.initialize(game: this);
     addAll(components);
   }
 
