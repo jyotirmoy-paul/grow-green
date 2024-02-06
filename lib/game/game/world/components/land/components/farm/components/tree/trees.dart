@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
-import 'enums/tree_type.dart';
 
 import '../../../../../../../grow_green_game.dart';
+import 'enums/tree_type.dart';
 import 'trees_controller.dart';
 
 class Trees extends PositionComponent with HasGameRef<GrowGreenGame> {

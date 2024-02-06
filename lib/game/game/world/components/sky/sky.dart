@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+
 import 'sky_controller.dart';
 
 class Sky extends PositionComponent {

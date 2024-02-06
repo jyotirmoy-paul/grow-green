@@ -1,9 +1,8 @@
-import '../components/farmer/enums/farmer_category.dart';
-import 'fertilizer/fertilizer_type.dart';
-
 import '../components/crop/enums/crop_type.dart';
+import '../components/farmer/enums/farmer_category.dart';
 import '../components/tree/enums/tree_type.dart';
 import 'content.dart';
+import 'fertilizer/fertilizer_type.dart';
 
 /// A farm must contain crop & farmer, tree & fertilizer are optional
 class FarmContent {
