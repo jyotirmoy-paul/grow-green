@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flame/components.dart';
+
 import 'game_extensions.dart';
 
 class GameUtils {

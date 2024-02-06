@@ -1,0 +1,4 @@
+enum CropHealth {
+  healthy,
+  damaged,
+}

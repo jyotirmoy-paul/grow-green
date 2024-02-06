@@ -1,10 +1,10 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame_tiled/flame_tiled.dart';
-import '../../../../utils/game_extensions.dart';
-import '../../../../../services/log/log.dart';
+import 'package:flame_tiled/flame_tiled.dart' hide Text;
 
+import '../../../../../services/log/log.dart';
+import '../../../../utils/game_extensions.dart';
 import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
 import 'components/farm/farm.dart';
@@ -80,6 +80,11 @@ class LandController {
     ];
   }
 
+  void _processFarmTap() async {
+    final selectedFarm = _selectedFarm;
+    if (selectedFarm == null) return;
+  }
+
   void _calculateFarmTap(Vector2 gamePosition) {
     bool isOneFarmSelected = false;
 
@@ -98,6 +103,8 @@ class LandController {
     if (!isOneFarmSelected) {
       _selectedFarm = null;
     }
+
+    _processFarmTap();
   }
 
   void onTapUp(TapUpEvent event) {
