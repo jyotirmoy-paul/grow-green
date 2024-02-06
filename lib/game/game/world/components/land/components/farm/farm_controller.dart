@@ -10,8 +10,12 @@ class FarmController {
   late final String farmName;
   late final Rectangle farmRect;
 
+  bool get isFarmSelected => _isFarmSelected;
   bool _isFarmSelected = false;
-  set isFarmSelected(bool v) => _isFarmSelected = v;
+  set isFarmSelected(bool v) {
+    /// TODO: Take action when farm is selected
+    _isFarmSelected = v;
+  }
 
   FarmContent? _farmContent;
   FarmContent? get farmContent => _farmContent;

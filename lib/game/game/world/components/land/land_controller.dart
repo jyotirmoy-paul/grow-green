@@ -85,6 +85,14 @@ class LandController {
   void _processFarmTap(Farm farm) async {
     Log.d('$tag: _processFarmTap: $farm is tapped');
 
+    if (farm.farmController.isFarmSelected) {
+      /// the farm is already selected, we don't have to procees anything!
+      return;
+    }
+
+    /// mark farm as selected
+    farm.farmController.isFarmSelected = true;
+
     if (game.overlays.isActive(FarmCompositionMenu.overlayName)) {
       game.overlays.remove(FarmCompositionMenu.overlayName);
       await Future.delayed(const Duration(milliseconds: 80));
@@ -120,11 +128,11 @@ class LandController {
 
     for (final farm in farms) {
       final containsPoint = farm.farmRect.containsPoint(gamePosition);
-      farm.farmController.isFarmSelected = containsPoint;
 
       if (containsPoint) {
         selectedFarm = farm;
-        break;
+      } else {
+        farm.farmController.isFarmSelected = false;
       }
     }
 
