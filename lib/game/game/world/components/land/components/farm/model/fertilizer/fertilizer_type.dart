@@ -1,0 +1,4 @@
+enum FertilizerType {
+  organic,
+  chemical,
+}

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flame/game.dart';
+
 import 'game_utils.dart';
 
 extension GameExtension on Vector2 {

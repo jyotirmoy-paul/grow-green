@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
+
 import 'grow_green_game_controller.dart';
 
 class GrowGreenGame extends FlameGame with ScaleDetector {

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import '../../../grow_green_game.dart';
 
+import '../../../grow_green_game.dart';
 import 'land_controller.dart';
 
 class Land extends PositionComponent with HasGameRef<GrowGreenGame>, TapCallbacks {
