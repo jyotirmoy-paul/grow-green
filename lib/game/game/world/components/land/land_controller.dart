@@ -100,6 +100,7 @@ class LandController {
 
     /// open farm composition menu
     game.buildContext?.read<GameOverlayCubit>().onFarmCompositionShow(farm);
+    game.buildContext?.read<FarmCompositionMenuCubit>().populate(farm.farmController.farmContent);
     game.overlays.add(FarmCompositionMenu.overlayName);
   }
 

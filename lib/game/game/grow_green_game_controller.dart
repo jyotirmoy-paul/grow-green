@@ -7,10 +7,14 @@ import '../../services/log/log.dart';
 import '../utils/game_extensions.dart';
 import '../utils/game_utils.dart';
 import 'grow_green_game.dart';
+import 'services/datastore/game_datastore.dart';
 import 'world/world/grow_green_world.dart';
 
 class GrowGreenGameController {
   static const tag = 'GrowGreenGameController';
+
+  /// services
+  late final GameDatastore gameDatastore;
 
   late final GrowGreenGame game;
   late final CameraComponent camera;
@@ -42,6 +46,9 @@ class GrowGreenGameController {
   Future<List<Component>> initialize({required GrowGreenGame game}) async {
     this.game = game;
 
+    /// initialize services
+    _initializeServices();
+
     world = GrowGreenWorld();
     camera = CameraComponent(world: world);
 
@@ -49,6 +56,11 @@ class GrowGreenGameController {
       world,
       camera,
     ];
+  }
+
+  /// method responsible for initializing all sservices needed by the game
+  Future<void> _initializeServices() async {
+    gameDatastore = GameDatastore();
   }
 
   /// scaling & translating functionality

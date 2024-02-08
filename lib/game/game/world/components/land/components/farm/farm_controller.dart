@@ -17,6 +17,9 @@ class FarmController {
     _isFarmSelected = v;
   }
 
+  /// TODO: we need to check when editing is allowed for the farm
+  bool get isEditingAllowed => true;
+
   FarmContent? _farmContent;
   FarmContent? get farmContent => _farmContent;
 
