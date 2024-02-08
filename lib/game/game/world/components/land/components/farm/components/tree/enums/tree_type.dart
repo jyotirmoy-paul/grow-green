@@ -5,4 +5,5 @@ enum TreeType {
   d,
   e,
   f,
+  none,
 }

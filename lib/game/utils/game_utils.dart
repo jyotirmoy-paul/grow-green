@@ -8,8 +8,8 @@ class GameUtils {
   /// constants
   static final tileSize = Vector2(1024, 640);
   static const maxZoom = 0.8;
-  static const worldMapFileName = 'world.tmx';
-  static const mapDirectoryPrefix = 'assets/exp/';
+  static const worldMapFileName = 'world.tmx'; // TODO: move to game assets
+  static const mapDirectoryPrefix = 'assets/exp/'; // TODO: move to game assets
 
   final Vector2 gameWorldSize;
   final double isoAngle;
