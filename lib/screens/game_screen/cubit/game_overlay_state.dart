@@ -7,7 +7,20 @@ sealed class GameOverlayState extends Equatable {
   List<Object> get props => [];
 }
 
-final class GameOverlayNone extends GameOverlayState {}
+final class GameOverlayNone extends GameOverlayState {
+  const GameOverlayNone();
+}
+
+final class GameOverlaySystemSelector extends GameOverlayState {
+  final Farm farm;
+
+  const GameOverlaySystemSelector({
+    required this.farm,
+  });
+
+  @override
+  List<Object> get props => [farm];
+}
 
 final class GameOverlayFarmComposition extends GameOverlayState {
   final Farm farm;
