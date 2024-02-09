@@ -76,7 +76,7 @@ class GrowGreenGameController {
   set _zoom(double v) => camera.viewfinder.zoom = v.clamp(_minZoom, _maxZoom);
 
   Vector2 get _position => camera.viewfinder.position;
-  set _position(Vector2 v) => camera.viewfinder.position = _getClampedPosition(v);
+  set _position(Vector2 v) => camera.viewfinder.position = v;
 
   /// TODO: Refactor this
   Vector2 _getClampedPosition(Vector2 position) {
