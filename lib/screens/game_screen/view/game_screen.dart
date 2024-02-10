@@ -2,6 +2,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:growgreen/game/game/world/components/land/overlays/system_selector_menu/bloc/system_selector_menu_bloc.dart';
 import 'package:growgreen/game/game/world/components/land/overlays/system_selector_menu/system_selector_menu.dart';
 import '../../../game/game/world/components/land/overlays/farm_composition_menu/cubit/farm_composition_menu_cubit.dart';
 import '../../../game/game/world/components/land/overlays/inventory/cubit/inventory_cubit.dart';
@@ -33,6 +34,9 @@ class GameScreen extends StatelessWidget {
           create: (context) => GameOverlayCubit(
             game: context.read<GameBloc>().state.game,
           ),
+        ),
+        BlocProvider(
+          create: (context) => SystemSelectorMenuBloc(),
         ),
         BlocProvider(
           create: (context) => FarmCompositionMenuCubit(

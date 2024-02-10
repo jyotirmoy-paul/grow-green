@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
+import 'package:growgreen/game/game/world/components/land/components/farm/enum/farm_state.dart';
 
 import '../../../../../grow_green_game.dart';
 import 'model/farm_content.dart';
@@ -10,15 +11,10 @@ class FarmController {
   late final String farmName;
   late final Rectangle farmRect;
 
-  bool get isFarmSelected => _isFarmSelected;
-  bool _isFarmSelected = false;
-  set isFarmSelected(bool v) {
-    /// TODO: Take action when farm is selected
-    _isFarmSelected = v;
-  }
+  bool isFarmSelected = false;
 
-  /// TODO: we need to check when editing is allowed for the farm
-  bool get isEditingAllowed => true;
+  FarmState _currentFarmState = FarmState.notBought;
+  FarmState get currentFarmState => _currentFarmState;
 
   FarmContent? _farmContent;
   FarmContent? get farmContent => _farmContent;
@@ -31,6 +27,9 @@ class FarmController {
     this.game = game;
     this.farmName = farmName;
     this.farmRect = farmRect;
+
+    /// TODO: read from db
+    /// _currentFarmState
 
     return [];
   }

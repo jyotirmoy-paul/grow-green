@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:growgreen/game/game/world/components/land/components/farm/enum/farm_state.dart';
+import 'package:growgreen/game/game/world/components/land/overlays/system_selector_menu/bloc/system_selector_menu_bloc.dart';
 import '../../components/farm/farm.dart';
 
 import '../../../../../../../screens/game_screen/cubit/game_overlay_cubit.dart';
@@ -34,6 +36,8 @@ class SystemSelectorMenu extends StatefulWidget {
 }
 
 class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProviderStateMixin {
+  static const tag = '_SystemSelectorMenuState';
+
   static const _centerDiameter = 200.0;
   static const _childDiameter = _centerDiameter / 2;
 
@@ -57,7 +61,7 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
     /// appearance animation
 
     _appearanceAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 190),
       vsync: this,
     );
 
@@ -78,7 +82,7 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
 
     /// radial animation
     _radialAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
 
@@ -91,9 +95,31 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
     );
   }
 
-  void _initAnimations() async {
+  void _doAnimations() async {
     _appearanceAnimationController.forward();
-    _radialAnimationController.forward();
+  }
+
+  void _init() {
+    final farmState = widget.farm.farmController.currentFarmState;
+    final systemSelectorMenuBloc = context.read<SystemSelectorMenuBloc>();
+
+    switch (farmState) {
+      case FarmState.notBought:
+        throw Exception('$tag: _init(): System Selector Menu opened in invalid farm state: $farmState');
+
+      case FarmState.notInitialized:
+        return systemSelectorMenuBloc.add(SystemSelectorMenuChooseSystemEvent());
+
+      case FarmState.functioning:
+        return systemSelectorMenuBloc.add(SystemSelectorMenuViewComponentsEvent());
+
+      case FarmState.functioningOnlyTrees:
+        return;
+      case FarmState.functioningOnlyCrops:
+        return;
+      case FarmState.notFunctioning:
+        return;
+    }
   }
 
   @override
@@ -101,7 +127,9 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
     super.initState();
 
     _initAnimationControllers();
-    _initAnimations();
+    _doAnimations();
+
+    _init();
   }
 
   @override
@@ -120,8 +148,8 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
   }
 
   void _onClose() async {
-    await _radialAnimationController.reverse();
-    await _appearanceAnimationController.reverse();
+    await _radialAnimationController.animateTo(0, duration: const Duration(milliseconds: 200));
+    await _appearanceAnimationController.animateTo(0, duration: const Duration(milliseconds: 100));
     widget.game.overlays.remove(SystemSelectorMenu.overlayName);
   }
 
@@ -211,8 +239,10 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
                           itemCount: noOfChild,
                           itemIndex: index,
                           finalRadius: _centerDiameter,
-                          center:
-                              Offset((_size.width / 2) - _childDiameter / 2, (_size.height / 2) - _childDiameter / 2),
+                          center: Offset(
+                            (_size.width / 2) - _childDiameter / 2,
+                            (_size.height / 2) - _childDiameter / 2,
+                          ),
                         );
                         return Positioned(
                           left: position.dx,
@@ -239,7 +269,7 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
             child: Container(
               width: _centerDiameter,
               height: _centerDiameter,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.blue,
                 shape: BoxShape.circle,
               ),
