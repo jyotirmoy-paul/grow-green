@@ -43,10 +43,6 @@ class FarmCompositionMenuCubit extends Cubit<FarmCompositionMenuState> {
   }
 
   void onEditPressed(Farm farm) {
-    if (!farm.farmController.isEditingAllowed) {
-      throw Exception('$tag: $farm is not in editing state');
-    }
-
     emit(
       FarmCompositionMenuEditing(
         /// TODO: determine the needs of the farm
