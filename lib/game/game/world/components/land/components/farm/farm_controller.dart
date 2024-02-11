@@ -13,7 +13,7 @@ class FarmController {
 
   bool isFarmSelected = false;
 
-  FarmState _currentFarmState = FarmState.notBought;
+  FarmState _currentFarmState = FarmState.notInitialized;
   FarmState get currentFarmState => _currentFarmState;
 
   FarmContent? _farmContent;

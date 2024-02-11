@@ -1,0 +1,4 @@
+enum FarmSystemType {
+  monoculture,
+  agroforestry,
+}

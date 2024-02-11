@@ -1,17 +1,30 @@
 part of 'system_selector_menu_bloc.dart';
 
 sealed class SystemSelectorMenuState extends Equatable {
+  SsmParentModel get parentModel;
+  List<SsmChildModel> get childModels;
+
   const SystemSelectorMenuState();
 
   @override
   List<Object> get props => [];
 }
 
-final class SystemSelectorMenuInitial extends SystemSelectorMenuState {}
+final class SystemSelectorMenuInitial extends SystemSelectorMenuState {
+  @override
+  List<SsmChildModel> get childModels => const [];
+
+  @override
+  SsmParentModel get parentModel => SsmParentModel.empty();
+}
 
 final class SystemSelectorMenuChooseSystem extends SystemSelectorMenuState {
   final int selectedIndex;
+
+  @override
   final SsmParentModel parentModel;
+
+  @override
   final List<SsmChildModel> childModels;
 
   const SystemSelectorMenuChooseSystem({
@@ -29,7 +42,10 @@ final class SystemSelectorMenuChooseSystem extends SystemSelectorMenuState {
 }
 
 final class SystemSelectorMenuViewComponent extends SystemSelectorMenuState {
+  @override
   final SsmParentModel parentModel;
+
+  @override
   final List<SsmChildModel> childModels;
 
   const SystemSelectorMenuViewComponent({
@@ -45,28 +61,24 @@ final class SystemSelectorMenuViewComponent extends SystemSelectorMenuState {
 }
 
 final class SystemSelectorMenuChooseComponent extends SystemSelectorMenuState {
+  @override
   final SsmParentModel parentModel;
+
+  @override
   final List<SsmChildModel> childModels;
+
+  final FarmSystem farmSystem;
 
   const SystemSelectorMenuChooseComponent({
     required this.parentModel,
     required this.childModels,
+    required this.farmSystem,
   });
 
   @override
   List<Object> get props => [
         parentModel,
         childModels,
+        farmSystem,
       ];
 }
-/*
-
-/// choose tree for a system
-class SystemSelectorMenuChooseTreesEvent extends SystemSelectorMenuEvent {}
-
-/// choose crops for a system
-class SystemSelectorMenuChooseCropsEvent extends SystemSelectorMenuEvent {}
-
-/// choose fertilizer for a system
-class SystemSelectorMenuChooseFertilizerEvent extends SystemSelectorMenuEvent {}
-*/
