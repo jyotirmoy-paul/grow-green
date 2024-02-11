@@ -1,8 +1,8 @@
 import 'tree_calculators.dart';
 
 abstract class BaseTreeCalculator {
-  int maturityAge();
   int harvestReadyAge();
+  int maturityAge();
   AgePriceLinearData agePriceData();
   AgePriceLinearData recurringHarvestData();
 
@@ -30,5 +30,4 @@ abstract class BaseTreeCalculator {
     final price = p1.potentialPrice + ((age - p1.age) * m).round();
     return price;
   }
-
 }

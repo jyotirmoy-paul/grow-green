@@ -2,6 +2,7 @@ import '../../tree_calculators.dart';
 
 // source -
 // https://signuptrendingnature.com/malabar-neem-tree-weight-after-5-years/
+// https://signuptrendingnature.com/neem-tree-yield-per-acre-project-report/
 class NeemCalculator extends BaseTreeCalculator {
   @override
   AgePriceLinearData agePriceData() {
@@ -17,8 +18,10 @@ class NeemCalculator extends BaseTreeCalculator {
   int maturityAge() => 8;
 
   @override
-  int getRecurringHarvest(int age) => 0;
-
-  @override
-  AgePriceLinearData recurringHarvestData() => AgePriceLinearData.zero;
+  AgePriceLinearData recurringHarvestData() {
+    const pricePerKg = 20;
+    const p1 = AgePrice(age: 5, potentialPrice: pricePerKg * 10);
+    const p2 = AgePrice(age: 8, potentialPrice: pricePerKg * 50);
+    return const AgePriceLinearData(p1: p1, p2: p2);
+  }
 }
