@@ -1,9 +1,10 @@
+import 'package:growgreen/game/game/world/components/land/components/farm/model/content.dart';
+
 import '../enums/agroforestry_type.dart';
+import '../enums/farm_system_type.dart';
 import '../world/components/land/components/farm/components/crop/enums/crop_type.dart';
 import '../world/components/land/components/farm/components/tree/enums/tree_type.dart';
 import '../world/components/land/components/farm/model/fertilizer/fertilizer_type.dart';
-
-import '../enums/farm_system_type.dart';
 
 abstract interface class FarmSystem {
   FarmSystemType get farmSystemType;
@@ -11,11 +12,11 @@ abstract interface class FarmSystem {
 }
 
 class MonocultureSystem implements FarmSystem {
-  final FertilizerType fertilizerType;
-  final CropType crop;
+  final Content<FertilizerType> fertilizer;
+  final Content<CropType> crop;
 
   const MonocultureSystem({
-    required this.fertilizerType,
+    required this.fertilizer,
     required this.crop,
   });
 
@@ -29,11 +30,11 @@ class MonocultureSystem implements FarmSystem {
   }
 
   MonocultureSystem copyWith({
-    FertilizerType? fertilizerType,
-    CropType? crop,
+    Content<FertilizerType>? fertilizer,
+    Content<CropType>? crop,
   }) {
     return MonocultureSystem(
-      fertilizerType: fertilizerType ?? this.fertilizerType,
+      fertilizer: fertilizer ?? this.fertilizer,
       crop: crop ?? this.crop,
     );
   }
@@ -41,12 +42,12 @@ class MonocultureSystem implements FarmSystem {
 
 class AgroforestrySystem implements FarmSystem {
   final AgroforestryType agroforestryType;
-  final List<TreeType> tree;
-  final CropType crop;
+  final List<Content<TreeType>> trees;
+  final Content<CropType> crop;
 
   const AgroforestrySystem({
     required this.agroforestryType,
-    required this.tree,
+    required this.trees,
     required this.crop,
   });
 
@@ -61,12 +62,12 @@ class AgroforestrySystem implements FarmSystem {
 
   AgroforestrySystem copyWith({
     AgroforestryType? agroforestryType,
-    List<TreeType>? tree,
-    CropType? crop,
+    List<Content<TreeType>>? trees,
+    Content<CropType>? crop,
   }) {
     return AgroforestrySystem(
       agroforestryType: agroforestryType ?? this.agroforestryType,
-      tree: tree ?? this.tree,
+      trees: trees ?? this.trees,
       crop: crop ?? this.crop,
     );
   }

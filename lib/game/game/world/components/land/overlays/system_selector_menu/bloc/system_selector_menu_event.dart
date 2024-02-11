@@ -7,20 +7,6 @@ sealed class SystemSelectorMenuEvent extends Equatable {
   List<Object> get props => [];
 }
 
-/// choose agriculture system
-class SystemSelectorMenuChooseSystemEvent extends SystemSelectorMenuEvent {
-  final int selectedSystemIndex;
-
-  const SystemSelectorMenuChooseSystemEvent({
-    required this.selectedSystemIndex,
-  });
-
-  @override
-  List<Object> get props => [
-        selectedSystemIndex,
-      ];
-}
-
 /// view components in a particular system
 class SystemSelectorMenuViewComponentsEvent extends SystemSelectorMenuEvent {
   final bool editable;
@@ -33,18 +19,6 @@ class SystemSelectorMenuViewComponentsEvent extends SystemSelectorMenuEvent {
   List<Object> get props => [editable];
 }
 
-/// choose components in a particular system
-class SystemSelectorMenuChooseComponentsEvent extends SystemSelectorMenuEvent {
-  final FarmSystem farmSystem;
-
-  const SystemSelectorMenuChooseComponentsEvent({
-    required this.farmSystem,
-  });
-
-  @override
-  List<Object> get props => [farmSystem];
-}
-
 class SystemSelectorMenuContinueEvent extends SystemSelectorMenuEvent {
   const SystemSelectorMenuContinueEvent();
 }
@@ -53,9 +27,21 @@ class SystemSelectorMenuBackEvent extends SystemSelectorMenuEvent {
   const SystemSelectorMenuBackEvent();
 }
 
+/// child tap event
+class SystemSelectorMenuChildTapEvent extends SystemSelectorMenuEvent {
+  final int tappedIndex;
+
+  const SystemSelectorMenuChildTapEvent({
+    required this.tappedIndex,
+  });
+
+  @override
+  List<Object> get props => [tappedIndex];
+}
+
 /// choose tree for a system
 class SystemSelectorMenuChooseTreesEvent extends SystemSelectorMenuEvent {
-  final List<TreeType> trees;
+  final List<Content<TreeType>> trees;
 
   const SystemSelectorMenuChooseTreesEvent({
     required this.trees,
@@ -67,7 +53,7 @@ class SystemSelectorMenuChooseTreesEvent extends SystemSelectorMenuEvent {
 
 /// choose crops for a system
 class SystemSelectorMenuChooseCropsEvent extends SystemSelectorMenuEvent {
-  final CropType crop;
+  final Content<CropType> crop;
 
   const SystemSelectorMenuChooseCropsEvent({
     required this.crop,
@@ -79,7 +65,7 @@ class SystemSelectorMenuChooseCropsEvent extends SystemSelectorMenuEvent {
 
 /// choose fertilizer for a system
 class SystemSelectorMenuChooseFertilizerEvent extends SystemSelectorMenuEvent {
-  final FertilizerType fertilizer;
+  final Content<FertilizerType> fertilizer;
 
   const SystemSelectorMenuChooseFertilizerEvent({
     required this.fertilizer,

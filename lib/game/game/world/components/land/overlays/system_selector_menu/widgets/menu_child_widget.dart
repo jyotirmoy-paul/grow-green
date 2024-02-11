@@ -15,15 +15,21 @@ class MenuChildWidget extends StatelessWidget {
     this.onTap,
   });
 
-  bool get _isChildrenAvailable => childModel.children.isNotEmpty;
-
   Widget _buildChild() {
     return Container(
       width: diameter,
       height: diameter,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.greenAccent,
         shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            spreadRadius: 5,
+            blurRadius: 50,
+            offset: const Offset(-5, -5),
+          ),
+        ],
       ),
       alignment: Alignment.center,
       child: Column(
@@ -54,29 +60,7 @@ class MenuChildWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: _isChildrenAvailable
-          ? Stack(
-              children: [
-                ...List<Widget>.generate(
-                  childModel.children.length,
-                  (index) {
-                    return Transform.translate(
-                      offset: Offset(-10.0 * index, -10.0 * index),
-                      child: Container(
-                        width: diameter,
-                        height: diameter,
-                        decoration: BoxDecoration(
-                          color: Colors.greenAccent.withOpacity(0.5),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                _buildChild(),
-              ],
-            )
-          : _buildChild(),
+      child: _buildChild(),
     );
   }
 }
