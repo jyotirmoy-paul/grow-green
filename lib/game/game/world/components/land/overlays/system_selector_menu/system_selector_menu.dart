@@ -4,8 +4,10 @@ import 'dart:ui';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:growgreen/game/game/world/components/land/components/farm/enum/farm_state.dart';
-import 'package:growgreen/game/game/world/components/land/overlays/system_selector_menu/bloc/system_selector_menu_bloc.dart';
+import '../../components/farm/enum/farm_state.dart';
+import 'bloc/system_selector_menu_bloc.dart';
+import 'widgets/menu_child_widget.dart';
+import 'widgets/menu_parent_widget.dart';
 import '../../components/farm/farm.dart';
 
 import '../../../../../../../screens/game_screen/cubit/game_overlay_cubit.dart';
@@ -38,9 +40,6 @@ class SystemSelectorMenu extends StatefulWidget {
 class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProviderStateMixin {
   static const tag = '_SystemSelectorMenuState';
 
-  static const _centerDiameter = 200.0;
-  static const _childDiameter = _centerDiameter / 2;
-
   late AnimationController _appearanceAnimationController;
   late AnimationController _radialAnimationController;
 
@@ -54,8 +53,12 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
   late Animation<double> _rotationAnimation;
 
   late Size _size;
+  late double _parentWidgetDiameter;
+  late double _childWidgetDiameter;
+  late double _childFinalRadius;
+  late Offset _center;
 
-  int noOfChild = 4;
+  SystemSelectorMenuState? _previousMenuState;
 
   void _initAnimationControllers() {
     /// appearance animation
@@ -97,28 +100,37 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
 
   void _doAnimations() async {
     _appearanceAnimationController.forward();
+    _radialAnimationController.forward();
+  }
+
+  void _onClose() async {
+    /// animate out
+    await _appearanceAnimationController.animateTo(0, duration: const Duration(milliseconds: 100));
+
+    /// close overlay
+    widget.game.overlays.remove(SystemSelectorMenu.overlayName);
   }
 
   void _init() {
     final farmState = widget.farm.farmController.currentFarmState;
     final systemSelectorMenuBloc = context.read<SystemSelectorMenuBloc>();
 
+    systemSelectorMenuBloc.onClose = _onClose;
+
     switch (farmState) {
       case FarmState.notBought:
         throw Exception('$tag: _init(): System Selector Menu opened in invalid farm state: $farmState');
 
       case FarmState.notInitialized:
-        return systemSelectorMenuBloc.add(SystemSelectorMenuChooseSystemEvent());
+        return systemSelectorMenuBloc.add(const SystemSelectorMenuChooseSystemEvent(selectedSystemIndex: 0));
 
       case FarmState.functioning:
-        return systemSelectorMenuBloc.add(SystemSelectorMenuViewComponentsEvent());
+        return systemSelectorMenuBloc.add(const SystemSelectorMenuViewComponentsEvent(editable: false));
 
       case FarmState.functioningOnlyTrees:
-        return;
       case FarmState.functioningOnlyCrops:
-        return;
       case FarmState.notFunctioning:
-        return;
+        return systemSelectorMenuBloc.add(const SystemSelectorMenuViewComponentsEvent(editable: true));
     }
   }
 
@@ -136,21 +148,53 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
   void dispose() {
     /// dispose animation controllers
     _appearanceAnimationController.dispose();
+    _radialAnimationController.dispose();
 
     super.dispose();
+  }
+
+  void _determineDimensions() {
+    _size = MediaQuery.of(context).size;
+
+    final shortestSize = _size.shortestSide;
+    final availablesize = shortestSize * 0.80;
+
+    _parentWidgetDiameter = availablesize * 0.4;
+    _childWidgetDiameter = availablesize * 0.23;
+
+    _childFinalRadius = _parentWidgetDiameter;
+
+    _center = Offset(
+      (_size.width / 2) - _childWidgetDiameter / 2,
+      (_size.height / 2) - _childWidgetDiameter / 2,
+    );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _size = MediaQuery.of(context).size;
+    _determineDimensions();
   }
 
-  void _onClose() async {
+  void _onBackTap() async {
     await _radialAnimationController.animateTo(0, duration: const Duration(milliseconds: 200));
-    await _appearanceAnimationController.animateTo(0, duration: const Duration(milliseconds: 100));
-    widget.game.overlays.remove(SystemSelectorMenu.overlayName);
+    if (mounted) {
+      context.read<SystemSelectorMenuBloc>().add(const SystemSelectorMenuBackEvent());
+    }
+    _radialAnimationController.forward();
+  }
+
+  void _onContinue() async {
+    /// close children
+    await _radialAnimationController.reverse();
+
+    if (!mounted) return;
+
+    context.read<SystemSelectorMenuBloc>().add(SystemSelectorMenuContinueEvent());
+
+    /// open children
+    await _radialAnimationController.forward();
   }
 
   Offset _calculateAnimatedPosition({
@@ -174,108 +218,185 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
     return Offset(x, y);
   }
 
+  void _onMenuStateChange(SystemSelectorMenuState previousState, SystemSelectorMenuState nextState) {}
+
+  void _onChildTap(int index) {
+    final currentState = context.read<SystemSelectorMenuBloc>().state;
+
+    if (currentState is SystemSelectorMenuChooseSystem) {
+      return context
+          .read<SystemSelectorMenuBloc>()
+          .add(SystemSelectorMenuChooseSystemEvent(selectedSystemIndex: index));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _appearanceAnimationController,
-      builder: (context, child) {
-        return Material(
-          color: _backgroundColorAnimation.value,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: _blurAnimation.value, sigmaY: _blurAnimation.value),
-            child: Opacity(
-              opacity: _opacityAnimation.value,
-              child: child,
-            ),
-          ),
-        );
+    return BlocListener<SystemSelectorMenuBloc, SystemSelectorMenuState>(
+      listener: (context, state) => _onMenuStateChange(_previousMenuState!, state),
+      listenWhen: (previous, current) {
+        _previousMenuState = previous;
+        return true;
       },
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // farm name
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Text(
-                widget.farm.farmName,
-                style: const TextStyle(color: Colors.white, fontSize: 32.0),
+      child: AnimatedBuilder(
+        animation: _appearanceAnimationController,
+        builder: (context, child) {
+          return Material(
+            color: _backgroundColorAnimation.value,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: _blurAnimation.value, sigmaY: _blurAnimation.value),
+              child: Opacity(
+                opacity: _opacityAnimation.value,
+                child: child,
               ),
             ),
-          ),
-
-          // close button
-          Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              margin: const EdgeInsets.all(32.0),
-              padding: const EdgeInsets.all(4.0),
-              decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-              child: IconButton(
-                onPressed: _onClose,
-                icon: const Icon(
-                  Icons.close_rounded,
-                  color: Colors.white,
-                  size: 32.0,
+          );
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // farm name
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Text(
+                  widget.farm.farmName,
+                  style: const TextStyle(color: Colors.white, fontSize: 32.0),
                 ),
               ),
             ),
-          ),
 
-          // small circle positioned according to animation
-          Positioned.fill(
-            child: AnimatedBuilder(
-              animation: _radialAnimationController,
-              builder: (context, child) {
-                return Transform.rotate(
-                  angle: _rotationAnimation.value,
-                  child: Stack(
-                    children: List<Widget>.generate(
-                      noOfChild,
-                      (index) {
-                        final position = _calculateAnimatedPosition(
-                          animationValue: _radialAnimation.value,
-                          itemCount: noOfChild,
-                          itemIndex: index,
-                          finalRadius: _centerDiameter,
-                          center: Offset(
-                            (_size.width / 2) - _childDiameter / 2,
-                            (_size.height / 2) - _childDiameter / 2,
-                          ),
-                        );
-                        return Positioned(
-                          left: position.dx,
-                          top: position.dy,
-                          child: Container(
-                            width: _childDiameter,
-                            height: _childDiameter,
-                            decoration: const BoxDecoration(
-                              color: Colors.blueAccent,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+            // small circle positioned according to animation
+            Positioned.fill(
+              child: BlocBuilder<SystemSelectorMenuBloc, SystemSelectorMenuState>(
+                builder: (context, state) {
+                  final childModels = state.childModels;
+                  final n = childModels.length;
 
-          // large central circle
-          Align(
-            child: Container(
-              width: _centerDiameter,
-              height: _centerDiameter,
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
+                  return AnimatedBuilder(
+                    animation: _radialAnimationController,
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: _rotationAnimation.value,
+                        child: Stack(
+                          children: List<Widget>.generate(
+                            n,
+                            (index) {
+                              final position = _calculateAnimatedPosition(
+                                animationValue: _radialAnimation.value,
+                                itemCount: n,
+                                itemIndex: index,
+                                finalRadius: _childFinalRadius,
+                                center: _center,
+                              );
+
+                              int selectedIndex = -1;
+
+                              if (state is SystemSelectorMenuChooseSystem) {
+                                selectedIndex = state.selectedIndex;
+                              }
+
+                              final isSelected = index == selectedIndex;
+
+                              return Positioned(
+                                left: position.dx,
+                                top: position.dy,
+                                width: _childWidgetDiameter,
+                                height: _childWidgetDiameter,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Transform.scale(
+                                      scale: 1.3,
+                                      child: AnimatedContainer(
+                                        duration: const Duration(milliseconds: 180),
+                                        curve: Curves.easeOut,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: isSelected ? Colors.white : Colors.transparent,
+                                            width: 5.0,
+                                            strokeAlign: BorderSide.strokeAlignOutside,
+                                          ),
+                                          shape: BoxShape.circle,
+                                          // shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                    ),
+                                    AnimatedScale(
+                                      curve: Curves.easeOut,
+                                      duration: const Duration(milliseconds: 280),
+                                      scale: isSelected ? 1.2 : 1.0,
+                                      child: MenuChildWidget(
+                                        childModel: childModels[index],
+                                        diameter: _childWidgetDiameter,
+                                        onTap: () => _onChildTap(index),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
-          ),
-        ],
+
+            // large central circle
+            Align(
+              child: BlocBuilder<SystemSelectorMenuBloc, SystemSelectorMenuState>(
+                builder: (context, state) {
+                  return MenuParentWidget(
+                    parentModel: state.parentModel,
+                    diameter: _parentWidgetDiameter,
+                  );
+                },
+              ),
+            ),
+
+            /// back button
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                margin: const EdgeInsets.all(32.0),
+                padding: const EdgeInsets.all(4.0),
+                decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                child: IconButton(
+                  onPressed: _onBackTap,
+                  icon: const Icon(
+                    Icons.chevron_left_rounded,
+                    color: Colors.white,
+                    size: 32.0,
+                  ),
+                ),
+              ),
+            ),
+
+            /// continue button
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                margin: const EdgeInsets.all(32.0),
+                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: InkWell(
+                  onTap: _onContinue,
+                  child: const Text(
+                    'Continue',
+                    style: TextStyle(fontSize: 24.0),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

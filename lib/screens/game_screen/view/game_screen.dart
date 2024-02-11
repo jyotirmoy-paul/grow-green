@@ -36,7 +36,9 @@ class GameScreen extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (context) => SystemSelectorMenuBloc(),
+          create: (context) => SystemSelectorMenuBloc(
+            game: context.read<GameBloc>().state.game,
+          ),
         ),
         BlocProvider(
           create: (context) => FarmCompositionMenuCubit(
