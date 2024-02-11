@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
+import 'package:growgreen/game/game/models/farm_system.dart';
 import 'package:growgreen/game/game/world/components/land/components/farm/enum/farm_state.dart';
 
 import '../../../../../grow_green_game.dart';
@@ -38,7 +39,11 @@ class FarmController {
   /// 1. Task - Designate positions for crops & trees (if any)
   /// 2. Instantiate - CropsController, FarmerController & TreeController (if not already)
   /// 3. Update - CropSupporter (Trees / Fertilizers)
-  void updateFarmComposition(FarmContent farmContent) {}
+  void updateFarmComposition({
+    required FarmContent farmContent,
+  }) {
+    /// TODO
+  }
 
   TextPainter get textPainter => TextPainter(
         text: TextSpan(

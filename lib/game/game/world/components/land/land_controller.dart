@@ -3,7 +3,6 @@ import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart' hide Text;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'overlays/farm_composition_menu/cubit/farm_composition_menu_cubit.dart';
 import '../../../../../screens/game_screen/cubit/game_overlay_cubit.dart';
 
 import '../../../../../services/log/log.dart';
@@ -11,7 +10,6 @@ import '../../../../utils/game_extensions.dart';
 import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
 import 'components/farm/farm.dart';
-import 'overlays/farm_composition_menu/farm_composition_menu.dart';
 
 class LandController {
   static const tag = 'LandController';
@@ -83,29 +81,21 @@ class LandController {
   }
 
   void _processFarmTap(Farm farm) async {
+    /// TODO: Check if farm is bought?
     Log.d('$tag: _processFarmTap: $farm is tapped');
 
     /// mark farm as selected
     farm.farmController.isFarmSelected = true;
 
     /// open farm composition menu
-    /// TODO: Depending on state of farm, invoke correct method
     game.buildContext?.read<GameOverlayCubit>().onShowSystemSelectorMenu(farm);
   }
 
   void _processOutsideTap() {
-    game.overlays.removeAll([
-      FarmCompositionMenu.overlayName,
-    ]);
+    /// TODO: is there anything to do?
   }
 
   void _onFarmTap(Farm? selectedFarm) {
-    ///  If farm is getting edited (inventory is open) skip closing!
-    final farmCompositionState = game.buildContext?.read<FarmCompositionMenuCubit>().state;
-    if (farmCompositionState is FarmCompositionMenuEditing) {
-      return;
-    }
-
     if (selectedFarm != null) {
       _processFarmTap(selectedFarm);
     } else {

@@ -11,6 +11,8 @@ sealed class SystemSelectorMenuState extends Equatable {
 }
 
 final class SystemSelectorMenuInitial extends SystemSelectorMenuState {
+  const SystemSelectorMenuInitial();
+  
   @override
   List<SsmChildModel> get childModels => const [];
 

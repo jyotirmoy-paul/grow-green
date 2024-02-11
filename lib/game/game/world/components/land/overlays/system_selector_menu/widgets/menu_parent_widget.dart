@@ -19,9 +19,17 @@ class MenuParentWidget extends StatelessWidget {
       width: diameter,
       height: diameter,
       clipBehavior: Clip.none,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.blue,
         shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            spreadRadius: 5,
+            blurRadius: 20,
+            offset: const Offset(-5, -5),
+          ),
+        ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 30.0),
       alignment: Alignment.center,

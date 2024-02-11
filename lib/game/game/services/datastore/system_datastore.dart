@@ -2,41 +2,52 @@ import '../../enums/agroforestry_type.dart';
 import '../../models/farm_system.dart';
 import '../../world/components/land/components/farm/components/crop/enums/crop_type.dart';
 import '../../world/components/land/components/farm/components/tree/enums/tree_type.dart';
+import '../../world/components/land/components/farm/model/content.dart';
 import '../../world/components/land/components/farm/model/fertilizer/fertilizer_type.dart';
 
 /// Class holds various systems initially available to the user
 class SystemDatastore {
   /// Alley agroforestry system
-  final _agroforestrySystem1 = const AgroforestrySystem(
+  final _agroforestrySystem1 = AgroforestrySystem(
     agroforestryType: AgroforestryType.alley,
-    tree: [TreeType.a],
-    crop: CropType.a,
+    trees: [
+      Content<TreeType>(type: TreeType.a, quantity: 10),
+      Content<TreeType>(type: TreeType.b, quantity: 20),
+    ],
+    crop: Content<CropType>(type: CropType.a, quantity: 100),
   );
 
   /// Block agroforestry system
-  final _agroforestrySystem2 = const AgroforestrySystem(
+  final _agroforestrySystem2 = AgroforestrySystem(
     agroforestryType: AgroforestryType.block,
-    tree: [TreeType.b],
-    crop: CropType.b,
+    trees: [
+      Content<TreeType>(type: TreeType.e, quantity: 15),
+      Content<TreeType>(type: TreeType.c, quantity: 15),
+    ],
+    crop: Content<CropType>(type: CropType.b, quantity: 90),
   );
 
   /// Boundary agroforestry system
-  final _agroforestrySystem3 = const AgroforestrySystem(
+  final _agroforestrySystem3 = AgroforestrySystem(
     agroforestryType: AgroforestryType.boundary,
-    tree: [TreeType.a, TreeType.b, TreeType.c],
-    crop: CropType.c,
+    trees: [
+      Content<TreeType>(type: TreeType.a, quantity: 5),
+      Content<TreeType>(type: TreeType.b, quantity: 20),
+      Content<TreeType>(type: TreeType.c, quantity: 5),
+    ],
+    crop: Content<CropType>(type: CropType.d, quantity: 100),
   );
 
   /// Organic fertilizer monoculture system
-  final _monocultureSystem1 = const MonocultureSystem(
-    fertilizerType: FertilizerType.organic,
-    crop: CropType.a,
+  final _monocultureSystem1 = MonocultureSystem(
+    fertilizer: Content<FertilizerType>(type: FertilizerType.organic, quantity: 100),
+    crop: Content<CropType>(type: CropType.a, quantity: 90),
   );
 
   /// Chemical fertilizer monoculture sysetm
-  final _monocultureSystem2 = const MonocultureSystem(
-    fertilizerType: FertilizerType.chemical,
-    crop: CropType.c,
+  final _monocultureSystem2 = MonocultureSystem(
+    fertilizer: Content<FertilizerType>(type: FertilizerType.chemical, quantity: 80),
+    crop: Content<CropType>(type: CropType.c, quantity: 100),
   );
 
   List<FarmSystem> get systems => [
