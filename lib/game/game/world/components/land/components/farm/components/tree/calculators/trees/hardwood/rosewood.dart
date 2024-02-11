@@ -19,9 +19,6 @@ class RosewoodCalculator extends BaseTreeCalculator {
   }
 
   @override
-  int getRecurringHarvest(int age) => 0;
-
-  @override
   AgePriceLinearData recurringHarvestData() => AgePriceLinearData.zero;
 }
 
