@@ -1,9 +1,14 @@
-enum CropType {
+import '../../system/growable.dart';
+
+enum CropType implements Growable {
   maize,
   bajra,
   wheat,
   groundnut,
   pepper,
   banana,
-  none,
+  none;
+
+  @override
+  GrowableType getGrowableType() => GrowableType.crop;
 }
