@@ -30,13 +30,18 @@ class SystemSelectorMenuBackEvent extends SystemSelectorMenuEvent {
 /// child tap event
 class SystemSelectorMenuChildTapEvent extends SystemSelectorMenuEvent {
   final int tappedIndex;
+  final bool chooseSystem;
 
   const SystemSelectorMenuChildTapEvent({
     required this.tappedIndex,
+    this.chooseSystem = false,
   });
 
   @override
-  List<Object> get props => [tappedIndex];
+  List<Object> get props => [
+        tappedIndex,
+        chooseSystem,
+      ];
 }
 
 /// choose tree for a system
@@ -73,4 +78,16 @@ class SystemSelectorMenuChooseFertilizerEvent extends SystemSelectorMenuEvent {
 
   @override
   List<Object> get props => [fertilizer];
+}
+
+/// choose agroforestry setup for a system
+class SystemSelectorMenuChooseAgroforestrySystemEvent extends SystemSelectorMenuEvent {
+  final AgroforestryType agroforestryType;
+
+  const SystemSelectorMenuChooseAgroforestrySystemEvent({
+    required this.agroforestryType,
+  });
+
+  @override
+  List<Object> get props => [agroforestryType];
 }

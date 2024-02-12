@@ -1,4 +1,6 @@
-class SsmParentModel {
+import 'package:equatable/equatable.dart';
+
+class SsmParentModel extends Equatable {
   final String image;
   final String name;
   final String description;
@@ -19,4 +21,12 @@ class SsmParentModel {
       bulletPoints: [],
     );
   }
+
+  @override
+  List<Object?> get props => [
+        image,
+        name,
+        description,
+        bulletPoints,
+      ];
 }

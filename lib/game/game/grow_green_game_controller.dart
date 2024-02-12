@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'models/overlay_data.dart';
 
 import '../../services/log/log.dart';
 import '../utils/game_extensions.dart';
@@ -12,6 +13,8 @@ import 'world/world/grow_green_world.dart';
 
 class GrowGreenGameController {
   static const tag = 'GrowGreenGameController';
+
+  final OverlayData overlayData = OverlayData();
 
   /// services
   late final GameDatastore gameDatastore;
