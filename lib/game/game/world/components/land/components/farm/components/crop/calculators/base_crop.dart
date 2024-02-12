@@ -1,8 +1,9 @@
 import '../../../../../../utils/month.dart';
-
 import '../calculators/harvest_data.dart';
+import '../enums/crop_type.dart';
 
 abstract class BaseCropCalculator {
+  CropType cropType();
   double getYieldKgPerCubicM();
   List<HarvestPeriod> harvestData();
 
