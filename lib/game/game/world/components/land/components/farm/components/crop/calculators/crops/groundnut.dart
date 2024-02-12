@@ -1,5 +1,5 @@
-// Groundnut Class
 import '../../../../../../../utils/month.dart';
+import '../../enums/crop_type.dart';
 import '../base_crop.dart';
 import '../harvest_data.dart';
 
@@ -14,4 +14,7 @@ class GroundnutCropCalculator extends BaseCropCalculator {
       HarvestPeriod(sowMonth: Month.jan, harvestMonth: Month.jun),
     ];
   }
+
+  @override
+  CropType cropType() => CropType.groundnut;
 }
