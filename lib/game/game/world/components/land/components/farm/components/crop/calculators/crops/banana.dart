@@ -1,4 +1,5 @@
 import '../../../../../../../utils/month.dart';
+import '../../enums/crop_type.dart';
 import '../base_crop.dart';
 import '../harvest_data.dart';
 
@@ -23,4 +24,7 @@ class BananaCropCalculator extends BaseCropCalculator {
       HarvestPeriod(sowMonth: Month.dec, harvestMonth: Month.nov),
     ];
   }
+
+  @override
+  CropType cropType() => CropType.banana;
 }
