@@ -10,7 +10,7 @@ class Content<T extends Enum> {
 
   @override
   String toString() {
-    return 'GrowableContent(${type.name}, $quantity)';
+    return 'Content(${type.name}, $quantity)';
   }
 
   factory Content.empty(T type) {

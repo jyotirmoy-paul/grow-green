@@ -4,5 +4,4 @@ enum CropType {
   c,
   d,
   e,
-  none,
 }

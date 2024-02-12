@@ -1,13 +1,15 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
-import 'package:growgreen/game/game/models/farm_system.dart';
-import 'package:growgreen/game/game/world/components/land/components/farm/enum/farm_state.dart';
+import '../../../../../../../services/log/log.dart';
+import 'enum/farm_state.dart';
 
 import '../../../../../grow_green_game.dart';
 import 'model/farm_content.dart';
 
 class FarmController {
+  static const tag = 'FarmController';
+
   late final GrowGreenGame game;
   late final String farmName;
   late final Rectangle farmRect;
@@ -42,7 +44,7 @@ class FarmController {
   void updateFarmComposition({
     required FarmContent farmContent,
   }) {
-    /// TODO
+    Log.i('$tag: updateFarmComposition: $farmContent');
   }
 
   TextPainter get textPainter => TextPainter(

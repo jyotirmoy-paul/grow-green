@@ -1,9 +1,8 @@
-import 'package:growgreen/game/game/world/components/land/components/farm/model/content.dart';
-
 import '../enums/agroforestry_type.dart';
 import '../enums/farm_system_type.dart';
 import '../world/components/land/components/farm/components/crop/enums/crop_type.dart';
 import '../world/components/land/components/farm/components/tree/enums/tree_type.dart';
+import '../world/components/land/components/farm/model/content.dart';
 import '../world/components/land/components/farm/model/fertilizer/fertilizer_type.dart';
 
 abstract interface class FarmSystem {

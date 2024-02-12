@@ -2,14 +2,13 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart' hide Text;
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../screens/game_screen/cubit/game_overlay_cubit.dart';
 
 import '../../../../../services/log/log.dart';
 import '../../../../utils/game_extensions.dart';
 import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
 import 'components/farm/farm.dart';
+import 'overlays/system_selector_menu/system_selector_menu.dart';
 
 class LandController {
   static const tag = 'LandController';
@@ -88,7 +87,8 @@ class LandController {
     farm.farmController.isFarmSelected = true;
 
     /// open farm composition menu
-    game.buildContext?.read<GameOverlayCubit>().onShowSystemSelectorMenu(farm);
+    game.gameController.overlayData.farm = farm;
+    game.overlays.add(SystemSelectorMenu.overlayName);
   }
 
   void _processOutsideTap() {

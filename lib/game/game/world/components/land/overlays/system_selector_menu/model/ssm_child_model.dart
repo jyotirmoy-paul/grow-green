@@ -1,15 +1,22 @@
-import 'package:growgreen/game/game/world/components/land/overlays/system_selector_menu/enum/component_id.dart';
+import 'package:equatable/equatable.dart';
 
-class SsmChildModel {
+import '../enum/component_id.dart';
+
+class SsmChildModel extends Equatable {
   final ComponentId componentId;
   final String image;
   final String shortName;
-  final bool editable;
 
   const SsmChildModel({
     this.componentId = ComponentId.none,
     required this.shortName,
     required this.image,
-    this.editable = true,
   });
+
+  @override
+  List<Object?> get props => [
+        componentId,
+        image,
+        shortName,
+      ];
 }
