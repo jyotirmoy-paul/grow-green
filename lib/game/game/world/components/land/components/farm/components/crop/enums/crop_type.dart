@@ -1,7 +1,9 @@
 enum CropType {
-  a,
-  b,
-  c,
-  d,
-  e,
+  maize,
+  bajra,
+  wheat,
+  groundnut,
+  pepper,
+  banana,
+  none,
 }
