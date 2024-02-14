@@ -31,7 +31,7 @@ class FarmController {
     this.farmName = farmName;
     this.farmRect = farmRect;
 
-    /// TODO: read from db
+    /// TODO: read farm's state from db and update all relevant variables
     /// _currentFarmState
 
     return [];
@@ -45,6 +45,10 @@ class FarmController {
     required FarmContent farmContent,
   }) {
     Log.i('$tag: updateFarmComposition: $farmContent');
+  }
+
+  void onTimeChange(DateTime dateTime) {
+    Log.i('$tag: onTimeChange: $dateTime');
   }
 
   TextPainter get textPainter => TextPainter(

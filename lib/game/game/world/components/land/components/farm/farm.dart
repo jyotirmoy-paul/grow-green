@@ -5,9 +5,10 @@ import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../grow_green_game.dart';
+import '../../../../../services/time/time_aware.dart';
 import 'farm_controller.dart';
 
-class Farm extends PolygonComponent with HasGameRef<GrowGreenGame> {
+class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
   final farmController = FarmController();
 
   final String farmName;
@@ -40,6 +41,9 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame> {
 
     addAll(components);
   }
+
+  @override
+  void onTimeChange(DateTime dateTime) => farmController.onTimeChange(dateTime);
 
   @override
   String toString() {
