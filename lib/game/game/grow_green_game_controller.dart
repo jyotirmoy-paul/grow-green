@@ -2,13 +2,14 @@ import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'models/overlay_data.dart';
 
 import '../../services/log/log.dart';
 import '../utils/game_extensions.dart';
 import '../utils/game_utils.dart';
 import 'grow_green_game.dart';
+import 'models/overlay_data.dart';
 import 'services/datastore/game_datastore.dart';
+import 'services/time/time_service.dart';
 import 'world/world/grow_green_world.dart';
 
 class GrowGreenGameController {
@@ -64,6 +65,9 @@ class GrowGreenGameController {
   /// method responsible for initializing all sservices needed by the game
   Future<void> _initializeServices() async {
     gameDatastore = GameDatastore();
+
+    /// TODO: initialize timer with dateTime as read from storage
+    TimeService().initialize();
   }
 
   /// scaling & translating functionality
