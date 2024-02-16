@@ -6,8 +6,7 @@ enum CropType implements Growable {
   wheat,
   groundnut,
   pepper,
-  banana,
-  none;
+  banana;
 
   @override
   GrowableType getGrowableType() => GrowableType.crop;

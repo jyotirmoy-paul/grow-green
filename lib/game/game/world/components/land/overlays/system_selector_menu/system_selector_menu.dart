@@ -59,7 +59,8 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
     /// appearance animation
 
     _appearanceAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 190),
+      duration: const Duration(milliseconds: 200),
+      reverseDuration: const Duration(milliseconds: 150),
       vsync: this,
     );
 
@@ -103,10 +104,14 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
     _radialAnimationController.reset();
 
     /// animate out
-    await _appearanceAnimationController.animateTo(0, duration: const Duration(milliseconds: 200));
+    await _appearanceAnimationController.reverse();
 
     /// close overlay
     widget.game.overlays.remove(SystemSelectorMenu.overlayName);
+  }
+
+  void _onChildShow() {
+    _radialAnimationController.forward();
   }
 
   void _init() {
@@ -114,6 +119,7 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
     final systemSelectorMenuBloc = context.read<SystemSelectorMenuBloc>();
 
     systemSelectorMenuBloc.onCloseMenu = _onClose;
+    systemSelectorMenuBloc.onChildShow = _onChildShow;
 
     switch (farmState) {
       case FarmState.notBought:
@@ -176,6 +182,9 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
   }
 
   void _onBackTap() async {
+    /// close component selection menu, if open
+    context.read<SystemSelectorMenuBloc>().closeComponentSelection();
+
     await _radialAnimationController.reverse();
 
     if (mounted) {
@@ -195,9 +204,6 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
     if (!mounted) return;
 
     context.read<SystemSelectorMenuBloc>().add(const SystemSelectorMenuContinueEvent());
-
-    /// open children
-    await _radialAnimationController.forward();
   }
 
   Offset _calculateAnimatedPosition({

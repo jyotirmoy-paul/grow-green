@@ -1,9 +1,8 @@
-import '../qty.dart';
-
 import '../../../../../../../../utils/month.dart';
 import '../../../../crop/enums/crop_type.dart';
 import '../base_crop.dart';
 import '../harvest_period.dart';
+import '../qty.dart';
 
 class PepperCropCalculator extends BaseCropCalculator {
   @override
