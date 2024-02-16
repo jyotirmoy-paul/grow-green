@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import '../crop/enums/crop_type.dart';
-import '../tree/enums/tree_type.dart';
-import 'growable.dart';
-import 'system_type.dart';
+import '../../crop/enums/crop_type.dart';
+import '../../tree/enums/tree_type.dart';
+import '../growable.dart';
+import '../system_type.dart';
 
 typedef LayoutData = List<GrowablePosition>;
 

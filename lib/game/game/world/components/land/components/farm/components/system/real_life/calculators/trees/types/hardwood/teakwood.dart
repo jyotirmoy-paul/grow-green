@@ -1,9 +1,12 @@
-import 'package:growgreen/services/log/log.dart';
+import '../../../../../../../../../../../../../../services/log/log.dart';
+import '../../../../../../tree/enums/tree_type.dart';
 import '../../tree_calculators.dart';
 
 // source -
 // https://signuptrendingnature.com/how-many-teak-trees-per-acre-farm-income/
 class TeakWoodCalculator extends BaseTreeCalculator {
+  TeakWoodCalculator({super.treeType = TreeType.teakwood});
+
   @override
   int harvestReadyAge() => 10;
 
@@ -22,6 +25,9 @@ class TeakWoodCalculator extends BaseTreeCalculator {
 
   @override
   AgePriceLinearData recurringHarvestData() => AgePriceLinearData.zero;
+
+  @override
+  int get saplingCost => 50;
 }
 
 void main(List<String> args) {

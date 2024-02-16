@@ -1,11 +1,13 @@
-import '../../../../../../../utils/month.dart';
-import '../../enums/crop_type.dart';
+import 'package:growgreen/game/game/world/components/land/components/farm/components/system/real_life/calculators/qty.dart';
+
+import '../../../../../../../../utils/month.dart';
+import '../../../../crop/enums/crop_type.dart';
 import '../base_crop.dart';
-import '../harvest_data.dart';
+import '../harvest_period.dart';
 
 class BananaCropCalculator extends BaseCropCalculator {
   @override
-  double getYieldKgPerCubicM() => 8.00;
+  double getYieldKgPerSquareM() => 8.00;
 
   @override
   List<HarvestPeriod> harvestData() {
@@ -27,4 +29,7 @@ class BananaCropCalculator extends BaseCropCalculator {
 
   @override
   CropType cropType() => CropType.banana;
+
+  @override
+  Qty getSeedsRequiredPerHacter() => const Qty(value: 2500, scale: Scale.units);
 }

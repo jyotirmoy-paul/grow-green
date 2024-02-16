@@ -1,9 +1,12 @@
+import '../../../../../../tree/enums/tree_type.dart';
 import '../../tree_calculators.dart';
 
 // source -
 // https://signuptrendingnature.com/coconut-tree-profit-per-acre-coconut-cult/#5_Is_coconut_the_tree_of_life
 //
 class CoconutCalculator extends BaseTreeCalculator {
+  CoconutCalculator({super.treeType = TreeType.cocounut});
+
   @override
   AgePriceLinearData agePriceData() {
     const pricePerCubicFt = 600;
@@ -25,4 +28,7 @@ class CoconutCalculator extends BaseTreeCalculator {
     const p2 = AgePrice(age: 20, potentialPrice: pricePerNut * 75);
     return const AgePriceLinearData(p1: p1, p2: p2);
   }
+
+  @override
+  int get saplingCost => 100;
 }

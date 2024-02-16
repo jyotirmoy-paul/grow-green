@@ -1,6 +1,8 @@
-import '../enums/crop_type.dart';
+import '../../../crop/enums/crop_type.dart';
 
 abstract class CropMarket {
+
+  // This represents the selling price of the crop per kg 
   static final Map<CropType, int> _cropPrices = {
     CropType.maize: 29,
     CropType.bajra: 23,
@@ -10,7 +12,7 @@ abstract class CropMarket {
     CropType.banana: 32,
   };
 
-  static int pricePerKg(CropType cropType) {
+  static int pricePerQty(CropType cropType) {
     return _cropPrices[cropType] ?? 0; // Return 0 if not found
   }
 

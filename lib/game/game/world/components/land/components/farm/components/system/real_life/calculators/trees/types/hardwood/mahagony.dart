@@ -1,8 +1,11 @@
+import '../../../../../../tree/enums/tree_type.dart';
 import '../../tree_calculators.dart';
 
 // source -
 // https://signuptrendingnature.com/how-many-mahogany-trees-per-acre-income/
 class MahagonyCalculator extends BaseTreeCalculator {
+  MahagonyCalculator({super.treeType = TreeType.mahagony});
+
   @override
   AgePriceLinearData agePriceData() {
     const p1 = AgePrice(age: 10, potentialPrice: 20000);
@@ -21,4 +24,7 @@ class MahagonyCalculator extends BaseTreeCalculator {
 
   @override
   AgePriceLinearData recurringHarvestData() => AgePriceLinearData.zero;
+
+  @override
+  int get saplingCost => 100;
 }

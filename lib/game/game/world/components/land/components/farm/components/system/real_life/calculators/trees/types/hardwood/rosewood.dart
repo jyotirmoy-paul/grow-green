@@ -1,9 +1,12 @@
-import 'package:growgreen/services/log/log.dart';
+import '../../../../../../../../../../../../../../services/log/log.dart';
+import '../../../../../../tree/enums/tree_type.dart';
 import '../../tree_calculators.dart';
 
 // source -
 // https://signuptrendingnature.com/rosewood-tree-farming-profit-per-acre/
 class RosewoodCalculator extends BaseTreeCalculator {
+  RosewoodCalculator({super.treeType = TreeType.rosewood});
+
   @override
   int maturityAge() => 20;
 
@@ -20,6 +23,9 @@ class RosewoodCalculator extends BaseTreeCalculator {
 
   @override
   AgePriceLinearData recurringHarvestData() => AgePriceLinearData.zero;
+
+  @override
+  int get saplingCost => 100;
 }
 
 void main(List<String> args) {

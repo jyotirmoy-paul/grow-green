@@ -1,9 +1,12 @@
+import '../../../../../../tree/enums/tree_type.dart';
 import '../../tree_calculators.dart';
 
 // source -
 // https://signuptrendingnature.com/jackfruit-farming-profit-per-acre-guide/
 //
 class JackfruitCalculator extends BaseTreeCalculator {
+  JackfruitCalculator({super.treeType = TreeType.jackfruit});
+
   @override
   AgePriceLinearData agePriceData() {
     const pricePerCubicFt = 1500;
@@ -25,4 +28,7 @@ class JackfruitCalculator extends BaseTreeCalculator {
     const p2 = AgePrice(age: 15, potentialPrice: pricePerKg * 200);
     return const AgePriceLinearData(p1: p1, p2: p2);
   }
+
+  @override
+  int get saplingCost => 80;
 }

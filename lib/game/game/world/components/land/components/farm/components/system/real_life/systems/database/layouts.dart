@@ -1,4 +1,6 @@
 // This is assuming one hactar area
+import '../../../system_type.dart';
+
 class PlantationLayout {
   final int numberOfTrees;
   final double leftoverAreaForCrops;
@@ -26,4 +28,17 @@ class PlantationLayout {
     numberOfTrees: 0,
     leftoverAreaForCrops: 10000,
   );
+
+  factory PlantationLayout.fromSytemType(SystemType type) {
+    switch (type) {
+      case SystemType.boundary:
+        return boundary;
+      case SystemType.alley:
+        return alleyCropping;
+      case SystemType.block:
+        return blockPlantation;
+      case SystemType.monocrop:
+        return monoPlantation;
+    }
+  }
 }
