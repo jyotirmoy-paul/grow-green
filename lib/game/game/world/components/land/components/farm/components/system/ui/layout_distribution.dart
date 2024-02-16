@@ -1,3 +1,5 @@
+import 'package:flame/game.dart';
+
 import '../../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../../enums/system_type.dart';
@@ -78,7 +80,7 @@ class LayoutDistribution {
   }
 
   LayoutData _getMonocropDistribution() {
-    return _fillArea(cropType, Position.zero, Position(size, size));
+    throw Exception('_getMonocropDistribution not implemented');
   }
 
   LayoutData _fillRow({
@@ -129,6 +131,11 @@ class GrowablePosition {
   final Growable growable;
 
   GrowablePosition({required this.pos, required this.growable});
+
+  @override
+  String toString() {
+    return 'GrowablePosition($pos, $growable)';
+  }
 }
 
 class Position {
@@ -157,9 +164,13 @@ class Position {
 
   static Position fromSize(int size) => Position(size, size);
 
+  Vector2 toVector2() {
+    return Vector2(x.toDouble(), y.toDouble());
+  }
+
   @override
   String toString() {
-    return "(${x},${y})";
+    return 'Position($x, $y)';
   }
 }
 

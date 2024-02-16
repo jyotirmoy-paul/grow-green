@@ -28,8 +28,8 @@ extension GameExtension on Vector2 {
     return Vector2(x1, y1)..scale(GameUtils().isoScaleFactor);
   }
 
-  Vector2 toCart() {
-    final halfWorldSize = GameUtils().gameWorldSize.half();
+  Vector2 toCart([Vector2? size]) {
+    final halfWorldSize = size ?? GameUtils().gameWorldSize.half();
     final alpha = GameUtils().isoAngle;
 
     /// revert scale
