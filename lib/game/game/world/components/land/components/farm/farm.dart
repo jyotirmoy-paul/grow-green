@@ -27,6 +27,8 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
     if (debugMode) {
       farmController.textPainter.paint(canvas, Offset.zero);
     }
+
+    addAll;
   }
 
   @override
@@ -36,7 +38,13 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
     final components = await farmController.initialize(
       game: game,
       farmName: farmName,
+      farmPosition: position,
+      farm: this,
       farmRect: farmRect,
+      add: add,
+      addAll: addAll,
+      remove: remove,
+      removeAll: removeAll,
     );
 
     addAll(components);

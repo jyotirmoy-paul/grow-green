@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../services/log/log.dart';
 import '../utils/game_extensions.dart';
@@ -27,7 +28,7 @@ class GrowGreenGameController {
   late final double _minZoom;
   late final Vector2 worldCenter;
 
-  static const _maxZoomStable = GameUtils.maxZoom;
+  static const _maxZoomStable = kDebugMode ? 10 : GameUtils.maxZoom;
   static const _maxZoom = _maxZoomStable * 1.6;
 
   /// called from `grow_green_land_controller` after the world is loaded
@@ -80,7 +81,7 @@ class GrowGreenGameController {
   bool get _hasInertia => _hasTranslationInertia || _hasScaleInertia;
 
   double get _zoom => camera.viewfinder.zoom;
-  set _zoom(double v) => camera.viewfinder.zoom = v.clamp(_minZoom, _maxZoom);
+  set _zoom(double v) => camera.viewfinder.zoom = kDebugMode ? v : v.clamp(_minZoom, _maxZoom);
 
   Vector2 get _position => camera.viewfinder.position;
   set _position(Vector2 v) => camera.viewfinder.position = v;

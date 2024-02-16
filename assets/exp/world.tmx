@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="isometric" renderorder="right-down" width="8" height="8" tilewidth="1024" tileheight="640" infinite="0" nextlayerid="3" nextobjectid="15">
+<map version="1.10" tiledversion="1.10.2" orientation="isometric" renderorder="right-down" width="4" height="4" tilewidth="1024" tileheight="640" infinite="0" nextlayerid="3" nextobjectid="15">
  <tileset firstgid="1" source="measured.tsx"/>
- <layer id="1" name="Ground" width="8" height="8">
+ <layer id="1" name="Ground" width="4" height="4">
   <data encoding="csv">
-0,0,9,9,9,9,0,0,
-0,8,9,9,8,8,8,0,
-8,8,4,5,6,5,8,9,
-8,8,6,4,4,6,10,9,
-8,7,5,6,4,5,10,9,
-8,7,6,4,5,4,10,9,
-0,7,7,7,7,8,8,0,
-0,0,9,9,9,9,0,0
+4,5,6,5,
+6,4,4,6,
+5,6,4,5,
+6,4,5,4
 </data>
  </layer>
  <objectgroup id="2" name="Farms">
-  <object id="1" name="farm-1" x="1280" y="1280" width="640" height="640"/>
-  <object id="2" name="farm-2" x="1920" y="1920" width="640" height="640"/>
-  <object id="5" name="farm-3" x="2560" y="1920" width="640" height="640"/>
-  <object id="8" name="farm-5" x="1920" y="3200" width="640" height="640"/>
-  <object id="10" name="farm-4" x="2560" y="2560" width="640" height="640"/>
-  <object id="11" name="farm-6" x="3200" y="3200" width="640" height="640"/>
+  <object id="1" name="farm-1" x="0" y="0" width="640" height="640"/>
+  <object id="2" name="farm-2" x="640" y="640" width="640" height="640"/>
+  <object id="5" name="farm-3" x="1280" y="640" width="640" height="640"/>
+  <object id="8" name="farm-5" x="640" y="1920" width="640" height="640"/>
+  <object id="10" name="farm-4" x="1280" y="1280" width="640" height="640"/>
+  <object id="11" name="farm-6" x="1920" y="1920" width="640" height="640"/>
  </objectgroup>
 </map>

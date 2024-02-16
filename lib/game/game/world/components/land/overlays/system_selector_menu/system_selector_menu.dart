@@ -115,7 +115,7 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
   }
 
   void _init() {
-    final farmState = widget.farm.farmController.currentFarmState;
+    final farmState = widget.farm.farmController.farmState;
     final systemSelectorMenuBloc = context.read<SystemSelectorMenuBloc>();
 
     systemSelectorMenuBloc.onCloseMenu = _onClose;
