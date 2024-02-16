@@ -1,12 +1,13 @@
 import 'package:growgreen/game/game/world/components/land/components/farm/components/system/growable.dart';
 
 enum TreeType implements Growable {
-  a,
-  b,
-  c,
-  d,
-  e,
-  f,
+  mahagony,
+  neem,
+  rosewood,
+  teakwood,
+  cocounut,
+  jackfruit,
+  mango,
   none;
 
   @override
