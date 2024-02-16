@@ -1,9 +1,9 @@
-import 'dart:math';
-
+import '../../../../../../../../enums/agroforestry_type.dart';
+import '../../../../../../../../enums/farm_system_type.dart';
+import '../../../../../../../../enums/system_type.dart';
 import '../../crop/enums/crop_type.dart';
 import '../../tree/enums/tree_type.dart';
 import '../growable.dart';
-import '../system_type.dart';
 
 typedef LayoutData = List<GrowablePosition>;
 
@@ -30,23 +30,28 @@ class LayoutDistribution {
 
   LayoutData getDistribution() {
     switch (systemType) {
-      case SystemType.alley:
+      case AgroforestryType.alley:
         return _getAlleyDistribution();
-      case SystemType.block:
+
+      case AgroforestryType.block:
         return _getBlockDistribution();
-      case SystemType.boundary:
+
+      case AgroforestryType.boundary:
         return _getBoundaryDistribution();
-      case SystemType.monocrop:
+
+      case FarmSystemType.monoculture:
         return _getMonocropDistribution();
     }
+
+    throw Exception('Please specify agroforestry type using AgroforestryType enum!');
   }
 
   LayoutData _getAlleyDistribution() {
-    return null!;
+    throw Exception('Alley Distribution is not implemented yet!');
   }
 
   LayoutData _getBlockDistribution() {
-    return null!;
+    throw Exception('Block Distribution is not implemented yet!');
   }
 
   LayoutData _getBoundaryDistribution() {

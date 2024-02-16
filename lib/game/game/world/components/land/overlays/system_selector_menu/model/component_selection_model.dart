@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../enum/component_id.dart';
 
 class ComponentSelectionModel extends ChangeNotifier {

@@ -1,6 +1,9 @@
 import '../../enums/agroforestry_type.dart';
+import '../../enums/farm_system_type.dart';
 import '../../models/farm_system.dart';
 import '../../world/components/land/components/farm/components/crop/enums/crop_type.dart';
+import '../../world/components/land/components/farm/components/system/real_life/calculators/qty.dart';
+import '../../world/components/land/components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../world/components/land/components/farm/components/tree/enums/tree_type.dart';
 import '../../world/components/land/components/farm/model/content.dart';
 import '../../world/components/land/components/farm/model/fertilizer/fertilizer_type.dart';
@@ -11,43 +14,90 @@ class SystemDatastore {
   final _agroforestrySystem1 = AgroforestrySystem(
     agroforestryType: AgroforestryType.alley,
     trees: [
-      Content<TreeType>(type: TreeType.a, quantity: 10),
-      Content<TreeType>(type: TreeType.b, quantity: 20),
+      Content<TreeType>(
+        type: TreeType.cocounut,
+        qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.alley),
+      ),
     ],
-    crop: Content<CropType>(type: CropType.a, quantity: 100),
+    crop: Content<CropType>(
+      type: CropType.bajra,
+      qty: QtyCalculator.getSeedQtyRequireFor(
+        systemType: AgroforestryType.alley,
+        cropType: CropType.bajra,
+      ),
+    ),
   );
 
   /// Block agroforestry system
   final _agroforestrySystem2 = AgroforestrySystem(
     agroforestryType: AgroforestryType.block,
     trees: [
-      Content<TreeType>(type: TreeType.e, quantity: 15),
-      Content<TreeType>(type: TreeType.c, quantity: 15),
+      Content<TreeType>(
+        type: TreeType.cocounut,
+        qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.block),
+      ),
     ],
-    crop: Content<CropType>(type: CropType.b, quantity: 90),
+    crop: Content<CropType>(
+      type: CropType.maize,
+      qty: QtyCalculator.getSeedQtyRequireFor(
+        systemType: AgroforestryType.block,
+        cropType: CropType.maize,
+      ),
+    ),
   );
 
   /// Boundary agroforestry system
   final _agroforestrySystem3 = AgroforestrySystem(
     agroforestryType: AgroforestryType.boundary,
     trees: [
-      Content<TreeType>(type: TreeType.a, quantity: 5),
-      Content<TreeType>(type: TreeType.b, quantity: 20),
-      Content<TreeType>(type: TreeType.c, quantity: 5),
+      Content<TreeType>(
+        type: TreeType.mango,
+        qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.boundary),
+      ),
     ],
-    crop: Content<CropType>(type: CropType.d, quantity: 100),
+    crop: Content<CropType>(
+      type: CropType.pepper,
+      qty: QtyCalculator.getSeedQtyRequireFor(
+        systemType: AgroforestryType.boundary,
+        cropType: CropType.pepper,
+      ),
+    ),
   );
 
   /// Organic fertilizer monoculture system
   final _monocultureSystem1 = MonocultureSystem(
-    fertilizer: Content<FertilizerType>(type: FertilizerType.organic, quantity: 100),
-    crop: Content<CropType>(type: CropType.a, quantity: 90),
+    fertilizer: const Content<FertilizerType>(
+      type: FertilizerType.organic,
+      qty: Qty(
+        value: 100,
+        scale: Scale.kg,
+      ),
+    ),
+    crop: Content<CropType>(
+      type: CropType.wheat,
+      qty: QtyCalculator.getSeedQtyRequireFor(
+        systemType: FarmSystemType.monoculture,
+        cropType: CropType.wheat,
+      ),
+    ),
   );
 
   /// Chemical fertilizer monoculture sysetm
   final _monocultureSystem2 = MonocultureSystem(
-    fertilizer: Content<FertilizerType>(type: FertilizerType.chemical, quantity: 80),
-    crop: Content<CropType>(type: CropType.c, quantity: 100),
+    fertilizer: const Content<FertilizerType>(
+      type: FertilizerType.organic,
+      qty: Qty(
+        value: 190,
+        scale: Scale.kg,
+      ),
+    ),
+    crop: Content<CropType>(
+      type: CropType.bajra,
+      qty: QtyCalculator.getSeedQtyRequireFor(
+        systemType: FarmSystemType.monoculture,
+        cropType: CropType.bajra,
+      ),
+    ),
   );
 
   List<FarmSystem> get systems => [

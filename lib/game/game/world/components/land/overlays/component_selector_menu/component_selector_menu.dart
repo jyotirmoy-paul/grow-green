@@ -3,21 +3,19 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import '../system_selector_menu/model/component_selection_model.dart';
+
+import '../../../../../../../utils/extensions/list_extensions.dart';
 import '../../../../../enums/agroforestry_type.dart';
-import '../../../../../models/farm_system.dart';
+import '../../../../../grow_green_game.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
-import '../../components/farm/model/content.dart';
 import '../../components/farm/model/fertilizer/fertilizer_type.dart';
+import '../system_selector_menu/bloc/system_selector_menu_bloc.dart';
+import '../system_selector_menu/enum/component_id.dart';
+import '../system_selector_menu/model/component_selection_model.dart';
 import 'model/csm_item_model.dart';
 import 'utils/triple_tween.dart';
 import 'widget/component_item.dart';
-import '../system_selector_menu/bloc/system_selector_menu_bloc.dart';
-import '../../../../../../../utils/extensions/list_extensions.dart';
-
-import '../../../../../grow_green_game.dart';
-import '../system_selector_menu/enum/component_id.dart';
 
 class ComponentSelectorMenu extends StatefulWidget {
   static const overlayName = 'component-selector-menu';
@@ -207,35 +205,20 @@ class _ComponentSelectorMenuState extends State<ComponentSelectorMenu> with Sing
       case ComponentId.crop:
         final crop = CropType.values[index];
 
-        /// TODO: quantity can be fetched from a static database with type
         systemSelectorMenuBloc.add(
           SystemSelectorMenuChooseCropsEvent(
-            crop: Content<CropType>(
-              type: crop,
-              quantity: 100,
-            ),
+            crop: crop,
           ),
         );
         break;
 
       case ComponentId.trees:
-        final treeTappedIndex = componentTappedIndex;
         final tree = TreeType.values[index];
-
-        final treesList =
-            ((systemSelectorMenuBloc.state as SystemSelectorMenuChooseComponent).farmSystem as AgroforestrySystem)
-                .trees;
-        final newTreeList = List<Content<TreeType>>.from(treesList);
-
-        /// TODO: fetch quantity required from a static database
-        newTreeList[treeTappedIndex] = Content<TreeType>(
-          type: tree,
-          quantity: 100,
-        );
 
         systemSelectorMenuBloc.add(
           SystemSelectorMenuChooseTreesEvent(
-            trees: newTreeList,
+            tree: tree,
+            componentTappedIndex: componentTappedIndex,
           ),
         );
         break;
@@ -243,13 +226,9 @@ class _ComponentSelectorMenuState extends State<ComponentSelectorMenu> with Sing
       case ComponentId.fertilizer:
         final fertilizer = FertilizerType.values[index];
 
-        /// TODO: quantity can be fetched from a static database with type
         systemSelectorMenuBloc.add(
           SystemSelectorMenuChooseFertilizerEvent(
-            fertilizer: Content<FertilizerType>(
-              type: fertilizer,
-              quantity: 100,
-            ),
+            fertilizer: fertilizer,
           ),
         );
         break;

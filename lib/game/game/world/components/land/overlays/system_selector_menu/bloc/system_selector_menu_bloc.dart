@@ -2,7 +2,6 @@ import 'dart:ui' show VoidCallback;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../component_selector_menu/component_selector_menu.dart';
 
 import '../../../../../../../../services/log/log.dart';
 import '../../../../../../enums/agroforestry_type.dart';
@@ -10,10 +9,13 @@ import '../../../../../../enums/farm_system_type.dart';
 import '../../../../../../grow_green_game.dart';
 import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/components/crop/enums/crop_type.dart';
+import '../../../components/farm/components/system/real_life/calculators/qty.dart';
+import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/components/tree/enums/tree_type.dart';
 import '../../../components/farm/model/content.dart';
 import '../../../components/farm/model/farm_content.dart';
 import '../../../components/farm/model/fertilizer/fertilizer_type.dart';
+import '../../component_selector_menu/component_selector_menu.dart';
 import '../enum/component_id.dart';
 import '../model/ssm_child_model.dart';
 import '../model/ssm_parent_model.dart';
@@ -308,7 +310,15 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
       throw Exception('$tag: _onChooseTreesEvent invoked with wrong farm system: $farmSystem');
     }
 
-    final newFarmSystem = farmSystem.copyWith(trees: event.trees);
+    final existingTrees = farmSystem.trees;
+    existingTrees[event.componentTappedIndex] = Content(
+      type: event.tree,
+      qty: QtyCalculator.getNumOfSaplingsFor(farmSystem.agroforestryType),
+    );
+
+    final newFarmSystem = farmSystem.copyWith(
+      trees: List.from(existingTrees),
+    );
 
     emit(
       SystemSelectorMenuChooseComponent(
@@ -330,9 +340,25 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
     late FarmSystem newFarmSystem;
 
     if (farmSystem is AgroforestrySystem) {
-      newFarmSystem = farmSystem.copyWith(crop: event.crop);
+      newFarmSystem = farmSystem.copyWith(
+        crop: Content(
+          type: event.crop,
+          qty: QtyCalculator.getSeedQtyRequireFor(
+            systemType: farmSystem.agroforestryType,
+            cropType: event.crop,
+          ),
+        ),
+      );
     } else if (farmSystem is MonocultureSystem) {
-      newFarmSystem = farmSystem.copyWith(crop: event.crop);
+      newFarmSystem = farmSystem.copyWith(
+        crop: Content(
+          type: event.crop,
+          qty: QtyCalculator.getSeedQtyRequireFor(
+            systemType: farmSystem.farmSystemType,
+            cropType: event.crop,
+          ),
+        ),
+      );
     }
 
     emit(
@@ -355,7 +381,12 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
     FarmSystem? newFarmSystem;
 
     if (farmSystem is MonocultureSystem) {
-      newFarmSystem = farmSystem.copyWith(fertilizer: event.fertilizer);
+      newFarmSystem = farmSystem.copyWith(
+        fertilizer: Content(
+          type: event.fertilizer,
+          qty: const Qty(value: 100, scale: Scale.kg),
+        ),
+      );
     }
 
     if (newFarmSystem == null) return;
@@ -383,7 +414,21 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
     FarmSystem? newFarmSystem;
 
     if (farmSystem is AgroforestrySystem) {
-      newFarmSystem = farmSystem.copyWith(agroforestryType: event.agroforestryType);
+      newFarmSystem = farmSystem.copyWith(
+        /// update agroforestry system
+        agroforestryType: event.agroforestryType,
+
+        /// update trees quantity changes
+        trees: farmSystem.trees.map<Content<TreeType>>((existingTree) {
+          return Content(type: existingTree.type, qty: QtyCalculator.getNumOfSaplingsFor(event.agroforestryType));
+        }).toList(),
+
+        /// update crop quantity changes
+        crop: Content(
+          type: farmSystem.crop.type,
+          qty: QtyCalculator.getSeedQtyRequireFor(systemType: event.agroforestryType, cropType: farmSystem.crop.type),
+        ),
+      );
     }
 
     if (newFarmSystem == null) return;
