@@ -1,5 +1,6 @@
 import 'package:flame/game.dart';
 
+import '../../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../../enums/system_type.dart';
@@ -13,11 +14,9 @@ class LayoutDistribution {
   final SystemType systemType;
   final TreeType treeType;
   final CropType cropType;
-  final int size;
-  final int treeSize;
-  final int cropSize;
-  final int treeSpacing;
-  final int cropSpacing;
+  final double size;
+  final double treeSize;
+  final double cropSize;
 
   LayoutDistribution({
     required this.systemType,
@@ -26,8 +25,6 @@ class LayoutDistribution {
     required this.size,
     this.treeSize = 1,
     this.cropSize = 1,
-    this.treeSpacing = 0,
-    this.cropSpacing = 0,
   });
 
   LayoutData getDistribution() {
@@ -39,7 +36,7 @@ class LayoutDistribution {
         return _getBlockDistribution();
 
       case AgroforestryType.boundary:
-        return _getBoundaryDistribution();
+        return _getBoundaryDistribution(growable: treeType, boundarySize: size, origin: 0);
 
       case FarmSystemType.monoculture:
         return _getMonocropDistribution();
@@ -56,26 +53,64 @@ class LayoutDistribution {
     throw Exception('Block Distribution is not implemented yet!');
   }
 
-  LayoutData _getBoundaryDistribution() {
-    final totalTreeSize = _getTotalSize(treeType);
-    final numOfTreesPerSide = size ~/ totalTreeSize;
-    final modifiedSize = numOfTreesPerSide * totalTreeSize;
+  LayoutData _getBoundaryDistribution({
+    required double boundarySize,
+    required Growable growable,
+    required double origin,
+  }) {
     LayoutData result = List.empty(growable: true);
+    double growableSize = getGrowableSize(growable);
 
-    final topRow = _fillRow(growable: treeType, row: 0, endToX: modifiedSize - 1);
-    final bottomRow = _fillRow(growable: treeType, row: modifiedSize - totalTreeSize, endToX: modifiedSize - 1);
-    final leftColumn = _fillColumn(growable: treeType, column: 0, spacing: 0, n: numOfTreesPerSide);
-    final rightColumn =
-        _fillColumn(growable: treeType, column: modifiedSize - totalTreeSize, spacing: 0, n: numOfTreesPerSide);
-
-    final cropLeftoverArea = Position.fromSize(modifiedSize) - Position.fromSize(2 * _getTotalSize(treeType));
-    final cropArea = _fillArea(cropType, Position.fromSize(_getTotalSize(treeType)), cropLeftoverArea);
+    if (boundarySize ~/ growableSize == 0) return List.empty();
+    final topRow = _fillRow(
+      growable: growable,
+      row: origin,
+      start: 0,
+      size: boundarySize,
+    );
+    final bottomRow = _fillRow(
+      growable: growable,
+      row: boundarySize - growableSize,
+      start: 0,
+      size: boundarySize,
+    );
+    final leftColumn = _fillColumn(
+      growable: growable,
+      column: origin,
+      start: 0,
+      size: boundarySize,
+    );
+    final rightColumn = _fillColumn(
+      growable: growable,
+      column: boundarySize - growableSize,
+      start: 0,
+      size: boundarySize,
+    );
 
     result.addAll(topRow);
     result.addAll(bottomRow);
     result.addAll(leftColumn);
     result.addAll(rightColumn);
-    result.addAll(cropArea);
+
+    if (result.isEmpty) return List.empty();
+
+    final cropArea = boundarySize - 2 * growableSize;
+    final startPosition = origin + getGrowableSize(growable);
+    var cropResult = _getBoundaryDistribution(
+      boundarySize: cropArea,
+      growable: cropType,
+      origin: 0,
+    );
+
+    cropResult = cropResult.map((e) {
+      return GrowablePosition(
+        pos: e.pos + Position(startPosition, startPosition),
+        growable: e.growable,
+      );
+    }).toList();
+
+    result.addAll(cropResult);
+
     return result;
   }
 
@@ -85,45 +120,65 @@ class LayoutDistribution {
 
   LayoutData _fillRow({
     required Growable growable,
-    required int row,
-    required int endToX,
-    startFromX = 0,
+    required double start,
+    required double size,
+    required double row, // Assuming this is the constant X-coordinate for all positions in the column
   }) {
-    final rowSize = endToX - startFromX + 1;
-    final n = rowSize ~/ _getTotalSize(growable);
-    var positions = List.generate(n, (i) => Position(i * _getTotalSize(growable), row));
-    positions = positions.map((pos) => pos.translateXBy(startFromX)).toList();
-    return positions.map((pos) => GrowablePosition(pos: pos, growable: growable)).toList();
+    return _fillLayout(
+      growable: growable,
+      start: start,
+      size: size,
+      direction: AxisDirection.horizontal,
+      position: row,
+    );
   }
 
-  LayoutData _fillColumn({required Growable growable, required int column, required int spacing, required int n}) {
-    final totalSize = spacing + _getTotalSize(growable);
-    final positions = List.generate(n, (i) => Position(column, i * totalSize));
-    return positions.map((pos) => GrowablePosition(pos: pos, growable: growable)).toList();
+  LayoutData _fillColumn({
+    required Growable growable,
+    required double start,
+    required double size,
+    required double column, // Assuming this is the constant X-coordinate for all positions in the column
+  }) {
+    return _fillLayout(
+      growable: growable,
+      start: start,
+      size: size,
+      direction: AxisDirection.vertical,
+      position: column,
+    );
   }
 
-  LayoutData _fillArea(Growable growable, Position startPos, Position area) {
-    LayoutData result = List.empty(growable: true);
-    final growablesPerColumn = area.y ~/ _getTotalSize(growable);
+  LayoutData _fillLayout({
+    required Growable growable,
+    required double position,
+    required AxisDirection direction,
+    required double size,
+    required double start,
+  }) {
+    // Calculate the size based on the start and end parameters.
+    final growableSize = getGrowableSize(growable);
+    final numOfGrowables = size ~/ growableSize;
 
-    for (int j = 0; j < growablesPerColumn; j++) {
-      final rowStartPos = startPos.translateYBy(j * _getTotalSize(growable));
-      final row = _fillRow(
-        growable: growable,
-        row: rowStartPos.y,
-        endToX: startPos.x + area.x - 1,
-        startFromX: rowStartPos.x,
-      );
-      result.addAll(row);
-    }
-    return result;
+    if (numOfGrowables == 0) return List.empty();
+
+    final spacing = size - numOfGrowables * growableSize;
+    final spacingPerGrowable = numOfGrowables > 1 ? spacing / (numOfGrowables - 1) : 0;
+    final growableTotalSize = spacingPerGrowable + growableSize;
+
+    // Adjust getX and getY functions to include the start offset.
+    double getX(int index) => direction == AxisDirection.horizontal ? start + index * growableTotalSize : position;
+    double getY(int index) => direction == AxisDirection.vertical ? start + index * growableTotalSize : position;
+
+    // Pre-calculate the positions and create GrowablePosition objects in one go.
+    List<GrowablePosition> positions = List.generate(numOfGrowables, (i) {
+      return GrowablePosition(pos: Position(getX(i), getY(i)), growable: growable);
+    });
+
+    Log.i("result $positions");
+    return positions;
   }
 
-  int _getTotalSize(Growable growable) {
-    final isTree = growable.getGrowableType() == GrowableType.tree;
-    if (isTree) return treeSize + treeSpacing;
-    return cropSize + cropSpacing;
-  }
+  double getGrowableSize(Growable growable) => growable.getGrowableType() == GrowableType.tree ? treeSize : cropSize;
 }
 
 class GrowablePosition {
@@ -139,8 +194,8 @@ class GrowablePosition {
 }
 
 class Position {
-  final int x;
-  final int y;
+  final double x;
+  final double y;
 
   const Position(this.x, this.y);
 
@@ -162,7 +217,7 @@ class Position {
 
   static const zero = Position(0, 0);
 
-  static Position fromSize(int size) => Position(size, size);
+  static Position fromSize(double size) => Position(size, size);
 
   Vector2 toVector2() {
     return Vector2(x.toDouble(), y.toDouble());
@@ -192,7 +247,7 @@ extension PositionMathOperators on Position {
     if (other.x == 0 || other.y == 0) {
       throw ArgumentError("Cannot divide by zero in Position division");
     }
-    return Position(x ~/ other.x, y ~/ other.y);
+    return Position(x / other.x, y / other.y);
   }
 
   // For scalar operations, you can define additional methods or extensions.
@@ -200,10 +255,15 @@ extension PositionMathOperators on Position {
     return Position(x * scalar, y * scalar);
   }
 
-  Position divideByScalar(int scalar) {
+  Position divideByScalar(double scalar) {
     if (scalar == 0) {
       throw ArgumentError("Cannot divide by zero scalar");
     }
-    return Position(x ~/ scalar, y ~/ scalar);
+    return Position(x / scalar, y / scalar);
   }
+}
+
+enum AxisDirection {
+  horizontal,
+  vertical,
 }

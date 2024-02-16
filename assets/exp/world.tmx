@@ -3,10 +3,10 @@
  <tileset firstgid="1" source="measured.tsx"/>
  <layer id="1" name="Ground" width="4" height="4">
   <data encoding="csv">
-4,5,6,5,
-6,4,4,6,
-5,6,4,5,
-6,4,5,4
+11,5,6,5,
+6,11,11,6,
+5,6,11,5,
+6,11,5,11
 </data>
  </layer>
  <objectgroup id="2" name="Farms">
