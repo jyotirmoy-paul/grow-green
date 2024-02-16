@@ -7,8 +7,7 @@ enum TreeType implements Growable {
   teakwood,
   cocounut,
   jackfruit,
-  mango,
-  none;
+  mango;
 
   @override
   GrowableType getGrowableType() => GrowableType.tree;

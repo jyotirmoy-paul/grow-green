@@ -1,6 +1,6 @@
-import '../../../../../../enums/agroforestry_type.dart';
-
+import '../../../../../../enums/system_type.dart';
 import '../components/crop/enums/crop_type.dart';
+import '../components/system/real_life/utils/cost_calculator.dart';
 import '../components/tree/enums/tree_type.dart';
 import 'content.dart';
 import 'fertilizer/fertilizer_type.dart';
@@ -9,14 +9,27 @@ class FarmContent {
   final Content<CropType>? crop;
   final List<Content<TreeType>>? trees;
   final Content<FertilizerType>? fertilizer;
-  final AgroforestryType? agroforestryType;
+  final SystemType systemType;
 
   FarmContent({
+    required this.systemType,
     this.crop,
     this.trees,
     this.fertilizer,
-    this.agroforestryType,
   });
+
+  int get priceOfFarmContent {
+    final priceOfCrop = crop != null ? CostCalculator.seedCost(cropType: crop!.type, systemType: systemType) : 0;
+
+    final priceOfTrees = trees != null
+        ? trees!.fold(0, (pv, tree) => pv + CostCalculator.saplingCost(systemType: systemType, treeType: tree.type))
+        : 0;
+
+    /// TODO: use cost calculator
+    final priceOfFertilizer = fertilizer != null ? 10000 : 0;
+
+    return priceOfCrop + priceOfTrees + priceOfFertilizer;
+  }
 
   bool get hasOnlyCrops => (crop != null && crop!.isNotEmpty) && (trees == null || trees!.isEmpty);
 
@@ -29,6 +42,6 @@ class FarmContent {
 
   @override
   String toString() {
-    return 'FarmContent(crop: $crop, trees: $trees, agroforestryType: $agroforestryType, fertilizer: $fertilizer)';
+    return 'FarmContent(crop: $crop, trees: $trees, systemType: $systemType, fertilizer: $fertilizer)';
   }
 }

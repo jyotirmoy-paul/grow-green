@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../game/game/grow_green_game.dart';
+import '../../../game/game/world/components/land/overlays/bill_menu/bill_menu.dart';
 import '../../../game/game/world/components/land/overlays/component_selector_menu/component_selector_menu.dart';
 import '../../../game/game/world/components/land/overlays/system_selector_menu/bloc/system_selector_menu_bloc.dart';
 import '../../../game/game/world/components/land/overlays/system_selector_menu/system_selector_menu.dart';
@@ -16,6 +17,7 @@ class GameScreen extends StatelessWidget {
   static const overlayBuilderMap = <String, Widget Function(BuildContext, GrowGreenGame)>{
     SystemSelectorMenu.overlayName: SystemSelectorMenu.builder,
     ComponentSelectorMenu.overlayName: ComponentSelectorMenu.builder,
+    BillMenu.overlayName: BillMenu.builder,
   };
 
   @override

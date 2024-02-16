@@ -5,6 +5,11 @@ class Qty {
   final Scale scale;
 
   const Qty({required this.value, required this.scale});
+
+  @override
+  String toString() {
+    return 'Qty($value, $scale)';
+  }
 }
 
 enum Scale { kg, units }

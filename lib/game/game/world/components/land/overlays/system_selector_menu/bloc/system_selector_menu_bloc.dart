@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import '../../../../../../../../services/log/log.dart';
 import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../enums/farm_system_type.dart';
+import '../../../../../../enums/system_type.dart';
 import '../../../../../../grow_green_game.dart';
 import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/components/crop/enums/crop_type.dart';
@@ -15,6 +16,7 @@ import '../../../components/farm/components/tree/enums/tree_type.dart';
 import '../../../components/farm/model/content.dart';
 import '../../../components/farm/model/farm_content.dart';
 import '../../../components/farm/model/fertilizer/fertilizer_type.dart';
+import '../../bill_menu/bill_menu.dart';
 import '../../component_selector_menu/component_selector_menu.dart';
 import '../enum/component_id.dart';
 import '../model/ssm_child_model.dart';
@@ -30,6 +32,7 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
 
   /// call back can be set by host widget
   VoidCallback? onCloseMenu;
+  VoidCallback? onChildShow;
 
   /// systems
   final List<FarmSystem> _farmSystems;
@@ -90,26 +93,27 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
     Content<CropType>? crop;
     List<Content<TreeType>>? trees;
     Content<FertilizerType>? fertilizer;
-    AgroforestryType? agroforestryType;
+    late SystemType systemType;
 
     if (farmSystem.farmSystemType == FarmSystemType.monoculture) {
       final system = farmSystem as MonocultureSystem;
 
       crop = system.crop;
       fertilizer = system.fertilizer;
+      systemType = FarmSystemType.monoculture;
     } else {
       final system = farmSystem as AgroforestrySystem;
 
       crop = system.crop;
       trees = system.trees;
-      agroforestryType = system.agroforestryType;
+      systemType = system.agroforestryType;
     }
 
     return FarmContent(
       crop: crop,
       trees: trees,
       fertilizer: fertilizer,
-      agroforestryType: agroforestryType,
+      systemType: systemType,
     );
   }
 
@@ -268,33 +272,45 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
     closeComponentSelection();
   }
 
-  void _onContinueEvent(SystemSelectorMenuContinueEvent event, Emitter<SystemSelectorMenuState> emit) {
+  void _onContinueEvent(SystemSelectorMenuContinueEvent event, Emitter<SystemSelectorMenuState> emit) async {
     final currentState = state;
 
     if (currentState is SystemSelectorMenuChooseSystem) {
       final system = _farmSystems[currentState.selectedIndex];
 
-      return emit(
+      emit(
         SystemSelectorMenuChooseComponent(
           parentModel: _getParentModelFromSystem(system),
           childModels: _getChildModelOfSystem(system),
           farmSystem: system,
         ),
       );
+
+      return onChildShow?.call();
     }
 
     if (currentState is SystemSelectorMenuChooseComponent) {
-      final farm = game.gameController.overlayData.farm;
-
-      /// initialize farm with system
-      farm.farmController.updateFarmComposition(
-        farmContent: _getFarmContentFromSystem(currentState.farmSystem),
+      /// set data to farm content
+      game.gameController.overlayData.farmContent = _getFarmContentFromSystem(
+        currentState.farmSystem,
       );
 
-      /// close
-      onCloseMenu?.call();
+      /// show bill menu
+      game.overlays.add(BillMenu.overlayName);
 
-      return;
+      /// wait until overlay is closed
+      while (true) {
+        await Future.delayed(const Duration(milliseconds: 1));
+        if (!game.overlays.isActive(BillMenu.overlayName)) {
+          break;
+        }
+      }
+
+      if (game.gameController.overlayData.stayOnSystemSelectorMenu) {
+        return onChildShow?.call();
+      } else {
+        return onCloseMenu?.call();
+      }
     }
   }
 

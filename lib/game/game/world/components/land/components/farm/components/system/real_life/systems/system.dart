@@ -1,8 +1,8 @@
 import '../../../../../../../../../enums/system_type.dart';
 import '../../../crop/enums/crop_type.dart';
 import '../calculators/base_crop.dart';
-import 'database/layouts.dart';
 import '../calculators/qty.dart';
+import 'database/layouts.dart';
 
 class System {
   final SystemType systemType;
