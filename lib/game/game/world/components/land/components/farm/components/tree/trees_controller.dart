@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 
 import '../../../../../../../../../services/log/log.dart';
@@ -36,13 +35,15 @@ class TreesController {
 
     for (final position in treePositions) {
       final cartPosition = position.toVector2().toCart(farmSize.half());
+      final originalTreeSize = treeAsset.size;
 
       Log.i('$tag: Drawing tree at position: $position, cartPosition: $cartPosition');
 
       spriteBatch.add(
-        source: treeSize.toRect(),
+        source: originalTreeSize.toRect(),
         offset: cartPosition,
-        anchor: Vector2(treeSize.x / 2, 0),
+        anchor: Vector2(originalTreeSize.x / 2, 0),
+        scale: treeSize.length / originalTreeSize.length,
       );
     }
 

@@ -107,17 +107,15 @@ class FarmController {
       throw Exception('$tag: _setupFarmFromScratch not implemented for monoculture');
     } else {
       /// agroforestry system
+      const treeSize = 150.0;
+      const cropSize = 50.0;
       final layoutDistributor = LayoutDistribution(
         systemType: farmContent.systemType,
         treeType: farmContent.trees![0].type,
         cropType: farmContent.crop!.type,
-
-        /// TODO: Need to come back to this!
-        /// This is assuming there will be 10 trees in the farm
-        /// And each crops are 1/3rd the size of trees
-        size: farmRect.width.toInt(),
-        treeSize: farmRect.width.toInt() ~/ 5,
-        cropSize: (farmRect.width.toInt() ~/ 5) ~/ 3,
+        size: farmRect.width,
+        treeSize: treeSize,
+        cropSize: cropSize,
       );
 
       final farmDistribution = layoutDistributor.getDistribution();

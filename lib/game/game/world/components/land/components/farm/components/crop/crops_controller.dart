@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 
 import '../../../../../../../../../services/log/log.dart';
@@ -32,17 +31,20 @@ class CropsController {
   }) async {
     this.game = game;
 
-    final cropAsset = await game.images.load('tiles/maize.png');
+    final cropAsset = await game.images.load('tiles/banana_iso.png');
     healthyCropSpriteBatch = SpriteBatch(cropAsset);
 
     for (final position in cropPositions) {
       final cartPosition = position.toVector2().toCart(farmSize.half());
+      final originCropSize = cropAsset.size;
+
       Log.i('$tag: Drawing tree at position: $position, cartPosition: $cartPosition');
 
       healthyCropSpriteBatch.add(
-        source: cropSize.toRect(),
+        source: originCropSize.toRect(),
         offset: cartPosition,
-        anchor: Vector2(cropSize.x / 2, 0),
+        anchor: Vector2(originCropSize.x / 2, 0),
+        scale: cropSize.length / originCropSize.length,
       );
     }
 
