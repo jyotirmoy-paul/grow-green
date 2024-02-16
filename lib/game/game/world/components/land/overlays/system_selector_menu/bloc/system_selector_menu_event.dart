@@ -46,19 +46,24 @@ class SystemSelectorMenuChildTapEvent extends SystemSelectorMenuEvent {
 
 /// choose tree for a system
 class SystemSelectorMenuChooseTreesEvent extends SystemSelectorMenuEvent {
-  final List<Content<TreeType>> trees;
+  final TreeType tree;
+  final int componentTappedIndex;
 
   const SystemSelectorMenuChooseTreesEvent({
-    required this.trees,
+    required this.tree,
+    required this.componentTappedIndex,
   });
 
   @override
-  List<Object> get props => [trees];
+  List<Object> get props => [
+        tree,
+        componentTappedIndex,
+      ];
 }
 
 /// choose crops for a system
 class SystemSelectorMenuChooseCropsEvent extends SystemSelectorMenuEvent {
-  final Content<CropType> crop;
+  final CropType crop;
 
   const SystemSelectorMenuChooseCropsEvent({
     required this.crop,
@@ -70,7 +75,7 @@ class SystemSelectorMenuChooseCropsEvent extends SystemSelectorMenuEvent {
 
 /// choose fertilizer for a system
 class SystemSelectorMenuChooseFertilizerEvent extends SystemSelectorMenuEvent {
-  final Content<FertilizerType> fertilizer;
+  final FertilizerType fertilizer;
 
   const SystemSelectorMenuChooseFertilizerEvent({
     required this.fertilizer,

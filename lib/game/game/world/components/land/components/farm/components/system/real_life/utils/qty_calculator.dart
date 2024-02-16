@@ -1,13 +1,16 @@
 // Values are per hacter
 
+import '../../../../../../../../../enums/system_type.dart';
 import '../../../crop/enums/crop_type.dart';
-import '../../system_type.dart';
-import '../systems/system.dart';
 import '../calculators/qty.dart';
+import '../systems/system.dart';
 
 abstract class QtyCalculator {
-  static int getNumOfSaplingsFor(SystemType systemType) {
-    return System(systemType: systemType).plantationLayout.numberOfTrees;
+  static Qty getNumOfSaplingsFor(SystemType systemType) {
+    return Qty(
+      value: System(systemType: systemType).plantationLayout.numberOfTrees,
+      scale: Scale.units,
+    );
   }
 
   static Qty getSeedQtyRequireFor({required systemType, required CropType cropType}) {

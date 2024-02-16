@@ -1,25 +1,27 @@
+import '../components/system/real_life/calculators/qty.dart';
+
 /// quantity is in game units
 class Content<T extends Enum> {
   final T type;
-  final int quantity;
+  final Qty qty;
 
-  Content({
+  const Content({
     required this.type,
-    required this.quantity,
+    required this.qty,
   });
 
   @override
   String toString() {
-    return 'Content(${type.name}, $quantity)';
+    return 'Content(${type.name}, $qty)';
   }
 
   factory Content.empty(T type) {
     return Content<T>(
       type: type,
-      quantity: 0,
+      qty: const Qty(value: 0, scale: Scale.units),
     );
   }
 
-  bool get isEmpty => quantity == 0;
+  bool get isEmpty => qty.value == 0;
   bool get isNotEmpty => !isEmpty;
 }

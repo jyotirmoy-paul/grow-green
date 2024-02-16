@@ -1,4 +1,4 @@
-import 'package:growgreen/game/game/world/components/land/components/farm/components/system/real_life/calculators/qty.dart';
+import '../qty.dart';
 
 import '../../../../../../../../utils/month.dart';
 import '../../../../crop/enums/crop_type.dart';

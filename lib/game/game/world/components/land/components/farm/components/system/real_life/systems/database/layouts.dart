@@ -1,5 +1,8 @@
 // This is assuming one hactar area
-import '../../../system_type.dart';
+
+import '../../../../../../../../../../enums/agroforestry_type.dart';
+import '../../../../../../../../../../enums/farm_system_type.dart';
+import '../../../../../../../../../../enums/system_type.dart';
 
 class PlantationLayout {
   final int numberOfTrees;
@@ -31,14 +34,19 @@ class PlantationLayout {
 
   factory PlantationLayout.fromSytemType(SystemType type) {
     switch (type) {
-      case SystemType.boundary:
+      case AgroforestryType.boundary:
         return boundary;
-      case SystemType.alley:
+
+      case AgroforestryType.alley:
         return alleyCropping;
-      case SystemType.block:
+
+      case AgroforestryType.block:
         return blockPlantation;
-      case SystemType.monocrop:
+
+      case FarmSystemType.monoculture:
         return monoPlantation;
     }
+
+    throw Exception('Please specify agroforestry type using AgroforestryType enum!');
   }
 }

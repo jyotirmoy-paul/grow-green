@@ -1,4 +1,4 @@
-import 'package:growgreen/game/game/world/components/land/components/farm/components/system/growable.dart';
+import '../../system/growable.dart';
 
 enum TreeType implements Growable {
   mahagony,
