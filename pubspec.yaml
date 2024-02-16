@@ -36,6 +36,7 @@ flutter:
   assets:
     - assets/images/tile_maps/
     - assets/images/tiles/
+    - assets/images/clouds/
     - assets/exp/
 
   fonts:
