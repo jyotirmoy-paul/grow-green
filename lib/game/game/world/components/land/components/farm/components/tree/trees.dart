@@ -4,13 +4,12 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../grow_green_game.dart';
-import '../system/ui/layout_distribution.dart';
 import 'enums/tree_type.dart';
 import 'trees_controller.dart';
 
 class Trees extends PositionComponent with HasGameRef<GrowGreenGame> {
   final Vector2 farmSize;
-  final List<Position> treePositions;
+  final List<Vector2> treePositions;
   final Vector2 treeSize;
   final TreeType treeType;
   final TreesController treesController;

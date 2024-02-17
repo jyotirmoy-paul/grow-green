@@ -1,9 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../../../../services/log/log.dart';
-import '../../../../../enums/farm_system_type.dart';
 import '../../../../../grow_green_game.dart';
 import 'components/crop/crops.dart';
 import 'components/system/growable.dart';
@@ -15,10 +13,6 @@ import 'model/farm_content.dart';
 
 class FarmController {
   static const tag = 'FarmController';
-
-  /// generated content of the farm
-  final _treesComponent = [];
-  final _cropsComponent = [];
 
   Trees? _trees;
   Crops? _crops;
@@ -102,60 +96,59 @@ class FarmController {
   }
 
   void _setupFarmFromScratch(FarmContent farmContent) {
-    if (farmContent.systemType == FarmSystemType.monoculture) {
-      /// monoculture system
-      throw Exception('$tag: _setupFarmFromScratch not implemented for monoculture');
-    } else {
-      /// agroforestry system
-      const treeSize = 150.0;
-      const cropSize = 50.0;
-      final layoutDistributor = LayoutDistribution(
-        systemType: farmContent.systemType,
-        treeType: farmContent.trees![0].type,
-        cropType: farmContent.crop!.type,
-        size: farmRect.width,
-        treeSize: treeSize,
-        cropSize: cropSize,
-      );
+    /// agroforestry system
+    const treeSize = 50.0;
+    const cropSize = 25.0;
 
-      final farmDistribution = layoutDistributor.getDistribution();
+    final layoutDistributor = LayoutDistribution(
+      systemType: farmContent.systemType,
+      size: farmRect.width,
+      treeSize: treeSize,
+      cropSize: cropSize,
+    );
 
-      Log.i('$tag: farmDistribution: $farmDistribution');
+    final farmDistribution = layoutDistributor.getDistribution();
 
-      final treePositions = <Position>[];
-      final cropPositions = <Position>[];
+    Log.i('$tag: farmDistribution: $farmDistribution');
 
-      /// populate tree & crop positions
-      for (final growablePosition in farmDistribution) {
-        switch (growablePosition.growable.getGrowableType()) {
-          case GrowableType.tree:
-            treePositions.add(growablePosition.pos);
-            break;
+    final treePositions = <Vector2>[];
+    final cropPositions = <Vector2>[];
 
-          case GrowableType.crop:
-            cropPositions.add(growablePosition.pos);
-            break;
-        }
+    /// populate tree & crop positions
+    for (final growablePosition in farmDistribution) {
+      switch (growablePosition.growable) {
+        case GrowableType.tree:
+          treePositions.add(growablePosition.pos);
+          break;
+
+        case GrowableType.crop:
+          cropPositions.add(growablePosition.pos);
+          break;
       }
+    }
 
-      /// build trees & crops components
+    /// build trees & crops components
+    if (farmContent.hasOnlyCrops) {
+      _trees = null;
+    } else {
       _trees = Trees(
         treeType: farmContent.trees![0].type,
         treeSize: Vector2(layoutDistributor.treeSize.toDouble() * 1.6, layoutDistributor.treeSize.toDouble()),
         treePositions: treePositions,
         farmSize: farm.size,
       );
-
-      _crops = Crops(
-        cropType: farmContent.crop!.type,
-        cropPositions: cropPositions,
-        cropSize: Vector2.all(layoutDistributor.cropSize.toDouble()),
-        farmSize: farm.size,
-      );
-
-      /// add trees & crops to the game
-      addAll([_trees!, _crops!]);
     }
+
+    _crops = Crops(
+      cropType: farmContent.crop!.type,
+      cropPositions: cropPositions,
+      cropSize: Vector2(layoutDistributor.cropSize.toDouble() * 1.6, layoutDistributor.cropSize.toDouble()),
+      farmSize: farm.size,
+    );
+
+    /// add trees & crops to the game
+    if (_trees != null) add(_trees!);
+    if (_crops != null) add(_crops!);
 
     _farmContent = farmContent;
     _farmState = FarmState.functioning;
