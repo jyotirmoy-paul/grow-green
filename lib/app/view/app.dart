@@ -25,6 +25,7 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Grow Green',
+        debugShowCheckedModeBanner: false,
         navigatorKey: Navigation.navigationKey,
         onGenerateRoute: AppRoutes.generateRoutes,
         initialRoute: RouteName.splashScreen.name,

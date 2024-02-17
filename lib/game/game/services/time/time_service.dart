@@ -16,25 +16,41 @@ class TimeService {
 
   late DateTime _dateTime;
   Timer? _timer;
-  int _timeAccelerationFactor = 1;
+  int _timePace = 1;
+  Duration _currentPeriod = Duration.zero;
+
+  final _dateTimeStreamController = StreamController<DateTime>.broadcast();
+  Stream<DateTime> get dateTimeStream => _dateTimeStreamController.stream;
+
+  final _timePaceStreamController = StreamController<int>.broadcast();
+  Stream<int> get timePaceStream => _timePaceStreamController.stream;
 
   void _initializeTimer() {
     /// cancel any existing timer
     _timer?.cancel();
 
+    _currentPeriod = Duration(milliseconds: 1000 ~/ _timePace);
+
     /// start a new timer with new period
     _timer = Timer.periodic(
-      Duration(milliseconds: 1000 ~/ _timeAccelerationFactor),
+      _currentPeriod,
       (_) {
         /// every tick adds one day!
         _dateTime = _dateTime.add(const Duration(days: 1));
         _notifySubscribers();
       },
     );
+
+    /// notify time pace has changed
+    _timePaceStreamController.add(_timePace);
   }
 
   void _notifySubscribers() {
-    for (var subscriber in _subscribers) {
+    /// notify stream subscribers
+    _dateTimeStreamController.add(_dateTime);
+
+    /// notify game component subscribers
+    for (final subscriber in _subscribers) {
       subscriber.onTimeChange(_dateTime);
     }
   }
@@ -46,6 +62,7 @@ class TimeService {
     _dateTime = dateTime ?? DateTime(2000);
 
     _initializeTimer();
+    _notifySubscribers();
   }
 
   void register(TimeAware subscriber) {
@@ -58,12 +75,16 @@ class TimeService {
     _subscribers.remove(subscriber);
   }
 
-  int get timeAccelerationFactor => _timeAccelerationFactor;
-  set timeAccelerationFactor(int v) {
+  /// time acceleration & current period
+
+  int get timePace => _timePace;
+  set timePace(int v) {
     if (v < 0) throw Exception('$tag: timeAccelerationFactor invalid value $v, Factor cannot be negative!');
     if (v < 1) throw Exception('$tag: timeAccelerationFactor invalid value $v, Time cannot be slowed down!');
 
-    _timeAccelerationFactor = v;
+    _timePace = v;
     _initializeTimer();
   }
+
+  Duration get currentPeriod => _currentPeriod;
 }
