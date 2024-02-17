@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../game/game/grow_green_game.dart';
+import '../../../game/game/overlays/game_stat_overlay/cubit/calender_cubit.dart';
+import '../../../game/game/overlays/game_stat_overlay/game_stat_overlay.dart';
 import '../../../game/game/world/components/land/overlays/bill_menu/bill_menu.dart';
 import '../../../game/game/world/components/land/overlays/component_selector_menu/component_selector_menu.dart';
 import '../../../game/game/world/components/land/overlays/system_selector_menu/bloc/system_selector_menu_bloc.dart';
@@ -18,12 +20,12 @@ class GameScreen extends StatelessWidget {
     SystemSelectorMenu.overlayName: SystemSelectorMenu.builder,
     ComponentSelectorMenu.overlayName: ComponentSelectorMenu.builder,
     BillMenu.overlayName: BillMenu.builder,
+    GameStatOverlay.overlayName: GameStatOverlay.builder,
   };
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      key: kDebugMode ? UniqueKey() : const ValueKey('game-screen'),
       providers: [
         BlocProvider(
           create: (_) => GameBloc(),
@@ -33,12 +35,18 @@ class GameScreen extends StatelessWidget {
             game: context.read<GameBloc>().state.game,
           ),
         ),
+        BlocProvider(
+          create: (context) => CalenderCubit(),
+        ),
       ],
       child: BlocBuilder<GameBloc, GameState>(
         builder: (_, state) {
           return GameWidget<GrowGreenGame>(
             game: state.game,
             overlayBuilderMap: overlayBuilderMap,
+            initialActiveOverlays: const [
+              GameStatOverlay.overlayName,
+            ],
           );
         },
       ),
