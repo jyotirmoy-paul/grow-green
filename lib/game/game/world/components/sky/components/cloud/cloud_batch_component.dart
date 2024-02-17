@@ -5,6 +5,7 @@ import 'package:flame/extensions.dart';
 
 import '../../../../../grow_green_game.dart';
 import '../../../../../services/time/time_aware.dart';
+import '../../../../../services/time/time_service.dart';
 import 'cloud_batch_component_controller.dart';
 
 class CloudBatchComponent extends PositionComponent with HasGameRef<GrowGreenGame>, TimeAware {
@@ -24,7 +25,8 @@ class CloudBatchComponent extends PositionComponent with HasGameRef<GrowGreenGam
 
   @override
   void update(double dt) {
-    cloudController.update(dt);
+    /// add time pace affect to cloud animations
+    cloudController.update(dt * TimeService().timePace);
     super.update(dt);
   }
 
