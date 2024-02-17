@@ -16,6 +16,8 @@ class GameUtils {
   final double isoAngle;
   final double isoScaleFactor;
 
+  final math.Random _random = math.Random();
+
   static GameUtils? _instance;
   GameUtils._(this.gameWorldSize)
       : isoAngle = math.atan(gameWorldSize.y / gameWorldSize.x),
@@ -31,5 +33,10 @@ class GameUtils {
 
   factory GameUtils.initializeWithWorldSize(Vector2 gameWorldSize) {
     return _instance = GameUtils._(gameWorldSize);
+  }
+
+  /// generates random double between `min` & `max` values
+  double getRandomNumberBetween({required double min, required double max}) {
+    return _random.nextDouble() * (max - min) + min;
   }
 }

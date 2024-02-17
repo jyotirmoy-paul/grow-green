@@ -65,25 +65,21 @@ class LayoutDistribution {
     final topRow = _fillRow(
       growable: growable,
       row: origin,
-      start: 0,
       size: boundarySize,
     );
     final bottomRow = _fillRow(
       growable: growable,
       row: boundarySize - growableSize,
-      start: 0,
       size: boundarySize,
     );
     final leftColumn = _fillColumn(
       growable: growable,
       column: origin,
-      start: 0,
       size: boundarySize,
     );
     final rightColumn = _fillColumn(
       growable: growable,
       column: boundarySize - growableSize,
-      start: 0,
       size: boundarySize,
     );
 
@@ -120,13 +116,11 @@ class LayoutDistribution {
 
   LayoutData _fillRow({
     required Growable growable,
-    required double start,
     required double size,
     required double row, // Assuming this is the constant X-coordinate for all positions in the column
   }) {
     return _fillLayout(
       growable: growable,
-      start: start,
       size: size,
       direction: AxisDirection.horizontal,
       position: row,
@@ -135,13 +129,11 @@ class LayoutDistribution {
 
   LayoutData _fillColumn({
     required Growable growable,
-    required double start,
     required double size,
     required double column, // Assuming this is the constant X-coordinate for all positions in the column
   }) {
     return _fillLayout(
       growable: growable,
-      start: start,
       size: size,
       direction: AxisDirection.vertical,
       position: column,
@@ -153,7 +145,6 @@ class LayoutDistribution {
     required double position,
     required AxisDirection direction,
     required double size,
-    required double start,
   }) {
     // Calculate the size based on the start and end parameters.
     final growableSize = getGrowableSize(growable);
@@ -166,8 +157,8 @@ class LayoutDistribution {
     final growableTotalSize = spacingPerGrowable + growableSize;
 
     // Adjust getX and getY functions to include the start offset.
-    double getX(int index) => direction == AxisDirection.horizontal ? start + index * growableTotalSize : position;
-    double getY(int index) => direction == AxisDirection.vertical ? start + index * growableTotalSize : position;
+    double getX(int index) => direction == AxisDirection.horizontal ? index * growableTotalSize : position;
+    double getY(int index) => direction == AxisDirection.vertical ? index * growableTotalSize : position;
 
     // Pre-calculate the positions and create GrowablePosition objects in one go.
     List<GrowablePosition> positions = List.generate(numOfGrowables, (i) {

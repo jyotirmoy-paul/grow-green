@@ -23,6 +23,7 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
+      key: kDebugMode ? UniqueKey() : const ValueKey('game-screen'),
       providers: [
         BlocProvider(
           create: (_) => GameBloc(),
@@ -36,7 +37,7 @@ class GameScreen extends StatelessWidget {
       child: BlocBuilder<GameBloc, GameState>(
         builder: (_, state) {
           return GameWidget<GrowGreenGame>(
-            game: kDebugMode ? state.game : state.game,
+            game: state.game,
             overlayBuilderMap: overlayBuilderMap,
           );
         },
