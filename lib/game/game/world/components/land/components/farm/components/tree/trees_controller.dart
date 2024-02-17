@@ -5,7 +5,6 @@ import 'package:flame/sprite.dart';
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
 import '../../../../../../../grow_green_game.dart';
-import '../system/ui/layout_distribution.dart';
 import 'enums/tree_type.dart';
 
 class TreesController {
@@ -14,7 +13,7 @@ class TreesController {
   final TreeType treeType;
   final Vector2 farmSize;
   final Vector2 treeSize;
-  final List<Position> treePositions;
+  final List<Vector2> treePositions;
 
   TreesController({
     required this.treeType,
@@ -34,7 +33,7 @@ class TreesController {
     spriteBatch = SpriteBatch(treeAsset);
 
     for (final position in treePositions) {
-      final cartPosition = position.toVector2().toCart(farmSize.half());
+      final cartPosition = position.toCart(farmSize.half());
       final originalTreeSize = treeAsset.size;
 
       Log.i('$tag: Drawing tree at position: $position, cartPosition: $cartPosition');

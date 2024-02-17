@@ -5,7 +5,6 @@ import 'package:flame/sprite.dart';
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
 import '../../../../../../../grow_green_game.dart';
-import '../system/ui/layout_distribution.dart';
 import 'enums/crop_type.dart';
 
 class CropsController {
@@ -13,7 +12,7 @@ class CropsController {
 
   final CropType cropType;
   final Vector2 cropSize;
-  final List<Position> cropPositions;
+  final List<Vector2> cropPositions;
   final Vector2 farmSize;
 
   CropsController({
@@ -35,7 +34,7 @@ class CropsController {
     healthyCropSpriteBatch = SpriteBatch(cropAsset);
 
     for (final position in cropPositions) {
-      final cartPosition = position.toVector2().toCart(farmSize.half());
+      final cartPosition = position.toCart(farmSize.half());
       final originCropSize = cropAsset.size;
 
       Log.i('$tag: Drawing tree at position: $position, cartPosition: $cartPosition');
