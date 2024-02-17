@@ -8,22 +8,30 @@ class GrowGreenWorldController {
   static const tag = 'GrowGreenWorldController';
 
   late final GrowGreenGame game;
+  late final void Function(Component) add;
+
   late final Land land;
   late final Sky sky;
 
   /// initialize components of the world
-  Future<List<Component>> initialize(GrowGreenGame game) async {
+  Future<List<Component>> initialize({
+    required GrowGreenGame game,
+    required void Function(Component) add,
+  }) async {
     this.game = game;
+    this.add = add;
 
     /// load land
     land = Land();
 
-    /// sky
-    sky = Sky();
+    /// once land is loaded, load the skyc
+    land.loaded.then((_) {
+      sky = Sky();
+      add(sky);
+    });
 
     return [
       land,
-      sky,
     ];
   }
 }

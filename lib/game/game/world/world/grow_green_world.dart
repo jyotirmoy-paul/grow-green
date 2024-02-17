@@ -10,7 +10,10 @@ class GrowGreenWorld extends World with HasGameRef<GrowGreenGame> {
 
   @override
   FutureOr<void> onLoad() async {
-    final components = await worldController.initialize(game);
+    final components = await worldController.initialize(
+      game: game,
+      add: add,
+    );
     addAll(components);
   }
 }

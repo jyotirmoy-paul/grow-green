@@ -10,7 +10,7 @@ class GrowGreenGame extends FlameGame with ScaleDetector {
 
   @override
   FutureOr<void> onLoad() async {
-    debugMode = true;
+    debugMode = false;
     final components = await gameController.initialize(game: this);
     addAll(components);
   }

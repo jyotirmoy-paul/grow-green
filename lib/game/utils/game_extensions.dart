@@ -6,7 +6,7 @@ import 'game_utils.dart';
 
 extension GameExtension on Vector2 {
   Vector2 half() {
-    return Vector2(x / 2.0, y / 2.0);
+    return this / 2;
   }
 
   Vector2 toIso() {
