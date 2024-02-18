@@ -12,8 +12,8 @@ class MaizeCropCalculator extends BaseCropCalculator {
   @override
   List<HarvestPeriod> harvestData() {
     return [
-      HarvestPeriod(sowMonth: Month.jun, harvestMonth: Month.sep),
-      HarvestPeriod(sowMonth: Month.oct, harvestMonth: Month.jan),
+      HarvestPeriod(sowMonth: Month.jun),
+      HarvestPeriod(sowMonth: Month.oct),
     ];
   }
 
@@ -22,4 +22,7 @@ class MaizeCropCalculator extends BaseCropCalculator {
 
   @override
   Qty getSeedsRequiredPerHacter() => const Qty(value: 20, scale: Scale.kg);
+
+  @override
+  int get maxAgeInMonths => 3;
 }

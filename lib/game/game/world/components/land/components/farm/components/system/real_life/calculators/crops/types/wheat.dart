@@ -12,7 +12,7 @@ class WheatCropCalculator extends BaseCropCalculator {
   @override
   List<HarvestPeriod> harvestData() {
     return [
-      HarvestPeriod(sowMonth: Month.oct, harvestMonth: Month.feb),
+      HarvestPeriod(sowMonth: Month.oct),
     ];
   }
 
@@ -21,4 +21,7 @@ class WheatCropCalculator extends BaseCropCalculator {
 
   @override
   Qty getSeedsRequiredPerHacter() => const Qty(value: 100, scale: Scale.kg);
+
+  @override
+  int get maxAgeInMonths => 4;
 }

@@ -2,11 +2,10 @@ import '../../../../../../utils/month.dart';
 
 class HarvestPeriod {
   final Month sowMonth;
-  final Month harvestMonth;
 
-  HarvestPeriod({required this.sowMonth, required this.harvestMonth});
+  HarvestPeriod({required this.sowMonth});
 
   bool contains(Month month) {
-    return (month >= sowMonth) && (month <= harvestMonth);
+    return (month >= sowMonth);
   }
 }

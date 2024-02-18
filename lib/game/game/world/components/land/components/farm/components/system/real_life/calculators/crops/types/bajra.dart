@@ -11,8 +11,8 @@ class BajraCropCalculator extends BaseCropCalculator {
   @override
   List<HarvestPeriod> harvestData() {
     return [
-      HarvestPeriod(sowMonth: Month.jun, harvestMonth: Month.sep),
-      HarvestPeriod(sowMonth: Month.oct, harvestMonth: Month.feb),
+      HarvestPeriod(sowMonth: Month.jun),
+      HarvestPeriod(sowMonth: Month.nov),
     ];
   }
 
@@ -21,4 +21,7 @@ class BajraCropCalculator extends BaseCropCalculator {
 
   @override
   Qty getSeedsRequiredPerHacter() => const Qty(value: 5, scale: Scale.kg);
+
+  @override
+  int get maxAgeInMonths => 4;
 }
