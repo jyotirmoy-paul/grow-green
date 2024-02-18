@@ -2,7 +2,7 @@ import 'package:flame/game.dart';
 import '../../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../../enums/system_type.dart';
-import '../growable.dart';
+import '../enum/growable.dart';
 
 typedef LayoutData = List<GrowablePosition>;
 
@@ -11,6 +11,9 @@ class LayoutDistribution {
   final double size;
   final double treeSize;
   final double cropSize;
+
+  Vector2 get treeSizeVector2 => Vector2(treeSize * 1.6, treeSize);
+  Vector2 get cropSizeVector2 => Vector2(cropSize * 1.6, cropSize);
 
   LayoutDistribution({
     required this.systemType,

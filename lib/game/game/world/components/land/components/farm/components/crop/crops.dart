@@ -14,11 +14,14 @@ class Crops extends PositionComponent with HasGameRef<GrowGreenGame> {
   final CropType cropType;
   final CropsController cropsController;
 
+  DateTime? lifeStartedAt;
+
   Crops({
     required this.cropType,
     required this.cropSize,
     required this.farmSize,
     required this.cropPositions,
+    this.lifeStartedAt,
   }) : cropsController = CropsController(
           cropType: cropType,
           cropSize: cropSize,

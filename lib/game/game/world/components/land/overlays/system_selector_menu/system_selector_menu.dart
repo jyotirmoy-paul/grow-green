@@ -123,9 +123,12 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
 
     switch (farmState) {
       case FarmState.notBought:
+      case FarmState.barren:
+      case FarmState.onlyCropsWaiting:
+      case FarmState.treesAndCropsButCropsWaiting:
         throw Exception('$tag: _init(): System Selector Menu opened in invalid farm state: $farmState');
 
-      case FarmState.notInitialized:
+      case FarmState.notFunctioning:
         return systemSelectorMenuBloc.add(const SystemSelectorMenuChildTapEvent(tappedIndex: 0, chooseSystem: true));
 
       case FarmState.functioning:
@@ -133,8 +136,6 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
 
       case FarmState.functioningOnlyTrees:
       case FarmState.functioningOnlyCrops:
-      case FarmState.notFunctioning:
-        return systemSelectorMenuBloc.add(const SystemSelectorMenuViewComponentsEvent(editable: true));
     }
   }
 

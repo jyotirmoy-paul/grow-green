@@ -18,6 +18,29 @@ class FarmContent {
     this.fertilizer,
   });
 
+  FarmContent removeCrop() {
+    return FarmContent(
+      crop: null,
+      trees: trees,
+      fertilizer: fertilizer,
+      systemType: systemType,
+    );
+  }
+
+  FarmContent copyWith({
+    Content<CropType>? crop,
+    List<Content<TreeType>>? trees,
+    Content<FertilizerType>? fertilizer,
+    SystemType? systemType,
+  }) {
+    return FarmContent(
+      crop: crop ?? this.crop,
+      trees: trees ?? this.trees,
+      fertilizer: fertilizer ?? this.fertilizer,
+      systemType: systemType ?? this.systemType,
+    );
+  }
+
   int get priceOfFarmContent {
     final priceOfCrop = crop != null ? CostCalculator.seedCost(cropType: crop!.type, systemType: systemType) : 0;
 

@@ -36,8 +36,6 @@ class TreesController {
       final cartPosition = position.toCart(farmSize.half());
       final originalTreeSize = treeAsset.size;
 
-      Log.i('$tag: Drawing tree at position: $position, cartPosition: $cartPosition');
-
       spriteBatch.add(
         source: originalTreeSize.toRect(),
         offset: cartPosition,

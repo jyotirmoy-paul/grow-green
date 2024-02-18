@@ -1,4 +1,4 @@
-import '../components/system/real_life/calculators/qty.dart';
+import '../components/system/model/qty.dart';
 
 /// quantity is in game units
 class Content<T extends Enum> {

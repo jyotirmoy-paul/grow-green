@@ -1,6 +1,7 @@
 import '../../../../../../../../../../../../../../services/log/log.dart';
 import '../../../../../../tree/enums/tree_type.dart';
-import '../../tree_calculators.dart';
+import '../../base_tree.dart';
+import '../../point_data.dart';
 
 // source -
 // https://signuptrendingnature.com/rosewood-tree-farming-profit-per-acre/

@@ -2,8 +2,11 @@ enum FarmState {
   /// farm is not bought yet
   notBought,
 
-  /// farm is bought, but non further action is taken
-  notInitialized,
+  /// farm is initialized with only crops, and we are waiting as it's not the correct time for sow
+  onlyCropsWaiting,
+
+  /// farm is initialized with crops & trees, and we are waiting for the crops as it's not correct sow time
+  treesAndCropsButCropsWaiting,
 
   /// farm is at work, crops & trees / crops are getting grown
   functioning,
@@ -16,4 +19,7 @@ enum FarmState {
 
   /// nothing in the farm to act on
   notFunctioning,
+
+  /// nothing can be done now, the farm is completely lost!
+  barren,
 }

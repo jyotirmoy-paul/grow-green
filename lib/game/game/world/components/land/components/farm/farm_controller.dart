@@ -1,48 +1,29 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
-import '../../../../../../../services/log/log.dart';
 import '../../../../../grow_green_game.dart';
-import 'components/crop/crops.dart';
-import 'components/system/growable.dart';
-import 'components/system/ui/layout_distribution.dart';
-import 'components/tree/trees.dart';
 import 'enum/farm_state.dart';
 import 'farm.dart';
 import 'model/farm_content.dart';
+import 'service/farm_core_service.dart';
 
 class FarmController {
   static const tag = 'FarmController';
 
-  Trees? _trees;
-  Crops? _crops;
-
-  FarmState _farmState = FarmState.notInitialized;
-
-  FarmContent? _farmContent;
-
-  /// support variables
-
   late final GrowGreenGame game;
   late final String farmName;
-  late final Vector2 farmPosition;
   late final Rectangle farmRect;
   late final Farm farm;
-
-  late final void Function(List<Component>) addAll;
-  late final void Function(Component) add;
-  late final void Function(List<Component>) removeAll;
-  late final void Function(Component) remove;
+  late final FarmCoreService _farmCoreService;
 
   bool isFarmSelected = false;
 
-  FarmState get farmState => _farmState;
-  FarmContent? get farmContent => _farmContent;
+  FarmState get farmState => _farmCoreService.farmState;
+  FarmContent? get farmContent => _farmCoreService.farmContent;
 
   Future<List<Component>> initialize({
     required GrowGreenGame game,
     required String farmName,
-    required Vector2 farmPosition,
     required Rectangle farmRect,
     required Farm farm,
     required void Function(List<Component>) addAll,
@@ -52,114 +33,30 @@ class FarmController {
   }) async {
     this.game = game;
     this.farmName = farmName;
-    this.farmPosition = farmPosition;
     this.farmRect = farmRect;
     this.farm = farm;
-    this.addAll = addAll;
-    this.add = add;
-    this.removeAll = removeAll;
-    this.remove = remove;
 
-    /// TODO: read farm's state from db and update all relevant variables
-    /// _currentFarmState
-
-    return [];
-  }
-
-  /// update farm composition, this method is responsible for following:
-  /// 1. Task - Designate positions for crops & trees (if any)
-  /// 2. Instantiate - CropsController, FarmerController & TreeController (if not already)
-  /// 3. Update - CropSupporter (Trees / Fertilizers)
-  void updateFarmComposition({
-    required FarmContent farmContent,
-  }) {
-    Log.i('$tag: updateFarmComposition: $farmContent');
-
-    switch (_farmState) {
-      case FarmState.notBought:
-      case FarmState.functioning:
-        throw Exception('$tag updateFarmComposition invoked in wrong farm state: $_farmState');
-
-      /// nothing is available in the farm, need to setup from scratch
-      case FarmState.notFunctioning:
-      case FarmState.notInitialized:
-        return _setupFarmFromScratch(farmContent);
-
-      /// only trees are functioning, crops can be updated
-      case FarmState.functioningOnlyTrees:
-        return _addCropsToFarm(farmContent);
-
-      /// only crops are functioning, tree spaces are available, trees can be updated
-      case FarmState.functioningOnlyCrops:
-        return _addTreesToFarm(farmContent);
-    }
-  }
-
-  void _setupFarmFromScratch(FarmContent farmContent) {
-    /// agroforestry system
-    const treeSize = 50.0;
-    const cropSize = 25.0;
-
-    final layoutDistributor = LayoutDistribution(
-      systemType: farmContent.systemType,
-      size: farmRect.width,
-      treeSize: treeSize,
-      cropSize: cropSize,
+    /// create farm service
+    _farmCoreService = FarmCoreService(
+      farm: farm,
+      farmRect: farmRect,
+      addComponent: add,
+      addComponents: addAll,
+      removeComponent: remove,
+      removeComponents: removeAll,
     );
 
-    final farmDistribution = layoutDistributor.getDistribution();
-
-    Log.i('$tag: farmDistribution: $farmDistribution');
-
-    final treePositions = <Vector2>[];
-    final cropPositions = <Vector2>[];
-
-    /// populate tree & crop positions
-    for (final growablePosition in farmDistribution) {
-      switch (growablePosition.growable) {
-        case GrowableType.tree:
-          treePositions.add(growablePosition.pos);
-          break;
-
-        case GrowableType.crop:
-          cropPositions.add(growablePosition.pos);
-          break;
-      }
-    }
-
-    /// build trees & crops components
-    if (farmContent.hasOnlyCrops) {
-      _trees = null;
-    } else {
-      _trees = Trees(
-        treeType: farmContent.trees![0].type,
-        treeSize: Vector2(layoutDistributor.treeSize.toDouble() * 1.6, layoutDistributor.treeSize.toDouble()),
-        treePositions: treePositions,
-        farmSize: farm.size,
-      );
-    }
-
-    _crops = Crops(
-      cropType: farmContent.crop!.type,
-      cropPositions: cropPositions,
-      cropSize: Vector2(layoutDistributor.cropSize.toDouble() * 1.6, layoutDistributor.cropSize.toDouble()),
-      farmSize: farm.size,
-    );
-
-    /// add trees & crops to the game
-    if (_trees != null) add(_trees!);
-    if (_crops != null) add(_crops!);
-
-    _farmContent = farmContent;
-    _farmState = FarmState.functioning;
+    /// prepare farm service
+    /// a call to `initialize` returns back initial components that needs to be shown
+    return _farmCoreService.initialize();
   }
 
-  void _addCropsToFarm(FarmContent farmContent) {}
-
-  void _addTreesToFarm(FarmContent farmContent) {}
+  void updateFarmComposition({required FarmContent farmContent}) {
+    _farmCoreService.updateFarmContent(farmContent);
+  }
 
   void onTimeChange(DateTime dateTime) {
-    Log.i('$tag: onTimeChange: $dateTime');
+    _farmCoreService.onTimeChange(dateTime);
   }
 
   TextPainter get textPainter => TextPainter(

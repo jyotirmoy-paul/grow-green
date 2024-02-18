@@ -1,5 +1,7 @@
+import '../../../../../../../../utils/month.dart';
+import '../../../../tree/enums/tree_stage.dart';
 import '../../../../tree/enums/tree_type.dart';
-import 'tree_calculators.dart';
+import 'point_data.dart';
 import 'types/fruit/coconut.dart';
 import 'types/fruit/jackfruit.dart';
 import 'types/fruit/mango.dart';
@@ -17,6 +19,18 @@ abstract class BaseTreeCalculator {
   int get saplingCost;
   AgePriceLinearData agePriceData();
   AgePriceLinearData recurringHarvestData();
+
+  bool canHarvest({
+    required int treeAgeInDays,
+    required Month currentMonth,
+  }) {
+    /// TODO: Implement can harvest
+    return false;
+  }
+
+  TreeStage getTreeStage(int treeAgeInDays) {
+    return TreeStage.adult;
+  }
 
   int getPotentialPrice(int age) {
     assert(harvestReadyAge() <= maturityAge(), "Harvest ready age should be less than or equal to maturity age");

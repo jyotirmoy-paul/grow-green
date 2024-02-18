@@ -2,7 +2,6 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 
-import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
 import '../../../../../../../grow_green_game.dart';
 import 'enums/crop_type.dart';
@@ -36,8 +35,6 @@ class CropsController {
     for (final position in cropPositions) {
       final cartPosition = position.toCart(farmSize.half());
       final originCropSize = cropAsset.size;
-
-      Log.i('$tag: Drawing tree at position: $position, cartPosition: $cartPosition');
 
       healthyCropSpriteBatch.add(
         source: originCropSize.toRect(),

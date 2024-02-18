@@ -1,8 +1,8 @@
 import '../../../../../../../../../enums/system_type.dart';
 import '../../../crop/enums/crop_type.dart';
 import '../../../tree/enums/tree_type.dart';
-import '../calculators/base_crop.dart';
-import '../calculators/trees/tree_calculators.dart';
+import '../calculators/crops/base_crop.dart';
+import '../calculators/trees/base_tree.dart';
 import 'qty_calculator.dart';
 
 class CostCalculator {

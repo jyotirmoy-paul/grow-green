@@ -2,7 +2,7 @@ import '../../enums/agroforestry_type.dart';
 import '../../enums/farm_system_type.dart';
 import '../../models/farm_system.dart';
 import '../../world/components/land/components/farm/components/crop/enums/crop_type.dart';
-import '../../world/components/land/components/farm/components/system/real_life/calculators/qty.dart';
+import '../../world/components/land/components/farm/components/system/model/qty.dart';
 import '../../world/components/land/components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../world/components/land/components/farm/components/tree/enums/tree_type.dart';
 import '../../world/components/land/components/farm/model/content.dart';

@@ -1,5 +1,6 @@
 import '../../../../../../tree/enums/tree_type.dart';
-import '../../tree_calculators.dart';
+import '../../base_tree.dart';
+import '../../point_data.dart';
 
 // source -
 // https://www.agrifarming.in/mango-farming-project-report-cost-and-profit-analysis

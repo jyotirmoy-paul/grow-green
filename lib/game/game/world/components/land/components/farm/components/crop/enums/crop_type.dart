@@ -1,4 +1,4 @@
-import '../../system/growable.dart';
+import '../../system/enum/growable.dart';
 
 enum CropType implements Growable {
   maize,
