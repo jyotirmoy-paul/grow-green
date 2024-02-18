@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../grow_green_game.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
+import '../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/model/content.dart';
 import '../../components/farm/model/farm_content.dart';
@@ -90,7 +91,13 @@ class _BillMenuState extends State<BillMenu> with SingleTickerProviderStateMixin
               BillItem(title: 'Quantity', value: '${crop.qty.value} ${crop.qty.scale.name}'),
               BillItem(
                 title: 'Price',
-                value: 'Rs ${CostCalculator.seedCost(cropType: crop.type, systemType: widget.farmContent.systemType)}',
+                value: 'Rs ${CostCalculator.seedCost(
+                  cropType: crop.type,
+                  seedsRequired: QtyCalculator.getSeedQtyRequireFor(
+                    cropType: crop.type,
+                    systemType: widget.farmContent.systemType,
+                  ),
+                )}',
               ),
             ]
           : const [],
@@ -112,7 +119,7 @@ class _BillMenuState extends State<BillMenu> with SingleTickerProviderStateMixin
                       title: 'Price',
                       value: 'Rs ${CostCalculator.saplingCost(
                         treeType: tree.type,
-                        systemType: widget.farmContent.systemType,
+                        saplingQty: QtyCalculator.getNumOfSaplingsFor(widget.farmContent.systemType),
                       )}',
                     ),
                   ],
