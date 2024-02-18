@@ -2,7 +2,7 @@
 
 import '../../../../../../../../../enums/system_type.dart';
 import '../../../crop/enums/crop_type.dart';
-import '../calculators/qty.dart';
+import '../../model/qty.dart';
 import '../systems/system.dart';
 
 abstract class QtyCalculator {

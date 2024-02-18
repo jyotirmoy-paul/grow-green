@@ -1,4 +1,4 @@
-import '../../../crop/enums/crop_type.dart';
+import '../../../../crop/enums/crop_type.dart';
 
 abstract class CropMarket {
 

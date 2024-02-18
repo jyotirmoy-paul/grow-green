@@ -13,12 +13,14 @@ class Trees extends PositionComponent with HasGameRef<GrowGreenGame> {
   final Vector2 treeSize;
   final TreeType treeType;
   final TreesController treesController;
+  final DateTime lifeStartedAt;
 
   Trees({
     required this.farmSize,
     required this.treeType,
     required this.treeSize,
     required this.treePositions,
+    required this.lifeStartedAt,
   }) : treesController = TreesController(
           treeType: treeType,
           treeSize: treeSize,

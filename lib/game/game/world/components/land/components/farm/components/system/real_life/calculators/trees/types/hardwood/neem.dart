@@ -1,5 +1,6 @@
 import '../../../../../../tree/enums/tree_type.dart';
-import '../../tree_calculators.dart';
+import '../../base_tree.dart';
+import '../../point_data.dart';
 
 // source -
 // https://signuptrendingnature.com/malabar-neem-tree-weight-after-5-years/

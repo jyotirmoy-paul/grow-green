@@ -1,5 +1,6 @@
 import '../../../../../../tree/enums/tree_type.dart';
-import '../../tree_calculators.dart';
+import '../../base_tree.dart';
+import '../../point_data.dart';
 
 // source -
 // https://signuptrendingnature.com/coconut-tree-profit-per-acre-coconut-cult/#5_Is_coconut_the_tree_of_life

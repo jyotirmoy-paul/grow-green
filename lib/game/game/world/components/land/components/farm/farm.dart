@@ -38,7 +38,6 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
     final components = await farmController.initialize(
       game: game,
       farmName: farmName,
-      farmPosition: position,
       farm: this,
       farmRect: farmRect,
       add: add,

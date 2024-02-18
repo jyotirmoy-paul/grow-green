@@ -10,7 +10,7 @@ import '../../../../../../enums/system_type.dart';
 import '../../../../../../grow_green_game.dart';
 import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/components/crop/enums/crop_type.dart';
-import '../../../components/farm/components/system/real_life/calculators/qty.dart';
+import '../../../components/farm/components/system/model/qty.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/components/tree/enums/tree_type.dart';
 import '../../../components/farm/model/content.dart';
