@@ -11,7 +11,7 @@ class PepperCropCalculator extends BaseCropCalculator {
   @override
   List<HarvestPeriod> harvestData() {
     return [
-      HarvestPeriod(sowMonth: Month.may, harvestMonth: Month.jan),
+      HarvestPeriod(sowMonth: Month.may),
     ];
   }
 
@@ -20,4 +20,7 @@ class PepperCropCalculator extends BaseCropCalculator {
 
   @override
   Qty getSeedsRequiredPerHacter() => const Qty(value: 3000, scale: Scale.units);
+
+  @override
+  int get maxAgeInMonths => 8;
 }

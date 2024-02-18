@@ -19,13 +19,23 @@ abstract class BaseTreeCalculator {
   int get saplingCost;
   AgePriceLinearData agePriceData();
   AgePriceLinearData recurringHarvestData();
+  Month? getRecurringHarvestMonth();
 
   bool canHarvest({
     required int treeAgeInDays,
     required Month currentMonth,
   }) {
-    /// TODO: Implement can harvest
-    return false;
+    // Tree is not ready to harvest
+    int ageInYears = treeAgeInDays ~/ 365;
+    if (ageInYears < harvestReadyAge()) return false;
+
+    // The tree does not provide recurring harvest
+    if (getRecurringHarvestMonth() == null) return false;
+
+    // Current month is not the month of harvest
+    if (currentMonth != getRecurringHarvestMonth()) return false;
+
+    return true;
   }
 
   TreeStage getTreeStage(int treeAgeInDays) {

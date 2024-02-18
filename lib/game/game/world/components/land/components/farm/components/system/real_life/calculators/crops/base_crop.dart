@@ -18,6 +18,10 @@ abstract class BaseCropCalculator {
   double getYieldKgPerSquareM();
   Qty getSeedsRequiredPerHacter();
   List<HarvestPeriod> harvestData();
+
+  // Age is calculated including sowing month and excluding harvest month
+  int get maxAgeInMonths;
+
   int getSellingPricePerKg() => CropMarket.pricePerQty(cropType());
 
   bool canSow(Month month) {
@@ -25,13 +29,25 @@ abstract class BaseCropCalculator {
   }
 
   bool canHarvest(int cropAgeInDays) {
-    /// TODO: Implement can harvest in crop age
-    // return harvestData().any((period) => period.harvestMonth == month);
-    return cropAgeInDays > 100;
+    int cropAgeInMonths = cropAgeInDays ~/ 30;
+    return cropAgeInMonths == maxAgeInMonths;
   }
 
   CropStage getCropStage(int cropAgeInDays) {
-    /// TODO: Implement crop stage functionality depending on crop age!
+    int cropAgeInMonths = cropAgeInDays ~/ 30;
+    int percentageGrowth = (cropAgeInMonths / maxAgeInMonths * 100).round();
+
+    switch (percentageGrowth) {
+      case < 10:
+        return CropStage.sowing;
+      case < 30:
+        return CropStage.seedling;
+      case < 80:
+        return CropStage.flowering;
+      case < 100:
+        return CropStage.maturiy;
+    }
+
     return CropStage.flowering;
   }
 

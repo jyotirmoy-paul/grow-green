@@ -1,3 +1,4 @@
+import '../../../../../../../../../../utils/month.dart';
 import '../../../../../../tree/enums/tree_type.dart';
 import '../../base_tree.dart';
 import '../../point_data.dart';
@@ -28,4 +29,7 @@ class MahagonyCalculator extends BaseTreeCalculator {
 
   @override
   int get saplingCost => 100;
+
+  @override
+  Month? getRecurringHarvestMonth() => null;
 }

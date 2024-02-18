@@ -11,8 +11,8 @@ class GroundnutCropCalculator extends BaseCropCalculator {
   @override
   List<HarvestPeriod> harvestData() {
     return [
-      HarvestPeriod(sowMonth: Month.jun, harvestMonth: Month.dec),
-      HarvestPeriod(sowMonth: Month.jan, harvestMonth: Month.jun),
+      HarvestPeriod(sowMonth: Month.jun),
+      HarvestPeriod(sowMonth: Month.jan),
     ];
   }
 
@@ -21,4 +21,7 @@ class GroundnutCropCalculator extends BaseCropCalculator {
 
   @override
   Qty getSeedsRequiredPerHacter() => const Qty(value: 100, scale: Scale.kg);
+
+  @override
+  int get maxAgeInMonths => 6;
 }
