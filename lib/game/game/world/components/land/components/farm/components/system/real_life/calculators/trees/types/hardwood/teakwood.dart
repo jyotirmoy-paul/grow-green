@@ -1,4 +1,5 @@
 import '../../../../../../../../../../../../../../services/log/log.dart';
+import '../../../../../../../../../../utils/month.dart';
 import '../../../../../../tree/enums/tree_type.dart';
 import '../../base_tree.dart';
 import '../../point_data.dart';
@@ -29,6 +30,9 @@ class TeakWoodCalculator extends BaseTreeCalculator {
 
   @override
   int get saplingCost => 50;
+
+  @override
+  Month? getRecurringHarvestMonth() => null;
 }
 
 void main(List<String> args) {

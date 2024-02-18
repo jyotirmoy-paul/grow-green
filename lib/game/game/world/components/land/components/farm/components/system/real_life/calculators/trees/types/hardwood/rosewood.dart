@@ -1,4 +1,5 @@
 import '../../../../../../../../../../../../../../services/log/log.dart';
+import '../../../../../../../../../../utils/month.dart';
 import '../../../../../../tree/enums/tree_type.dart';
 import '../../base_tree.dart';
 import '../../point_data.dart';
@@ -27,6 +28,9 @@ class RosewoodCalculator extends BaseTreeCalculator {
 
   @override
   int get saplingCost => 100;
+
+  @override
+  Month? getRecurringHarvestMonth() => null;
 }
 
 void main(List<String> args) {
