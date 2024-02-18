@@ -1,6 +1,7 @@
 import '../../../../../../enums/system_type.dart';
 import '../components/crop/enums/crop_type.dart';
 import '../components/system/real_life/utils/cost_calculator.dart';
+import '../components/system/real_life/utils/qty_calculator.dart';
 import '../components/tree/enums/tree_type.dart';
 import 'content.dart';
 import 'fertilizer/fertilizer_type.dart';
@@ -42,12 +43,15 @@ class FarmContent {
   }
 
   int get priceOfFarmContent {
-    final priceOfCrop = crop != null ? CostCalculator.seedCost(cropType: crop!.type, systemType: systemType) : 0;
+    final cropsQty = QtyCalculator.getSeedQtyRequireFor(systemType: systemType, cropType: crop!.type);
+    final priceOfCrop = crop != null ? CostCalculator.seedCost(cropType: crop!.type, seedsRequired: cropsQty) : 0;
 
+    final saplingQty = QtyCalculator.getNumOfSaplingsFor(systemType);
     final priceOfTrees = trees != null
-        ? trees!.fold(0, (pv, tree) => pv + CostCalculator.saplingCost(systemType: systemType, treeType: tree.type))
+        ? trees!.fold(0, (pv, tree) => pv + CostCalculator.saplingCost(saplingQty: saplingQty, treeType: tree.type))
         : 0;
 
+    
     /// TODO: use cost calculator
     final priceOfFertilizer = fertilizer != null ? 10000 : 0;
 
