@@ -9,14 +9,19 @@ sealed class SystemSelectorMenuEvent extends Equatable {
 
 /// view components in a particular system
 class SystemSelectorMenuViewComponentsEvent extends SystemSelectorMenuEvent {
-  final bool editable;
+  final List<ComponentId> editableComponents;
+  final bool cropsWaiting;
 
   const SystemSelectorMenuViewComponentsEvent({
-    required this.editable,
+    this.editableComponents = const [],
+    this.cropsWaiting = false,
   });
 
   @override
-  List<Object> get props => [editable];
+  List<Object> get props => [
+        editableComponents,
+        cropsWaiting,
+      ];
 }
 
 class SystemSelectorMenuContinueEvent extends SystemSelectorMenuEvent {

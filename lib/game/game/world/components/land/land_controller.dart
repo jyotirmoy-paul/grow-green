@@ -113,7 +113,7 @@ class LandController {
     /// mark farm as selected
     farm.farmController.isFarmSelected = true;
 
-    /// open farm composition menu
+/// open farm composition menu
     game.gameController.overlayData.farm = farm;
     game.overlays.add(SystemSelectorMenu.overlayName);
   }

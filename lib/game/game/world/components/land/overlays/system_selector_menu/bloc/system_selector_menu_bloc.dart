@@ -10,9 +10,11 @@ import '../../../../../../enums/system_type.dart';
 import '../../../../../../grow_green_game.dart';
 import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/components/crop/enums/crop_type.dart';
+import '../../../components/farm/components/system/enum/growable.dart';
 import '../../../components/farm/components/system/model/qty.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/components/tree/enums/tree_type.dart';
+import '../../../components/farm/farm.dart';
 import '../../../components/farm/model/content.dart';
 import '../../../components/farm/model/farm_content.dart';
 import '../../../components/farm/model/fertilizer/fertilizer_type.dart';
@@ -39,6 +41,7 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
   final List<SsmParentModel> _systemParents = [];
   final List<SsmChildModel> _systemChildren = [];
 
+  late Farm _farm;
   int _lastChoosenSystemIndex = 0;
 
   SsmParentModel _getParentModelFromSystem(FarmSystem farmSystem) {
@@ -89,6 +92,22 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
     }
   }
 
+  FarmSystem _getFarmSystemFromContent(FarmContent content) {
+    /// TODO: revisit this method to fix the null assertions
+    if (content.systemType == FarmSystemType.monoculture) {
+      return MonocultureSystem(
+        fertilizer: content.fertilizer!,
+        crop: content.crop!,
+      );
+    } else {
+      return AgroforestrySystem(
+        agroforestryType: content.systemType as AgroforestryType,
+        trees: content.trees ?? const [],
+        crop: content.crop ?? Content.empty(CropType.bajra),
+      );
+    }
+  }
+
   FarmContent _getFarmContentFromSystem(FarmSystem farmSystem) {
     Content<CropType>? crop;
     List<Content<TreeType>>? trees;
@@ -124,10 +143,14 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
     }
   }
 
+  void setFarm(Farm farm) {
+    _farm = farm;
+  }
+
   SystemSelectorMenuBloc({
     required this.game,
   })  : _farmSystems = game.gameController.gameDatastore.systemDatastore.systems,
-        super(const SystemSelectorMenuInitial()) {
+        super(const SystemSelectorMenuNone()) {
     /// prepare
     _initSystems();
 
@@ -142,12 +165,18 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
   }
 
   void _onChildTapEvent(SystemSelectorMenuChildTapEvent event, Emitter<SystemSelectorMenuState> emit) {
-    if (state is SystemSelectorMenuChooseSystem || state is SystemSelectorMenuInitial || event.chooseSystem) {
+    /// If a child is tapped in `SystemSelectorMenuChooseSystem` state,
+    /// Or `SystemSelectorMenuNone` state that means we must emit choose system event
+    if (state is SystemSelectorMenuChooseSystem || state is SystemSelectorMenuNone || event.chooseSystem) {
       return _onChooseSystemEvent(event.tappedIndex, emit);
     }
 
     if (state is SystemSelectorMenuChooseComponent) {
-      _onChooseComponentsEvent(event.tappedIndex, emit);
+      return _onChooseComponentsEvent(
+        state: state as SystemSelectorMenuChooseComponent,
+        index: event.tappedIndex,
+        emit: emit,
+      );
     }
   }
 
@@ -164,7 +193,24 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
   }
 
   void _onViewComponentsEvent(SystemSelectorMenuViewComponentsEvent event, Emitter<SystemSelectorMenuState> emit) {
-    /// TODO: create farm system from farmcontroller's content to show user the current composition
+    final farmContent = _farm.farmController.farmContent;
+    if (farmContent == null) {
+      throw Exception('$tag: _onViewComponentsEvent invoked with null farmContent!');
+    }
+
+    Log.d('$tag: _onViewComponentsEvent invoked with farmContent: $farmContent');
+
+    final farmSystem = _getFarmSystemFromContent(farmContent);
+
+    emit(
+      SystemSelectorMenuChooseComponent(
+        parentModel: _getParentModelFromSystem(farmSystem),
+        childModels: _getChildModelOfSystem(farmSystem, event.editableComponents),
+        farmSystem: farmSystem,
+        alreadyFunctioningFarm: true,
+        componentsEditable: event.editableComponents,
+      ),
+    );
   }
 
   ComponentId _findTappedChild(int index, List<SsmChildModel> children) {
@@ -179,30 +225,38 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
     return child.componentId;
   }
 
-  void _onChooseComponentsEvent(int index, Emitter<SystemSelectorMenuState> emit) {
-    if (state is! SystemSelectorMenuChooseComponent) {
-      throw Exception('$tag: _onChooseComponentsEvent invoked with wrong current state: $state');
-    }
-
-    final currentState = state as SystemSelectorMenuChooseComponent;
-    final componentId = _findTappedChild(index, currentState.childModels);
+  void _onChooseComponentsEvent({
+    required SystemSelectorMenuChooseComponent state,
+    required int index,
+    required Emitter<SystemSelectorMenuState> emit,
+  }) {
+    final componentId = _findTappedChild(index, state.childModels);
 
     /// process componentId tap
     Log.d('$tag: _onChooseComponentsEvent choosen with component id: $componentId');
 
-    /// update game component selection model
-    game.gameController.overlayData.componentSelectionModel.update(
-      componentId: componentId,
-      componentTappedIndex: index,
-    );
+    if (state.alreadyFunctioningFarm) {
+      /// The farm is already functioning, we may need to show options for only editable components
+      /// And editing anyting / everything will be restricted
+      /// TODO: handle taps here!
+    } else {
+      /// update game component selection model
+      game.gameController.overlayData.componentSelectionModel.update(
+        componentId: componentId,
+        componentTappedIndex: index,
+      );
 
-    /// add overlay if not already added
-    if (!game.overlays.isActive(ComponentSelectorMenu.overlayName)) {
-      game.overlays.add(ComponentSelectorMenu.overlayName);
+      /// add overlay if not already added
+      if (!game.overlays.isActive(ComponentSelectorMenu.overlayName)) {
+        game.overlays.add(ComponentSelectorMenu.overlayName);
+      }
     }
   }
 
-  List<SsmChildModel> _getChildModelOfSystem(FarmSystem farmSystem) {
+  List<SsmChildModel> _getChildModelOfSystem(
+    FarmSystem farmSystem, [
+    List<ComponentId> editableComponents = const [],
+  ]) {
     switch (farmSystem.farmSystemType) {
       case FarmSystemType.monoculture:
         final system = farmSystem as MonocultureSystem;
@@ -211,11 +265,13 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
             componentId: ComponentId.crop,
             shortName: system.crop.type.name,
             image: '',
+            editable: false,
           ),
           SsmChildModel(
             componentId: ComponentId.fertilizer,
             shortName: system.fertilizer.type.name,
             image: '',
+            editable: false,
           ),
         ];
 
@@ -228,6 +284,7 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
                 componentId: ComponentId.trees,
                 shortName: t.type.name,
                 image: '',
+                editable: editableComponents.contains(ComponentId.trees),
               );
             },
           ),
@@ -235,21 +292,31 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
             componentId: ComponentId.agroforestryLayout,
             shortName: system.agroforestryType.name,
             image: '',
+            editable: false,
           ),
           SsmChildModel(
             componentId: ComponentId.crop,
-            shortName: system.crop.type.name,
+            shortName: system.crop.isEmpty ? 'No Crops!' : system.crop.type.name,
             image: '',
+            editable: editableComponents.contains(ComponentId.crop),
           ),
         ];
     }
   }
 
   void _onBack(SystemSelectorMenuBackEvent event, Emitter<SystemSelectorMenuState> emit) {
-    if (state is SystemSelectorMenuChooseSystem) {
+    final currentState = state;
+
+    if (currentState is SystemSelectorMenuChooseSystem) {
       /// close
       onCloseMenu?.call();
-    } else if (state is SystemSelectorMenuChooseComponent) {
+    } else if (currentState is SystemSelectorMenuChooseComponent) {
+      /// If the current state is view only, we can close the menu
+      if (currentState.alreadyFunctioningFarm) {
+        /// close menu
+        return onCloseMenu?.call();
+      }
+
       /// go back to choose system
       emit(
         SystemSelectorMenuChooseSystem(
@@ -290,6 +357,13 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
     }
 
     if (currentState is SystemSelectorMenuChooseComponent) {
+      /// If the farm is already functioning, only diff items price would be shown!
+      /// And any items (tree) sold, the price would get credited to the user!
+      if (currentState.alreadyFunctioningFarm) {
+        /// TODO: handle next tap
+        return onChildShow?.call();
+      }
+
       /// set data to farm content
       game.gameController.overlayData.farmContent = _getFarmContentFromSystem(
         currentState.farmSystem,

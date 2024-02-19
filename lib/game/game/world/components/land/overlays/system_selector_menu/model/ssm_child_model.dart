@@ -6,11 +6,13 @@ class SsmChildModel extends Equatable {
   final ComponentId componentId;
   final String image;
   final String shortName;
+  final bool editable;
 
   const SsmChildModel({
     this.componentId = ComponentId.none,
     required this.shortName,
     required this.image,
+    this.editable = false,
   });
 
   @override
@@ -18,5 +20,6 @@ class SsmChildModel extends Equatable {
         componentId,
         image,
         shortName,
+        editable,
       ];
 }
