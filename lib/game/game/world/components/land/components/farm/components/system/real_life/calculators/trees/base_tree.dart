@@ -1,3 +1,4 @@
+import '../../../../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/month.dart';
 import '../../../../tree/enums/tree_stage.dart';
 import '../../../../tree/enums/tree_type.dart';
@@ -11,6 +12,8 @@ import 'types/hardwood/rosewood.dart';
 import 'types/hardwood/teakwood.dart';
 
 abstract class BaseTreeCalculator {
+  static const tag = 'BaseTreeCalculator';
+
   BaseTreeCalculator({required this.treeType});
 
   final TreeType treeType;
@@ -39,7 +42,21 @@ abstract class BaseTreeCalculator {
   }
 
   TreeStage getTreeStage(int treeAgeInDays) {
-    return TreeStage.adult;
+    final growthFactor = treeAgeInDays / (maturityAge() * 365);
+
+    switch (growthFactor) {
+      case < .03:
+        return TreeStage.seedling;
+
+      case < .3:
+        return TreeStage.plant;
+
+      case < .6:
+        return TreeStage.adult;
+
+      default:
+        return TreeStage.giant;
+    }
   }
 
   int getPotentialPrice(int age) {

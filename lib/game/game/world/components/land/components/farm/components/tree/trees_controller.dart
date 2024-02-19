@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 
+import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
 import '../../../../../../../grow_green_game.dart';
 import '../../asset/tree_asset.dart';
@@ -24,7 +25,7 @@ class TreesController {
   });
 
   late final GrowGreenGame game;
-  late SpriteBatch treeSpriteBatch;
+  SpriteBatch? treeSpriteBatch;
 
   TreeStage treeStage = TreeStage.seedling;
 
@@ -40,7 +41,7 @@ class TreesController {
       final cartPosition = position.toCart(farmSize.half());
       final originalTreeSize = treeAsset.size;
 
-      treeSpriteBatch.add(
+      treeSpriteBatch?.add(
         source: treeSource,
         offset: cartPosition,
         anchor: Vector2(originalTreeSize.x / 2, 0),
@@ -58,10 +59,13 @@ class TreesController {
   }
 
   void render(Canvas canvas) {
-    treeSpriteBatch.render(canvas);
+    treeSpriteBatch?.render(canvas);
   }
 
   void updateTreeStage(TreeStage treeStage) {
+    /// if the tree stage has not changed, no need to update it
+    if (this.treeStage == treeStage) return;
+
     Log.d('$tag: updateTreeStage invoked for $treeType, updating tree stage from ${this.treeStage} to $treeStage');
 
     this.treeStage = treeStage;
