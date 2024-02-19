@@ -52,6 +52,10 @@ class FarmController {
     return _farmCoreService.initialize();
   }
 
+  void purchaseSuccess() {
+    _farmCoreService.purchaseSuccess();
+  }
+
   void updateFarmComposition({required FarmContent farmContent}) {
     _farmCoreService.updateFarmContent(farmContent);
   }

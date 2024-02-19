@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../cubit/calender_cubit.dart';
+import '../../../services/game_services/monetary/monetary_service.dart';
 
-class CalenderStat extends StatelessWidget {
-  const CalenderStat({super.key});
+class MoneyStat extends StatelessWidget {
+  final MonetaryService monetaryService;
+
+  const MoneyStat({
+    super.key,
+    required this.monetaryService,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +19,15 @@ class CalenderStat extends StatelessWidget {
       ),
       margin: const EdgeInsets.all(24.0),
       padding: const EdgeInsets.all(12.0),
-      child: BlocBuilder<CalenderCubit, CalenderState>(
-        builder: (context, state) {
-          if (state.isEmpty) return const SizedBox();
+      child: StreamBuilder(
+        stream: monetaryService.balanceStream,
+        initialData: monetaryService.balance,
+        builder: (context, snapshot) {
+          final money = snapshot.data;
+          if (money == null) return const CircularProgressIndicator();
 
           return Text(
-            '${state.month}, ${state.year}',
+            'Rs ${money.formattedRupees}',
             style: const TextStyle(
               color: Colors.black,
               letterSpacing: 1.0,

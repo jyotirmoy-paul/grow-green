@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../services/log/log.dart';
-import '../../../../services/time/time_service.dart';
+import '../../../../services/game_services/time/time_service.dart';
 import 'abstract_clock.dart';
 
 /// TODO: Refactor this class to use BLoC

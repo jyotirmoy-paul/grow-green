@@ -5,7 +5,7 @@ import 'package:flame/experimental.dart';
 
 import '../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/extensions/date_time_extensions.dart';
-import '../../../../../../services/time/time_service.dart';
+import '../../../../../../services/game_services/time/time_service.dart';
 import '../../../../utils/month.dart';
 import '../components/crop/crops.dart';
 import '../components/system/enum/growable.dart';
@@ -63,9 +63,16 @@ class FarmCoreService {
 
   /// read farm state from db
   Future<List<Component>> initialize() async {
-    _farmState = FarmState.notFunctioning;
+    _farmState = FarmState.notBought;
 
     return const [];
+  }
+
+  void purchaseSuccess() {
+    Log.i('$tag: ${farm.farmName} is successfully purchased!');
+
+    /// move the farm state to not functioning!
+    _farmState = FarmState.notFunctioning;
   }
 
   /// update farm composition, this method is responsible for following:

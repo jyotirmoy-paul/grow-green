@@ -4,8 +4,8 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 
 import '../../../../../grow_green_game.dart';
-import '../../../../../services/time/time_aware.dart';
-import '../../../../../services/time/time_service.dart';
+import '../../../../../services/game_services/time/time_aware.dart';
+import '../../../../../services/game_services/time/time_service.dart';
 import 'cloud_batch_component_controller.dart';
 
 class CloudBatchComponent extends PositionComponent with HasGameRef<GrowGreenGame>, TimeAware {
