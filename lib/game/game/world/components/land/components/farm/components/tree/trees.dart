@@ -31,12 +31,14 @@ class Trees extends PositionComponent with HasGameRef<GrowGreenGame> {
 
   @override
   FutureOr<void> onLoad() async {
-    debugMode = true;
-    debugColor = Colors.white;
-
     final components = await treesController.initialize(game: game);
-
     addAll(components);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    treesController.update(dt);
   }
 
   @override
