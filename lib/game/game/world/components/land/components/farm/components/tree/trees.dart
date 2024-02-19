@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../grow_green_game.dart';
+import 'enums/tree_stage.dart';
 import 'enums/tree_type.dart';
 import 'trees_controller.dart';
 
@@ -43,4 +44,6 @@ class Trees extends PositionComponent with HasGameRef<GrowGreenGame> {
     super.render(canvas);
     treesController.render(canvas);
   }
+
+  void updateTreeStage(TreeStage treeStage) => treesController.updateTreeStage(treeStage);
 }

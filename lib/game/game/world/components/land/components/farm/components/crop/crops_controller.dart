@@ -2,8 +2,11 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 
+import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
 import '../../../../../../../grow_green_game.dart';
+import '../../asset/crop_asset.dart';
+import 'enums/crop_stage.dart';
 import 'enums/crop_type.dart';
 
 class CropsController {
@@ -22,32 +25,49 @@ class CropsController {
   });
 
   late final GrowGreenGame game;
-  late final SpriteBatch healthyCropSpriteBatch;
+  late SpriteBatch cropSpriteBatch;
+
+  CropStage cropStage = CropStage.sowing;
+
+  void _populateSpriteBatch() async {
+    final cropAsset = await game.images.load(CropAsset.of(cropType).at(cropStage));
+    cropSpriteBatch = SpriteBatch(cropAsset);
+
+    final originCropSize = cropAsset.size;
+    final cropSource = originCropSize.toRect();
+
+    cropSpriteBatch.clear();
+
+    for (final position in cropPositions) {
+      final cartPosition = position.toCart(farmSize.half());
+
+      cropSpriteBatch.add(
+        source: cropSource,
+        offset: cartPosition,
+        anchor: Vector2(originCropSize.x / 2, 0),
+        scale: cropSize.length / originCropSize.length,
+      );
+    }
+  }
 
   Future<List<Component>> initialize({
     required GrowGreenGame game,
   }) async {
     this.game = game;
 
-    final cropAsset = await game.images.load('tiles/banana_iso.png');
-    healthyCropSpriteBatch = SpriteBatch(cropAsset);
-
-    for (final position in cropPositions) {
-      final cartPosition = position.toCart(farmSize.half());
-      final originCropSize = cropAsset.size;
-
-      healthyCropSpriteBatch.add(
-        source: originCropSize.toRect(),
-        offset: cartPosition,
-        anchor: Vector2(originCropSize.x / 2, 0),
-        scale: cropSize.length / originCropSize.length,
-      );
-    }
+    _populateSpriteBatch();
 
     return const [];
   }
 
   void render(Canvas canvas) {
-    healthyCropSpriteBatch.render(canvas);
+    cropSpriteBatch.render(canvas);
+  }
+
+  void updateCropStage(CropStage cropStage) {
+    Log.d('$tag: updateCropStage invoked for $cropType, updating crop stage from ${this.cropStage} to $cropStage');
+
+    this.cropStage = cropStage;
+    _populateSpriteBatch();
   }
 }
