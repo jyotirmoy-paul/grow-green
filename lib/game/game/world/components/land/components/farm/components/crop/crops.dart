@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 
 import '../../../../../../../grow_green_game.dart';
 import 'crops_controller.dart';
+import 'enums/crop_stage.dart';
 import 'enums/crop_type.dart';
 
 class Crops extends PositionComponent with HasGameRef<GrowGreenGame> {
@@ -40,4 +41,6 @@ class Crops extends PositionComponent with HasGameRef<GrowGreenGame> {
     super.render(canvas);
     cropsController.render(canvas);
   }
+
+  void updateCropStage(CropStage cropStage) => cropsController.updateCropStage(cropStage);
 }

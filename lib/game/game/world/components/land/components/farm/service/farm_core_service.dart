@@ -119,7 +119,7 @@ class FarmCoreService {
   }
 
   /// repeateadly checks for crop
-  void _checkCrop() {
+  void _updateCrops() {
     final crops = _crops;
     final cropsCalculator = _baseCropCalculator;
     if (crops == null) return;
@@ -128,6 +128,10 @@ class FarmCoreService {
     }
 
     final cropAge = _dateTime.difference(crops.lifeStartedAt!).inDays;
+    final cropStage = cropsCalculator.getCropStage(cropAge);
+
+    crops.updateCropStage(cropStage);
+
     final canHarvestCrop = cropsCalculator.canHarvest(cropAge);
     if (canHarvestCrop) {
       _harvestCrops(crops);
@@ -138,7 +142,7 @@ class FarmCoreService {
     /// TODO: Do something with the harvest result
   }
 
-  void _checkTree() {
+  void _updateTrees() {
     final trees = _trees;
     final treesCalculator = _baseTreeCalculator;
     if (trees == null) return;
@@ -147,6 +151,10 @@ class FarmCoreService {
     }
 
     final treeAge = _dateTime.difference(trees.lifeStartedAt).inDays;
+    final treeStage = treesCalculator.getTreeStage(treeAge);
+
+    trees.updateTreeStage(treeStage);
+
     final currentMonth = _dateTime.gameMonth;
     final canHarvestTree = treesCalculator.canHarvest(treeAgeInDays: treeAge, currentMonth: currentMonth);
 
@@ -159,8 +167,8 @@ class FarmCoreService {
   void onTimeChange(DateTime dateTime) {
     _dateTime = dateTime;
 
-    _checkCrop();
-    _checkTree();
+    _updateCrops();
+    _updateTrees();
   }
 
   void _putTrees({required Trees trees}) {

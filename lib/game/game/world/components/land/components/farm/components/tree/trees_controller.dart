@@ -5,6 +5,8 @@ import 'package:flame/sprite.dart';
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
 import '../../../../../../../grow_green_game.dart';
+import '../../asset/tree_asset.dart';
+import 'enums/tree_stage.dart';
 import 'enums/tree_type.dart';
 
 class TreesController {
@@ -23,31 +25,47 @@ class TreesController {
   });
 
   late final GrowGreenGame game;
+  late SpriteBatch treeSpriteBatch;
 
-  late final SpriteBatch spriteBatch;
+  TreeStage treeStage = TreeStage.seedling;
 
-  Future<List<Component>> initialize({required GrowGreenGame game}) async {
-    this.game = game;
+  void _populateSpriteBatch() async {
+    /// load the new asset and set to the sprite batch
+    final treeAsset = await game.images.load(TreeAsset.of(treeType).at(treeStage));
+    treeSpriteBatch = SpriteBatch(treeAsset);
 
-    final treeAsset = await game.images.load('tiles/banana_iso.png');
-    spriteBatch = SpriteBatch(treeAsset);
+    final originalTreeSize = treeAsset.size;
+    final treeSource = originalTreeSize.toRect();
 
     for (final position in treePositions) {
       final cartPosition = position.toCart(farmSize.half());
       final originalTreeSize = treeAsset.size;
 
-      spriteBatch.add(
-        source: originalTreeSize.toRect(),
+      treeSpriteBatch.add(
+        source: treeSource,
         offset: cartPosition,
         anchor: Vector2(originalTreeSize.x / 2, 0),
         scale: treeSize.length / originalTreeSize.length,
       );
     }
+  }
+
+  Future<List<Component>> initialize({required GrowGreenGame game}) async {
+    this.game = game;
+
+    _populateSpriteBatch();
 
     return const [];
   }
 
   void render(Canvas canvas) {
-    spriteBatch.render(canvas);
+    treeSpriteBatch.render(canvas);
+  }
+
+  void updateTreeStage(TreeStage treeStage) {
+    Log.d('$tag: updateTreeStage invoked for $treeType, updating tree stage from ${this.treeStage} to $treeStage');
+
+    this.treeStage = treeStage;
+    _populateSpriteBatch();
   }
 }
