@@ -12,6 +12,8 @@ import '../../../model/harvest_period.dart';
 import '../../../model/qty.dart';
 
 abstract class BaseCropCalculator {
+  static const tag = 'BaseCropCalculator';
+
   BaseCropCalculator();
 
   CropType cropType();
@@ -48,7 +50,7 @@ abstract class BaseCropCalculator {
         return CropStage.maturiy;
     }
 
-    return CropStage.flowering;
+    throw Exception('$tag: getCropStage: invalid percentageGrowth value: $percentageGrowth');
   }
 
   factory BaseCropCalculator.fromCropType(CropType cropType) {
