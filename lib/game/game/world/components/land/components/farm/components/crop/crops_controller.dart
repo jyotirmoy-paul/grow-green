@@ -5,6 +5,7 @@ import 'package:flame/sprite.dart';
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
 import '../../../../../../../grow_green_game.dart';
+import '../../animations/bounce_animation.dart';
 import '../../asset/crop_asset.dart';
 import 'enums/crop_stage.dart';
 import 'enums/crop_type.dart';
@@ -29,21 +30,39 @@ class CropsController {
 
   CropStage cropStage = CropStage.sowing;
 
+  BounceAnimation? bounceAnimation;
+
+  void _populateSpriteBatchWithAnimation() {
+    if (bounceAnimation != null) return;
+
+    bounceAnimation = BounceAnimation(
+      totalDuration: 0.626,
+      maxScale: 1.6,
+      onComplete: () {
+        bounceAnimation = null;
+      },
+    );
+  }
+
   void _populateSpriteBatch() async {
     final cropAsset = await game.images.load(CropAsset.of(cropType).at(cropStage));
     cropSpriteBatch = SpriteBatch(cropAsset);
 
     final originCropSize = cropAsset.size;
     final cropSource = originCropSize.toRect();
+    final scale = cropSize.length / originCropSize.length;
+
+    final bounceAnimationScaleFactor = bounceAnimation?.getCurrentScale() ?? 1.0;
+    final finalScale = scale * bounceAnimationScaleFactor;
 
     for (final position in cropPositions) {
       final cartPosition = position.toCart(farmSize.half());
 
       cropSpriteBatch?.add(
         source: cropSource,
-        offset: cartPosition,
-        anchor: Vector2(originCropSize.x / 2, 0),
-        scale: cropSize.length / originCropSize.length,
+        offset: Vector2(cartPosition.x, cartPosition.y + ((originCropSize.y / 2) * scale)),
+        anchor: Vector2(originCropSize.x / 2, originCropSize.y / 2),
+        scale: finalScale,
       );
     }
   }
@@ -53,13 +72,21 @@ class CropsController {
   }) async {
     this.game = game;
 
-    _populateSpriteBatch();
+    /// animate to show new addtion occured
+    _populateSpriteBatchWithAnimation();
 
     return const [];
   }
 
   void render(Canvas canvas) {
     cropSpriteBatch?.render(canvas);
+  }
+
+  void update(dt) {
+    if (bounceAnimation != null) {
+      bounceAnimation!.update(dt);
+      _populateSpriteBatch();
+    }
   }
 
   void updateCropStage(CropStage cropStage) {
@@ -69,6 +96,8 @@ class CropsController {
     Log.d('$tag: updateCropStage invoked for $cropType, updating crop stage from ${this.cropStage} to $cropStage');
 
     this.cropStage = cropStage;
-    _populateSpriteBatch();
+
+    /// animate to notify stage change
+    _populateSpriteBatchWithAnimation();
   }
 }

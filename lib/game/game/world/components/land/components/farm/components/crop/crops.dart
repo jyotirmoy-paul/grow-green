@@ -37,6 +37,12 @@ class Crops extends PositionComponent with HasGameRef<GrowGreenGame> {
   }
 
   @override
+  void update(double dt) {
+    super.update(dt);
+    cropsController.update(dt);
+  }
+
+  @override
   void render(Canvas canvas) {
     super.render(canvas);
     cropsController.render(canvas);
