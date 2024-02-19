@@ -1,7 +1,7 @@
 import '../../../../../../../../../enums/system_type.dart';
 import '../../../crop/enums/crop_type.dart';
-import '../calculators/crops/base_crop.dart';
 import '../../model/qty.dart';
+import '../calculators/crops/base_crop.dart';
 import 'database/layouts.dart';
 
 class System {

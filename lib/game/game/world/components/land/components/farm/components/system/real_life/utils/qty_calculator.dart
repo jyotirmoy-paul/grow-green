@@ -1,7 +1,6 @@
 // Values are per hacter
 
 import '../../../../../../../../../enums/system_type.dart';
-import '../../../../model/content.dart';
 import '../../../crop/enums/crop_type.dart';
 import '../../model/qty.dart';
 import '../calculators/crops/base_crop.dart';

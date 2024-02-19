@@ -1,6 +1,11 @@
+import 'dart:ffi';
+
+import '../../../../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/month.dart';
 import '../../../../crop/enums/crop_stage.dart';
 import '../../../../crop/enums/crop_type.dart';
+import '../../../model/harvest_period.dart';
+import '../../../model/qty.dart';
 import 'crop_market.dart';
 import 'types/bajra.dart';
 import 'types/banana.dart';
@@ -8,8 +13,6 @@ import 'types/groundnut.dart';
 import 'types/maize.dart';
 import 'types/pepper.dart';
 import 'types/wheat.dart';
-import '../../../model/harvest_period.dart';
-import '../../../model/qty.dart';
 
 abstract class BaseCropCalculator {
   static const tag = 'BaseCropCalculator';
@@ -36,21 +39,23 @@ abstract class BaseCropCalculator {
   }
 
   CropStage getCropStage(int cropAgeInDays) {
-    int cropAgeInMonths = cropAgeInDays ~/ 30;
-    int percentageGrowth = (cropAgeInMonths / maxAgeInMonths * 100).round();
+    final growthFactor = (cropAgeInDays / (maxAgeInMonths * 30));
 
-    switch (percentageGrowth) {
-      case < 10:
+    switch (growthFactor) {
+      case < .1:
         return CropStage.sowing;
-      case < 30:
+
+      case < .3:
         return CropStage.seedling;
-      case < 80:
+
+      case < .8:
         return CropStage.flowering;
-      case < 100:
-        return CropStage.maturiy;
+
+      case < 1.0:
+        return CropStage.maturity;
     }
 
-    throw Exception('$tag: getCropStage: invalid percentageGrowth value: $percentageGrowth');
+    throw Exception('$tag: getCropStage: invalid growthFactor value: $growthFactor');
   }
 
   factory BaseCropCalculator.fromCropType(CropType cropType) {

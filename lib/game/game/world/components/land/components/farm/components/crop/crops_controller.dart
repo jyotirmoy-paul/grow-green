@@ -25,7 +25,7 @@ class CropsController {
   });
 
   late final GrowGreenGame game;
-  late SpriteBatch cropSpriteBatch;
+  SpriteBatch? cropSpriteBatch;
 
   CropStage cropStage = CropStage.sowing;
 
@@ -36,12 +36,10 @@ class CropsController {
     final originCropSize = cropAsset.size;
     final cropSource = originCropSize.toRect();
 
-    cropSpriteBatch.clear();
-
     for (final position in cropPositions) {
       final cartPosition = position.toCart(farmSize.half());
 
-      cropSpriteBatch.add(
+      cropSpriteBatch?.add(
         source: cropSource,
         offset: cartPosition,
         anchor: Vector2(originCropSize.x / 2, 0),
@@ -61,10 +59,13 @@ class CropsController {
   }
 
   void render(Canvas canvas) {
-    cropSpriteBatch.render(canvas);
+    cropSpriteBatch?.render(canvas);
   }
 
   void updateCropStage(CropStage cropStage) {
+    /// if the crop stage has not change, no need to update it
+    if (this.cropStage == cropStage) return;
+
     Log.d('$tag: updateCropStage invoked for $cropType, updating crop stage from ${this.cropStage} to $cropStage');
 
     this.cropStage = cropStage;
