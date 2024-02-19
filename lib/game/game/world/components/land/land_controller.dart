@@ -2,11 +2,15 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart' hide Text;
+import 'package:flutter/material.dart';
 
 import '../../../../../services/log/log.dart';
+import '../../../../../services/utils/service_action.dart';
 import '../../../../utils/game_extensions.dart';
 import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
+import 'components/farm/dialogs/buy_farm_dialog.dart';
+import 'components/farm/enum/farm_state.dart';
 import 'components/farm/farm.dart';
 import 'overlays/system_selector_menu/system_selector_menu.dart';
 
@@ -79,9 +83,32 @@ class LandController {
     ];
   }
 
+  void _handleFarmBuying(Farm farm) async {
+    Log.d('$tag: _handleFarmBuying: $farm menu is shown');
+
+    final context = game.buildContext;
+    if (context == null) {
+      throw Exception('$tag: _handleFarmBuying received empty game context!');
+    }
+
+    final serviceAction = await BuyFarmDialog.openDialog(
+      context: context,
+      farm: farm,
+    );
+
+    Log.d('$tag: _handleFarmBuying: $farm purchase result: $serviceAction');
+
+    if (serviceAction == ServiceAction.success) {
+      farm.farmController.purchaseSuccess();
+    }
+  }
+
   void _processFarmTap(Farm farm) async {
-    /// TODO: Check if farm is bought?
     Log.d('$tag: _processFarmTap: $farm is tapped');
+
+    if (farm.farmController.farmState == FarmState.notBought) {
+      return _handleFarmBuying(farm);
+    }
 
     /// mark farm as selected
     farm.farmController.isFarmSelected = true;

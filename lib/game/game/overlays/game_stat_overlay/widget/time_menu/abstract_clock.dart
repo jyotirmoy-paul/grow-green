@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../../services/time/time_service.dart';
+import '../../../../services/game_services/time/time_service.dart';
 import 'clock_painters.dart';
 
 class AbstractClock extends StatefulWidget {
@@ -21,17 +21,21 @@ class _AbstractClockState extends State<AbstractClock> with SingleTickerProvider
   late AnimationController _controller;
   StreamSubscription? _timePaceListener;
 
+  Duration _getClockAnimationDurationFrom({required Duration currentPeriod}) {
+    return currentPeriod * 10;
+  }
+
   void init() {
     /// init animation
     _controller = AnimationController(
       vsync: this,
-      duration: TimeService().currentPeriod,
+      duration: _getClockAnimationDurationFrom(currentPeriod: TimeService().currentPeriod),
     )..repeat();
 
     /// listen for time pace changes
-    _timePaceListener = TimeService().timePaceStream.listen((timePace) {
+    _timePaceListener = TimeService().timePaceStream.listen((_) {
       /// change pace
-      _controller.duration = TimeService().currentPeriod;
+      _controller.duration = _getClockAnimationDurationFrom(currentPeriod: TimeService().currentPeriod);
       _controller.repeat();
     });
   }

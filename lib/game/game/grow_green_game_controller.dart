@@ -10,7 +10,8 @@ import '../utils/game_utils.dart';
 import 'grow_green_game.dart';
 import 'models/overlay_data.dart';
 import 'services/datastore/game_datastore.dart';
-import 'services/time/time_service.dart';
+import 'services/game_services/monetary/monetary_service.dart';
+import 'services/game_services/time/time_service.dart';
 import 'world/world/grow_green_world.dart';
 
 class GrowGreenGameController {
@@ -20,6 +21,7 @@ class GrowGreenGameController {
 
   /// services
   late final GameDatastore gameDatastore;
+  late final MonetaryService monetaryService;
 
   late final GrowGreenGame game;
   late final CameraComponent camera;
@@ -66,6 +68,10 @@ class GrowGreenGameController {
   /// method responsible for initializing all sservices needed by the game
   Future<void> _initializeServices() async {
     gameDatastore = GameDatastore();
+    monetaryService = MonetaryService();
+
+    /// intialize services
+    await monetaryService.initialize();
 
     /// TODO: initialize timer with dateTime as read from storage
     TimeService().initialize();

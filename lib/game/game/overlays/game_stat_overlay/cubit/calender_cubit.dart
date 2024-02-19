@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
-import '../../../services/time/time_service.dart';
+import '../../../services/game_services/time/time_service.dart';
 
 part 'calender_state.dart';
 

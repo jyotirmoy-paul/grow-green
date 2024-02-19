@@ -5,7 +5,7 @@ import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../grow_green_game.dart';
-import '../../../../../services/time/time_aware.dart';
+import '../../../../../services/game_services/time/time_aware.dart';
 import 'farm_controller.dart';
 
 class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
