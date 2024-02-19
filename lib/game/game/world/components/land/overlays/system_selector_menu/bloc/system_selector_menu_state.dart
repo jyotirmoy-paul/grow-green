@@ -10,9 +10,9 @@ sealed class SystemSelectorMenuState extends Equatable {
   List<Object> get props => [];
 }
 
-final class SystemSelectorMenuInitial extends SystemSelectorMenuState {
-  const SystemSelectorMenuInitial();
-  
+final class SystemSelectorMenuNone extends SystemSelectorMenuState {
+  const SystemSelectorMenuNone();
+
   @override
   List<SsmChildModel> get childModels => const [];
 
@@ -70,11 +70,15 @@ final class SystemSelectorMenuChooseComponent extends SystemSelectorMenuState {
   final List<SsmChildModel> childModels;
 
   final FarmSystem farmSystem;
+  final bool alreadyFunctioningFarm;
+  final List<ComponentId> componentsEditable;
 
   const SystemSelectorMenuChooseComponent({
     required this.parentModel,
     required this.childModels,
     required this.farmSystem,
+    this.alreadyFunctioningFarm = false,
+    this.componentsEditable = const [],
   });
 
   @override
@@ -82,5 +86,7 @@ final class SystemSelectorMenuChooseComponent extends SystemSelectorMenuState {
         parentModel,
         childModels,
         farmSystem,
+        alreadyFunctioningFarm,
+        componentsEditable,
       ];
 }

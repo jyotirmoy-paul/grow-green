@@ -20,7 +20,7 @@ class MenuChildWidget extends StatelessWidget {
       width: diameter,
       height: diameter,
       decoration: BoxDecoration(
-        color: Colors.greenAccent,
+        color: childModel.editable ? Colors.greenAccent : Colors.grey,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(

@@ -9,6 +9,7 @@ import '../../../../../grow_green_game.dart';
 import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm.dart';
 import 'bloc/system_selector_menu_bloc.dart';
+import 'enum/component_id.dart';
 import 'widgets/menu_child_widget.dart';
 import 'widgets/menu_parent_widget.dart';
 
@@ -118,24 +119,47 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
     final farmState = widget.farm.farmController.farmState;
     final systemSelectorMenuBloc = context.read<SystemSelectorMenuBloc>();
 
+    systemSelectorMenuBloc.setFarm(widget.farm);
     systemSelectorMenuBloc.onCloseMenu = _onClose;
     systemSelectorMenuBloc.onChildShow = _onChildShow;
 
     switch (farmState) {
       case FarmState.notBought:
       case FarmState.barren:
-      case FarmState.onlyCropsWaiting:
-      case FarmState.treesAndCropsButCropsWaiting:
         throw Exception('$tag: _init(): System Selector Menu opened in invalid farm state: $farmState');
 
       case FarmState.notFunctioning:
         return systemSelectorMenuBloc.add(const SystemSelectorMenuChildTapEvent(tappedIndex: 0, chooseSystem: true));
 
+      case FarmState.onlyCropsWaiting:
+        return systemSelectorMenuBloc.add(
+          const SystemSelectorMenuViewComponentsEvent(cropsWaiting: true),
+        );
+
+      case FarmState.treesAndCropsButCropsWaiting:
+        return systemSelectorMenuBloc.add(
+          const SystemSelectorMenuViewComponentsEvent(
+            cropsWaiting: true,
+            editableComponents: [ComponentId.trees],
+          ),
+        );
+
       case FarmState.functioning:
-        return systemSelectorMenuBloc.add(const SystemSelectorMenuViewComponentsEvent(editable: false));
+      case FarmState.functioningOnlyCrops:
+        return systemSelectorMenuBloc.add(
+          const SystemSelectorMenuViewComponentsEvent(
+            cropsWaiting: false,
+            editableComponents: [ComponentId.trees],
+          ),
+        );
 
       case FarmState.functioningOnlyTrees:
-      case FarmState.functioningOnlyCrops:
+        return systemSelectorMenuBloc.add(
+          const SystemSelectorMenuViewComponentsEvent(
+            cropsWaiting: false,
+            editableComponents: [ComponentId.crop, ComponentId.trees],
+          ),
+        );
     }
   }
 

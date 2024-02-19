@@ -17,6 +17,7 @@ class FarmController {
   late final Farm farm;
   late final FarmCoreService _farmCoreService;
 
+  /// FIXME: a farm stays selected until a new farm is selected, it's a bug
   bool isFarmSelected = false;
 
   FarmState get farmState => _farmCoreService.farmState;
