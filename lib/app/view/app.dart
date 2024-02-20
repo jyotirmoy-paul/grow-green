@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,6 +31,10 @@ class App extends StatelessWidget {
         onGenerateRoute: AppRoutes.generateRoutes,
         initialRoute: RouteName.splashScreen.name,
         theme: ThemeData(fontFamily: kFontFamily),
+        navigatorObservers: [
+          BotToastNavigatorObserver(),
+        ],
+        builder: BotToastInit(),
       ),
     );
   }

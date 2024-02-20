@@ -3,5 +3,6 @@ enum ComponentId {
   trees,
   fertilizer,
   agroforestryLayout,
+  action,
   none,
 }

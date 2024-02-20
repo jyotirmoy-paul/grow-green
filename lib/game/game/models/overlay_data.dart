@@ -1,5 +1,6 @@
 import '../world/components/land/components/farm/farm.dart';
 import '../world/components/land/components/farm/model/farm_content.dart';
+import '../world/components/land/overlays/bill_menu/enums/bill_state.dart';
 import '../world/components/land/overlays/system_selector_menu/enum/component_id.dart';
 import '../world/components/land/overlays/system_selector_menu/model/component_selection_model.dart';
 
@@ -35,6 +36,9 @@ class OverlayData {
 
     return _farmContent!;
   }
+
+  /// bill state - by default state is purchase everything!
+  BillState billState = BillState.purchaseEverything;
 
   /// stay on system selector menu boolean
   bool stayOnSystemSelectorMenu = false;

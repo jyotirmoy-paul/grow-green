@@ -11,6 +11,7 @@ import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../system_selector_menu/bloc/system_selector_menu_bloc.dart';
+import '../system_selector_menu/enum/action_state.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import '../system_selector_menu/model/component_selection_model.dart';
 import 'model/csm_item_model.dart';
@@ -89,6 +90,14 @@ class _ComponentSelectorMenuState extends State<ComponentSelectorMenu> with Sing
 
       case ComponentId.none:
         return;
+
+      case ComponentId.action:
+        return models.addAll(
+          [
+            CsmItemModel(name: 'Cancel', image: ''),
+            CsmItemModel(name: 'Confirm', image: ''),
+          ],
+        );
     }
   }
 
@@ -244,6 +253,11 @@ class _ComponentSelectorMenuState extends State<ComponentSelectorMenu> with Sing
 
       case ComponentId.none:
         break;
+
+      case ComponentId.action:
+        final action = ActionState.values[index];
+        systemSelectorMenuBloc.add(SystemSelectorMenuDeleteTreeEvent(actionState: action));
+        break;
     }
 
     /// close
@@ -267,7 +281,9 @@ class _ComponentSelectorMenuState extends State<ComponentSelectorMenu> with Sing
               ),
               padding: const EdgeInsets.all(12.0),
               child: Text(
-                'Choose your ${componentId.name}',
+                componentId == ComponentId.action
+                    ? 'Are you sure you want remove the tree?'
+                    : 'Choose your ${componentId.name}',
                 style: const TextStyle(
                   fontSize: 32.0,
                 ),
