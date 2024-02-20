@@ -12,7 +12,7 @@ class SsmChildModel extends Equatable {
     this.componentId = ComponentId.none,
     required this.shortName,
     required this.image,
-    this.editable = false,
+    this.editable = true,
   });
 
   @override

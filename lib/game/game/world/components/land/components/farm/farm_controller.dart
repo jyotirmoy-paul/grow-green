@@ -3,6 +3,7 @@ import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../grow_green_game.dart';
+import '../../../../../services/game_services/monetary/models/money_model.dart';
 import 'enum/farm_state.dart';
 import 'farm.dart';
 import 'model/farm_content.dart';
@@ -63,6 +64,14 @@ class FarmController {
 
   void onTimeChange(DateTime dateTime) {
     _farmCoreService.onTimeChange(dateTime);
+  }
+
+  MoneyModel getTreePotentialValue() {
+    return _farmCoreService.getTreePotentionValue();
+  }
+
+  Future<bool> sellTree() {
+    return _farmCoreService.sellTree();
   }
 
   TextPainter get textPainter => TextPainter(

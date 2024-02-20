@@ -28,6 +28,15 @@ class FarmContent {
     );
   }
 
+  FarmContent removeTree() {
+    return FarmContent(
+      crop: crop,
+      trees: null,
+      fertilizer: fertilizer,
+      systemType: systemType,
+    );
+  }
+
   FarmContent copyWith({
     Content<CropType>? crop,
     List<Content<TreeType>>? trees,
@@ -51,7 +60,6 @@ class FarmContent {
         ? trees!.fold(0, (pv, tree) => pv + CostCalculator.saplingCost(saplingQty: saplingQty, treeType: tree.type))
         : 0;
 
-    
     /// TODO: use cost calculator
     final priceOfFertilizer = fertilizer != null ? 10000 : 0;
 

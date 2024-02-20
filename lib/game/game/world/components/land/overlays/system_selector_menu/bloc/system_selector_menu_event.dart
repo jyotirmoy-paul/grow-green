@@ -101,3 +101,14 @@ class SystemSelectorMenuChooseAgroforestrySystemEvent extends SystemSelectorMenu
   @override
   List<Object> get props => [agroforestryType];
 }
+
+class SystemSelectorMenuDeleteTreeEvent extends SystemSelectorMenuEvent {
+  final ActionState actionState;
+
+  const SystemSelectorMenuDeleteTreeEvent({
+    required this.actionState,
+  });
+
+  @override
+  List<Object> get props => [actionState];
+}

@@ -5,6 +5,8 @@ import 'package:flame/experimental.dart';
 
 import '../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/extensions/date_time_extensions.dart';
+import '../../../../../../services/game_services/monetary/enums/transaction_type.dart';
+import '../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../../../../services/game_services/time/time_service.dart';
 import '../../../../utils/month.dart';
 import '../components/crop/crops.dart';
@@ -73,6 +75,56 @@ class FarmCoreService {
 
     /// move the farm state to not functioning!
     _farmState = FarmState.notFunctioning;
+  }
+
+  MoneyModel getTreePotentionValue() {
+    final trees = _trees;
+    final treesCalculator = _baseTreeCalculator;
+    if (trees == null) {
+      throw Exception('$tag: invoked getTreePotentionValue with null trees!');
+    }
+    if (treesCalculator == null) {
+      throw Exception('$tag: _checkTree invoked with null _baseTreeCalculator value despite having valid trees!');
+    }
+
+    final treeAge = _dateTime.difference(trees.lifeStartedAt).inDays;
+    final value = treesCalculator.getPotentialPrice(treeAge);
+
+    return MoneyModel(rupees: value);
+  }
+
+  Future<bool> sellTree() async {
+    final trees = _trees;
+
+    if (trees == null) {
+      throw Exception('$tag: sellTree invoked with null trees. How to sell tree without any tree?');
+    }
+
+    final treePotentialValue = getTreePotentionValue();
+
+    /// remove trees reference
+    _trees = null;
+    _baseTreeCalculator = null;
+
+    /// remove crops component
+    removeComponent(trees);
+
+    /// update farm state
+    if (_crops == null) {
+      _farmState = FarmState.notFunctioning;
+    } else {
+      _farmState = FarmState.functioningOnlyCrops;
+    }
+
+    /// update farm content
+    _farmContent = _farmContent?.removeTree();
+
+    /// TODO: Show alert dialog box for progress!
+
+    return farm.game.gameController.monetaryService.transact(
+      transactionType: TransactionType.credit,
+      value: treePotentialValue,
+    );
   }
 
   /// update farm composition, this method is responsible for following:
