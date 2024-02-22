@@ -1,5 +1,9 @@
 import 'package:intl/intl.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'money_model.g.dart';
+
+@JsonSerializable()
 class MoneyModel {
   static final _formatter = NumberFormat.decimalPattern('en_IN');
 
@@ -31,4 +35,7 @@ class MoneyModel {
       rupees: rupees + other.rupees,
     );
   }
+
+  factory MoneyModel.fromJson(Map<String, dynamic> json) => _$MoneyModelFromJson(json);
+  Map<String, dynamic> toJson() => _$MoneyModelToJson(this);
 }

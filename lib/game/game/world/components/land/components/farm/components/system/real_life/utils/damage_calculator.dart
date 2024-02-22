@@ -5,18 +5,24 @@ import '../../../../model/fertilizer/fertilizer_type.dart';
 import 'qty_calculator.dart';
 
 class SoilHealthCalculator {
+  static const tag = 'SoilHealthCalculator';
+
   static double _fertilizerEffect({
-    required Content<FertilizerType> fertilizerType,
+    required Content fertilizer,
     required double soilHealthPercentage,
   }) {
     final fertilizerPerYearPerHectar = QtyCalculator.getFertilizerQtyRequiredFromTime(
       soilHealthPercentage: soilHealthPercentage,
       ageInMonths: 12,
     );
-    final fertilizerQty = fertilizerType.qty.value;
+    final fertilizerQty = fertilizer.qty.value;
     final fertilizerUsedRatio = fertilizerQty / fertilizerPerYearPerHectar.value;
 
-    final fertilizerEffectWithFullQty = switch (fertilizerType.type) {
+    if (fertilizer.type is! FertilizerType) {
+      throw Exception('$tag: _fertilizerEffect() invoked with wrong fertilizer.type: ${fertilizer.type}');
+    }
+
+    final fertilizerEffectWithFullQty = switch (fertilizer.type as FertilizerType) {
       FertilizerType.organic => 0.2,
       FertilizerType.chemical => -0.2,
     };
@@ -45,11 +51,11 @@ class SoilHealthCalculator {
 
   static double updateSoilHealth({
     required double soilHealthPercentage,
-    required Content<FertilizerType> fertilzerQty,
+    required Content fertilzerQty,
     required SystemType systemType,
     required bool treesPresent,
   }) {
-    final fertilzerEffect = _fertilizerEffect(fertilizerType: fertilzerQty, soilHealthPercentage: soilHealthPercentage);
+    final fertilzerEffect = _fertilizerEffect(fertilizer: fertilzerQty, soilHealthPercentage: soilHealthPercentage);
     final systemTypeEffectValue = _systemTypeAffect(systemType: systemType, treesPresent: treesPresent);
 
     return soilHealthPercentage + fertilzerEffect + systemTypeEffectValue;

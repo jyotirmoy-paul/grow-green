@@ -14,12 +14,12 @@ class SystemDatastore {
   final _agroforestrySystem1 = AgroforestrySystem(
     agroforestryType: AgroforestryType.alley,
     trees: [
-      Content<TreeType>(
+      Content(
         type: TreeType.cocounut,
         qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.alley),
       ),
     ],
-    crop: Content<CropType>(
+    crop: Content(
       type: CropType.bajra,
       qty: QtyCalculator.getSeedQtyRequireFor(
         systemType: AgroforestryType.alley,
@@ -32,12 +32,12 @@ class SystemDatastore {
   final _agroforestrySystem2 = AgroforestrySystem(
     agroforestryType: AgroforestryType.block,
     trees: [
-      Content<TreeType>(
+      Content(
         type: TreeType.cocounut,
         qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.block),
       ),
     ],
-    crop: Content<CropType>(
+    crop: Content(
       type: CropType.maize,
       qty: QtyCalculator.getSeedQtyRequireFor(
         systemType: AgroforestryType.block,
@@ -50,12 +50,12 @@ class SystemDatastore {
   final _agroforestrySystem3 = AgroforestrySystem(
     agroforestryType: AgroforestryType.boundary,
     trees: [
-      Content<TreeType>(
+      Content(
         type: TreeType.mango,
         qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.boundary),
       ),
     ],
-    crop: Content<CropType>(
+    crop: Content(
       type: CropType.pepper,
       qty: QtyCalculator.getSeedQtyRequireFor(
         systemType: AgroforestryType.boundary,
@@ -66,14 +66,14 @@ class SystemDatastore {
 
   /// Organic fertilizer monoculture system
   final _monocultureSystem1 = MonocultureSystem(
-    fertilizer: const Content<FertilizerType>(
+    fertilizer: const Content(
       type: FertilizerType.organic,
       qty: Qty(
         value: 100,
         scale: Scale.kg,
       ),
     ),
-    crop: Content<CropType>(
+    crop: Content(
       type: CropType.wheat,
       qty: QtyCalculator.getSeedQtyRequireFor(
         systemType: FarmSystemType.monoculture,
@@ -84,14 +84,14 @@ class SystemDatastore {
 
   /// Chemical fertilizer monoculture sysetm
   final _monocultureSystem2 = MonocultureSystem(
-    fertilizer: const Content<FertilizerType>(
+    fertilizer: const Content(
       type: FertilizerType.organic,
       qty: Qty(
         value: 190,
         scale: Scale.kg,
       ),
     ),
-    crop: Content<CropType>(
+    crop: Content(
       type: CropType.bajra,
       qty: QtyCalculator.getSeedQtyRequireFor(
         systemType: FarmSystemType.monoculture,

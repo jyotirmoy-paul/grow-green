@@ -1,5 +1,12 @@
 // this is store per hacter
 
+import 'package:json_annotation/json_annotation.dart';
+
+part 'qty.g.dart';
+
+enum Scale { kg, units }
+
+@JsonSerializable()
 class Qty {
   final int value;
   final Scale scale;
@@ -10,6 +17,7 @@ class Qty {
   String toString() {
     return 'Qty($value, $scale)';
   }
-}
 
-enum Scale { kg, units }
+  factory Qty.fromJson(Map<String, dynamic> json) => _$QtyFromJson(json);
+  Map<String, dynamic> toJson() => _$QtyToJson(this);
+}

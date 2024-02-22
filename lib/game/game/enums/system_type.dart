@@ -1,1 +1,1 @@
-abstract class SystemType {}
+abstract class SystemType implements Enum {}

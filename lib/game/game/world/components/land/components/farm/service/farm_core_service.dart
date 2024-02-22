@@ -10,10 +10,12 @@ import '../../../../../../services/game_services/monetary/models/money_model.dar
 import '../../../../../../services/game_services/time/time_service.dart';
 import '../../../../utils/month.dart';
 import '../components/crop/crops.dart';
+import '../components/crop/enums/crop_type.dart';
 import '../components/system/enum/growable.dart';
 import '../components/system/real_life/calculators/crops/base_crop.dart';
 import '../components/system/real_life/calculators/trees/base_tree.dart';
 import '../components/system/ui/layout_distribution.dart';
+import '../components/tree/enums/tree_type.dart';
 import '../components/tree/trees.dart';
 import '../enum/farm_state.dart';
 import '../farm.dart';
@@ -325,7 +327,7 @@ class FarmCoreService {
     } else {
       _trees = Trees(
         lifeStartedAt: _dateTime,
-        treeType: farmContent.trees![0].type,
+        treeType: farmContent.trees![0].type as TreeType,
         treeSize: layoutDistributor.treeSizeVector2,
         treePositions: treePositions,
         farmSize: farm.size,
@@ -333,7 +335,7 @@ class FarmCoreService {
     }
 
     final crops = Crops(
-      cropType: farmContent.crop!.type,
+      cropType: farmContent.crop!.type as CropType,
       cropPositions: cropPositions,
       cropSize: layoutDistributor.cropSizeVector2,
       farmSize: farm.size,
@@ -373,7 +375,7 @@ class FarmCoreService {
     }
 
     final crops = Crops(
-      cropType: farmContent.crop!.type,
+      cropType: farmContent.crop!.type as CropType,
       cropPositions: cropPositions,
       cropSize: layoutDistributor.cropSizeVector2,
       farmSize: farm.size,
@@ -414,7 +416,7 @@ class FarmCoreService {
 
     _trees = Trees(
       lifeStartedAt: _dateTime,
-      treeType: farmContent.trees![0].type,
+      treeType: farmContent.trees![0].type as TreeType,
       treeSize: layoutDistributor.treeSizeVector2,
       treePositions: treePositions,
       farmSize: farm.size,

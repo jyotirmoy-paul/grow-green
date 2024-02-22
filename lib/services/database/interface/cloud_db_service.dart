@@ -1,0 +1,26 @@
+import '../../utils/service_action.dart';
+import 'db_batch_write.dart';
+
+abstract interface class CloudDbService {
+  Future<ServiceAction> initialize({
+    required String path,
+  });
+
+  Future<ServiceAction> connect();
+  Future<ServiceAction> disconnect();
+
+  DbBatch createBatch();
+
+  Future<ServiceAction> set({
+    required String id,
+    required Map<String, dynamic> data,
+  });
+
+  Future<(ServiceAction, Map<String, dynamic>)> get({
+    required String id,
+  });
+
+  Future<ServiceAction> delete({
+    required String id,
+  });
+}
