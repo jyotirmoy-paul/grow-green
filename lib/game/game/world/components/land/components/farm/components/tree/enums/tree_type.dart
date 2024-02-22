@@ -1,6 +1,7 @@
+import '../../../../../../../../enums/measurables.dart';
 import '../../system/enum/growable.dart';
 
-enum TreeType implements Growable {
+enum TreeType implements Growable, Measurables {
   mahagony,
   neem,
   rosewood,

@@ -1,15 +1,21 @@
+import 'package:json_annotation/json_annotation.dart';
+
+import '../../../../../../converters/system_type_converters.dart';
 import '../../../../../../enums/system_type.dart';
 import '../components/crop/enums/crop_type.dart';
 import '../components/system/real_life/utils/cost_calculator.dart';
 import '../components/system/real_life/utils/qty_calculator.dart';
 import '../components/tree/enums/tree_type.dart';
 import 'content.dart';
-import 'fertilizer/fertilizer_type.dart';
 
+part 'farm_content.g.dart';
+
+@JsonSerializable()
 class FarmContent {
-  final Content<CropType>? crop;
-  final List<Content<TreeType>>? trees;
-  final Content<FertilizerType>? fertilizer;
+  final Content? crop;
+  final List<Content>? trees;
+  final Content? fertilizer;
+  @SystemTypeConverter()
   final SystemType systemType;
 
   FarmContent({
@@ -38,9 +44,9 @@ class FarmContent {
   }
 
   FarmContent copyWith({
-    Content<CropType>? crop,
-    List<Content<TreeType>>? trees,
-    Content<FertilizerType>? fertilizer,
+    Content? crop,
+    List<Content>? trees,
+    Content? fertilizer,
     SystemType? systemType,
   }) {
     return FarmContent(
@@ -52,12 +58,21 @@ class FarmContent {
   }
 
   int get priceOfFarmContent {
-    final cropsQty = QtyCalculator.getSeedQtyRequireFor(systemType: systemType, cropType: crop!.type);
-    final priceOfCrop = crop != null ? CostCalculator.seedCost(cropType: crop!.type, seedsRequired: cropsQty) : 0;
+    final cropsQty = QtyCalculator.getSeedQtyRequireFor(systemType: systemType, cropType: crop!.type as CropType);
+    final priceOfCrop =
+        crop != null ? CostCalculator.seedCost(cropType: crop!.type as CropType, seedsRequired: cropsQty) : 0;
 
     final saplingQty = QtyCalculator.getNumOfSaplingsFor(systemType);
     final priceOfTrees = trees != null
-        ? trees!.fold(0, (pv, tree) => pv + CostCalculator.saplingCost(saplingQty: saplingQty, treeType: tree.type))
+        ? trees!.fold(
+            0,
+            (pv, tree) =>
+                pv +
+                CostCalculator.saplingCost(
+                  saplingQty: saplingQty,
+                  treeType: tree.type as TreeType,
+                ),
+          )
         : 0;
 
     /// TODO: use cost calculator
@@ -79,4 +94,7 @@ class FarmContent {
   String toString() {
     return 'FarmContent(crop: $crop, trees: $trees, systemType: $systemType, fertilizer: $fertilizer)';
   }
+
+  factory FarmContent.fromJson(Map<String, dynamic> json) => _$FarmContentFromJson(json);
+  Map<String, dynamic> toJson() => _$FarmContentToJson(this);
 }

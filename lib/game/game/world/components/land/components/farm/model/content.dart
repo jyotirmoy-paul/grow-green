@@ -1,8 +1,15 @@
-import '../components/system/model/qty.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-/// quantity is in game units
-class Content<T extends Enum> {
-  final T type;
+import '../../../../../../enums/measurables.dart';
+import '../components/system/model/qty.dart';
+import '../../../../../../converters/measurables_converter.dart';
+
+part 'content.g.dart';
+
+@JsonSerializable()
+class Content {
+  @MeasurablesConverter()
+  final Measurables type;
   final Qty qty;
 
   const Content({
@@ -12,11 +19,11 @@ class Content<T extends Enum> {
 
   @override
   String toString() {
-    return 'Content(${type.name}, $qty)';
+    return 'Content($type, $qty)';
   }
 
-  factory Content.empty(T type) {
-    return Content<T>(
+  factory Content.empty(Measurables type) {
+    return Content(
       type: type,
       qty: const Qty(value: 0, scale: Scale.units),
     );
@@ -24,4 +31,7 @@ class Content<T extends Enum> {
 
   bool get isEmpty => qty.value == 0;
   bool get isNotEmpty => !isEmpty;
+
+  factory Content.fromJson(Map<String, dynamic> json) => _$ContentFromJson(json);
+  Map<String, dynamic> toJson() => _$ContentToJson(this);
 }

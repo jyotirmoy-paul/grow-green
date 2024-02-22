@@ -1,9 +1,6 @@
 import '../enums/agroforestry_type.dart';
 import '../enums/farm_system_type.dart';
-import '../world/components/land/components/farm/components/crop/enums/crop_type.dart';
-import '../world/components/land/components/farm/components/tree/enums/tree_type.dart';
 import '../world/components/land/components/farm/model/content.dart';
-import '../world/components/land/components/farm/model/fertilizer/fertilizer_type.dart';
 
 abstract interface class FarmSystem {
   FarmSystemType get farmSystemType;
@@ -11,8 +8,8 @@ abstract interface class FarmSystem {
 }
 
 class MonocultureSystem implements FarmSystem {
-  final Content<FertilizerType> fertilizer;
-  final Content<CropType> crop;
+  final Content fertilizer;
+  final Content crop;
 
   const MonocultureSystem({
     required this.fertilizer,
@@ -29,8 +26,8 @@ class MonocultureSystem implements FarmSystem {
   }
 
   MonocultureSystem copyWith({
-    Content<FertilizerType>? fertilizer,
-    Content<CropType>? crop,
+    Content? fertilizer,
+    Content? crop,
   }) {
     return MonocultureSystem(
       fertilizer: fertilizer ?? this.fertilizer,
@@ -41,8 +38,8 @@ class MonocultureSystem implements FarmSystem {
 
 class AgroforestrySystem implements FarmSystem {
   final AgroforestryType agroforestryType;
-  final List<Content<TreeType>> trees;
-  final Content<CropType> crop;
+  final List<Content> trees;
+  final Content crop;
 
   const AgroforestrySystem({
     required this.agroforestryType,
@@ -61,8 +58,8 @@ class AgroforestrySystem implements FarmSystem {
 
   AgroforestrySystem copyWith({
     AgroforestryType? agroforestryType,
-    List<Content<TreeType>>? trees,
-    Content<CropType>? crop,
+    List<Content>? trees,
+    Content? crop,
   }) {
     return AgroforestrySystem(
       agroforestryType: agroforestryType ?? this.agroforestryType,

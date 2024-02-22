@@ -109,9 +109,9 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
   }
 
   FarmContent _getFarmContentFromSystem(FarmSystem farmSystem) {
-    Content<CropType>? crop;
-    List<Content<TreeType>>? trees;
-    Content<FertilizerType>? fertilizer;
+    Content? crop;
+    List<Content>? trees;
+    Content? fertilizer;
     late SystemType systemType;
 
     if (farmSystem.farmSystemType == FarmSystemType.monoculture) {
@@ -591,14 +591,17 @@ class SystemSelectorMenuBloc extends Bloc<SystemSelectorMenuEvent, SystemSelecto
         agroforestryType: event.agroforestryType,
 
         /// update trees quantity changes
-        trees: farmSystem.trees.map<Content<TreeType>>((existingTree) {
+        trees: farmSystem.trees.map<Content>((existingTree) {
           return Content(type: existingTree.type, qty: QtyCalculator.getNumOfSaplingsFor(event.agroforestryType));
         }).toList(),
 
         /// update crop quantity changes
         crop: Content(
           type: farmSystem.crop.type,
-          qty: QtyCalculator.getSeedQtyRequireFor(systemType: event.agroforestryType, cropType: farmSystem.crop.type),
+          qty: QtyCalculator.getSeedQtyRequireFor(
+            systemType: event.agroforestryType,
+            cropType: farmSystem.crop.type as CropType,
+          ),
         ),
       );
     }

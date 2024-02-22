@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../components/farm/components/crop/enums/crop_type.dart';
 import '../../../components/farm/components/system/real_life/utils/cost_calculator.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/components/tree/enums/tree_type.dart';
-import '../../../components/farm/model/content.dart';
 import '../../../components/farm/model/farm_content.dart';
-import '../../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../widget/bill_group.dart';
 import '../widget/bill_item.dart';
 
@@ -21,9 +20,9 @@ abstract class BillWidgetUtils {
               BillItem(
                 title: 'Price',
                 value: 'Rs ${CostCalculator.seedCost(
-                  cropType: crop.type,
+                  cropType: crop.type as CropType,
                   seedsRequired: QtyCalculator.getSeedQtyRequireFor(
-                    cropType: crop.type,
+                    cropType: crop.type as CropType,
                     systemType: farmContent.systemType,
                   ),
                 )}',
@@ -49,7 +48,7 @@ abstract class BillWidgetUtils {
                     BillItem(
                       title: 'Price',
                       value: 'Rs ${CostCalculator.saplingCost(
-                        treeType: tree.type,
+                        treeType: tree.type as TreeType,
                         saplingQty: QtyCalculator.getNumOfSaplingsFor(farmContent.systemType),
                       )}',
                     ),
