@@ -10,7 +10,7 @@ import 'content.dart';
 
 part 'farm_content.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class FarmContent {
   final Content? crop;
   final List<Content>? trees;
@@ -84,6 +84,10 @@ class FarmContent {
   bool get hasOnlyCrops => (crop != null && crop!.isNotEmpty) && (trees == null || trees!.isEmpty);
 
   bool get hasOnlyTrees => !hasOnlyCrops;
+
+  bool get hasCrop => crop?.isNotEmpty == true;
+
+  bool get hasTrees => trees?.isNotEmpty == true;
 
   bool get isEmpty =>
       (crop == null || crop!.isEmpty) &&

@@ -20,9 +20,6 @@ class _IntervalSyncDbManagerService implements DbManagerService {
   /// This is to avoid starting another sync when one is in progress
   final Lock lock = Lock();
 
-  /// Cache which gets used if a syncing is in progress, and a modify request is placed
-  DbBatch? _temporaryCache;
-
   Timer? _syncTimer;
 
   void _initTimer() {
@@ -72,7 +69,7 @@ class _IntervalSyncDbManagerService implements DbManagerService {
 
       if (status == ServiceAction.failure) {
         Log.e('$tag: syncing failed after retrying for $syncAttempt times');
-        _cache = _temporaryCache ?? cloudDbService.createBatch();
+        _cache = cloudDbService.createBatch();
         return ServiceAction.failure;
       }
 
@@ -86,10 +83,7 @@ class _IntervalSyncDbManagerService implements DbManagerService {
       /// create a new cache
       /// either from an existing temporary batch (if any modify request was made during syncing)
       /// or a fresh new batch!
-      _cache = _temporaryCache ?? cloudDbService.createBatch();
-
-      /// nullify the temporary cache to avoid writing to it again!
-      _temporaryCache = null;
+      _cache = cloudDbService.createBatch();
 
       return ServiceAction.success;
     });
@@ -103,29 +97,21 @@ class _IntervalSyncDbManagerService implements DbManagerService {
 
   @override
   Future<ServiceAction> set({required String id, required Map<String, dynamic> data}) async {
-    Log.d('$tag: set(id: $id, data: $data) is invoked, lock status: ${lock.locked}');
+    return lock.synchronized<ServiceAction>(() {
+      Log.d('$tag: set(id: $id, data: $data) is invoked');
 
-    if (lock.locked) {
-      _temporaryCache ??= cloudDbService.createBatch();
-      _temporaryCache!.update(id: id, data: data);
-    } else {
       _cache.update(id: id, data: data);
-    }
-
-    return ServiceAction.success;
+      return ServiceAction.success;
+    });
   }
 
   @override
   Future<ServiceAction> delete({required String id}) async {
-    Log.d('$tag: delete(id: $id) is invoked, lock status: ${lock.locked}');
+    return lock.synchronized(() {
+      Log.d('$tag: delete(id: $id) is invoked');
 
-    if (lock.locked) {
-      _temporaryCache ??= cloudDbService.createBatch();
-      _temporaryCache!.delete(id: id);
-    } else {
       _cache.delete(id: id);
-    }
-
-    return ServiceAction.success;
+      return ServiceAction.success;
+    });
   }
 }

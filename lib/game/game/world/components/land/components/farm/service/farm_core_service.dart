@@ -5,6 +5,7 @@ import 'package:flame/experimental.dart';
 
 import '../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/extensions/date_time_extensions.dart';
+import '../../../../../../services/datastore/game_datastore.dart';
 import '../../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../../../../services/game_services/time/time_service.dart';
@@ -20,6 +21,7 @@ import '../components/tree/trees.dart';
 import '../enum/farm_state.dart';
 import '../farm.dart';
 import '../model/farm_content.dart';
+import '../model/farm_state_model.dart';
 
 class FarmCoreService {
   static const treeSize = 50.0;
@@ -40,34 +42,192 @@ class FarmCoreService {
     required this.addComponent,
     required this.removeComponents,
     required this.removeComponent,
-  }) : tag = 'FarmCoreService[${farm.farmId}]';
+  })  : tag = 'FarmCoreService[${farm.farmId}]',
+        _dateTime = TimeService().currentDateTime;
 
   final _farmStateStreamController = StreamController<FarmState>.broadcast();
-  late FarmState _farmStateValue;
-  set _farmState(FarmState value) {
-    Log.d('$tag: updating _farmState to $value');
+  final _farmStateModelStreamController = StreamController<FarmStateModel>.broadcast();
 
-    _farmStateValue = value;
-    _farmStateStreamController.add(value);
+  GameDatastore get gameDatastore => farm.game.gameDatastore;
+
+  bool _sync = true;
+
+  late FarmStateModel _farmStateModelValue;
+  set _farmStateModel(FarmStateModel value) {
+    Log.d('$tag: updating _farmStateModel to $value, _sync: $_sync');
+
+    /// update farm state value
+    _farmStateModelValue = value;
+
+    if (_crops == null) {
+      value.cropsLifeStartedAt = null;
+    }
+
+    if (_trees == null) {
+      value.treeLastHarvestedInMonth = null;
+      value.treesLifeStartedAt = null;
+    }
+
+    if (_sync) {
+      /// sync changes to server - if not in initializing phase
+      unawaited(gameDatastore.saveFarmState(value));
+    }
+
+    /// update farm state model & farm state
+    _farmStateModelStreamController.add(value);
+    _farmStateStreamController.add(value.farmState);
   }
 
-  late DateTime _dateTime;
+  set _farmState(FarmState value) {
+    _farmStateModel = _farmStateModelValue.copyWith(
+      farmState: value,
+    );
+  }
+
+  set _farmContent(FarmContent? value) {
+    if (value == null) return;
+
+    _farmStateModel = _farmStateModelValue.copyWith(
+      farmContent: value,
+    );
+  }
+
+  set _treeLastHarvestedInMonth(Month? value) {
+    if (value == null) return;
+
+    _farmStateModel = _farmStateModelValue.copyWith(
+      treeLastHarvestedInMonth: value,
+    );
+  }
+
+  DateTime _dateTime;
 
   /// trees & crops components
-  FarmContent? _farmContent;
   Trees? _trees;
   Crops? _crops;
   BaseTreeCalculator? _baseTreeCalculator;
   BaseCropCalculator? _baseCropCalculator;
-  Month? _treeLastHarvestedInMonth;
 
-  FarmState get farmState => _farmStateValue;
+  FarmState get farmState => _farmStateModelValue.farmState;
   Stream<FarmState> get farmStateStream => _farmStateStreamController.stream;
-  FarmContent? get farmContent => _farmContent;
+  FarmContent? get farmContent => _farmStateModelValue.farmContent;
+  FarmContent? get _farmContent => _farmStateModelValue.farmContent;
+  Month? get _treeLastHarvestedInMonth => _farmStateModelValue.treeLastHarvestedInMonth;
+
+  void _handleBarren() {
+    throw UnimplementedError('barren land implementation is not done yet');
+  }
+
+  ((List<Vector2>, Vector2), (List<Vector2>, Vector2)) _getTreesAndCropsPositionAndSizeFor(FarmContent farmContent) {
+    final layoutDistributor = LayoutDistribution(
+      systemType: farmContent.systemType,
+      size: farmRect.width,
+      treeSize: treeSize,
+      cropSize: cropSize,
+    );
+
+    final farmDistribution = layoutDistributor.getDistribution();
+
+    final treePositions = <Vector2>[];
+    final cropPositions = <Vector2>[];
+
+    /// populate tree & crop positions
+    for (final growablePosition in farmDistribution) {
+      switch (growablePosition.growable) {
+        case GrowableType.tree:
+          treePositions.add(growablePosition.pos);
+          break;
+
+        case GrowableType.crop:
+          cropPositions.add(growablePosition.pos);
+          break;
+      }
+    }
+
+    return ((treePositions, layoutDistributor.treeSizeVector2), (cropPositions, layoutDistributor.cropSizeVector2));
+  }
+
+  void _populateFarm(FarmContent farmContent) {
+    final (treeData, cropData) = _getTreesAndCropsPositionAndSizeFor(farmContent);
+
+    _trees = null;
+    _crops = null;
+
+    if (farmContent.hasCrop) {
+      _crops = Crops(
+        lifeStartedAt: _farmStateModelValue.cropsLifeStartedAt,
+        cropType: farmContent.crop!.type as CropType,
+        cropPositions: cropData.$1,
+        cropSize: cropData.$2,
+        farmSize: farm.size,
+      );
+    }
+
+    if (farmContent.hasTrees) {
+      _trees = Trees(
+        lifeStartedAt: _farmStateModelValue.treesLifeStartedAt!,
+        treeType: farmContent.trees![0].type as TreeType,
+        treePositions: treeData.$1,
+        treeSize: treeData.$2,
+        farmSize: farm.size,
+      );
+    }
+
+    /// add trees & crops to the game
+    if (_trees != null) _putTrees(trees: _trees!);
+    if (_crops != null) {
+      final cropType = _crops!.cropType;
+
+      /// update base crop calculator
+      _baseCropCalculator = BaseCropCalculator.fromCropType(cropType);
+
+      addComponent(_crops!);
+    }
+  }
+
+  void _prepareFarm() {
+    switch (farmState) {
+      case FarmState.onlyCropsWaiting:
+      case FarmState.treesAndCropsButCropsWaiting:
+        final farmContent = _farmContent;
+        if (farmContent == null) {
+          throw Exception('$tag: invalid farm content for farmState: $farmState');
+        }
+
+        return _setupFarmFromScratch(farmContent);
+
+      case FarmState.functioning:
+      case FarmState.functioningOnlyTrees:
+      case FarmState.functioningOnlyCrops:
+        final farmContent = _farmContent;
+        if (farmContent == null) {
+          throw Exception('$tag: invalid farm content for farmState: $farmState');
+        }
+
+        return _populateFarm(farmContent);
+
+      case FarmState.barren:
+        return _handleBarren();
+
+      /// nothing special to do
+      case FarmState.notBought:
+      case FarmState.notFunctioning:
+        return;
+    }
+  }
 
   /// read farm state from db
   Future<List<Component>> initialize() async {
-    _farmState = FarmState.notBought;
+    /// mark sync as false
+    _sync = false;
+
+    final farmStateModel = await farm.game.gameDatastore.getFarmState(farm.farmId);
+    _farmStateModel = farmStateModel;
+
+    _prepareFarm();
+
+    /// mark sync back to true
+    _sync = true;
 
     return const [];
   }
@@ -282,8 +442,23 @@ class FarmCoreService {
           _farmState = FarmState.functioning;
         }
 
+        DateTime? cropsLifeStartedAt = _farmStateModelValue.cropsLifeStartedAt;
+        if (cropsLifeStartedAt == null) {
+          cropsLifeStartedAt = dateTime;
+
+          /// record tree life started time
+          _farmStateModel = _farmStateModelValue.copyWith(
+            cropsLifeStartedAt: dateTime,
+          );
+        }
+
+        /// record crop life started time
+        _farmStateModel = _farmStateModelValue.copyWith(
+          cropsLifeStartedAt: cropsLifeStartedAt,
+        );
+
         /// set crop's life started at value
-        crops.lifeStartedAt = dateTime;
+        crops.lifeStartedAt = cropsLifeStartedAt;
 
         addComponent(crops);
 
@@ -296,48 +471,35 @@ class FarmCoreService {
   void _setupFarmFromScratch(FarmContent farmContent) {
     _farmContent = farmContent;
 
-    final layoutDistributor = LayoutDistribution(
-      systemType: farmContent.systemType,
-      size: farmRect.width,
-      treeSize: treeSize,
-      cropSize: cropSize,
-    );
-
-    final farmDistribution = layoutDistributor.getDistribution();
-
-    final treePositions = <Vector2>[];
-    final cropPositions = <Vector2>[];
-
-    /// populate tree & crop positions
-    for (final growablePosition in farmDistribution) {
-      switch (growablePosition.growable) {
-        case GrowableType.tree:
-          treePositions.add(growablePosition.pos);
-          break;
-
-        case GrowableType.crop:
-          cropPositions.add(growablePosition.pos);
-          break;
-      }
-    }
+    final (treeData, cropData) = _getTreesAndCropsPositionAndSizeFor(farmContent);
 
     /// build trees & crops components
     if (farmContent.hasOnlyCrops) {
       _trees = null;
     } else {
+      DateTime? treeLifeStartedAt = _farmStateModelValue.treesLifeStartedAt;
+      if (treeLifeStartedAt == null) {
+        treeLifeStartedAt = _dateTime;
+
+        /// record tree life started time
+        _farmStateModel = _farmStateModelValue.copyWith(
+          treesLifeStartedAt: _dateTime,
+        );
+      }
+
       _trees = Trees(
-        lifeStartedAt: _dateTime,
+        lifeStartedAt: treeLifeStartedAt,
         treeType: farmContent.trees![0].type as TreeType,
-        treeSize: layoutDistributor.treeSizeVector2,
-        treePositions: treePositions,
+        treePositions: treeData.$1,
+        treeSize: treeData.$2,
         farmSize: farm.size,
       );
     }
 
     final crops = Crops(
       cropType: farmContent.crop!.type as CropType,
-      cropPositions: cropPositions,
-      cropSize: layoutDistributor.cropSizeVector2,
+      cropPositions: cropData.$1,
+      cropSize: cropData.$2,
       farmSize: farm.size,
     );
 
@@ -356,28 +518,12 @@ class FarmCoreService {
       fertilizer: farmContent.fertilizer,
     );
 
-    final layoutDistributor = LayoutDistribution(
-      systemType: farmContent.systemType,
-      size: farmRect.width,
-      treeSize: treeSize,
-      cropSize: cropSize,
-    );
-
-    final farmDistribution = layoutDistributor.getDistribution();
-
-    final cropPositions = <Vector2>[];
-
-    /// populate crop positions
-    for (final growablePosition in farmDistribution) {
-      if (growablePosition.growable == GrowableType.crop) {
-        cropPositions.add(growablePosition.pos);
-      }
-    }
+    final (_, cropData) = _getTreesAndCropsPositionAndSizeFor(farmContent);
 
     final crops = Crops(
       cropType: farmContent.crop!.type as CropType,
-      cropPositions: cropPositions,
-      cropSize: layoutDistributor.cropSizeVector2,
+      cropPositions: cropData.$1,
+      cropSize: cropData.$2,
       farmSize: farm.size,
     );
 
@@ -395,30 +541,23 @@ class FarmCoreService {
     _farmContent = _farmContent!.copyWith(
       trees: farmContent.trees,
     );
+    final (treeData, _) = _getTreesAndCropsPositionAndSizeFor(farmContent);
 
-    final layoutDistributor = LayoutDistribution(
-      systemType: farmContent.systemType,
-      size: farmRect.width,
-      treeSize: treeSize,
-      cropSize: cropSize,
-    );
+    DateTime? treeLifeStartedAt = _farmStateModelValue.treesLifeStartedAt;
+    if (treeLifeStartedAt == null) {
+      treeLifeStartedAt = _dateTime;
 
-    final farmDistribution = layoutDistributor.getDistribution();
-
-    final treePositions = <Vector2>[];
-
-    /// populate crop positions
-    for (final growablePosition in farmDistribution) {
-      if (growablePosition.growable == GrowableType.tree) {
-        treePositions.add(growablePosition.pos);
-      }
+      /// record tree life started time
+      _farmStateModel = _farmStateModelValue.copyWith(
+        treesLifeStartedAt: _dateTime,
+      );
     }
 
     _trees = Trees(
       lifeStartedAt: _dateTime,
       treeType: farmContent.trees![0].type as TreeType,
-      treeSize: layoutDistributor.treeSizeVector2,
-      treePositions: treePositions,
+      treePositions: treeData.$1,
+      treeSize: treeData.$2,
       farmSize: farm.size,
     );
 
