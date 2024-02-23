@@ -289,7 +289,7 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Text(
-                  widget.farm.farmName,
+                  widget.farm.farmId,
                   style: const TextStyle(color: Colors.white, fontSize: 32.0),
                 ),
               ),

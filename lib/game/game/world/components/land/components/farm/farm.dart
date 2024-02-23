@@ -11,12 +11,12 @@ import 'farm_controller.dart';
 class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
   final farmController = FarmController();
 
-  final String farmName;
+  final String farmId;
   final Rectangle farmRect;
 
   Farm(
     super._vertices, {
-    required this.farmName,
+    required this.farmId,
     required this.farmRect,
   }) : super(paint: Paint()..color = Colors.transparent);
 
@@ -37,7 +37,6 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
 
     final components = await farmController.initialize(
       game: game,
-      farmName: farmName,
       farm: this,
       farmRect: farmRect,
       add: add,
@@ -54,6 +53,6 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
 
   @override
   String toString() {
-    return farmName;
+    return farmId;
   }
 }

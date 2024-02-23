@@ -99,7 +99,7 @@ class BuyFarmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Purchase the farm: ${farm.farmName}?'),
+      title: Text('Purchase the farm: ${farm.farmId}?'),
 
       /// TODO: get the farm price
       content: Text('You would need to pay a total amount of Rs 1,00,000'),

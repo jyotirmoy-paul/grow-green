@@ -1,5 +1,5 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+import functions = require('firebase-functions');
+import admin = require('firebase-admin');
 
 admin.initializeApp();
 

@@ -40,7 +40,7 @@ class FarmCoreService {
     required this.addComponent,
     required this.removeComponents,
     required this.removeComponent,
-  }) : tag = 'FarmCoreService[${farm.farmName}]';
+  }) : tag = 'FarmCoreService[${farm.farmId}]';
 
   final _farmStateStreamController = StreamController<FarmState>.broadcast();
   late FarmState _farmStateValue;
@@ -73,7 +73,7 @@ class FarmCoreService {
   }
 
   void purchaseSuccess() {
-    Log.i('$tag: ${farm.farmName} is successfully purchased!');
+    Log.i('$tag: ${farm.farmId} is successfully purchased!');
 
     /// move the farm state to not functioning!
     _farmState = FarmState.notFunctioning;

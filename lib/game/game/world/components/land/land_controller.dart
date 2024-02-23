@@ -2,7 +2,6 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart' hide Text;
-import 'package:flutter/material.dart';
 
 import '../../../../../services/log/log.dart';
 import '../../../../../services/utils/service_action.dart';
@@ -47,7 +46,7 @@ class LandController {
             rectangle.bottomLeft.toCart(),
           ],
           farmRect: rectangle,
-          farmName: farmObj.name,
+          farmId: farmObj.name,
         )..anchor = Anchor.topLeft;
 
         farms.add(farm);
@@ -113,7 +112,7 @@ class LandController {
     /// mark farm as selected
     farm.farmController.isFarmSelected = true;
 
-/// open farm composition menu
+    /// open farm composition menu
     game.gameController.overlayData.farm = farm;
     game.overlays.add(SystemSelectorMenu.overlayName);
   }

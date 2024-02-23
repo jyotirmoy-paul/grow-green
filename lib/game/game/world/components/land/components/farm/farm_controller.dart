@@ -13,7 +13,6 @@ class FarmController {
   static const tag = 'FarmController';
 
   late final GrowGreenGame game;
-  late final String farmName;
   late final Rectangle farmRect;
   late final Farm farm;
   late final FarmCoreService _farmCoreService;
@@ -26,7 +25,6 @@ class FarmController {
 
   Future<List<Component>> initialize({
     required GrowGreenGame game,
-    required String farmName,
     required Rectangle farmRect,
     required Farm farm,
     required void Function(List<Component>) addAll,
@@ -35,7 +33,6 @@ class FarmController {
     required void Function(Component) remove,
   }) async {
     this.game = game;
-    this.farmName = farmName;
     this.farmRect = farmRect;
     this.farm = farm;
 
@@ -76,7 +73,7 @@ class FarmController {
 
   TextPainter get textPainter => TextPainter(
         text: TextSpan(
-          text: farmName,
+          text: farm.farmId,
           style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w900,
