@@ -26,6 +26,8 @@ class CropsController {
   });
 
   late final GrowGreenGame game;
+
+  Image? cropAsset;
   SpriteBatch? cropSpriteBatch;
 
   CropStage cropStage = CropStage.sowing;
@@ -44,13 +46,15 @@ class CropsController {
     );
   }
 
-  void _populateSpriteBatch() async {
-    final cropAsset = await game.images.load(CropAsset.of(cropType).at(cropStage));
-    cropSpriteBatch = SpriteBatch(cropAsset);
+  void _animateBatch() {
+    if (cropAsset == null) return;
+    if (cropSpriteBatch == null) return;
 
-    final originCropSize = cropAsset.size;
+    final originCropSize = cropAsset!.size;
     final cropSource = originCropSize.toRect();
     final scale = cropSize.length / originCropSize.length;
+
+    cropSpriteBatch?.clear();
 
     final bounceAnimationScaleFactor = bounceAnimation?.getCurrentScale() ?? 1.0;
     final finalScale = scale * bounceAnimationScaleFactor;
@@ -67,12 +71,18 @@ class CropsController {
     }
   }
 
+  Future<void> _populateSpriteBatch() async {
+    cropAsset = await game.images.load(CropAsset.of(cropType).at(cropStage));
+    cropSpriteBatch = SpriteBatch(cropAsset!);
+  }
+
   Future<List<Component>> initialize({
     required GrowGreenGame game,
   }) async {
     this.game = game;
 
-    /// animate to show new addtion occured
+    /// animate to show addition occured
+    await _populateSpriteBatch();
     _populateSpriteBatchWithAnimation();
 
     return const [];
@@ -85,11 +95,11 @@ class CropsController {
   void update(dt) {
     if (bounceAnimation != null) {
       bounceAnimation!.update(dt);
-      _populateSpriteBatch();
+      _animateBatch();
     }
   }
 
-  void updateCropStage(CropStage cropStage) {
+  void updateCropStage(CropStage cropStage) async {
     /// if the crop stage has not change, no need to update it
     if (this.cropStage == cropStage) return;
 
@@ -98,6 +108,7 @@ class CropsController {
     this.cropStage = cropStage;
 
     /// animate to notify stage change
+    await _populateSpriteBatch();
     _populateSpriteBatchWithAnimation();
   }
 }

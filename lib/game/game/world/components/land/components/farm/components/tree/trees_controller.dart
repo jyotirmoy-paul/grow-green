@@ -26,6 +26,8 @@ class TreesController {
   });
 
   late final GrowGreenGame game;
+
+  Image? treeAsset;
   SpriteBatch? treeSpriteBatch;
 
   TreeStage treeStage = TreeStage.seedling;
@@ -44,12 +46,13 @@ class TreesController {
     );
   }
 
-  void _populateSpriteBatch() async {
-    /// load the new asset and set to the sprite batch
-    final treeAsset = await game.images.load(TreeAsset.of(treeType).at(treeStage));
-    treeSpriteBatch = SpriteBatch(treeAsset);
+  void _animateBatch() async {
+    if (treeAsset == null) return;
+    if (treeSpriteBatch == null) return;
 
-    final originalTreeSize = treeAsset.size;
+    treeSpriteBatch?.clear();
+
+    final originalTreeSize = treeAsset!.size;
     final treeSource = originalTreeSize.toRect();
     final scale = treeSize.length / originalTreeSize.length;
 
@@ -58,7 +61,6 @@ class TreesController {
 
     for (final position in treePositions) {
       final cartPosition = position.toCart(farmSize.half());
-      final originalTreeSize = treeAsset.size;
 
       treeSpriteBatch?.add(
         source: treeSource,
@@ -69,10 +71,17 @@ class TreesController {
     }
   }
 
+  Future<void> _populateSpriteBatch() async {
+    /// load the new asset and set to the sprite batch
+    treeAsset = await game.images.load(TreeAsset.of(treeType).at(treeStage));
+    treeSpriteBatch = SpriteBatch(treeAsset!);
+  }
+
   Future<List<Component>> initialize({required GrowGreenGame game}) async {
     this.game = game;
 
     /// animate to show addition occured
+    await _populateSpriteBatch();
     _populateSpriteBatchWithAnimation();
 
     return const [];
@@ -85,11 +94,11 @@ class TreesController {
   void update(double dt) {
     if (bounceAnimation != null) {
       bounceAnimation!.update(dt);
-      _populateSpriteBatch();
+      _animateBatch();
     }
   }
 
-  void updateTreeStage(TreeStage treeStage) {
+  void updateTreeStage(TreeStage treeStage) async {
     /// if the tree stage has not changed, no need to update it
     if (this.treeStage == treeStage) return;
     Log.d('$tag: updateTreeStage invoked for $treeType, updating tree stage from ${this.treeStage} to $treeStage');
@@ -97,6 +106,7 @@ class TreesController {
     this.treeStage = treeStage;
 
     /// animate to notify stage change
+    await _populateSpriteBatch();
     _populateSpriteBatchWithAnimation();
   }
 }

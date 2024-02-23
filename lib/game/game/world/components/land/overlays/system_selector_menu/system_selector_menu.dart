@@ -271,12 +271,9 @@ class _SystemSelectorMenuState extends State<SystemSelectorMenu> with TickerProv
         builder: (context, child) {
           return Material(
             color: _backgroundColorAnimation.value,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: _blurAnimation.value, sigmaY: _blurAnimation.value),
-              child: Opacity(
-                opacity: _opacityAnimation.value,
-                child: child,
-              ),
+            child: Opacity(
+              opacity: _opacityAnimation.value,
+              child: child,
             ),
           );
         },

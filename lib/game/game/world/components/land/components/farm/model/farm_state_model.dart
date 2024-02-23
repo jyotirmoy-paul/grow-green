@@ -7,7 +7,7 @@ import 'harvest_model.dart';
 
 part 'farm_state_model.g.dart';
 
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
+@JsonSerializable(explicitToJson: true, includeIfNull: true)
 class FarmStateModel {
   final String farmId;
   double soilHealthPercentage;

@@ -10,7 +10,7 @@ import 'content.dart';
 
 part 'farm_content.g.dart';
 
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
+@JsonSerializable(explicitToJson: true, includeIfNull: true)
 class FarmContent {
   final Content? crop;
   final List<Content>? trees;

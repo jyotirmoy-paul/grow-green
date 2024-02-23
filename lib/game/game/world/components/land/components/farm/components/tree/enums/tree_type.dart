@@ -6,7 +6,7 @@ enum TreeType implements Growable, Measurables {
   neem,
   rosewood,
   teakwood,
-  cocounut,
+  coconut,
   jackfruit,
   mango;
 

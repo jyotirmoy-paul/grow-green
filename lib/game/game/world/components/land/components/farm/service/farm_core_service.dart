@@ -208,6 +208,9 @@ class FarmCoreService {
 
     _prepareFarm();
 
+    _updateCrops();
+    _updateTrees();
+
     /// mark init phase to be false
     _initPhase = false;
 
@@ -401,11 +404,11 @@ class FarmCoreService {
 
     addComponent(trees);
 
+    _trees = trees;
+
     if (farmState == FarmState.functioningOnlyCrops) {
       return FarmState.functioning;
     }
-
-    _trees = trees;
 
     return null;
   }
