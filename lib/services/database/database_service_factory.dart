@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../../models/auth/user.dart';
@@ -10,7 +11,7 @@ import 'interface/cloud_db_service.dart';
 import 'interface/db_batch_write.dart';
 import 'interface/db_manager_service.dart';
 
-part 'impl/app_db_manager_service.dart';
+part 'impl/interval_sync_db_manager_service.dart';
 part 'impl/firebase_cloud_db_service.dart';
 part 'impl/firebase_db_batch_write.dart';
 

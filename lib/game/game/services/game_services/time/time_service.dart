@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../../datastore/game_datastore.dart';
 import 'time_aware.dart';
 
 /// Singleton class
@@ -15,6 +16,10 @@ class TimeService {
   final List<TimeAware> _subscribers = [];
 
   late DateTime _dateTime;
+  DateTime get currentDateTime => _dateTime;
+
+  late GameDatastore _gameDatastore;
+
   Timer? _timer;
   int _timePace = 1;
   Duration _currentPeriod = Duration.zero;
@@ -53,13 +58,16 @@ class TimeService {
     for (final subscriber in _subscribers) {
       subscriber.onTimeChange(_dateTime);
     }
+
+    /// let's invoke db to store time
+    unawaited(_gameDatastore.saveDate(_dateTime));
   }
 
   /// public methods
 
-  /// TODO: get time from database to initialize timer with
-  Future<void> initialize({DateTime? dateTime}) async {
-    _dateTime = dateTime ?? DateTime(2000);
+  Future<void> initialize({required GameDatastore gameDatastore}) async {
+    _gameDatastore = gameDatastore;
+    _dateTime = await gameDatastore.getDate();
 
     _initializeTimer();
     _notifySubscribers();

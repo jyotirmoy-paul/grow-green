@@ -29,14 +29,14 @@ class _IntervalSyncDbManagerService implements DbManagerService {
     _syncTimer?.cancel();
     _syncTimer = Timer(_syncInterval, () {
       if (lock.locked) return;
-      Log.i('$tag: timer sync initiated');
+      Log.i('$tag: timer sync initiated at ${DateTime.now()}');
       sync();
     });
   }
 
   @override
   Future<ServiceAction> configure({
-    Duration syncInterval = const Duration(seconds: 10),
+    Duration syncInterval = const Duration(seconds: 30),
     required User user,
   }) async {
     /// initialize the cloud db service
@@ -55,7 +55,7 @@ class _IntervalSyncDbManagerService implements DbManagerService {
   /// instead of waiting for the interval sync
   @override
   Future<ServiceAction> sync() async {
-    Log.d('$tag: sync() is invoked, lock status: ${lock.locked}');
+    Log.i('$tag: sync() is invoked, lock status: ${lock.locked}');
 
     return lock.synchronized<ServiceAction>(() async {
       Log.i('$tag: starting to sync local cache to server');
@@ -88,6 +88,9 @@ class _IntervalSyncDbManagerService implements DbManagerService {
       /// or a fresh new batch!
       _cache = _temporaryCache ?? cloudDbService.createBatch();
 
+      /// nullify the temporary cache to avoid writing to it again!
+      _temporaryCache = null;
+
       return ServiceAction.success;
     });
   }
@@ -104,9 +107,9 @@ class _IntervalSyncDbManagerService implements DbManagerService {
 
     if (lock.locked) {
       _temporaryCache ??= cloudDbService.createBatch();
-      _temporaryCache!.write(id: id, data: data);
+      _temporaryCache!.update(id: id, data: data);
     } else {
-      _cache.write(id: id, data: data);
+      _cache.update(id: id, data: data);
     }
 
     return ServiceAction.success;

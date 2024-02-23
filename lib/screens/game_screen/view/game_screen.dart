@@ -12,6 +12,8 @@ import '../../../game/game/world/components/land/overlays/system_selector_menu/s
 import '../bloc/game_bloc.dart';
 
 class GameScreen extends StatelessWidget {
+  static const tag = 'GameScreen';
+
   const GameScreen({super.key});
 
   /// list down all overlays
@@ -24,14 +26,18 @@ class GameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gameBloc = context.read<GameBloc>();
+    if (gameBloc.state is! GameLoaded) {
+      throw Exception('$tag build() was invoked in wrong GameBloc state: ${gameBloc.state}');
+    }
+
+    final gameLoadedState = gameBloc.state as GameLoaded;
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => GameBloc(),
-        ),
-        BlocProvider(
           create: (context) => SystemSelectorMenuBloc(
-            game: context.read<GameBloc>().state.game,
+            game: gameLoadedState.game,
           ),
         ),
         BlocProvider(
@@ -41,7 +47,7 @@ class GameScreen extends StatelessWidget {
       child: BlocBuilder<GameBloc, GameState>(
         builder: (_, state) {
           return GameWidget<GrowGreenGame>(
-            game: state.game,
+            game: gameLoadedState.game,
             overlayBuilderMap: overlayBuilderMap,
             initialActiveOverlays: const [
               GameStatOverlay.overlayName,

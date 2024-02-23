@@ -4,52 +4,70 @@ import 'package:gap/gap.dart';
 
 import '../../../models/auth/user.dart';
 import '../../../models/auth/user_auth_type.dart';
+import '../../../routes/routes.dart';
 import '../../../services/auth/auth.dart';
+import '../../../services/log/log.dart';
+import '../../game_screen/bloc/game_bloc.dart';
 import '../cubit/landing_screen_cubit.dart';
 
 class LandingScreen extends StatelessWidget {
+  static const tag = 'LandingScreen';
+
   const LandingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => LandingScreenCubit(),
-      child: Scaffold(
-        body: Stack(
-          children: [
-            /// Background image
+    return BlocListener<GameBloc, GameState>(
+      listener: (context, state) {
+        if (state is GameLoaded) {
+          /// TODO: let's preload the game screen and once all assets are ready we can move to the screen
+          /// This will avoid any abrupt ui changes and everything will be smooth
+          Log.d('$tag: Game is loaded, moving to game screen!');
+          Navigation.pushReplacement(RouteName.gameScreen);
+        }
+      },
+      child: BlocProvider(
+        create: (context) => LandingScreenCubit(
+          gameBloc: context.read<GameBloc>(),
+          authBloc: context.read<AuthBloc>(),
+        ),
+        child: Scaffold(
+          body: Stack(
+            children: [
+              /// Background image
 
-            /// View
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, authState) {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  reverseDuration: const Duration(milliseconds: 300),
-                  child: () {
-                    if (authState is AuthLoginProcessing) {
-                      return const Align(
-                        alignment: Alignment.center,
-                        child: CircularProgressIndicator(
-                          key: ValueKey('processing-view'),
-                        ),
+              /// View
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, authState) {
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    reverseDuration: const Duration(milliseconds: 300),
+                    child: () {
+                      if (authState is AuthLoginProcessing) {
+                        return const Align(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(
+                            key: ValueKey('processing-view'),
+                          ),
+                        );
+                      }
+
+                      if (authState is AuthLoggedIn) {
+                        return _LoggedInView(
+                          key: const ValueKey('logged-in-view'),
+                          user: authState.user,
+                        );
+                      }
+
+                      return const _NotLoggedInView(
+                        key: ValueKey('not-logged-in-view'),
                       );
-                    }
-
-                    if (authState is AuthLoggedIn) {
-                      return _LoggedInView(
-                        key: const ValueKey('logged-in-view'),
-                        user: authState.user,
-                      );
-                    }
-
-                    return const _NotLoggedInView(
-                      key: ValueKey('not-logged-in-view'),
-                    );
-                  }(),
-                );
-              },
-            ),
-          ],
+                    }(),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

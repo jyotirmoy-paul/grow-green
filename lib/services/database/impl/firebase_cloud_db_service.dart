@@ -47,16 +47,16 @@ class _FirebaseCloudDbService implements CloudDbService {
   }
 
   @override
-  Future<ServiceAction> set({
+  Future<ServiceAction> update({
     required String id,
     required Map<String, dynamic> data,
   }) async {
     try {
       final documentReference = collectionReference.doc(id);
-      await documentReference.set(data);
+      await documentReference.update(data);
       return ServiceAction.success;
     } catch (e) {
-      Log.e('$tag: set(id: $id, data: $data) threw exception: $e');
+      Log.e('$tag: update(id: $id, data: $data) threw exception: $e');
     }
 
     return ServiceAction.failure;

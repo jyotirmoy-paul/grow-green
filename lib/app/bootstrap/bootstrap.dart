@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,21 @@ import 'package:flutter/material.dart';
 import '../../firebase_options.dart';
 import '../../services/log/log.dart';
 import 'app_bloc_observer.dart';
+
+const useFirebaseEmulator = true;
+
+Future<void> _setupFirebaseEmulator() async {
+  const macIp = '192.168.0.108';
+  const firestoreIp = '$macIp:8080';
+
+  await FirebaseAuth.instance.useAuthEmulator(macIp, 9099);
+
+  FirebaseFirestore.instance.settings = const Settings(
+    host: firestoreIp,
+    sslEnabled: false,
+    persistenceEnabled: false,
+  );
+}
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   FlutterError.onError = (details) {
@@ -26,6 +43,10 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+
+      if (useFirebaseEmulator) {
+        await _setupFirebaseEmulator();
+      }
 
       runApp(await builder());
     },

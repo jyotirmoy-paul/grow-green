@@ -9,7 +9,7 @@ part of 'farm_state_model.dart';
 FarmStateModel _$FarmStateModelFromJson(Map<String, dynamic> json) =>
     FarmStateModel(
       farmId: json['farmId'] as String,
-      soilHealth: (json['soilHealth'] as num).toDouble(),
+      soilHealthPercentage: (json['soilHealthPercentage'] as num).toDouble(),
       farmState: $enumDecode(_$FarmStateEnumMap, json['farmState']),
       farmContent: json['farmContent'] == null
           ? null
@@ -30,7 +30,7 @@ FarmStateModel _$FarmStateModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$FarmStateModelToJson(FarmStateModel instance) =>
     <String, dynamic>{
       'farmId': instance.farmId,
-      'soilHealth': instance.soilHealth,
+      'soilHealthPercentage': instance.soilHealthPercentage,
       'farmState': _$FarmStateEnumMap[instance.farmState]!,
       'farmContent': instance.farmContent,
       'treeLastHarvestedInMonth':

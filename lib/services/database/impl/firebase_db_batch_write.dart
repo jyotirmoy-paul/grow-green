@@ -36,19 +36,18 @@ class _FirebaseDbWriteBatch implements DbBatch {
   }
 
   @override
-  ServiceAction write({
+  ServiceAction update({
     required String id,
     required Map<String, dynamic> data,
   }) {
     try {
-      writeBatch.set(
+      writeBatch.update(
         collectionReference.doc(id),
         data,
-        SetOptions(merge: false),
       );
       return ServiceAction.success;
     } catch (e) {
-      Log.d('$tag: delete(id: $id) thew exception: $e');
+      Log.d('$tag: update(id: $id) thew exception: $e');
     }
 
     return ServiceAction.failure;
