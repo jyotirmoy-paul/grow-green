@@ -4,7 +4,7 @@ abstract interface class DbBatch {
   /// commits all writes
   Future<ServiceAction> commit();
 
-  ServiceAction write({
+  ServiceAction update({
     required String id,
     required Map<String, dynamic> data,
   });

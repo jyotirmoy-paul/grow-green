@@ -7,4 +7,14 @@ sealed class LandingScreenState extends Equatable {
   List<Object> get props => [];
 }
 
-final class LandingScreenInitial extends LandingScreenState {}
+final class LandingScreenInitial extends LandingScreenState {
+  const LandingScreenInitial();
+}
+
+final class LandingScreenPreparingGame extends LandingScreenState {
+  const LandingScreenPreparingGame();
+}
+
+final class LandingScreenGameReady extends LandingScreenState {
+  const LandingScreenGameReady();
+}

@@ -15,9 +15,10 @@ class SystemTypeConverter implements JsonConverter<SystemType, String> {
     final agroforestryType = name.toEnum<AgroforestryType?>(AgroforestryType.values, null);
     final farmSystemType = name.toEnum<FarmSystemType?>(FarmSystemType.values, null);
 
-    return agroforestryType ??
-        farmSystemType ??
-        (throw Exception('$tag: fromJson($name) failed to find enum from agroforestryType, farmSystemType'));
+    return (agroforestryType ??
+            farmSystemType ??
+            (throw Exception('$tag: fromJson($name) failed to find enum from agroforestryType, farmSystemType')))
+        as SystemType;
   }
 
   @override

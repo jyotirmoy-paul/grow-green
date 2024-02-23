@@ -1,11 +1,15 @@
 import 'dart:async';
 
 import '../../../../../services/log/log.dart';
+import '../../../../../services/utils/service_action.dart';
+import '../../datastore/game_datastore.dart';
 import 'enums/transaction_type.dart';
 import 'models/money_model.dart';
 
 class MonetaryService {
   static const tag = 'MonetaryService';
+
+  final GameDatastore gameDatastore;
 
   MoneyModel _balanceValue = MoneyModel(rupees: 0);
   MoneyModel get _balance => _balanceValue;
@@ -16,13 +20,12 @@ class MonetaryService {
 
   final StreamController<MoneyModel> _balanceStreamController = StreamController.broadcast();
 
-  MonetaryService();
+  MonetaryService({
+    required this.gameDatastore,
+  });
 
   Future<void> initialize() async {
-    /// TODO: Initialize monetary service with value from server!
-    _balance = MoneyModel(
-      rupees: 10000000,
-    );
+    _balance = await gameDatastore.getMoney();
   }
 
   /// Deducts `value` amount from user's balance
@@ -37,12 +40,15 @@ class MonetaryService {
       return false;
     }
 
-    /// TODO: commit the new balance to server
-
-    /// TODO: update balance from server
-    _balance = balance;
+    final serverStatus = await gameDatastore.saveMoney(balance);
+    if (serverStatus == ServiceAction.failure) {
+      Log.e('_transactDebit($value) failed to commit to server!');
+      return false;
+    }
 
     Log.d('$tag: A debit transaction of value $value was successful. Balance amount: $_balance');
+
+    _balance = balance;
 
     return true;
   }
@@ -54,12 +60,16 @@ class MonetaryService {
   Future<bool> _transactCredit(MoneyModel value) async {
     final balance = _balance + value;
 
-    /// TODO: commit the new balance to server
-
-    /// TODO: update balance from server
-    _balance = balance;
+    final serverStatus = await gameDatastore.saveMoney(balance);
+    if (serverStatus == ServiceAction.failure) {
+      Log.e('_transactCredit($value) failed to commit to server!');
+      return false;
+    }
 
     Log.d('$tag: A credit transaction of value $value was successful. Balance amount: $_balance');
+
+    _balance = balance;
+
     return true;
   }
 
@@ -67,9 +77,6 @@ class MonetaryService {
     required TransactionType transactionType,
     required MoneyModel value,
   }) async {
-    /// TODO: Remove this artificial delay
-    await Future.delayed(const Duration(milliseconds: 500));
-
     switch (transactionType) {
       case TransactionType.debit:
         return _transactDebit(value);

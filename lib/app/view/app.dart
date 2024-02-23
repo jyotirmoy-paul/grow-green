@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../routes/app_routes.dart';
 import '../../routes/routes.dart';
+import '../../screens/game_screen/bloc/game_bloc.dart';
 import '../../screens/splash_screen/cubit/splash_screen_cubit.dart';
 import '../../services/auth/auth.dart';
 import '../../utils/constants.dart';
@@ -22,6 +23,9 @@ class App extends StatelessWidget {
           create: (context) => SplashScreenCubit(
             authBloc: context.read<AuthBloc>(),
           ),
+        ),
+        BlocProvider(
+          create: (_) => GameBloc(),
         ),
       ],
       child: MaterialApp(

@@ -11,7 +11,7 @@ abstract interface class CloudDbService {
 
   DbBatch createBatch();
 
-  Future<ServiceAction> set({
+  Future<ServiceAction> update({
     required String id,
     required Map<String, dynamic> data,
   });

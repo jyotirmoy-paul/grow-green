@@ -4,9 +4,19 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 
 import 'grow_green_game_controller.dart';
+import 'services/datastore/game_datastore.dart';
+import 'services/game_services/monetary/monetary_service.dart';
 
 class GrowGreenGame extends FlameGame with ScaleDetector {
-  final gameController = GrowGreenGameController();
+  final GrowGreenGameController gameController;
+
+  final GameDatastore gameDatastore;
+  final MonetaryService monetaryService;
+
+  GrowGreenGame({
+    required this.gameDatastore,
+    required this.monetaryService,
+  }) : gameController = GrowGreenGameController(gameDatastore: gameDatastore, monetaryService: monetaryService);
 
   @override
   FutureOr<void> onLoad() async {

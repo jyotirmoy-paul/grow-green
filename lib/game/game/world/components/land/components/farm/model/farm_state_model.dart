@@ -10,7 +10,7 @@ part 'farm_state_model.g.dart';
 @JsonSerializable()
 class FarmStateModel {
   final String farmId;
-  double soilHealth;
+  double soilHealthPercentage;
   FarmState farmState;
   FarmContent? farmContent;
   Month? treeLastHarvestedInMonth;
@@ -20,7 +20,7 @@ class FarmStateModel {
 
   FarmStateModel({
     required this.farmId,
-    required this.soilHealth,
+    required this.soilHealthPercentage,
     required this.farmState,
     this.farmContent,
     this.treeLastHarvestedInMonth,
