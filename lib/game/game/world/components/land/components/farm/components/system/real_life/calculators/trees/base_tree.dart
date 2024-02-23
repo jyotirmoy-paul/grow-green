@@ -93,7 +93,7 @@ abstract class BaseTreeCalculator {
         return MangoTreeCalculator();
       case TreeType.mahagony:
         return MahagonyCalculator();
-      case TreeType.cocounut:
+      case TreeType.coconut:
         return CoconutCalculator();
       case TreeType.neem:
         return NeemCalculator();

@@ -7,6 +7,8 @@ import '../enum/growable.dart';
 typedef LayoutData = List<GrowablePosition>;
 
 class LayoutDistribution {
+  static const tag = 'LayoutDistribution';
+
   final SystemType systemType;
   final double size;
   final double treeSize;
@@ -44,7 +46,9 @@ class LayoutDistribution {
     LayoutData result = List.empty(growable: true);
 
     final smallestSize = 4 * treeSize + 4 * 3 * cropSize;
-    if (smallestSize > size) return List.empty();
+    if (smallestSize > size) {
+      throw Exception('$tag: The given tree and crop size is not possible to be shown within $size area!');
+    }
 
     LayoutData firstColumnTrees = _fillColumn(growable: GrowableType.tree, size: size, column: 0, numOfGrowables: 4);
     LayoutData firstColumnCrops = LayoutData.empty(growable: true);

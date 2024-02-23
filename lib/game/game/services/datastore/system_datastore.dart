@@ -15,7 +15,7 @@ class SystemDatastore {
     agroforestryType: AgroforestryType.alley,
     trees: [
       Content(
-        type: TreeType.cocounut,
+        type: TreeType.coconut,
         qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.alley),
       ),
     ],
@@ -33,7 +33,7 @@ class SystemDatastore {
     agroforestryType: AgroforestryType.block,
     trees: [
       Content(
-        type: TreeType.cocounut,
+        type: TreeType.coconut,
         qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.block),
       ),
     ],

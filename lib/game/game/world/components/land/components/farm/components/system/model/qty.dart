@@ -6,7 +6,7 @@ part 'qty.g.dart';
 
 enum Scale { kg, units }
 
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
+@JsonSerializable(explicitToJson: true, includeIfNull: true)
 class Qty {
   final int value;
   final Scale scale;

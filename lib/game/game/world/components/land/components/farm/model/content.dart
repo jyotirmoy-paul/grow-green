@@ -6,7 +6,7 @@ import '../components/system/model/qty.dart';
 
 part 'content.g.dart';
 
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
+@JsonSerializable(explicitToJson: true, includeIfNull: true)
 class Content {
   @MeasurablesConverter()
   final Measurables type;
