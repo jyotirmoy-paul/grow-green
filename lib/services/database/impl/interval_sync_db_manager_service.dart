@@ -98,7 +98,10 @@ class _IntervalSyncDbManagerService implements DbManagerService {
   @override
   Future<ServiceAction> set({required String id, required Map<String, dynamic> data}) async {
     return lock.synchronized<ServiceAction>(() {
-      Log.d('$tag: set(id: $id, data: $data) is invoked');
+      if (id != 'date') {
+        /// a temp hack
+        Log.d('$tag: set(id: $id, data: $data) is invoked');
+      }
 
       _cache.update(id: id, data: data);
       return ServiceAction.success;
