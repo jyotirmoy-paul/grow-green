@@ -15,7 +15,7 @@ HarvestModel _$HarvestModelFromJson(Map<String, dynamic> json) => HarvestModel(
 Map<String, dynamic> _$HarvestModelToJson(HarvestModel instance) =>
     <String, dynamic>{
       'yield': instance.yield,
-      'money': instance.money,
+      'money': instance.money.toJson(),
       'growable': _$ComponentIdEnumMap[instance.growable]!,
     };
 

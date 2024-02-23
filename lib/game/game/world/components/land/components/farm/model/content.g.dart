@@ -13,5 +13,5 @@ Content _$ContentFromJson(Map<String, dynamic> json) => Content(
 
 Map<String, dynamic> _$ContentToJson(Content instance) => <String, dynamic>{
       'type': const MeasurablesConverter().toJson(instance.type),
-      'qty': instance.qty,
+      'qty': instance.qty.toJson(),
     };

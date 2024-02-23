@@ -12,9 +12,6 @@ class GameUtils {
   static const worldMapFileName = 'world.tmx'; // TODO: move to game assets
   static const mapDirectoryPrefix = 'assets/exp/'; // TODO: move to game assets
 
-  static final defaultGameDateTime = DateTime(2000);
-  static const defaultGameMoney = 100000;
-
   final Vector2 gameWorldSize;
   final double isoAngle;
   final double isoScaleFactor;

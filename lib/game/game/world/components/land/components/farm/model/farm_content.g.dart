@@ -20,10 +20,18 @@ FarmContent _$FarmContentFromJson(Map<String, dynamic> json) => FarmContent(
           : Content.fromJson(json['fertilizer'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$FarmContentToJson(FarmContent instance) =>
-    <String, dynamic>{
-      'crop': instance.crop,
-      'trees': instance.trees,
-      'fertilizer': instance.fertilizer,
-      'systemType': const SystemTypeConverter().toJson(instance.systemType),
-    };
+Map<String, dynamic> _$FarmContentToJson(FarmContent instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('crop', instance.crop?.toJson());
+  writeNotNull('trees', instance.trees?.map((e) => e.toJson()).toList());
+  writeNotNull('fertilizer', instance.fertilizer?.toJson());
+  val['systemType'] = const SystemTypeConverter().toJson(instance.systemType);
+  return val;
+}

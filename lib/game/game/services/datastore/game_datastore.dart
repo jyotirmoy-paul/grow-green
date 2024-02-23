@@ -9,7 +9,7 @@ import 'system_datastore.dart';
 class GameDatastore {
   static const tag = 'GameDatastore';
 
-  final SystemDatastore _systemDatastore = SystemDatastore();
+  final _systemDatastore = SystemDatastore();
   final DbManagerService _dbManagerService;
 
   /// Ids used in database

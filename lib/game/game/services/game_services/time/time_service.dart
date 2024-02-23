@@ -73,6 +73,18 @@ class TimeService {
     _notifySubscribers();
   }
 
+  void pauseTime() {
+    _timer?.cancel();
+  }
+
+  void resumeTime() {
+    if (_timer?.isActive == true) {
+      throw Exception('$tag: cannot resume when already active!');
+    }
+
+    _initializeTimer();
+  }
+
   void register(TimeAware subscriber) {
     if (!_subscribers.contains(subscriber)) {
       _subscribers.add(subscriber);

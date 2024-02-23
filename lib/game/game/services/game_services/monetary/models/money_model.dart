@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'money_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MoneyModel {
   static final _formatter = NumberFormat.decimalPattern('en_IN');
 

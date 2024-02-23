@@ -5,7 +5,7 @@ import '../../../overlays/system_selector_menu/enum/component_id.dart';
 
 part 'harvest_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class HarvestModel {
   final double yield;
   final MoneyModel money;

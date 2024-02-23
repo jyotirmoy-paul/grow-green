@@ -27,18 +27,29 @@ FarmStateModel _$FarmStateModelFromJson(Map<String, dynamic> json) =>
           : HarvestModel.fromJson(json['harvestModel'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$FarmStateModelToJson(FarmStateModel instance) =>
-    <String, dynamic>{
-      'farmId': instance.farmId,
-      'soilHealthPercentage': instance.soilHealthPercentage,
-      'farmState': _$FarmStateEnumMap[instance.farmState]!,
-      'farmContent': instance.farmContent,
-      'treeLastHarvestedInMonth':
-          _$MonthEnumMap[instance.treeLastHarvestedInMonth],
-      'treesLifeStartedAt': instance.treesLifeStartedAt?.toIso8601String(),
-      'cropsLifeStartedAt': instance.cropsLifeStartedAt?.toIso8601String(),
-      'harvestModel': instance.harvestModel,
-    };
+Map<String, dynamic> _$FarmStateModelToJson(FarmStateModel instance) {
+  final val = <String, dynamic>{
+    'farmId': instance.farmId,
+    'soilHealthPercentage': instance.soilHealthPercentage,
+    'farmState': _$FarmStateEnumMap[instance.farmState]!,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('farmContent', instance.farmContent?.toJson());
+  writeNotNull('treeLastHarvestedInMonth',
+      _$MonthEnumMap[instance.treeLastHarvestedInMonth]);
+  writeNotNull(
+      'treesLifeStartedAt', instance.treesLifeStartedAt?.toIso8601String());
+  writeNotNull(
+      'cropsLifeStartedAt', instance.cropsLifeStartedAt?.toIso8601String());
+  writeNotNull('harvestModel', instance.harvestModel?.toJson());
+  return val;
+}
 
 const _$FarmStateEnumMap = {
   FarmState.notBought: 'notBought',
