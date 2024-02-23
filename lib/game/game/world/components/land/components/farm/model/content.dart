@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../../../../converters/measurables_converter.dart';
 import '../../../../../../enums/measurables.dart';
 import '../components/system/model/qty.dart';
-import '../../../../../../converters/measurables_converter.dart';
 
 part 'content.g.dart';
 

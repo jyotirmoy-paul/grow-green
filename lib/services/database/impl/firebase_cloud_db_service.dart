@@ -4,8 +4,8 @@ class _FirebaseCloudDbService implements CloudDbService {
   static const tag = '_FirebaseCloudDbService';
 
   late CollectionReference collectionReference;
-
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final _documents = <QueryDocumentSnapshot>[];
 
   @override
   Future<ServiceAction> initialize({
@@ -17,6 +17,32 @@ class _FirebaseCloudDbService implements CloudDbService {
 
   @override
   Future<(ServiceAction, Map<String, dynamic>)> get({required String id}) async {
+    /// populate the `_documents` list first
+    if (_documents.isEmpty) {
+      try {
+        final querySnapshot = await collectionReference.get(const GetOptions(source: Source.server));
+        _documents.clear();
+        _documents.addAll(querySnapshot.docs);
+      } catch (e) {
+        Log.e('$tag: get(id: $id) threw exception while querying reference: $e');
+      }
+    }
+
+    if (_documents.isEmpty) {
+      Log.i('$tag: _documents list is empty, falling back to manual fetch');
+    } else {
+      Log.i('$tag: _documents list is available, doing a smart fetch');
+      for (final doc in _documents) {
+        final docData = doc.data();
+        if (doc.id == id && docData != null) {
+          /// if we find the id we need in the documents list, return it
+          return (ServiceAction.success, Map<String, dynamic>.from(docData as Map));
+        }
+      }
+    }
+
+    Log.i('$tag: could not locate doc with id $id in the _documents list, falling back to manual fetch');
+
     try {
       final documentReference = collectionReference.doc(id);
       final documentSnapshot = await documentReference.get();
