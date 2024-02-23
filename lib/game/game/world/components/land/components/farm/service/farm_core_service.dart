@@ -50,54 +50,34 @@ class FarmCoreService {
 
   GameDatastore get gameDatastore => farm.game.gameDatastore;
 
-  bool _sync = true;
+  bool _initPhase = true;
 
   late FarmStateModel _farmStateModelValue;
-  set _farmStateModel(FarmStateModel value) {
-    Log.d('$tag: updating _farmStateModel to $value, _sync: $_sync');
+  void updateFarmStateModel(FarmStateModel newFarmStateModel) {
+    Log.d('$tag: updating _farmStateModel to $newFarmStateModel, _initPhase: $_initPhase');
 
     /// update farm state value
-    _farmStateModelValue = value;
+    _farmStateModelValue = newFarmStateModel;
 
-    if (_crops == null) {
-      value.cropsLifeStartedAt = null;
-    }
+    if (!_initPhase) {
+      if (_crops == null) {
+        newFarmStateModel.cropsLifeStartedAt = null;
+      }
 
-    if (_trees == null) {
-      value.treeLastHarvestedInMonth = null;
-      value.treesLifeStartedAt = null;
-    }
-
-    if (_sync) {
-      /// sync changes to server - if not in initializing phase
-      unawaited(gameDatastore.saveFarmState(value));
+      if (_trees == null) {
+        newFarmStateModel.treeLastHarvestedInMonth = null;
+        newFarmStateModel.treesLifeStartedAt = null;
+      }
     }
 
     /// update farm state model & farm state
-    _farmStateModelStreamController.add(value);
-    _farmStateStreamController.add(value.farmState);
-  }
+    _farmStateModelStreamController.add(newFarmStateModel);
+    _farmStateStreamController.add(newFarmStateModel.farmState);
 
-  set _farmState(FarmState value) {
-    _farmStateModel = _farmStateModelValue.copyWith(
-      farmState: value,
-    );
-  }
-
-  set _farmContent(FarmContent? value) {
-    if (value == null) return;
-
-    _farmStateModel = _farmStateModelValue.copyWith(
-      farmContent: value,
-    );
-  }
-
-  set _treeLastHarvestedInMonth(Month? value) {
-    if (value == null) return;
-
-    _farmStateModel = _farmStateModelValue.copyWith(
-      treeLastHarvestedInMonth: value,
-    );
+    if (!_initPhase) {
+      /// sync changes to server
+      unawaited(gameDatastore.saveFarmState(newFarmStateModel));
+    }
   }
 
   DateTime _dateTime;
@@ -147,7 +127,7 @@ class FarmCoreService {
     return ((treePositions, layoutDistributor.treeSizeVector2), (cropPositions, layoutDistributor.cropSizeVector2));
   }
 
-  void _populateFarm(FarmContent farmContent) {
+  void _populateFarmFromData(FarmContent farmContent) {
     final (treeData, cropData) = _getTreesAndCropsPositionAndSizeFor(farmContent);
 
     _trees = null;
@@ -174,7 +154,7 @@ class FarmCoreService {
     }
 
     /// add trees & crops to the game
-    if (_trees != null) _putTrees(trees: _trees!);
+    if (_trees != null) _putTreesAndGetFarmState(trees: _trees!);
     if (_crops != null) {
       final cropType = _crops!.cropType;
 
@@ -204,7 +184,7 @@ class FarmCoreService {
           throw Exception('$tag: invalid farm content for farmState: $farmState');
         }
 
-        return _populateFarm(farmContent);
+        return _populateFarmFromData(farmContent);
 
       case FarmState.barren:
         return _handleBarren();
@@ -218,25 +198,30 @@ class FarmCoreService {
 
   /// read farm state from db
   Future<List<Component>> initialize() async {
-    /// mark sync as false
-    _sync = false;
+    /// init phase is true
+    _initPhase = true;
 
     final farmStateModel = await farm.game.gameDatastore.getFarmState(farm.farmId);
-    _farmStateModel = farmStateModel;
+
+    /// write to server
+    updateFarmStateModel(farmStateModel);
 
     _prepareFarm();
 
-    /// mark sync back to true
-    _sync = true;
+    /// mark init phase to be false
+    _initPhase = false;
 
     return const [];
   }
 
   void purchaseSuccess() {
+    final farmStateModel = _farmStateModelValue;
+
     Log.i('$tag: ${farm.farmId} is successfully purchased!');
 
     /// move the farm state to not functioning!
-    _farmState = FarmState.notFunctioning;
+    farmStateModel.farmState = FarmState.notFunctioning;
+    updateFarmStateModel(farmStateModel);
   }
 
   MoneyModel getTreePotentionValue() {
@@ -256,6 +241,8 @@ class FarmCoreService {
   }
 
   Future<bool> sellTree() async {
+    final farmStateModel = _farmStateModelValue;
+
     final trees = _trees;
 
     if (trees == null) {
@@ -273,13 +260,16 @@ class FarmCoreService {
 
     /// update farm state
     if (_crops == null) {
-      _farmState = FarmState.notFunctioning;
+      farmStateModel.farmState = FarmState.notFunctioning;
     } else {
-      _farmState = FarmState.functioningOnlyCrops;
+      farmStateModel.farmState = FarmState.functioningOnlyCrops;
     }
 
     /// update farm content
-    _farmContent = _farmContent?.removeTree();
+    farmStateModel.farmContent = _farmContent?.removeTree();
+
+    /// write to server
+    updateFarmStateModel(farmStateModel);
 
     /// TODO: Show alert dialog box for progress!
 
@@ -317,6 +307,7 @@ class FarmCoreService {
   }
 
   void _harvestCrops(Crops crop) {
+    final farmStateModel = _farmStateModelValue;
     Log.d('$tag: Harvest season has arrived for ${crop.cropType}, harvesting!');
 
     /// remove crops reference
@@ -328,13 +319,16 @@ class FarmCoreService {
 
     /// update farm state
     if (_trees == null) {
-      _farmState = FarmState.notFunctioning;
+      farmStateModel.farmState = FarmState.notFunctioning;
     } else {
-      _farmState = FarmState.functioningOnlyTrees;
+      farmStateModel.farmState = FarmState.functioningOnlyTrees;
     }
 
     /// update farm content
-    _farmContent = _farmContent?.removeCrop();
+    farmStateModel.farmContent = _farmContent?.removeCrop();
+
+    /// write to server
+    updateFarmStateModel(farmStateModel);
 
     /// TODO: Do something with the harvest result
   }
@@ -380,7 +374,12 @@ class FarmCoreService {
     final canHarvestTree = treesCalculator.canHarvest(treeAgeInDays: treeAge, currentMonth: currentMonth);
 
     if (canHarvestTree && _treeLastHarvestedInMonth != currentMonth) {
-      _treeLastHarvestedInMonth = currentMonth;
+      updateFarmStateModel(
+        _farmStateModelValue.copyWith(
+          treeLastHarvestedInMonth: currentMonth,
+        ),
+      );
+
       _harvestTrees(trees);
     }
 
@@ -396,30 +395,36 @@ class FarmCoreService {
     _updateTrees();
   }
 
-  void _putTrees({required Trees trees}) {
+  FarmState? _putTreesAndGetFarmState({required Trees trees}) {
     final treeType = trees.treeType;
     _baseTreeCalculator = BaseTreeCalculator.fromTreeType(treeType);
 
     addComponent(trees);
 
     if (farmState == FarmState.functioningOnlyCrops) {
-      _farmState = FarmState.functioning;
+      return FarmState.functioning;
     }
 
     _trees = trees;
+
+    return null;
   }
 
   void _putCropsWhenReady({
     required Crops crops,
+    required FarmStateModel farmStateModel,
     bool areTreesAvailable = false,
   }) {
     Log.i('$tag: _putCropsWhenReady invoked, waiting until harvest season for ${crops.cropType}');
 
     if (areTreesAvailable) {
-      _farmState = FarmState.treesAndCropsButCropsWaiting;
+      farmStateModel.farmState = FarmState.treesAndCropsButCropsWaiting;
     } else {
-      _farmState = FarmState.onlyCropsWaiting;
+      farmStateModel.farmState = FarmState.onlyCropsWaiting;
     }
+
+    /// write to server
+    updateFarmStateModel(farmStateModel);
 
     final cropType = crops.cropType;
     final cropCalculator = BaseCropCalculator.fromCropType(cropType);
@@ -432,44 +437,36 @@ class FarmCoreService {
     subscription = TimeService().dateTimeStream.listen((dateTime) {
       if (cropCalculator.canSow(dateTime.gameMonth)) {
         /// hurray! we can finally sow the crop, let's do it
+        final farmStateModel = _farmStateModelValue;
 
         subscription?.cancel();
         Log.i('$tag: _putCropsWhenReady: Sowing season has arrived for ${crops.cropType}, sowing now!');
 
         if (areTreesAvailable && _trees == null) {
-          _farmState = FarmState.functioningOnlyCrops;
+          farmStateModel.farmState = FarmState.functioningOnlyCrops;
         } else {
-          _farmState = FarmState.functioning;
+          farmStateModel.farmState = FarmState.functioning;
         }
-
-        DateTime? cropsLifeStartedAt = _farmStateModelValue.cropsLifeStartedAt;
-        if (cropsLifeStartedAt == null) {
-          cropsLifeStartedAt = dateTime;
-
-          /// record tree life started time
-          _farmStateModel = _farmStateModelValue.copyWith(
-            cropsLifeStartedAt: dateTime,
-          );
-        }
-
-        /// record crop life started time
-        _farmStateModel = _farmStateModelValue.copyWith(
-          cropsLifeStartedAt: cropsLifeStartedAt,
-        );
 
         /// set crop's life started at value
-        crops.lifeStartedAt = cropsLifeStartedAt;
-
-        addComponent(crops);
+        crops.lifeStartedAt = dateTime;
+        farmStateModel.cropsLifeStartedAt = dateTime;
 
         /// update in the global variable
         _crops = crops;
+
+        addComponent(crops);
+
+        /// write to server
+        updateFarmStateModel(farmStateModel);
       }
     });
   }
 
   void _setupFarmFromScratch(FarmContent farmContent) {
-    _farmContent = farmContent;
+    final farmStateModel = _farmStateModelValue;
+
+    farmStateModel.farmContent = farmContent;
 
     final (treeData, cropData) = _getTreesAndCropsPositionAndSizeFor(farmContent);
 
@@ -477,15 +474,7 @@ class FarmCoreService {
     if (farmContent.hasOnlyCrops) {
       _trees = null;
     } else {
-      DateTime? treeLifeStartedAt = _farmStateModelValue.treesLifeStartedAt;
-      if (treeLifeStartedAt == null) {
-        treeLifeStartedAt = _dateTime;
-
-        /// record tree life started time
-        _farmStateModel = _farmStateModelValue.copyWith(
-          treesLifeStartedAt: _dateTime,
-        );
-      }
+      final treeLifeStartedAt = farmStateModel.treesLifeStartedAt ?? _dateTime;
 
       _trees = Trees(
         lifeStartedAt: treeLifeStartedAt,
@@ -494,6 +483,8 @@ class FarmCoreService {
         treeSize: treeData.$2,
         farmSize: farm.size,
       );
+
+      farmStateModel.treesLifeStartedAt = treeLifeStartedAt;
     }
 
     final crops = Crops(
@@ -504,8 +495,16 @@ class FarmCoreService {
     );
 
     /// add trees & crops to the game
-    if (_trees != null) _putTrees(trees: _trees!);
-    _putCropsWhenReady(crops: crops, areTreesAvailable: _trees != null);
+    if (_trees != null) {
+      final farmState = _putTreesAndGetFarmState(trees: _trees!);
+      if (farmState != null) farmStateModel.farmState = farmState;
+    }
+
+    _putCropsWhenReady(
+      crops: crops,
+      areTreesAvailable: _trees != null,
+      farmStateModel: farmStateModel,
+    );
   }
 
   void _addCropsToFarm(FarmContent farmContent) {
@@ -513,7 +512,9 @@ class FarmCoreService {
       throw Exception('$tag: Can not invoke _addCropsToFarm on a farm which is not initialized. _farmContent is null.');
     }
 
-    _farmContent = _farmContent!.copyWith(
+    final farmStateModel = _farmStateModelValue;
+
+    farmStateModel.farmContent = _farmContent!.copyWith(
       crop: farmContent.crop,
       fertilizer: farmContent.fertilizer,
     );
@@ -530,6 +531,7 @@ class FarmCoreService {
     _putCropsWhenReady(
       crops: crops,
       areTreesAvailable: true,
+      farmStateModel: farmStateModel,
     );
   }
 
@@ -538,20 +540,12 @@ class FarmCoreService {
       throw Exception('$tag: Can not invoke _addCropsToFarm on a farm which is not initialized. _farmContent is null.');
     }
 
-    _farmContent = _farmContent!.copyWith(
+    final farmStateModel = _farmStateModelValue;
+
+    farmStateModel.farmContent = _farmContent!.copyWith(
       trees: farmContent.trees,
     );
     final (treeData, _) = _getTreesAndCropsPositionAndSizeFor(farmContent);
-
-    DateTime? treeLifeStartedAt = _farmStateModelValue.treesLifeStartedAt;
-    if (treeLifeStartedAt == null) {
-      treeLifeStartedAt = _dateTime;
-
-      /// record tree life started time
-      _farmStateModel = _farmStateModelValue.copyWith(
-        treesLifeStartedAt: _dateTime,
-      );
-    }
 
     _trees = Trees(
       lifeStartedAt: _dateTime,
@@ -562,6 +556,11 @@ class FarmCoreService {
     );
 
     /// add tree
-    _putTrees(trees: _trees!);
+    final state = _putTreesAndGetFarmState(trees: _trees!);
+    if (state != null) {
+      farmStateModel.farmState = state;
+    }
+
+    updateFarmStateModel(farmStateModel);
   }
 }
