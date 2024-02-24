@@ -1,6 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-
-import '../../../../utils/month.dart';
 import '../enum/farm_state.dart';
 import 'farm_content.dart';
 import 'harvest_model.dart';
@@ -13,7 +11,7 @@ class FarmStateModel {
   double soilHealthPercentage;
   FarmState farmState;
   FarmContent? farmContent;
-  Month? treeLastHarvestedInMonth;
+  DateTime? treeLastHarvestedOn;
   DateTime? treesLifeStartedAt;
   DateTime? cropsLifeStartedAt;
   List<HarvestModel>? harvestModels;
@@ -23,7 +21,7 @@ class FarmStateModel {
     required this.soilHealthPercentage,
     required this.farmState,
     this.farmContent,
-    this.treeLastHarvestedInMonth,
+    this.treeLastHarvestedOn,
     this.treesLifeStartedAt,
     this.cropsLifeStartedAt,
     this.harvestModels,
@@ -39,7 +37,7 @@ class FarmStateModel {
     double? soilHealthPercentage,
     FarmState? farmState,
     FarmContent? farmContent,
-    Month? treeLastHarvestedInMonth,
+    DateTime? treeLastHarvestedOn,
     DateTime? treesLifeStartedAt,
     DateTime? cropsLifeStartedAt,
     List<HarvestModel>? harvestModels,
@@ -49,7 +47,7 @@ class FarmStateModel {
       soilHealthPercentage: soilHealthPercentage ?? this.soilHealthPercentage,
       farmState: farmState ?? this.farmState,
       farmContent: farmContent ?? this.farmContent,
-      treeLastHarvestedInMonth: treeLastHarvestedInMonth ?? this.treeLastHarvestedInMonth,
+      treeLastHarvestedOn: treeLastHarvestedOn ?? this.treeLastHarvestedOn,
       treesLifeStartedAt: treesLifeStartedAt ?? this.treesLifeStartedAt,
       cropsLifeStartedAt: cropsLifeStartedAt ?? this.cropsLifeStartedAt,
       harvestModels: harvestModels ?? this.harvestModels,
@@ -58,4 +56,9 @@ class FarmStateModel {
 
   factory FarmStateModel.fromJson(Map<String, dynamic> json) => _$FarmStateModelFromJson(json);
   Map<String, dynamic> toJson() => _$FarmStateModelToJson(this);
+
+  @override
+  String toString() {
+    return 'FarmStateModel(farmId: $farmId, soilHealthPercentage: $soilHealthPercentage, farmState: $farmState)';
+  }
 }

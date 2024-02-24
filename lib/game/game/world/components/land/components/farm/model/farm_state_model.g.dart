@@ -14,8 +14,9 @@ FarmStateModel _$FarmStateModelFromJson(Map<String, dynamic> json) =>
       farmContent: json['farmContent'] == null
           ? null
           : FarmContent.fromJson(json['farmContent'] as Map<String, dynamic>),
-      treeLastHarvestedInMonth:
-          $enumDecodeNullable(_$MonthEnumMap, json['treeLastHarvestedInMonth']),
+      treeLastHarvestedOn: json['treeLastHarvestedOn'] == null
+          ? null
+          : DateTime.parse(json['treeLastHarvestedOn'] as String),
       treesLifeStartedAt: json['treesLifeStartedAt'] == null
           ? null
           : DateTime.parse(json['treesLifeStartedAt'] as String),
@@ -33,8 +34,7 @@ Map<String, dynamic> _$FarmStateModelToJson(FarmStateModel instance) =>
       'soilHealthPercentage': instance.soilHealthPercentage,
       'farmState': _$FarmStateEnumMap[instance.farmState]!,
       'farmContent': instance.farmContent?.toJson(),
-      'treeLastHarvestedInMonth':
-          _$MonthEnumMap[instance.treeLastHarvestedInMonth],
+      'treeLastHarvestedOn': instance.treeLastHarvestedOn?.toIso8601String(),
       'treesLifeStartedAt': instance.treesLifeStartedAt?.toIso8601String(),
       'cropsLifeStartedAt': instance.cropsLifeStartedAt?.toIso8601String(),
       'harvestModels': instance.harvestModels?.map((e) => e.toJson()).toList(),
@@ -49,19 +49,4 @@ const _$FarmStateEnumMap = {
   FarmState.functioningOnlyCrops: 'functioningOnlyCrops',
   FarmState.notFunctioning: 'notFunctioning',
   FarmState.barren: 'barren',
-};
-
-const _$MonthEnumMap = {
-  Month.jan: 'jan',
-  Month.feb: 'feb',
-  Month.mar: 'mar',
-  Month.apr: 'apr',
-  Month.may: 'may',
-  Month.jun: 'jun',
-  Month.jul: 'jul',
-  Month.aug: 'aug',
-  Month.sep: 'sep',
-  Month.oct: 'oct',
-  Month.nov: 'nov',
-  Month.dec: 'dec',
 };

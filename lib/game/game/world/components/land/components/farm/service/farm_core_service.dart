@@ -8,7 +8,6 @@ import '../../../../../../../../utils/extensions/date_time_extensions.dart';
 import '../../../../../../services/datastore/game_datastore.dart';
 import '../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../../../../services/game_services/time/time_service.dart';
-import '../../../../utils/month.dart';
 import '../components/crop/crops.dart';
 import '../components/crop/enums/crop_type.dart';
 import '../components/system/enum/growable.dart';
@@ -21,6 +20,7 @@ import '../enum/farm_state.dart';
 import '../farm.dart';
 import '../model/farm_content.dart';
 import '../model/farm_state_model.dart';
+import '../model/harvest_model.dart';
 import 'harvest/harvest_core_service.dart';
 
 class FarmCoreService {
@@ -45,14 +45,35 @@ class FarmCoreService {
   })  : tag = 'FarmCoreService[${farm.farmId}]',
         _dateTime = TimeService().currentDateTime;
 
-  final _farmStateStreamController = StreamController<FarmState>.broadcast();
   final _farmStateModelStreamController = StreamController<FarmStateModel>.broadcast();
-
-  GameDatastore get gameDatastore => farm.game.gameDatastore;
 
   bool _initPhase = true;
 
   late FarmStateModel _farmStateModelValue;
+
+  DateTime _dateTime;
+
+  /// trees & crops components
+  Trees? _trees;
+  Crops? _crops;
+  BaseTreeCalculator? _baseTreeCalculator;
+  BaseCropCalculator? _baseCropCalculator;
+
+  /// getters
+  GameDatastore get gameDatastore => farm.game.gameDatastore;
+  FarmState get farmState => _farmStateModelValue.farmState;
+  FarmContent? get farmContent => _farmStateModelValue.farmContent;
+  DateTime? get _treeLastHarvestedOn => _farmStateModelValue.treeLastHarvestedOn;
+
+  /// streams available for getting updates of farm!
+  Stream<FarmState> get farmStateStream => _farmStateModelStreamController.stream.map<FarmState>(
+        (e) => e.farmState,
+      );
+
+  Stream<List<HarvestModel>> get harvestModels => _farmStateModelStreamController.stream.map<List<HarvestModel>>(
+        (e) => List.from(e.harvestModels ?? const []),
+      );
+
   void updateFarmStateModel(FarmStateModel newFarmStateModel) {
     Log.d('$tag: updating _farmStateModel to $newFarmStateModel, _initPhase: $_initPhase');
 
@@ -65,34 +86,20 @@ class FarmCoreService {
       }
 
       if (_trees == null) {
-        newFarmStateModel.treeLastHarvestedInMonth = null;
+        newFarmStateModel.treeLastHarvestedOn = null;
         newFarmStateModel.treesLifeStartedAt = null;
       }
     }
 
     /// update farm state model & farm state
     _farmStateModelStreamController.add(newFarmStateModel);
-    _farmStateStreamController.add(newFarmStateModel.farmState);
 
     if (!_initPhase) {
-      /// sync changes to server
+      /// sync changes to server - it's a fire and forget call
+      /// there are internal mechanisms for retrying
       unawaited(gameDatastore.saveFarmState(newFarmStateModel));
     }
   }
-
-  DateTime _dateTime;
-
-  /// trees & crops components
-  Trees? _trees;
-  Crops? _crops;
-  BaseTreeCalculator? _baseTreeCalculator;
-  BaseCropCalculator? _baseCropCalculator;
-
-  FarmState get farmState => _farmStateModelValue.farmState;
-  Stream<FarmState> get farmStateStream => _farmStateStreamController.stream;
-  FarmContent? get farmContent => _farmStateModelValue.farmContent;
-  FarmContent? get _farmContent => _farmStateModelValue.farmContent;
-  Month? get _treeLastHarvestedInMonth => _farmStateModelValue.treeLastHarvestedInMonth;
 
   void _handleBarren() {
     throw UnimplementedError('barren land implementation is not done yet');
@@ -170,22 +177,20 @@ class FarmCoreService {
     switch (farmState) {
       case FarmState.onlyCropsWaiting:
       case FarmState.treesAndCropsButCropsWaiting:
-        final farmContent = _farmContent;
         if (farmContent == null) {
           throw Exception('$tag: invalid farm content for farmState: $farmState');
         }
 
-        return _setupFarmFromScratch(farmContent);
+        return _setupFarmFromScratch(farmContent!);
 
       case FarmState.functioning:
       case FarmState.functioningOnlyTrees:
       case FarmState.functioningOnlyCrops:
-        final farmContent = _farmContent;
         if (farmContent == null) {
           throw Exception('$tag: invalid farm content for farmState: $farmState');
         }
 
-        return _populateFarmFromData(farmContent);
+        return _populateFarmFromData(farmContent!);
 
       case FarmState.barren:
         return _handleBarren();
@@ -267,7 +272,7 @@ class FarmCoreService {
     }
 
     /// update farm content
-    farmStateModel.farmContent = _farmContent?.removeTree();
+    farmStateModel.farmContent = farmContent?.removeTree();
 
     final treeAge = _dateTime.difference(trees.lifeStartedAt).inDays;
 
@@ -340,7 +345,7 @@ class FarmCoreService {
     }
 
     /// update farm content
-    farmStateModel.farmContent = _farmContent?.removeCrop();
+    farmStateModel.farmContent = farmContent?.removeCrop();
 
     /// write to server
     updateFarmStateModel(farmStateModel);
@@ -371,7 +376,7 @@ class FarmCoreService {
   /// periodic harvest of trees
   void _harvestTrees(Trees trees, int treeAge) {
     final farmStateModel = _farmStateModelValue;
-    Log.i('$tag: _harvestTrees invoked for ${trees.treeType}');
+    Log.i('$tag: _harvestTrees invoked for ${trees.treeType} on ${_dateTime.gameMonth}');
 
     final treeHarvestService = HarvestCoreService.forTree(
       treeType: trees.treeType,
@@ -400,10 +405,18 @@ class FarmCoreService {
     final currentMonth = _dateTime.gameMonth;
     final canHarvestTree = treesCalculator.canHarvest(treeAgeInDays: treeAge, currentMonth: currentMonth);
 
-    if (canHarvestTree && _treeLastHarvestedInMonth != currentMonth) {
+    bool canHarvesAgain = true;
+    if (_treeLastHarvestedOn != null) {
+      final harvestedDayDiff = _dateTime.difference(_treeLastHarvestedOn!).inDays;
+
+      /// if more than a month has passed, we can harvest again whenever treesCalculator says it's harvest time
+      canHarvesAgain = harvestedDayDiff > 31;
+    }
+
+    if (canHarvestTree && canHarvesAgain) {
       updateFarmStateModel(
         _farmStateModelValue.copyWith(
-          treeLastHarvestedInMonth: currentMonth,
+          treeLastHarvestedOn: _dateTime,
         ),
       );
 
@@ -535,16 +548,16 @@ class FarmCoreService {
   }
 
   void _addCropsToFarm(FarmContent farmContent) {
-    if (_farmContent == null) {
+    if (this.farmContent == null) {
       throw Exception('$tag: Can not invoke _addCropsToFarm on a farm which is not initialized. _farmContent is null.');
     }
 
     final farmStateModel = _farmStateModelValue;
 
-    farmStateModel.farmContent = _farmContent!.copyWith(
-      crop: farmContent.crop,
-      fertilizer: farmContent.fertilizer,
-    );
+    farmStateModel.farmContent = this.farmContent!.copyWith(
+          crop: farmContent.crop,
+          fertilizer: farmContent.fertilizer,
+        );
 
     final (_, cropData) = _getTreesAndCropsPositionAndSizeFor(farmContent);
 
@@ -563,15 +576,15 @@ class FarmCoreService {
   }
 
   void _addTreesToFarm(FarmContent farmContent) {
-    if (_farmContent == null) {
+    if (this.farmContent == null) {
       throw Exception('$tag: Can not invoke _addCropsToFarm on a farm which is not initialized. _farmContent is null.');
     }
 
     final farmStateModel = _farmStateModelValue;
 
-    farmStateModel.farmContent = _farmContent!.copyWith(
-      trees: farmContent.trees,
-    );
+    farmStateModel.farmContent = this.farmContent!.copyWith(
+          trees: farmContent.trees,
+        );
     final (treeData, _) = _getTreesAndCropsPositionAndSizeFor(farmContent);
 
     _trees = Trees(
