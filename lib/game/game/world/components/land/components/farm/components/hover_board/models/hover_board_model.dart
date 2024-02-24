@@ -3,10 +3,12 @@ abstract interface class HoverBoardModel {
   factory HoverBoardModel.basic({
     required String text,
     required String image,
+    required String animationPrefix,
   }) {
     return BasicHoverBoardModel(
       text: text,
       image: image,
+      animationPrefix: animationPrefix,
     );
   }
 
@@ -27,10 +29,12 @@ abstract interface class HoverBoardModel {
 class BasicHoverBoardModel implements HoverBoardModel {
   final String text;
   final String image;
+  final String animationPrefix;
 
   BasicHoverBoardModel({
     required this.text,
     required this.image,
+    required this.animationPrefix,
   });
 
   @override

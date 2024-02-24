@@ -39,7 +39,7 @@ class CropsController {
 
     bounceAnimation = GameAnimation(
       totalDuration: 0.626,
-      maxScale: 1.6,
+      maxValue: 1.6,
       onComplete: () {
         bounceAnimation = null;
       },
@@ -56,7 +56,7 @@ class CropsController {
 
     cropSpriteBatch?.clear();
 
-    final bounceAnimationScaleFactor = bounceAnimation?.getCurrentScale() ?? 1.0;
+    final bounceAnimationScaleFactor = bounceAnimation?.value ?? 1.0;
     final finalScale = scale * bounceAnimationScaleFactor;
 
     for (final position in cropPositions) {

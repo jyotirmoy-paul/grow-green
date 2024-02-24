@@ -1,4 +1,6 @@
 enum GameAnimationTypes {
   breathing,
-  easeInOut,
+  bounce,
+  tween,
+  easeOut,
 }

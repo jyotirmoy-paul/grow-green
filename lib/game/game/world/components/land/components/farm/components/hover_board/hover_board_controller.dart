@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
 import '../../farm.dart';
+import 'components/basic_hover_board.dart';
 import 'components/hover_board_item.dart';
 import 'enum/hover_board_type.dart';
 import 'models/hover_board_model.dart';
@@ -36,42 +37,41 @@ class HoverBoardController {
     return const [];
   }
 
-  /// TODO: Need to handle multiple hoverboard effectively
-  void addHoverBoard({
-    required HoverBoardType type,
-    required HoverBoardModel model,
-    required VoidCallback onTap,
-  }) {
+  void addHoverBoard({required HoverBoardType type, required HoverBoardModel model, required VoidCallback onTap}) {
     Log.i('$tag: invoked addHoverBoard(type: $type, model: $model)');
 
+    /// check if a hover board of type already exists
     if (_hoverBoards.containsKey(type)) {
-      Log.w('$tag: existing hoverboard of type $type will be replaced!');
+      final hoverBoard = _hoverBoards[type];
 
-      final existingItem = _hoverBoards.remove(type)!;
-      remove(existingItem);
+      if (hoverBoard!.isMounted) {
+        Log.d('$tag: $type hover board already exist, update method will be invoked!');
+        _hoverBoards[type]!.updateData(model);
+        return;
+      } else {
+        _hoverBoards.remove(type);
+      }
     }
 
-    final item = HoverBoardItem(
-      model: model,
-      farmCenter: farmCenter,
-      onTap: onTap,
-    );
+    /// if not, create a branch new hover board and add it
+    final hoverBoardModel = model;
+    late HoverBoardItem hoverBoardItem;
 
-    /// add
-    add(item);
-    _hoverBoards[type] = item;
-  }
-
-  void removeHoverBoard({
-    required HoverBoardType type,
-  }) {
-    Log.i('$tag: invoked removeHoverBoard(type: $type)');
-
-    if (!_hoverBoards.containsKey(type)) {
-      throw Exception('$tag: cannot remove an inactive hoverboard, $type is not active');
+    if (hoverBoardModel is BasicHoverBoardModel) {
+      /// basic hover board
+      hoverBoardItem = BasicHoverBoard(
+        model: hoverBoardModel,
+        farmCenter: farmCenter,
+        onTap: onTap,
+        farm: farm,
+      );
+    } else if (hoverBoardModel is TimerHoverBoardModel) {
+      /// timer hover board
+      throw UnimplementedError('Not implemented yet!');
     }
 
-    final item = _hoverBoards.remove(type)!;
-    remove(item);
+    /// add the hoverboard item
+    add(hoverBoardItem);
+    _hoverBoards[type] = hoverBoardItem;
   }
 }

@@ -27,6 +27,8 @@ class FarmController {
   FarmState get farmState => _farmCoreService.farmState;
   FarmContent? get farmContent => _farmCoreService.farmContent;
 
+  VoidCallback? onFarmTap;
+
   Future<List<Component>> initialize({
     required GrowGreenGame game,
     required Rectangle farmRect,
