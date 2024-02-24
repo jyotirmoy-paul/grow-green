@@ -11,16 +11,21 @@ enum HarvestType {
   oneTime,
 }
 
+enum HarvestState {
+  ack,
+  waitingAck,
+}
+
 @JsonSerializable(explicitToJson: true, includeIfNull: true)
 class HarvestModel {
   final HarvestType harvestType;
-
   @GrowableConverter()
   final Growable growable;
   final DateTime dateOfHarvest;
-  final int ageAtHarvest;
+  final int ageInDaysAtHarvest;
   final double yield;
   final MoneyModel money;
+  final HarvestState harvestState;
 
   HarvestModel({
     required this.harvestType,
@@ -28,8 +33,21 @@ class HarvestModel {
     required this.money,
     required this.growable,
     required this.dateOfHarvest,
-    required this.ageAtHarvest,
+    required this.ageInDaysAtHarvest,
+    this.harvestState = HarvestState.waitingAck,
   });
+
+  HarvestModel ackHarvestState() {
+    return HarvestModel(
+      harvestType: harvestType,
+      yield: yield,
+      money: money,
+      growable: growable,
+      dateOfHarvest: dateOfHarvest,
+      ageInDaysAtHarvest: ageInDaysAtHarvest,
+      harvestState: HarvestState.ack,
+    );
+  }
 
   factory HarvestModel.fromJson(Map<String, dynamic> json) => _$HarvestModelFromJson(json);
   Map<String, dynamic> toJson() => _$HarvestModelToJson(this);
