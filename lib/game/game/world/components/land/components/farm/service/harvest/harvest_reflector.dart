@@ -64,11 +64,6 @@ class HarvestReflector {
     if (totalMoney.isZero()) {
       Log.d('$tag: no money to collect in the farm');
 
-      if (_hoverBoardController.isShowing) {
-        Log.d('$tag: removing the active hover board');
-        _hoverBoardController.removeHoverBoard(type: HoverBoardType.harvestOutcome);
-      }
-
       return;
     }
 
@@ -79,7 +74,11 @@ class HarvestReflector {
       type: HoverBoardType.harvestOutcome,
 
       /// TODO: Replace asset & fix text
-      model: HoverBoardModel.basic(text: '₹ ${totalMoney.formattedRupees}', image: 'props/coin.png'),
+      model: HoverBoardModel.basic(
+        text: '₹ ${totalMoney.formattedRupees}',
+        image: 'props/coin.png',
+        animationPrefix: 'animations/coins',
+      ),
       onTap: () {
         _onHoverBoardTap(totalMoney);
       },

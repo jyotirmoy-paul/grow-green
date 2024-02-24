@@ -105,6 +105,11 @@ class LandController {
   void _processFarmTap(Farm farm) async {
     Log.d('$tag: _processFarmTap: $farm is tapped');
 
+    /// if a listener has registered for taps, let them handle it
+    if (farm.farmController.onFarmTap != null) {
+      return farm.farmController.onFarmTap!();
+    }
+
     if (farm.farmController.farmState == FarmState.notBought) {
       return _handleFarmBuying(farm);
     }

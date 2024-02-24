@@ -43,6 +43,8 @@ flutter:
     - assets/images/trees/
     - assets/images/crops/
     - assets/images/props/
+    - assets/images/animations/
+    - assets/images/animations/coins/
     - assets/images/tiles/
     - assets/images/clouds/
     - assets/exp/
