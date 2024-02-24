@@ -5,7 +5,7 @@ import 'package:flame/sprite.dart';
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
 import '../../../../../../../grow_green_game.dart';
-import '../../animations/bounce_animation.dart';
+import '../../animations/game_animation.dart';
 import '../../asset/crop_asset.dart';
 import 'enums/crop_stage.dart';
 import 'enums/crop_type.dart';
@@ -32,12 +32,12 @@ class CropsController {
 
   CropStage cropStage = CropStage.sowing;
 
-  BounceAnimation? bounceAnimation;
+  GameAnimation? bounceAnimation;
 
   void _populateSpriteBatchWithAnimation() {
     if (bounceAnimation != null) return;
 
-    bounceAnimation = BounceAnimation(
+    bounceAnimation = GameAnimation(
       totalDuration: 0.626,
       maxScale: 1.6,
       onComplete: () {

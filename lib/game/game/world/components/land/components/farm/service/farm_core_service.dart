@@ -70,7 +70,7 @@ class FarmCoreService {
         (e) => e.farmState,
       );
 
-  Stream<List<HarvestModel>> get harvestModels => _farmStateModelStreamController.stream.map<List<HarvestModel>>(
+  Stream<List<HarvestModel>> get harvestModelsStream => _farmStateModelStreamController.stream.map<List<HarvestModel>>(
         (e) => List.from(e.harvestModels ?? const []),
       );
 
@@ -92,6 +92,7 @@ class FarmCoreService {
     }
 
     /// update farm state model & farm state
+    Log.d('$tag: notifying all listeners of changes in farm state model');
     _farmStateModelStreamController.add(newFarmStateModel);
 
     if (!_initPhase) {
@@ -203,7 +204,7 @@ class FarmCoreService {
   }
 
   /// read farm state from db
-  Future<List<Component>> initialize() async {
+  Future<void> initialize() async {
     /// init phase is true
     _initPhase = true;
 
@@ -219,8 +220,6 @@ class FarmCoreService {
 
     /// mark init phase to be false
     _initPhase = false;
-
-    return const [];
   }
 
   void purchaseSuccess() {
@@ -378,6 +377,9 @@ class FarmCoreService {
     final farmStateModel = _farmStateModelValue;
     Log.i('$tag: _harvestTrees invoked for ${trees.treeType} on ${_dateTime.gameMonth}');
 
+    /// update last harvested on
+    farmStateModel.treeLastHarvestedOn = _dateTime;
+
     final treeHarvestService = HarvestCoreService.forTree(
       treeType: trees.treeType,
       treeAgeInDays: treeAge,
@@ -414,12 +416,6 @@ class FarmCoreService {
     }
 
     if (canHarvestTree && canHarvesAgain) {
-      updateFarmStateModel(
-        _farmStateModelValue.copyWith(
-          treeLastHarvestedOn: _dateTime,
-        ),
-      );
-
       _harvestTrees(trees, treeAge);
     }
 
@@ -600,6 +596,30 @@ class FarmCoreService {
     if (state != null) {
       farmStateModel.farmState = state;
     }
+
+    updateFarmStateModel(farmStateModel);
+  }
+
+  void markAllHarvestsAck() {
+    Log.d('markAllHarvestsAck() invoked, to mark existing harvest models as ack');
+
+    final farmStateModel = _farmStateModelValue;
+    final models = farmStateModel.harvestModels;
+    if (models == null || models.isEmpty) {
+      throw Exception('$tag: No harvest models available to mark them ack');
+    }
+
+    final newHarvestModels = <HarvestModel>[];
+
+    for (final m in models) {
+      if (m.isAck()) {
+        newHarvestModels.add(m);
+      } else {
+        newHarvestModels.add(m.ackHarvestState());
+      }
+    }
+
+    farmStateModel.harvestModels = newHarvestModels;
 
     updateFarmStateModel(farmStateModel);
   }

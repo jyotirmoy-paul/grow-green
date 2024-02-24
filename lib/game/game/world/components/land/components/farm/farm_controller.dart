@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 
 import '../../../../../grow_green_game.dart';
 import '../../../../../services/game_services/monetary/models/money_model.dart';
+import 'components/hover_board/hover_board.dart';
 import 'enum/farm_state.dart';
 import 'farm.dart';
 import 'model/farm_content.dart';
 import 'service/farm_core_service.dart';
+import 'service/harvest/harvest_reflector.dart';
 
 class FarmController {
   static const tag = 'FarmController';
@@ -15,7 +17,9 @@ class FarmController {
   late final GrowGreenGame game;
   late final Rectangle farmRect;
   late final Farm farm;
+  late final HoverBoard hoverBoard;
   late final FarmCoreService _farmCoreService;
+  late final HarvestReflector _harvestReflector;
 
   /// FIXME: a farm stays selected until a new farm is selected, it's a bug
   bool isFarmSelected = false;
@@ -35,6 +39,7 @@ class FarmController {
     this.game = game;
     this.farmRect = farmRect;
     this.farm = farm;
+    hoverBoard = HoverBoard(farm: farm);
 
     /// create farm service
     _farmCoreService = FarmCoreService(
@@ -46,9 +51,23 @@ class FarmController {
       removeComponents: removeAll,
     );
 
+    /// create harvest reflector
+    _harvestReflector = HarvestReflector(
+      farmCoreService: _farmCoreService,
+      add: add,
+      remove: remove,
+    );
+
+    /// boot the harvest reflector service to handle harvest events
+    _harvestReflector.boot();
+
     /// prepare farm service
     /// a call to `initialize` returns back initial components that needs to be shown
-    return _farmCoreService.initialize();
+    await _farmCoreService.initialize();
+
+    return [
+      hoverBoard,
+    ];
   }
 
   void purchaseSuccess() {
@@ -69,6 +88,10 @@ class FarmController {
 
   void sellTree() {
     return _farmCoreService.sellTree();
+  }
+
+  void remove() {
+    _harvestReflector.shutdown();
   }
 
   TextPainter get textPainter => TextPainter(

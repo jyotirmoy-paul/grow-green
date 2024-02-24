@@ -35,4 +35,8 @@ abstract class Log {
   static void d(dynamic message) {
     _logger.d(message, time: DateTime.now(), stackTrace: StackTrace.empty);
   }
+
+  static void w(dynamic message) {
+    _logger.w(message, time: DateTime.now(), stackTrace: StackTrace.empty);
+  }
 }

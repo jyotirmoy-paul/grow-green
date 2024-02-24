@@ -55,4 +55,10 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
   String toString() {
     return farmId;
   }
+
+  @override
+  void onRemove() {
+    super.onRemove();
+    farmController.remove();
+  }
 }

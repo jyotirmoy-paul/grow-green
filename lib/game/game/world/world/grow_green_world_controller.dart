@@ -26,8 +26,9 @@ class GrowGreenWorldController {
 
     /// once land is loaded, load the skyc
     land.loaded.then((_) {
-      sky = Sky();
-      add(sky);
+      /// FIXME: allow sky back!
+      // sky = Sky();
+      // add(sky);
     });
 
     return [

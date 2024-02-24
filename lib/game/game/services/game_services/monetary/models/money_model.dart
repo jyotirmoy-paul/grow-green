@@ -9,6 +9,10 @@ class MoneyModel {
 
   final int rupees;
 
+  factory MoneyModel.zero() {
+    return MoneyModel(rupees: 0);
+  }
+
   MoneyModel({
     required int rupees,
   }) : rupees = rupees < 0 ? throw ArgumentError('rupees cannot be negative!') : rupees;
@@ -17,6 +21,10 @@ class MoneyModel {
 
   bool isNegative() {
     return rupees < 0;
+  }
+
+  bool isZero() {
+    return rupees == 0;
   }
 
   @override

@@ -37,6 +37,10 @@ class HarvestModel {
     this.harvestState = HarvestState.waitingAck,
   });
 
+  bool isAck() {
+    return harvestState == HarvestState.ack;
+  }
+
   HarvestModel ackHarvestState() {
     return HarvestModel(
       harvestType: harvestType,
