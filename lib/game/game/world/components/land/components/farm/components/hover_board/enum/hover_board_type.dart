@@ -1,0 +1,4 @@
+enum HoverBoardType {
+  cropsWaiting,
+  harvestOutcome,
+}

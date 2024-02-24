@@ -20,7 +20,6 @@ class Land extends PositionComponent with HasGameRef<GrowGreenGame>, TapCallback
 
   @override
   bool containsLocalPoint(Vector2 point) {
-    /// TODO: fix boundary
     return true;
   }
 }

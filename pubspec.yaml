@@ -40,11 +40,14 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/images/trees/
+    - assets/images/crops/
+    - assets/images/props/
     - assets/images/tiles/
     - assets/images/clouds/
     - assets/exp/
-    - assets/images/trees/
-    - assets/images/crops/
+    
+    
 
   fonts:
     - family: Pina Colada Creation
