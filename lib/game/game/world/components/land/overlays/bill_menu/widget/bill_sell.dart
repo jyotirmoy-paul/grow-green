@@ -41,9 +41,7 @@ class BillSell extends StatelessWidget {
   }
 
   void _onSellConfirm() async {
-    final treeSuccessfullySold = await farm.farmController.sellTree();
-
-    /// TODO: handle tree sell result
+    farm.farmController.sellTree();
     game.overlays.remove(BillMenu.overlayName);
   }
 

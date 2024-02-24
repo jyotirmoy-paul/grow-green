@@ -16,7 +16,7 @@ class FarmStateModel {
   Month? treeLastHarvestedInMonth;
   DateTime? treesLifeStartedAt;
   DateTime? cropsLifeStartedAt;
-  HarvestModel? harvestModel;
+  List<HarvestModel>? harvestModels;
 
   FarmStateModel({
     required this.farmId,
@@ -26,8 +26,13 @@ class FarmStateModel {
     this.treeLastHarvestedInMonth,
     this.treesLifeStartedAt,
     this.cropsLifeStartedAt,
-    this.harvestModel,
+    this.harvestModels,
   });
+
+  void addToHarvestModel(HarvestModel harvestModel) {
+    harvestModels ??= [];
+    harvestModels!.add(harvestModel);
+  }
 
   FarmStateModel copyWith({
     String? farmId,
@@ -37,7 +42,7 @@ class FarmStateModel {
     Month? treeLastHarvestedInMonth,
     DateTime? treesLifeStartedAt,
     DateTime? cropsLifeStartedAt,
-    HarvestModel? harvestModel,
+    List<HarvestModel>? harvestModels,
   }) {
     return FarmStateModel(
       farmId: farmId ?? this.farmId,
@@ -47,7 +52,7 @@ class FarmStateModel {
       treeLastHarvestedInMonth: treeLastHarvestedInMonth ?? this.treeLastHarvestedInMonth,
       treesLifeStartedAt: treesLifeStartedAt ?? this.treesLifeStartedAt,
       cropsLifeStartedAt: cropsLifeStartedAt ?? this.cropsLifeStartedAt,
-      harvestModel: harvestModel ?? this.harvestModel,
+      harvestModels: harvestModels ?? this.harvestModels,
     );
   }
 

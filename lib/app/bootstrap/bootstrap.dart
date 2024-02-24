@@ -11,7 +11,7 @@ import '../../firebase_options.dart';
 import '../../services/log/log.dart';
 import 'app_bloc_observer.dart';
 
-const useFirebaseEmulator = false;
+const useFirebaseEmulator = true;
 
 Future<void> _setupFirebaseEmulator() async {
   const macIp = '192.168.0.108';

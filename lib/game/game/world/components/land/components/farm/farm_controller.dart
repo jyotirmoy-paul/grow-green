@@ -67,7 +67,7 @@ class FarmController {
     return _farmCoreService.getTreePotentionValue();
   }
 
-  Future<bool> sellTree() {
+  void sellTree() {
     return _farmCoreService.sellTree();
   }
 

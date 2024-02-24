@@ -114,8 +114,6 @@ class GrowGreenGameController {
     /// handle zoom
     _zoom = _startZoom * info.raw.scale;
 
-    Log.i('$tag: onScaleUpdate: zoom: $_zoom');
-
     /// handle movements
     final delta = info.delta.global.scaled(1 / _zoom);
     _position = _position.translated(

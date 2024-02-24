@@ -6,7 +6,6 @@ import 'package:flame/experimental.dart';
 import '../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/extensions/date_time_extensions.dart';
 import '../../../../../../services/datastore/game_datastore.dart';
-import '../../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../../../../services/game_services/time/time_service.dart';
 import '../../../../utils/month.dart';
@@ -22,6 +21,7 @@ import '../enum/farm_state.dart';
 import '../farm.dart';
 import '../model/farm_content.dart';
 import '../model/farm_state_model.dart';
+import 'harvest/harvest_core_service.dart';
 
 class FarmCoreService {
   static const treeSize = 50.0;
@@ -165,6 +165,7 @@ class FarmCoreService {
     }
   }
 
+  /// TODO: Move these logics to farm populator service
   void _prepareFarm() {
     switch (farmState) {
       case FarmState.onlyCropsWaiting:
@@ -243,16 +244,13 @@ class FarmCoreService {
     return MoneyModel(rupees: value);
   }
 
-  Future<bool> sellTree() async {
-    final farmStateModel = _farmStateModelValue;
-
+  void sellTree() async {
     final trees = _trees;
-
     if (trees == null) {
       throw Exception('$tag: sellTree invoked with null trees. How to sell tree without any tree?');
     }
 
-    final treePotentialValue = getTreePotentionValue();
+    final farmStateModel = _farmStateModelValue;
 
     /// remove trees reference
     _trees = null;
@@ -271,15 +269,19 @@ class FarmCoreService {
     /// update farm content
     farmStateModel.farmContent = _farmContent?.removeTree();
 
+    final treeAge = _dateTime.difference(trees.lifeStartedAt).inDays;
+
+    final treeHarvestService = HarvestCoreService.forTree(
+      treeType: trees.treeType,
+      treeAgeInDays: treeAge,
+      currentDateTime: _dateTime,
+    );
+
+    final harvestModel = treeHarvestService.sell();
+    farmStateModel.addToHarvestModel(harvestModel);
+
     /// write to server
     updateFarmStateModel(farmStateModel);
-
-    /// TODO: Show alert dialog box for progress!
-
-    return farm.game.gameController.monetaryService.transact(
-      transactionType: TransactionType.credit,
-      value: treePotentialValue,
-    );
   }
 
   /// update farm composition, this method is responsible for following:
@@ -309,9 +311,19 @@ class FarmCoreService {
     }
   }
 
-  void _harvestCrops(Crops crop) {
+  void _harvestCrops(Crops crop, int cropAge) {
     final farmStateModel = _farmStateModelValue;
     Log.d('$tag: Harvest season has arrived for ${crop.cropType}, harvesting!');
+
+    /// let's generate harvest for crop
+    final cropHarvestService = HarvestCoreService.forCrop(
+      cropType: crop.cropType,
+      currentDateTime: _dateTime,
+      cropAgeInDays: cropAge,
+    );
+
+    final harvestModel = cropHarvestService.harvest();
+    farmStateModel.addToHarvestModel(harvestModel);
 
     /// remove crops reference
     _crops = null;
@@ -332,8 +344,6 @@ class FarmCoreService {
 
     /// write to server
     updateFarmStateModel(farmStateModel);
-
-    /// TODO: Do something with the harvest result
   }
 
   /// repeateadly checks for crop
@@ -350,7 +360,7 @@ class FarmCoreService {
     /// check for harvest
     final canHarvestCrop = cropsCalculator.canHarvest(cropAge);
     if (canHarvestCrop) {
-      return _harvestCrops(crops);
+      return _harvestCrops(crops, cropAge);
     }
 
     /// check for crop stage
@@ -358,8 +368,22 @@ class FarmCoreService {
     crops.updateCropStage(cropStage);
   }
 
-  void _harvestTrees(Trees trees) {
-    /// TODO: Do something with the harvest result
+  /// periodic harvest of trees
+  void _harvestTrees(Trees trees, int treeAge) {
+    final farmStateModel = _farmStateModelValue;
+    Log.i('$tag: _harvestTrees invoked for ${trees.treeType}');
+
+    final treeHarvestService = HarvestCoreService.forTree(
+      treeType: trees.treeType,
+      treeAgeInDays: treeAge,
+      currentDateTime: _dateTime,
+    );
+
+    final harvestModel = treeHarvestService.harvest();
+    farmStateModel.addToHarvestModel(harvestModel);
+
+    /// write to server
+    updateFarmStateModel(farmStateModel);
   }
 
   void _updateTrees() {
@@ -383,7 +407,7 @@ class FarmCoreService {
         ),
       );
 
-      _harvestTrees(trees);
+      _harvestTrees(trees, treeAge);
     }
 
     /// update tree stage
