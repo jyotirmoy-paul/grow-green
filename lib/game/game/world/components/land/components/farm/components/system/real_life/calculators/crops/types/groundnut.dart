@@ -9,7 +9,7 @@ class GroundnutCropCalculator extends BaseCropCalculator {
   double getYieldKgPerSquareM() => 0.45;
 
   @override
-  List<HarvestPeriod> harvestData() {
+  List<HarvestPeriod> sowData() {
     return [
       HarvestPeriod(sowMonth: Month.jun),
       HarvestPeriod(sowMonth: Month.jan),

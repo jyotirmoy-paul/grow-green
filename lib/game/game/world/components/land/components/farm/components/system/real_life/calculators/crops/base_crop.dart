@@ -19,7 +19,30 @@ abstract class BaseCropCalculator {
   CropType cropType();
   double getYieldKgPerSquareM();
   Qty getSeedsRequiredPerHacter();
-  List<HarvestPeriod> harvestData();
+  List<HarvestPeriod> sowData();
+
+  DateTime getNextSowDateFrom(DateTime currentDateTime) {
+    final monthsDateTime = <DateTime>[];
+
+    for (final month in sowData()) {
+      final monthNumber = month.sowMonth.index + 1;
+
+      DateTime monthDateTime;
+      if (monthNumber < currentDateTime.month) {
+        // If the month has already passed this year, use the next year
+        monthDateTime = DateTime(currentDateTime.year + 1, monthNumber, 1);
+      } else {
+        // Else, use this year
+        monthDateTime = DateTime(currentDateTime.year, monthNumber, 1);
+      }
+
+      monthsDateTime.add(monthDateTime);
+    }
+
+    return monthsDateTime.where((date) => date.isAfter(currentDateTime)).reduce(
+          (a, b) => a.isBefore(b) ? a : b,
+        );
+  }
 
   // Age is calculated including sowing month and excluding harvest month
   int get maxAgeInMonths;
@@ -27,7 +50,7 @@ abstract class BaseCropCalculator {
   int getSellingPricePerKg() => CropMarket.pricePerQty(cropType());
 
   bool canSow(Month month) {
-    return harvestData().any((period) => period.sowMonth == month);
+    return sowData().any((period) => period.sowMonth == month);
   }
 
   bool canHarvest(int cropAgeInDays) {

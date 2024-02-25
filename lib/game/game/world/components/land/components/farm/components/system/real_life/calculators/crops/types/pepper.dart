@@ -9,7 +9,7 @@ class PepperCropCalculator extends BaseCropCalculator {
   double getYieldKgPerSquareM() => 0.20;
 
   @override
-  List<HarvestPeriod> harvestData() {
+  List<HarvestPeriod> sowData() {
     return [
       HarvestPeriod(sowMonth: Month.may),
     ];

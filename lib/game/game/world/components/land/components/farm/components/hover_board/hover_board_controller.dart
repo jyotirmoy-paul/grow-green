@@ -8,6 +8,7 @@ import '../../../../../../../../utils/game_extensions.dart';
 import '../../farm.dart';
 import 'components/basic_hover_board.dart';
 import 'components/hover_board_item.dart';
+import 'components/timer_hover_board/timer_hover_board.dart';
 import 'enum/hover_board_type.dart';
 import 'models/hover_board_model.dart';
 
@@ -37,7 +38,11 @@ class HoverBoardController {
     return const [];
   }
 
-  void addHoverBoard({required HoverBoardType type, required HoverBoardModel model, required VoidCallback onTap}) {
+  void addHoverBoard({
+    required HoverBoardType type,
+    required HoverBoardModel model,
+    required VoidCallback onTap,
+  }) {
     Log.i('$tag: invoked addHoverBoard(type: $type, model: $model)');
 
     /// check if a hover board of type already exists
@@ -67,7 +72,11 @@ class HoverBoardController {
       );
     } else if (hoverBoardModel is TimerHoverBoardModel) {
       /// timer hover board
-      throw UnimplementedError('Not implemented yet!');
+      hoverBoardItem = TimerHoverBoard(
+        model: hoverBoardModel,
+        farm: farm,
+        farmCenter: farmCenter,
+      );
     }
 
     /// add the hoverboard item
