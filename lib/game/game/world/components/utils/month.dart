@@ -1,7 +1,13 @@
 enum Month { jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec }
 
 extension MonthExtension on Month {
+  int get length => Month.values.length;
+
   int get index => this.index + 1;
+
+  Month next() {
+    return Month.values[(index + 1) % length];
+  }
 
   bool operator >(Month other) {
     return this.index > other.index;
@@ -33,22 +39,5 @@ extension MonthExtension on Month {
   // Adding «= operator
   bool operator <=(Month other) {
     return this.index <= other.index;
-  }
-}
-
-void main() {
-  // Example usage
-  Month currentMonth = Month.jan;
-  Month nextMonth = currentMonth + 1;
-  print("Current month: ${currentMonth.name}, Next month: ${nextMonth.name}");
-
-  Month previousMonth = currentMonth - 1;
-  print("Current month: ${currentMonth.name}, Previous month: ${previousMonth.name}");
-
-  // Comparison example
-  if (Month.feb > Month.jan) {
-    print("February is after January");
-  } else {
-    print("January is after February");
   }
 }

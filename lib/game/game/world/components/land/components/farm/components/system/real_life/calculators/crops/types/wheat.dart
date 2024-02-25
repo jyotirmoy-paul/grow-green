@@ -9,7 +9,7 @@ class WheatCropCalculator extends BaseCropCalculator {
   double getYieldKgPerSquareM() => 0.80;
 
   @override
-  List<HarvestPeriod> harvestData() {
+  List<HarvestPeriod> sowData() {
     return [
       HarvestPeriod(sowMonth: Month.oct),
     ];

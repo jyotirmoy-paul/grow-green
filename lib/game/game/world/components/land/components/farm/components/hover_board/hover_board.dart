@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 
+import '../../../../../../../services/priority/priority_engine.dart';
 import '../../farm.dart';
 import 'hover_board_controller.dart';
 
@@ -17,8 +18,7 @@ class HoverBoard extends PositionComponent {
 
   @override
   FutureOr<void> onLoad() async {
-    /// a hoverboard should appear on top of everything!
-    // priority = double.maxFinite.toInt(); /// FIXME: Not working!
+    priority = PriorityEngine.hoverBoardPriority;
 
     final components = await hoverBoardController.initialize(
       add: add,

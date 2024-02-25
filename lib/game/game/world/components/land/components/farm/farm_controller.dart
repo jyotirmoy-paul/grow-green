@@ -8,6 +8,7 @@ import 'components/hover_board/hover_board.dart';
 import 'enum/farm_state.dart';
 import 'farm.dart';
 import 'model/farm_content.dart';
+import 'service/crop_timer/crop_timer.dart';
 import 'service/farm_core_service.dart';
 import 'service/harvest/harvest_reflector.dart';
 
@@ -20,6 +21,7 @@ class FarmController {
   late final HoverBoard hoverBoard;
   late final FarmCoreService _farmCoreService;
   late final HarvestReflector _harvestReflector;
+  late final CropTimer _cropTimer;
 
   /// FIXME: a farm stays selected until a new farm is selected, it's a bug
   bool isFarmSelected = false;
@@ -53,15 +55,13 @@ class FarmController {
       removeComponents: removeAll,
     );
 
-    /// create harvest reflector
-    _harvestReflector = HarvestReflector(
-      farmCoreService: _farmCoreService,
-      add: add,
-      remove: remove,
-    );
-
-    /// boot the harvest reflector service to handle harvest events
+    /// create harvest reflector, and boot to handle harvest events
+    _harvestReflector = HarvestReflector(farmCoreService: _farmCoreService);
     _harvestReflector.boot();
+
+    /// create crop timer
+    _cropTimer = CropTimer(farmCoreService: _farmCoreService);
+    _cropTimer.boot();
 
     /// prepare farm service
     /// a call to `initialize` returns back initial components that needs to be shown
@@ -94,6 +94,7 @@ class FarmController {
 
   void remove() {
     _harvestReflector.shutdown();
+    _cropTimer.shutdown();
   }
 
   TextPainter get textPainter => TextPainter(

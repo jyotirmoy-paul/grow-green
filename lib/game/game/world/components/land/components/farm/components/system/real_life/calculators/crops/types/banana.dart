@@ -10,7 +10,7 @@ class BananaCropCalculator extends BaseCropCalculator {
   double getYieldKgPerSquareM() => 8.00;
 
   @override
-  List<HarvestPeriod> harvestData() {
+  List<HarvestPeriod> sowData() {
     return [
       HarvestPeriod(sowMonth: Month.jan),
       HarvestPeriod(sowMonth: Month.feb),

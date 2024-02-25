@@ -10,7 +10,7 @@ class MaizeCropCalculator extends BaseCropCalculator {
   double getYieldKgPerSquareM() => 1.50;
 
   @override
-  List<HarvestPeriod> harvestData() {
+  List<HarvestPeriod> sowData() {
     return [
       HarvestPeriod(sowMonth: Month.jun),
       HarvestPeriod(sowMonth: Month.oct),

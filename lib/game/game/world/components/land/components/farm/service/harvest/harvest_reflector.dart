@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flame/components.dart';
-
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../../../services/game_services/monetary/models/money_model.dart';
@@ -15,16 +13,12 @@ import '../farm_core_service.dart';
 /// This class also oversees collection of money
 class HarvestReflector {
   final FarmCoreService farmCoreService;
-  final void Function(Component) add;
-  final void Function(Component) remove;
 
   final String tag;
   final HoverBoardController _hoverBoardController;
 
   HarvestReflector({
     required this.farmCoreService,
-    required this.add,
-    required this.remove,
   })  : _hoverBoardController = farmCoreService.farm.farmController.hoverBoard.hoverBoardController,
         tag = 'HarvestReflector[${farmCoreService.farm.farmId}]';
 
