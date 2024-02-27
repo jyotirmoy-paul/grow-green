@@ -5,12 +5,15 @@ import 'package:flame_tiled/flame_tiled.dart' hide Text;
 
 import '../../../../../services/log/log.dart';
 import '../../../../../services/utils/service_action.dart';
+import '../../../../utils/game_assets.dart';
 import '../../../../utils/game_extensions.dart';
 import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
+import '../../../services/priority/priority_engine.dart';
 import 'components/farm/dialogs/buy_farm_dialog.dart';
 import 'components/farm/enum/farm_state.dart';
 import 'components/farm/farm.dart';
+import 'components/river/river.dart';
 import 'overlays/system_selector_menu/system_selector_menu.dart';
 
 class LandController {
@@ -20,13 +23,39 @@ class LandController {
   late final TiledComponent map;
   late final List<Farm> farms;
 
-  static const _farmsLayerName = 'Farms';
+  static const _farmsLayerName = 'farms';
+  static const _riverLayerName = 'river';
+
+  List<Vector2> _getRiverPositions() {
+    final riverObjectGroup = map.tileMap.getLayer<ObjectGroup>(_riverLayerName);
+
+    if (riverObjectGroup == null) {
+      throw Exception('$tag: $_riverLayerName layer not found! Have you added it in the map?');
+    } else {
+      final List<Vector2> riverPositions = [];
+
+      for (final riverObj in riverObjectGroup.objects) {
+        final rectangle = Rectangle.fromLTWH(
+          riverObj.x,
+          riverObj.y,
+          riverObj.width,
+          riverObj.height,
+        );
+
+        riverPositions.add(
+          rectangle.bottomRight.toCart(),
+        );
+      }
+
+      return riverPositions;
+    }
+  }
 
   void _populateFarms() {
     final farmsObjectGroup = map.tileMap.getLayer<ObjectGroup>(_farmsLayerName);
 
     if (farmsObjectGroup == null) {
-      throw Exception('"$_farmsLayerName" layer not found! Have you added it in the map?');
+      throw Exception('$tag: $_farmsLayerName layer not found! Have you added it in the map?');
     } else {
       final List<Farm> farms = [];
 
@@ -61,9 +90,10 @@ class LandController {
 
     /// load map
     map = await TiledComponent.load(
-      GameUtils.worldMapFileName,
+      GameAssets.worldMap,
       GameUtils.tileSize,
-      prefix: GameUtils.mapDirectoryPrefix,
+      prefix: GameAssets.worldMapPrefix,
+      priority: PriorityEngine.mapPriority,
     )
       ..anchor = Anchor.topLeft;
 
@@ -76,8 +106,11 @@ class LandController {
     /// populate farms
     _populateFarms();
 
+    final river = River(riverPositions: _getRiverPositions())..priority = PriorityEngine.riverPriority;
+
     return [
       map,
+      river,
       ...farms,
     ];
   }
