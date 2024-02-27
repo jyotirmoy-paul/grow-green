@@ -99,11 +99,11 @@ class FarmController {
 
   TextPainter get textPainter => TextPainter(
         text: TextSpan(
-          text: farm.farmId,
+          text: 'farmId: ${farm.farmId}, priority: ${farm.priority}',
           style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w900,
-            fontSize: 64.0,
+            fontSize: 20.0,
             backgroundColor: Colors.white,
           ),
         ),

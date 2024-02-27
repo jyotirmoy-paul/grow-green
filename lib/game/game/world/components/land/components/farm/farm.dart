@@ -4,11 +4,14 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../../../services/log/log.dart';
 import '../../../../../grow_green_game.dart';
 import '../../../../../services/game_services/time/time_aware.dart';
 import 'farm_controller.dart';
 
 class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
+  static const tag = 'Farm';
+
   final farmController = FarmController();
 
   final String farmId;
@@ -27,12 +30,12 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
     if (debugMode) {
       farmController.textPainter.paint(canvas, Offset.zero);
     }
-
-    addAll;
   }
 
   @override
   FutureOr<void> onLoad() async {
+    Log.i('$tag: id: $farmId, priority: $priority');
+
     debugColor = Colors.white;
 
     final components = await farmController.initialize(

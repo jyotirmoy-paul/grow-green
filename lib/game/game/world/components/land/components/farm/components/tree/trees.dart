@@ -32,6 +32,10 @@ class Trees extends PositionComponent with HasGameRef<GrowGreenGame> {
   @override
   FutureOr<void> onLoad() async {
     final components = await treesController.initialize(game: game);
+
+    size = farmSize;
+    priority = -1;
+
     addAll(components);
   }
 
