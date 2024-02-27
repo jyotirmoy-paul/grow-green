@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="isometric" renderorder="right-down" width="4" height="4" tilewidth="1024" tileheight="640" infinite="0" nextlayerid="4" nextobjectid="19">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer id="1" name="ground" width="4" height="4">
+  <data encoding="csv">
+0,0,0,6,
+2,6,0,0,
+6,6,5,6,
+1,6,4,3
+</data>
+ </layer>
+ <objectgroup id="2" name="farms" locked="1">
+  <object id="2" name="farm-6" x="1920" y="0" width="640" height="640"/>
+  <object id="4" name="farm-5" x="640" y="640" width="640" height="640"/>
+  <object id="6" name="farm-4" x="0" y="1280" width="640" height="640"/>
+  <object id="7" name="farm-3" x="640" y="1280" width="640" height="640"/>
+  <object id="9" name="farm-2" x="640" y="1920" width="640" height="640"/>
+  <object id="10" name="farm-1" x="1920" y="1280" width="640" height="640"/>
+ </objectgroup>
+ <objectgroup id="3" name="river" locked="1">
+  <object id="13" name="1" x="0" y="0" width="640" height="640"/>
+  <object id="15" name="2" x="640" y="0" width="640" height="640"/>
+  <object id="16" name="3" x="1280" y="0" width="640" height="640"/>
+  <object id="17" name="4" x="1280" y="640" width="640" height="640"/>
+  <object id="18" name="5" x="1920" y="640" width="640" height="640"/>
+ </objectgroup>
+</map>

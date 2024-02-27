@@ -42,14 +42,12 @@ class GrowGreenGameController {
     this.worldCenter = worldCenter;
     final worldSize = GameUtils().gameWorldSize;
 
-    /// TODO: We may need to adjust min zoom as per final map
     _minZoom = camera.viewport.size.length / worldSize.half().length;
 
-    // TODO: We can pick last user zoom level & position from storage
     camera.viewfinder
       ..anchor = Anchor.center
       ..position = worldCenter
-      ..zoom = _minZoom;
+      ..zoom = 0.9;
   }
 
   /// initialize components of the game

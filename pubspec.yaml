@@ -40,6 +40,13 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/images/
+    - assets/images/tiles/
+    - assets/images/river/1/
+    - assets/images/river/2/
+    - assets/images/river/3/
+    - assets/images/river/4/
+    - assets/images/river/5/
     - assets/images/trees/
     - assets/images/crops/
     - assets/images/props/
@@ -49,7 +56,13 @@ flutter:
     - assets/images/clouds/
     - assets/exp/
     
-    
+# Dentisity  Flutter pixel ratio
+# ldpi        0.75x
+# mdpi        1.0x
+# hdpi        1.5x
+# xhdpi       2.0x
+# xxhdpi      3.0x
+# xxxhdpi     4.0x
 
   fonts:
     - family: Pina Colada Creation
