@@ -1,7 +1,9 @@
-/// class that holds priority or different component types availalbe in the game
+import 'package:flame/components.dart';
+
+/// class that generates priority of different component types availalbe in the game
 /// this is to handle z index sorting
 abstract class PriorityEngine {
-  static const int hoverBoardPriority = 100;
-  static const int mapPriority = 2;
-  static const int riverPriority = 1;
+  static generatePriorityFrom(Vector2 position) {
+    return (position.x + position.y).toInt();
+  }
 }

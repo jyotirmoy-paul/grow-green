@@ -13,10 +13,10 @@ import '../../../services/priority/priority_engine.dart';
 import 'components/farm/dialogs/buy_farm_dialog.dart';
 import 'components/farm/enum/farm_state.dart';
 import 'components/farm/farm.dart';
-import 'components/river/river.dart';
 import 'overlays/system_selector_menu/system_selector_menu.dart';
 
 class LandController {
+  static const riverAnimationSpeed = 0.1;
   static const tag = 'LandController';
 
   late final GrowGreenGame game;
@@ -25,64 +25,116 @@ class LandController {
 
   static const _farmsLayerName = 'farms';
   static const _riverLayerName = 'river';
-
-  List<Vector2> _getRiverPositions() {
-    final riverObjectGroup = map.tileMap.getLayer<ObjectGroup>(_riverLayerName);
-
-    if (riverObjectGroup == null) {
-      throw Exception('$tag: $_riverLayerName layer not found! Have you added it in the map?');
-    } else {
-      final List<Vector2> riverPositions = [];
-
-      for (final riverObj in riverObjectGroup.objects) {
-        final rectangle = Rectangle.fromLTWH(
-          riverObj.x,
-          riverObj.y,
-          riverObj.width,
-          riverObj.height,
-        );
-
-        riverPositions.add(
-          rectangle.bottomRight.toCart(),
-        );
-      }
-
-      return riverPositions;
-    }
-  }
+  static const _nonFarmsLayerName = 'non-farms';
 
   void _populateFarms() {
     final farmsObjectGroup = map.tileMap.getLayer<ObjectGroup>(_farmsLayerName);
-
     if (farmsObjectGroup == null) {
       throw Exception('$tag: $_farmsLayerName layer not found! Have you added it in the map?');
-    } else {
-      final List<Farm> farms = [];
+    }
 
-      for (final farmObj in farmsObjectGroup.objects) {
-        final rectangle = Rectangle.fromLTWH(
-          farmObj.x,
-          farmObj.y,
-          farmObj.width,
-          farmObj.height,
-        );
+    final List<Farm> farms = [];
 
-        final farm = Farm(
-          [
-            rectangle.topLeft.toCart(),
-            rectangle.topRight.toCart(),
-            rectangle.bottomRight.toCart(),
-            rectangle.bottomLeft.toCart(),
-          ],
-          farmRect: rectangle,
-          farmId: farmObj.name,
-        )..anchor = Anchor.topLeft;
+    for (final farmObj in farmsObjectGroup.objects) {
+      final rectangle = Rectangle.fromLTWH(
+        farmObj.x,
+        farmObj.y,
+        farmObj.width,
+        farmObj.height,
+      );
 
-        farms.add(farm);
+      final farm = Farm(
+        [
+          rectangle.topLeft.toCart(),
+          rectangle.topRight.toCart(),
+          rectangle.bottomRight.toCart(),
+          rectangle.bottomLeft.toCart(),
+        ],
+        farmRect: rectangle,
+        farmId: farmObj.name,
+      )
+        ..priority = PriorityEngine.generatePriorityFrom(rectangle.center)
+        ..anchor = Anchor.topLeft;
+
+      farms.add(farm);
+    }
+
+    this.farms = farms;
+  }
+
+  String _getAssetFor({
+    required String riverId,
+    required int frameId,
+  }) {
+    return 'river/$riverId/$frameId.png';
+  }
+
+  Future<List<Component>> getRivers() async {
+    final riverObjectGroup = map.tileMap.getLayer<ObjectGroup>(_riverLayerName);
+    if (riverObjectGroup == null) {
+      throw Exception('$tag: $_riverLayerName layer not found! Have you added it in the map?');
+    }
+
+    final rivers = <Component>[];
+
+    for (final riverObj in riverObjectGroup.objects) {
+      final rectangle = Rectangle.fromLTWH(
+        riverObj.x,
+        riverObj.y,
+        riverObj.width,
+        riverObj.height,
+      );
+
+      final List<Sprite> sprites = [];
+
+      for (int i = 1; i <= 6; i++) {
+        sprites.add(await Sprite.load(_getAssetFor(riverId: riverObj.name, frameId: i)));
       }
 
-      this.farms = farms;
+      final spriteAnimation = SpriteAnimation.spriteList(
+        sprites,
+        stepTime: riverAnimationSpeed,
+        loop: true,
+      );
+
+      rivers.add(
+        SpriteAnimationComponent(
+          animation: spriteAnimation,
+          position: rectangle.bottomRight.toCart(),
+          anchor: Anchor.bottomCenter,
+          priority: PriorityEngine.generatePriorityFrom(rectangle.center),
+        ),
+      );
     }
+
+    return rivers;
+  }
+
+  Future<List<Component>> getNonFarms() async {
+    final nonFarmsObjectGroup = map.tileMap.getLayer<ObjectGroup>(_nonFarmsLayerName);
+    if (nonFarmsObjectGroup == null) {
+      throw Exception('$tag: $nonFarmsObjectGroup layer not found! Have you added it in the map?');
+    }
+
+    final nonFarms = <Component>[];
+
+    for (final nonFarmObj in nonFarmsObjectGroup.objects) {
+      final rectangle = Rectangle.fromLTWH(
+        nonFarmObj.x,
+        nonFarmObj.y,
+        nonFarmObj.width,
+        nonFarmObj.height,
+      );
+
+      nonFarms.add(SpriteComponent.fromImage(
+        await game.images.load('tiles/${nonFarmObj.name}.png'),
+        position: rectangle.bottomRight.toCart(),
+        anchor: Anchor.bottomCenter,
+        priority: PriorityEngine.generatePriorityFrom(rectangle.center),
+      ));
+    }
+
+    return nonFarms;
   }
 
   Future<List<Component>> initialize(GrowGreenGame game) async {
@@ -93,7 +145,6 @@ class LandController {
       GameAssets.worldMap,
       GameUtils.tileSize,
       prefix: GameAssets.worldMapPrefix,
-      priority: PriorityEngine.mapPriority,
     )
       ..anchor = Anchor.topLeft;
 
@@ -106,11 +157,13 @@ class LandController {
     /// populate farms
     _populateFarms();
 
-    final river = River(riverPositions: _getRiverPositions())..priority = PriorityEngine.riverPriority;
+    final river = await getRivers();
+    final nonFarms = await getNonFarms();
 
     return [
       map,
-      river,
+      ...river,
+      ...nonFarms,
       ...farms,
     ];
   }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="isometric" renderorder="right-down" width="4" height="4" tilewidth="1024" tileheight="640" infinite="0" nextlayerid="4" nextobjectid="19">
+<map version="1.10" tiledversion="1.10.2" orientation="isometric" renderorder="right-down" width="4" height="4" tilewidth="1024" tileheight="640" infinite="0" nextlayerid="5" nextobjectid="26">
  <tileset firstgid="1" source="tileset.tsx"/>
- <layer id="1" name="ground" width="4" height="4">
+ <layer id="1" name="ground" width="4" height="4" locked="1">
   <data encoding="csv">
 0,0,0,6,
-2,6,0,0,
-6,6,5,6,
-1,6,4,3
+0,6,0,0,
+6,6,0,6,
+0,6,0,0
 </data>
  </layer>
  <objectgroup id="2" name="farms" locked="1">
@@ -23,5 +23,12 @@
   <object id="16" name="3" x="1280" y="0" width="640" height="640"/>
   <object id="17" name="4" x="1280" y="640" width="640" height="640"/>
   <object id="18" name="5" x="1920" y="640" width="640" height="640"/>
+ </objectgroup>
+ <objectgroup id="4" name="non-farms" locked="1">
+  <object id="19" name="1" x="0" y="1920" width="640" height="640"/>
+  <object id="20" name="2" x="0" y="640" width="640" height="640"/>
+  <object id="23" name="3" x="1280" y="1920" width="640" height="640"/>
+  <object id="24" name="4" x="1280" y="1280" width="640" height="640"/>
+  <object id="25" name="5" x="1920" y="1920" width="640" height="640"/>
  </objectgroup>
 </map>
