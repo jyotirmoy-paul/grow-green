@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';

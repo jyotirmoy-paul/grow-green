@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../../../utils/constants.dart';
 import '../../../../../../../../grow_green_game.dart';
-import '../../../animations/enums/game_animation_types.dart';
+import '../../../animations/enums/game_animation_type.dart';
 import '../../../animations/game_animation.dart';
 import '../../../farm.dart';
 import '../models/hover_board_model.dart';
@@ -90,7 +90,7 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
       totalDuration: animationDuration,
       maxValue: maxScale,
       repeat: true,
-      types: GameAnimationTypes.breathing,
+      type: GameAnimationType.breathing,
     );
 
     /// prepare components
@@ -144,14 +144,14 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
       totalDuration: endAnimationDuration,
       minValue: 0.0,
       maxValue: 1.0,
-      types: GameAnimationTypes.breathing,
+      type: GameAnimationType.breathing,
     );
 
     _imageOpacityAnimation = GameAnimation(
       totalDuration: endAnimationDuration,
       minValue: 0.0,
       maxValue: 1.0,
-      types: GameAnimationTypes.easeOut,
+      type: GameAnimationType.easeOut,
       onComplete: () {
         removeFromParent();
       },

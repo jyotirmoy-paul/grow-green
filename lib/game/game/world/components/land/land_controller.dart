@@ -11,9 +11,9 @@ import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
 import '../../../services/priority/priority_engine.dart';
 import 'components/farm/dialogs/buy_farm_dialog.dart';
-import 'components/farm/enum/farm_state.dart';
 import 'components/farm/farm.dart';
-import 'overlays/system_selector_menu/system_selector_menu.dart';
+import 'overlays/farm_menu/farm_menu.dart';
+import 'overlays/system_selector_menu/model/farm_notifier.dart';
 
 class LandController {
   static const riverAnimationSpeed = 0.1;
@@ -188,28 +188,27 @@ class LandController {
     }
   }
 
+  FarmNotifier get _farmNotifier => game.gameController.overlayData.farmNotifier;
+
   void _processFarmTap(Farm farm) async {
     Log.d('$tag: _processFarmTap: $farm is tapped');
 
     /// if a listener has registered for taps, let them handle it
     if (farm.farmController.onFarmTap != null) {
+      _farmNotifier.farm = null;
       return farm.farmController.onFarmTap!();
     }
 
-    if (farm.farmController.farmState == FarmState.notBought) {
-      return _handleFarmBuying(farm);
+    /// open farm menu
+    _farmNotifier.farm = farm;
+
+    if (!game.overlays.isActive(FarmMenu.overlayName)) {
+      game.overlays.add(FarmMenu.overlayName);
     }
-
-    /// mark farm as selected
-    farm.farmController.isFarmSelected = true;
-
-    /// open farm composition menu
-    game.gameController.overlayData.farm = farm;
-    game.overlays.add(SystemSelectorMenu.overlayName);
   }
 
   void _processOutsideTap() {
-    /// TODO: is there anything to do?
+    _farmNotifier.farm = null;
   }
 
   void _onFarmTap(Farm? selectedFarm) {
@@ -228,6 +227,7 @@ class LandController {
 
       if (containsPoint) {
         selectedFarm = farm;
+        farm.farmController.isFarmSelected = true;
       } else {
         farm.farmController.isFarmSelected = false;
       }

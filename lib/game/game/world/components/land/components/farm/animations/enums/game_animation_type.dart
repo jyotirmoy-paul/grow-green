@@ -1,4 +1,4 @@
-enum GameAnimationTypes {
+enum GameAnimationType {
   breathing,
   bounce,
   tween,

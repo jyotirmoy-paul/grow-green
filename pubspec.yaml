@@ -65,7 +65,7 @@ flutter:
 # xxxhdpi     4.0x
 
   fonts:
-    - family: Pina Colada Creation
+    - family: Freshman
       fonts:
-        - asset: assets/fonts/Pina Colada Creation.ttf
+        - asset: assets/fonts/freshman.ttf
 

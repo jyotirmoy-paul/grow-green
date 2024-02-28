@@ -1,1 +1,1 @@
-const kFontFamily = 'Pina Colada Creation';
+const kFontFamily = 'Freshman';
