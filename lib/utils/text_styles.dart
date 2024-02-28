@@ -4,36 +4,36 @@ import 'extensions/num_extensions.dart';
 
 abstract class TextStyles {
   static List<Shadow> _shadows(double fontSize) => [
-        Shadow(
-          color: Colors.black,
-          offset: Offset(0, (5 * fontSize) / 32),
-          blurRadius: 0.0,
-        ),
-        Shadow(
-          color: Colors.black,
-          offset: Offset((2 * fontSize) / 32, (5 * fontSize) / 32),
-          blurRadius: 0.0,
-        ),
-        Shadow(
-          color: Colors.black,
-          offset: Offset(-(2 * fontSize) / 32, (5 * fontSize) / 32),
-          blurRadius: 0.0,
-        ),
-        Shadow(
-          color: Colors.black,
-          offset: Offset(0, (-2 * fontSize) / 32),
-          blurRadius: 0.0,
-        ),
-        Shadow(
-          color: Colors.black,
-          offset: Offset((2 * fontSize) / 32, 0),
-          blurRadius: 0.0,
-        ),
-        Shadow(
-          color: Colors.black,
-          offset: Offset(-(2 * fontSize) / 32, 0),
-          blurRadius: 0.0,
-        ),
+        // Shadow(
+        //   color: Colors.black,
+        //   offset: Offset(0, (5 * fontSize) / 32),
+        //   blurRadius: 0.0,
+        // ),
+        // Shadow(
+        //   color: Colors.black,
+        //   offset: Offset((2 * fontSize) / 32, (5 * fontSize) / 32),
+        //   blurRadius: 0.0,
+        // ),
+        // Shadow(
+        //   color: Colors.black,
+        //   offset: Offset(-(2 * fontSize) / 32, (5 * fontSize) / 32),
+        //   blurRadius: 0.0,
+        // ),
+        // Shadow(
+        //   color: Colors.black,
+        //   offset: Offset(0, (-2 * fontSize) / 32),
+        //   blurRadius: 0.0,
+        // ),
+        // Shadow(
+        //   color: Colors.black,
+        //   offset: Offset((2 * fontSize) / 32, 0),
+        //   blurRadius: 0.0,
+        // ),
+        // Shadow(
+        //   color: Colors.black,
+        //   offset: Offset(-(2 * fontSize) / 32, 0),
+        //   blurRadius: 0.0,
+        // ),
       ];
 
   /// stylized text styles

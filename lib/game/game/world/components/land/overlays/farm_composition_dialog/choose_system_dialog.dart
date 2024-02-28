@@ -10,12 +10,12 @@ import 'widgets/system_item_widget.dart';
 
 class ChooseSystemDialog extends StatelessWidget {
   final Farm farm;
-  final SystemDatastore systemDatastore;
+  final List<FarmSystem> farmSystems;
 
-  ChooseSystemDialog({
+  const ChooseSystemDialog({
     super.key,
     required this.farm,
-  }) : systemDatastore = farm.game.gameDatastore.systemDatastore;
+  }) : farmSystems = SystemDatastore.systems;
 
   void _onSystemSelected(FarmSystem farmSystem) {}
 
@@ -25,9 +25,10 @@ class ChooseSystemDialog extends StatelessWidget {
       child: ListView.separated(
         padding: EdgeInsets.all(15.s),
         scrollDirection: Axis.horizontal,
-        itemCount: systemDatastore.systems.length,
+        itemCount: farmSystems.length,
         itemBuilder: (_, int index) {
-          final farmSystem = systemDatastore.systems[index];
+          final farmSystem = farmSystems[index];
+
           return ButtonAnimator(
             onPressed: () {
               _onSystemSelected(farmSystem);

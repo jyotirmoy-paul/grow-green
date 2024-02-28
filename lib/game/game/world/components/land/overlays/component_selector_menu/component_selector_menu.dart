@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../../../../utils/extensions/list_extensions.dart';
@@ -10,8 +9,6 @@ import '../../../../../grow_green_game.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/model/fertilizer/fertilizer_type.dart';
-import '../system_selector_menu/bloc/system_selector_menu_bloc.dart';
-import '../system_selector_menu/enum/action_state.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import '../system_selector_menu/model/component_selection_model.dart';
 import 'model/csm_item_model.dart';
@@ -208,60 +205,60 @@ class _ComponentSelectorMenuState extends State<ComponentSelectorMenu> with Sing
   }
 
   void _onChildTap(int index) {
-    final systemSelectorMenuBloc = context.read<SystemSelectorMenuBloc>();
+    // final systemSelectorMenuBloc = context.read<SystemSelectorMenuBloc>();
 
-    switch (componentId) {
-      case ComponentId.crop:
-        final crop = CropType.values[index];
+    // switch (componentId) {
+    //   case ComponentId.crop:
+    //     final crop = CropType.values[index];
 
-        systemSelectorMenuBloc.add(
-          SystemSelectorMenuChooseCropsEvent(
-            crop: crop,
-          ),
-        );
-        break;
+    //     systemSelectorMenuBloc.add(
+    //       SystemSelectorMenuChooseCropsEvent(
+    //         crop: crop,
+    //       ),
+    //     );
+    //     break;
 
-      case ComponentId.trees:
-        final tree = TreeType.values[index];
+    //   case ComponentId.trees:
+    //     final tree = TreeType.values[index];
 
-        systemSelectorMenuBloc.add(
-          SystemSelectorMenuChooseTreesEvent(
-            tree: tree,
-            componentTappedIndex: componentTappedIndex,
-          ),
-        );
-        break;
+    //     systemSelectorMenuBloc.add(
+    //       SystemSelectorMenuChooseTreesEvent(
+    //         tree: tree,
+    //         componentTappedIndex: componentTappedIndex,
+    //       ),
+    //     );
+    //     break;
 
-      case ComponentId.fertilizer:
-        final fertilizer = FertilizerType.values[index];
+    //   case ComponentId.fertilizer:
+    //     final fertilizer = FertilizerType.values[index];
 
-        systemSelectorMenuBloc.add(
-          SystemSelectorMenuChooseFertilizerEvent(
-            fertilizer: fertilizer,
-          ),
-        );
-        break;
+    //     systemSelectorMenuBloc.add(
+    //       SystemSelectorMenuChooseFertilizerEvent(
+    //         fertilizer: fertilizer,
+    //       ),
+    //     );
+    //     break;
 
-      case ComponentId.agroforestryLayout:
-        final agroforestrySystem = AgroforestryType.values[index];
-        systemSelectorMenuBloc.add(
-          SystemSelectorMenuChooseAgroforestrySystemEvent(
-            agroforestryType: agroforestrySystem,
-          ),
-        );
-        break;
+    //   case ComponentId.agroforestryLayout:
+    //     final agroforestrySystem = AgroforestryType.values[index];
+    //     systemSelectorMenuBloc.add(
+    //       SystemSelectorMenuChooseAgroforestrySystemEvent(
+    //         agroforestryType: agroforestrySystem,
+    //       ),
+    //     );
+    //     break;
 
-      case ComponentId.none:
-        break;
+    //   case ComponentId.none:
+    //     break;
 
-      case ComponentId.action:
-        final action = ActionState.values[index];
-        systemSelectorMenuBloc.add(SystemSelectorMenuDeleteTreeEvent(actionState: action));
-        break;
-    }
+    //   case ComponentId.action:
+    //     final action = ActionState.values[index];
+    //     systemSelectorMenuBloc.add(SystemSelectorMenuDeleteTreeEvent(actionState: action));
+    //     break;
+    // }
 
-    /// close
-    _closeMenu();
+    // /// close
+    // _closeMenu();
   }
 
   @override
