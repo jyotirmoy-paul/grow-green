@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../components/farm/farm.dart';
 
-class FarmHistoryDialog extends StatelessWidget {
+class ChooseComponentsDialog extends StatelessWidget {
   final Farm farm;
 
-  const FarmHistoryDialog({
+  const ChooseComponentsDialog({
     super.key,
     required this.farm,
   });

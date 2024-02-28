@@ -14,7 +14,7 @@ abstract class QtyCalculator {
     );
   }
 
-  static Qty getSeedQtyRequireFor({required systemType, required CropType cropType}) {
+  static Qty getSeedQtyRequireFor({required SystemType systemType, required CropType cropType}) {
     return System(systemType: systemType).seedQty(cropType);
   }
 

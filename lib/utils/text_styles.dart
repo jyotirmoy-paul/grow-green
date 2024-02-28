@@ -37,10 +37,17 @@ abstract class TextStyles {
       ];
 
   /// stylized text styles
-  static TextStyle get s12 => TextStyle(
+  static final TextStyle s12 = TextStyle(
+    color: Colors.white,
+    fontSize: 12.s,
+    shadows: _shadows(12.s),
+  );
+
+  /// stylized text styles
+  static TextStyle get s16 => TextStyle(
         color: Colors.white,
-        fontSize: 12.s,
-        shadows: _shadows(12.s),
+        fontSize: 16.s,
+        shadows: _shadows(16.s),
       );
 
   static final TextStyle s20 = TextStyle(
@@ -53,6 +60,12 @@ abstract class TextStyles {
     color: Colors.white,
     fontSize: 32.s,
     shadows: _shadows(32.s),
+  );
+
+  static final s24 = TextStyle(
+    color: Colors.white,
+    fontSize: 24.s,
+    shadows: _shadows(24.s),
   );
 
   static final s28 = TextStyle(
