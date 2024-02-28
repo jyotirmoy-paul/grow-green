@@ -3,7 +3,9 @@ import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../utils/game_extensions.dart';
+import '../../../../../../utils/game_utils.dart';
 import '../../../../../grow_green_game.dart';
+import '../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../services/game_services/monetary/models/money_model.dart';
 import 'animations/enums/game_animation_type.dart';
 import 'animations/game_animation.dart';
@@ -118,8 +120,15 @@ class FarmController {
     ];
   }
 
-  void purchaseSuccess() {
-    _farmCoreService.purchaseSuccess();
+  void purchaseFarm() async {
+    final success = await game.monetaryService.transact(
+      transactionType: TransactionType.debit,
+      value: GameUtils.farmInitialPrice,
+    );
+
+    if (success) {
+      _farmCoreService.purchaseSuccess();
+    } else {}
   }
 
   void updateFarmComposition({required FarmContent farmContent}) {

@@ -261,11 +261,19 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
                             dataImage: fm.model.data?.image,
                             dataText: fm.model.data?.data,
                             color: fm.model.bgColor,
-                            onTap: () {
-                              FarmMenuHelper.onMenuItemTap(
+                            onTap: () async {
+                              if (_currentFarm == null) return;
+
+                              final response = await FarmMenuHelper.onMenuItemTap(
                                 menuOption: fm.model.option,
                                 context: context,
+                                farm: _currentFarm!,
                               );
+
+                              ///  if we get back true, let's close the farm menu
+                              if (response) {
+                                _closeMenu();
+                              }
                             },
                           ),
                         ),

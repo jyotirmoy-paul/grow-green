@@ -45,23 +45,31 @@ class GameStatOverlay extends StatelessWidget {
             ),
           ),
 
-          /// show calender on top
-          const Align(
-            alignment: Alignment.topCenter,
-            child: CalenderStat(),
-          ),
+          Positioned.fill(
+            child: SafeArea(
+              child: Stack(
+                children: [
+                  /// show calender on top
+                  const Align(
+                    alignment: Alignment.topCenter,
+                    child: CalenderStat(),
+                  ),
 
-          /// menu for editing time factor
-          const Align(
-            alignment: Alignment.topRight,
-            child: TimeMenu(),
-          ),
+                  /// menu for editing time factor
+                  const Align(
+                    alignment: Alignment.topRight,
+                    child: TimeMenu(),
+                  ),
 
-          /// show money on top left
-          Align(
-            alignment: Alignment.topLeft,
-            child: MoneyStat(
-              monetaryService: game.gameController.monetaryService,
+                  /// show money on top left
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: MoneyStat(
+                      monetaryService: game.gameController.monetaryService,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

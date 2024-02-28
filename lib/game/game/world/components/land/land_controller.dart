@@ -4,13 +4,11 @@ import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart' hide Text;
 
 import '../../../../../services/log/log.dart';
-import '../../../../../services/utils/service_action.dart';
 import '../../../../utils/game_assets.dart';
 import '../../../../utils/game_extensions.dart';
 import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
 import '../../../services/priority/priority_engine.dart';
-import 'components/farm/dialogs/buy_farm_dialog.dart';
 import 'components/farm/farm.dart';
 import 'overlays/farm_menu/farm_menu.dart';
 import 'overlays/system_selector_menu/model/farm_notifier.dart';
@@ -166,26 +164,6 @@ class LandController {
       ...nonFarms,
       ...farms,
     ];
-  }
-
-  void _handleFarmBuying(Farm farm) async {
-    Log.d('$tag: _handleFarmBuying: $farm menu is shown');
-
-    final context = game.buildContext;
-    if (context == null) {
-      throw Exception('$tag: _handleFarmBuying received empty game context!');
-    }
-
-    final serviceAction = await BuyFarmDialog.openDialog(
-      context: context,
-      farm: farm,
-    );
-
-    Log.d('$tag: _handleFarmBuying: $farm purchase result: $serviceAction');
-
-    if (serviceAction == ServiceAction.success) {
-      farm.farmController.purchaseSuccess();
-    }
   }
 
   FarmNotifier get _farmNotifier => game.gameController.overlayData.farmNotifier;
