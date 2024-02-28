@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/extensions/list_extensions.dart';
+import '../../../../../../../utils/text_styles.dart';
+import '../../../../../../../widgets/game_button.dart';
 import '../../../../../grow_green_game.dart';
 import '../../components/farm/farm.dart';
 import '../system_selector_menu/model/farm_notifier.dart';
@@ -124,8 +127,8 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
 
     const animationDurationInMs = 200;
     const gapDurationInMs = 80;
-    const offsetGap = 30.0;
-    const jump = -20.0;
+    final offsetGap = 30.s;
+    final jump = -20.s;
 
     /// offset animation
     for (int i = 0; i < farmModels.length; i++) {
@@ -140,7 +143,7 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
 
       final offsetTween = ThreePointOffsetTween(
         x: Offset(0.0, (farmModels.length - i) * offsetGap),
-        i: const Offset(0.0, jump),
+        i: Offset(0.0, jump),
         y: Offset.zero,
         midPoint: 0.8,
       ).animate(
@@ -217,49 +220,60 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: const Alignment(0.0, 0.7),
-      child: Material(
-        type: MaterialType.transparency,
-        child: AnimatedBuilder(
-          animation: _opacityAnimationController,
-          builder: (_, child) {
-            return Opacity(
-              opacity: _opacityAnimation.value,
-              child: child,
-            );
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              /// title
-              Text(_titleText),
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 120.s),
+        // padding: EdgeInsets.only(bottom: 120.h),
+        child: Material(
+          type: MaterialType.transparency,
+          child: AnimatedBuilder(
+            animation: _opacityAnimationController,
+            builder: (_, child) {
+              return Opacity(
+                opacity: _opacityAnimation.value,
+                child: child,
+              );
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                /// title
+                Text(_titleText, style: TextStyles.s32),
 
-              const Gap(32.0),
+                Gap(32.s),
 
-              /// children
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: _farmModels
-                    .map(
-                      (fm) => AnimatedBuilder(
-                        animation: fm.controller,
-                        builder: (_, child) {
-                          return Transform.translate(
-                            offset: fm.offsetAnimation.value,
-                            child: child,
-                          );
-                        },
-                        child: Container(
-                          color: Colors.red,
-                          height: 100,
-                          width: 100,
-                          child: Text(fm.model.option.name + '\n ${fm.model.data?.data}'),
+                /// children
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: _farmModels
+                      .map(
+                        (fm) => AnimatedBuilder(
+                          animation: fm.controller,
+                          builder: (_, child) {
+                            return Transform.translate(
+                              offset: fm.offsetAnimation.value,
+                              child: child,
+                            );
+                          },
+                          child: GameButton.menuItem(
+                            text: fm.model.text,
+                            image: fm.model.image,
+                            dataImage: fm.model.data?.image,
+                            dataText: fm.model.data?.data,
+                            color: fm.model.bgColor,
+                            onTap: () {
+                              FarmMenuHelper.onMenuItemTap(
+                                menuOption: fm.model.option,
+                                context: context,
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    )
-                    .addSeparator(const Gap(32.0)),
-              ),
-            ],
+                      )
+                      .addSeparator(Gap(26.s)),
+                ),
+              ],
+            ),
           ),
         ),
       ),

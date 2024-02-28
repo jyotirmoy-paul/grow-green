@@ -31,7 +31,7 @@ class MoneyStat extends StatelessWidget {
             style: const TextStyle(
               color: Colors.black,
               letterSpacing: 1.0,
-              fontSize: 24.0,
+              fontSize: 18.0,
             ),
           );
         },
