@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../utils/game_icons.dart';
 import '../../../../../../utils/game_utils.dart';
 import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm.dart';
@@ -77,10 +78,10 @@ class FarmMenuHelper {
       text: 'Purchase',
       option: FarmMenuOption.buyFarm,
       bgColor: Colors.greenAccent,
-      image: '',
+      image: GameIcons.buyFarm,
       data: FarmMenuItemData(
         data: GameUtils.farmInitialPrice.formattedRupees,
-        image: null,
+        image: GameIcons.coin,
       ),
     );
   }
@@ -91,7 +92,7 @@ class FarmMenuHelper {
       text: 'Soil Health',
       option: FarmMenuOption.soilHealth,
       bgColor: Colors.brown,
-      image: '',
+      image: GameIcons.soilHealth,
       data: FarmMenuItemData(
         data: '${farm.farmController.soilHealthPercentage} %',
         image: null,
@@ -105,7 +106,7 @@ class FarmMenuHelper {
       text: 'Composition',
       option: FarmMenuOption.composition,
       bgColor: Colors.white,
-      image: '',
+      image: GameIcons.composition,
     );
   }
 
@@ -115,7 +116,12 @@ class FarmMenuHelper {
       text: 'History',
       option: FarmMenuOption.history,
       bgColor: Colors.white,
-      image: '',
+      image: GameIcons.history,
     );
   }
+
+  static void onMenuItemTap({
+    required FarmMenuOption menuOption,
+    required BuildContext context,
+  }) {}
 }

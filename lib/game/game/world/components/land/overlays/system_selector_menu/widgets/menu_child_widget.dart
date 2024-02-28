@@ -1,4 +1,3 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -64,14 +63,14 @@ class MenuChildWidget extends StatelessWidget {
         if (childModel.editable) {
           onTap?.call();
         } else {
-          BotToast.showSimpleNotification(
-            title: 'Editing ${childModel.shortName} is not available!',
-            titleStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 32.0,
-              letterSpacing: 2.0,
-            ),
-          );
+          // BotToast.showSimpleNotification(
+          //   title: 'Editing ${childModel.shortName} is not available!',
+          //   titleStyle: const TextStyle(
+          //     color: Colors.black,
+          //     fontSize: 32.0,
+          //     letterSpacing: 2.0,
+          //   ),
+          // );
         }
       },
       child: _buildChild(),
