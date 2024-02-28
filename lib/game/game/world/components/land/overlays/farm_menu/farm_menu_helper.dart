@@ -5,7 +5,8 @@ import '../../../../../../utils/game_icons.dart';
 import '../../../../../../utils/game_utils.dart';
 import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm.dart';
-import '../farm_composition_dialog/farm_composition_dialog.dart';
+import '../farm_composition_dialog/choose_components_dialog.dart';
+import '../farm_composition_dialog/choose_system_dialog.dart';
 import '../farm_history_dialog/farm_history_dialog.dart';
 import '../purchase_farm_dialog/purchase_farm_dialog.dart';
 import '../soil_health_dialog/soil_health_dialog.dart';
@@ -14,6 +15,8 @@ import 'model/farm_menu_model.dart';
 
 /// TODO: Language
 class FarmMenuHelper {
+  static const tag = 'FarmMenuHelper';
+
   static FarmMenuModel getFarmMenuModel(Farm farm) {
     return FarmMenuModel(title: _getTitle(farm), models: _getItemModels(farm));
   }
@@ -125,7 +128,30 @@ class FarmMenuHelper {
     );
   }
 
-  static String _titleFrom(FarmMenuOption menuOption) {
+  static String getDialogTitleFromFarmState(FarmState farmState) {
+    switch (farmState) {
+      case FarmState.notFunctioning:
+        return 'Choose a system';
+
+      case FarmState.onlyCropsWaiting:
+        return 'Monoculture Crops';
+
+      case FarmState.treesAndCropsButCropsWaiting:
+      case FarmState.functioning:
+      case FarmState.functioningOnlyTrees:
+      case FarmState.functioningOnlyCrops:
+        return 'Farm components';
+
+      case FarmState.notBought:
+      case FarmState.barren:
+        throw Exception('$tag: getDialogTitleFromFarmState($farmState) invoked at wrong farm state!');
+    }
+  }
+
+  static String _titleFrom({
+    required FarmMenuOption menuOption,
+    required FarmState farmState,
+  }) {
     switch (menuOption) {
       case FarmMenuOption.buyFarm:
         return 'Buy Farm?';
@@ -134,7 +160,7 @@ class FarmMenuHelper {
         return 'Soil Health';
 
       case FarmMenuOption.composition:
-        return 'Composition';
+        return getDialogTitleFromFarmState(farmState);
 
       case FarmMenuOption.history:
         return 'History';
@@ -169,7 +195,10 @@ class FarmMenuHelper {
       },
       pageBuilder: (context, animation, secondaryAnimation) {
         return DialogContainer(
-          title: _titleFrom(menuOption),
+          title: _titleFrom(
+            menuOption: menuOption,
+            farmState: farm.farmController.farmState,
+          ),
           dialogType: _dialogType(menuOption),
           child: () {
             switch (menuOption) {
@@ -180,10 +209,13 @@ class FarmMenuHelper {
                 return SoilHealthDialog();
 
               case FarmMenuOption.composition:
-                return FarmCompositionDialog();
+                if (farm.farmController.farmState == FarmState.notFunctioning) {
+                  return ChooseSystemDialog(farm: farm);
+                }
+                return ChooseComponentsDialog(farm: farm);
 
               case FarmMenuOption.history:
-                return FarmHistoryDialog();
+                return FarmHistoryDialog(farm: farm);
             }
           }(),
         );

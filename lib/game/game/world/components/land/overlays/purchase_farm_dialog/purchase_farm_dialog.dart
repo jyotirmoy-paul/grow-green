@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../utils/game_icons.dart';
@@ -22,27 +23,30 @@ class PurchaseFarmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          const Spacer(),
+    return Padding(
+      padding: EdgeInsets.all(12.s),
+      child: Center(
+        child: Column(
+          children: [
+            const Spacer(),
 
-          /// confirmation text
-          Text(
-            'Are you sure you want to purchase the farm?',
-            style: TextStyles.n18,
-          ),
+            /// confirmation text
+            Text(
+              'Are you sure you want to purchase the farm?',
+              style: TextStyles.n18,
+            ),
 
-          const Spacer(),
+            const Spacer(),
 
-          /// buy button
-          GameButton.textImage(
-            text: GameUtils.farmInitialPrice.formattedRupees,
-            image: GameIcons.coin,
-            onTap: () => _purchaseFarm(context),
-            bgColor: Colors.lightGreen,
-          ),
-        ],
+            /// buy button
+            GameButton.textImage(
+              text: GameUtils.farmInitialPrice.formattedRupees,
+              image: GameIcons.coin,
+              onTap: () => _purchaseFarm(context),
+              bgColor: Colors.lightGreen,
+            ),
+          ],
+        ),
       ),
     );
   }

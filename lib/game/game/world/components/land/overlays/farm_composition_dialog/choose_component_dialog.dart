@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class FarmCompositionDialog extends StatelessWidget {
-  const FarmCompositionDialog({super.key});
+class ChooseComponentDialog extends StatelessWidget {
+  const ChooseComponentDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

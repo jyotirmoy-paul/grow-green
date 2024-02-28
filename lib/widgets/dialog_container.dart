@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import '../game/utils/game_icons.dart';
 import '../utils/extensions/num_extensions.dart';
 import '../utils/text_styles.dart';
+import '../utils/utils.dart';
 import 'game_button.dart';
 
 enum DialogType {
@@ -22,7 +23,7 @@ class DialogContainer extends StatelessWidget {
     DialogType dialogType = DialogType.small,
     required this.title,
     required this.child,
-  }) : _size = dialogType == DialogType.small ? Size(500.s, 300.s) : Size(100.s, 100.s);
+  }) : _size = dialogType == DialogType.small ? Size(500.s, 300.s) : Size(1000.s, 600.s);
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +37,7 @@ class DialogContainer extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.brown[400],
             borderRadius: BorderRadius.circular(12.s),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                spreadRadius: 4.s,
-                offset: Offset(0.0, 1.s),
-              ),
-            ],
+            boxShadow: Utils.generalOutlineShadows,
           ),
           child: Column(
             children: [
@@ -95,7 +90,6 @@ class DialogContainer extends StatelessWidget {
                     color: Colors.brown[50],
                     borderRadius: BorderRadius.circular(12.s),
                   ),
-                  padding: EdgeInsets.all(12.s),
                   child: child,
                 ),
               ),
