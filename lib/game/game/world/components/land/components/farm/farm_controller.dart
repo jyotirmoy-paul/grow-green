@@ -2,8 +2,11 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../../utils/game_extensions.dart';
 import '../../../../../grow_green_game.dart';
 import '../../../../../services/game_services/monetary/models/money_model.dart';
+import 'animations/enums/game_animation_type.dart';
+import 'animations/game_animation.dart';
 import 'components/hover_board/hover_board.dart';
 import 'enum/farm_state.dart';
 import 'farm.dart';
@@ -22,14 +25,51 @@ class FarmController {
   late final FarmCoreService _farmCoreService;
   late final HarvestReflector _harvestReflector;
   late final CropTimer _cropTimer;
+  late final bool debugMode;
 
-  /// FIXME: a farm stays selected until a new farm is selected, it's a bug
-  bool isFarmSelected = false;
+  bool _isFarmSelected = false;
+
+  set isFarmSelected(bool value) {
+    if (_isFarmSelected == value) return;
+
+    _selectionAnimation.reset();
+    _isFarmSelected = value;
+  }
+
+  bool get isFarmSelected => _isFarmSelected;
 
   FarmState get farmState => _farmCoreService.farmState;
   FarmContent? get farmContent => _farmCoreService.farmContent;
 
   VoidCallback? onFarmTap;
+
+  final _polygonPath = Path();
+  final _selectionAnimation = GameAnimation(
+    totalDuration: 1.2,
+    minValue: 0.0,
+    maxValue: 0.3,
+    repeat: true,
+    type: GameAnimationType.breathing,
+  );
+
+  void _preparePolygonPath() {
+    final halfFarmSize = farm.size.half();
+
+    /// top-left corner
+    final topLeft = Vector2(0, 0).toCart(halfFarmSize);
+    final topRight = Vector2(farmRect.width, 0).toCart(halfFarmSize);
+    final bottomRight = Vector2(farmRect.width, farmRect.height).toCart(halfFarmSize);
+    final bottomLeft = Vector2(0, farmRect.height).toCart(halfFarmSize);
+
+    _polygonPath.moveTo(topLeft.x, topLeft.y);
+
+    /// lines to other corners
+    _polygonPath.lineTo(topRight.x, topRight.y);
+    _polygonPath.lineTo(bottomRight.x, bottomRight.y);
+    _polygonPath.lineTo(bottomLeft.x, bottomLeft.y);
+
+    _polygonPath.close();
+  }
 
   Future<List<Component>> initialize({
     required GrowGreenGame game,
@@ -39,10 +79,15 @@ class FarmController {
     required void Function(Component) add,
     required void Function(List<Component>) removeAll,
     required void Function(Component) remove,
+    bool debugMode = false,
   }) async {
     this.game = game;
     this.farmRect = farmRect;
     this.farm = farm;
+    this.debugMode = debugMode;
+
+    _preparePolygonPath();
+
     hoverBoard = HoverBoard(farm: farm);
 
     /// create farm service
@@ -95,6 +140,27 @@ class FarmController {
   void remove() {
     _harvestReflector.shutdown();
     _cropTimer.shutdown();
+  }
+
+  void update(dt) {
+    _selectionAnimation.update(dt);
+  }
+
+  void render(Canvas canvas) {
+    if (isFarmSelected) {
+      final paint = Paint()
+        ..color = Colors.black.withOpacity(_selectionAnimation.value)
+        ..style = PaintingStyle.fill;
+
+      canvas.drawPath(
+        _polygonPath,
+        paint,
+      );
+    }
+
+    if (debugMode) {
+      textPainter.paint(canvas, Offset.zero);
+    }
   }
 
   TextPainter get textPainter => TextPainter(

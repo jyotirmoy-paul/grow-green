@@ -24,12 +24,15 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
   }) : super(paint: Paint()..color = Colors.transparent);
 
   @override
+  void update(double dt) {
+    super.update(dt);
+    farmController.update(dt);
+  }
+
+  @override
   void render(Canvas canvas) {
     super.render(canvas);
-
-    if (debugMode) {
-      farmController.textPainter.paint(canvas, Offset.zero);
-    }
+    farmController.render(canvas);
   }
 
   @override
@@ -46,6 +49,7 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
       addAll: addAll,
       remove: remove,
       removeAll: removeAll,
+      debugMode: debugMode,
     );
 
     addAll(components);

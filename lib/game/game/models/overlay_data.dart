@@ -1,11 +1,17 @@
+import 'package:flutter/material.dart';
+
 import '../world/components/land/components/farm/farm.dart';
 import '../world/components/land/components/farm/model/farm_content.dart';
 import '../world/components/land/overlays/bill_menu/enums/bill_state.dart';
 import '../world/components/land/overlays/system_selector_menu/enum/component_id.dart';
 import '../world/components/land/overlays/system_selector_menu/model/component_selection_model.dart';
+import '../world/components/land/overlays/system_selector_menu/model/farm_notifier.dart';
 
 class OverlayData {
   static const tag = 'OverlayData';
+
+  /// farm notifier
+  final FarmNotifier farmNotifier = FarmNotifier();
 
   /// farm
   Farm? _farm;

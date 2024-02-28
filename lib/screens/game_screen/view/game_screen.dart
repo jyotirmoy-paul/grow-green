@@ -7,6 +7,7 @@ import '../../../game/game/overlays/game_stat_overlay/cubit/calender_cubit.dart'
 import '../../../game/game/overlays/game_stat_overlay/game_stat_overlay.dart';
 import '../../../game/game/world/components/land/overlays/bill_menu/bill_menu.dart';
 import '../../../game/game/world/components/land/overlays/component_selector_menu/component_selector_menu.dart';
+import '../../../game/game/world/components/land/overlays/farm_menu/farm_menu.dart';
 import '../../../game/game/world/components/land/overlays/system_selector_menu/bloc/system_selector_menu_bloc.dart';
 import '../../../game/game/world/components/land/overlays/system_selector_menu/system_selector_menu.dart';
 import '../bloc/game_bloc.dart';
@@ -18,6 +19,9 @@ class GameScreen extends StatelessWidget {
 
   /// list down all overlays
   static const overlayBuilderMap = <String, Widget Function(BuildContext, GrowGreenGame)>{
+    FarmMenu.overlayName: FarmMenu.builder,
+
+    /// obsolete
     SystemSelectorMenu.overlayName: SystemSelectorMenu.builder,
     ComponentSelectorMenu.overlayName: ComponentSelectorMenu.builder,
     BillMenu.overlayName: BillMenu.builder,
