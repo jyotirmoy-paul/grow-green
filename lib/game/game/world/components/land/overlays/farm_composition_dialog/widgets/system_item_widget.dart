@@ -11,10 +11,8 @@ import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/asset/crop_asset.dart';
 import '../../../components/farm/asset/tree_asset.dart';
 import '../../../components/farm/components/crop/enums/crop_stage.dart';
-import '../../../components/farm/components/crop/enums/crop_type.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/components/tree/enums/tree_stage.dart';
-import '../../../components/farm/components/tree/enums/tree_type.dart';
 import '../../../components/farm/farm.dart';
 
 /// TODO: Language
@@ -49,7 +47,7 @@ class SystemItemWidget extends StatelessWidget {
 
   List<Widget> buildComponentsFromAgroforestry(AgroforestrySystem system) {
     /// trees
-    final treeType = system.trees.first.type as TreeType;
+    final treeType = system.trees.first;
     final treeQty = QtyCalculator.getNumOfSaplingsFor(system.agroforestryType);
 
     final treesData = _SystemComponent(
@@ -58,7 +56,7 @@ class SystemItemWidget extends StatelessWidget {
     );
 
     /// crops
-    final cropType = system.crop.type as CropType;
+    final cropType = system.crop;
     final cropQty = QtyCalculator.getSeedQtyRequireFor(
       systemType: system.agroforestryType,
       cropType: cropType,
@@ -84,7 +82,7 @@ class SystemItemWidget extends StatelessWidget {
 
   List<Widget> buildComponentsFromMonoculture(MonocultureSystem system) {
     /// crops
-    final cropType = system.crop.type as CropType;
+    final cropType = system.crop;
     final cropQty = QtyCalculator.getSeedQtyRequireFor(
       systemType: system.farmSystemType,
       cropType: cropType,
@@ -102,7 +100,7 @@ class SystemItemWidget extends StatelessWidget {
       cropType: cropType,
     );
 
-    final fertilizerType = system.fertilizer.type;
+    final fertilizerType = system.fertilizer;
     final fertilierData = _SystemComponent(
       text: '${fertilizerQty.value} ${fertilizerQty.scale.name} of ${fertilizerType.name}',
       componentImage: cropsData.componentImage,

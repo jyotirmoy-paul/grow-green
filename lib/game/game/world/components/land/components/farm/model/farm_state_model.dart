@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+
 import '../enum/farm_state.dart';
 import 'farm_content.dart';
 import 'harvest_model.dart';

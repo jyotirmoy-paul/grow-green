@@ -1,110 +1,55 @@
 import '../../enums/agroforestry_type.dart';
-import '../../enums/farm_system_type.dart';
 import '../../models/farm_system.dart';
 import '../../world/components/land/components/farm/components/crop/enums/crop_type.dart';
-import '../../world/components/land/components/farm/components/system/model/qty.dart';
-import '../../world/components/land/components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../world/components/land/components/farm/components/tree/enums/tree_type.dart';
-import '../../world/components/land/components/farm/model/content.dart';
 import '../../world/components/land/components/farm/model/fertilizer/fertilizer_type.dart';
 
 /// Class holds various systems initially available to the user
-class SystemDatastore {
+abstract class SystemDatastore {
   /// Alley agroforestry system
-  final _agroforestrySystem1 = AgroforestrySystem(
+  static const _agroforestrySystem1 = AgroforestrySystem(
     agroforestryType: AgroforestryType.alley,
     trees: [
-      Content(
-        type: TreeType.coconut,
-        qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.alley),
-      ),
+      TreeType.coconut,
     ],
-    crop: Content(
-      type: CropType.bajra,
-      qty: QtyCalculator.getSeedQtyRequireFor(
-        systemType: AgroforestryType.alley,
-        cropType: CropType.bajra,
-      ),
-    ),
+    crop: CropType.bajra,
   );
 
   /// Block agroforestry system
-  final _agroforestrySystem2 = AgroforestrySystem(
+  static const _agroforestrySystem2 = AgroforestrySystem(
     agroforestryType: AgroforestryType.block,
     trees: [
-      Content(
-        type: TreeType.coconut,
-        qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.block),
-      ),
+      TreeType.coconut,
     ],
-    crop: Content(
-      type: CropType.maize,
-      qty: QtyCalculator.getSeedQtyRequireFor(
-        systemType: AgroforestryType.block,
-        cropType: CropType.maize,
-      ),
-    ),
+    crop: CropType.maize,
   );
 
   /// Boundary agroforestry system
-  final _agroforestrySystem3 = AgroforestrySystem(
+  static const _agroforestrySystem3 = AgroforestrySystem(
     agroforestryType: AgroforestryType.boundary,
     trees: [
-      Content(
-        type: TreeType.mango,
-        qty: QtyCalculator.getNumOfSaplingsFor(AgroforestryType.boundary),
-      ),
+      TreeType.mango,
     ],
-    crop: Content(
-      type: CropType.pepper,
-      qty: QtyCalculator.getSeedQtyRequireFor(
-        systemType: AgroforestryType.boundary,
-        cropType: CropType.pepper,
-      ),
-    ),
+    crop: CropType.pepper,
   );
 
   /// Organic fertilizer monoculture system
-  final _monocultureSystem1 = MonocultureSystem(
-    fertilizer: const Content(
-      type: FertilizerType.organic,
-      qty: Qty(
-        value: 100,
-        scale: Scale.kg,
-      ),
-    ),
-    crop: Content(
-      type: CropType.wheat,
-      qty: QtyCalculator.getSeedQtyRequireFor(
-        systemType: FarmSystemType.monoculture,
-        cropType: CropType.wheat,
-      ),
-    ),
+  static const _monocultureSystem1 = MonocultureSystem(
+    fertilizer: FertilizerType.organic,
+    crop: CropType.wheat,
   );
 
   /// Chemical fertilizer monoculture sysetm
-  final _monocultureSystem2 = MonocultureSystem(
-    fertilizer: const Content(
-      type: FertilizerType.organic,
-      qty: Qty(
-        value: 190,
-        scale: Scale.kg,
-      ),
-    ),
-    crop: Content(
-      type: CropType.bajra,
-      qty: QtyCalculator.getSeedQtyRequireFor(
-        systemType: FarmSystemType.monoculture,
-        cropType: CropType.bajra,
-      ),
-    ),
+  static const _monocultureSystem2 = MonocultureSystem(
+    fertilizer: FertilizerType.organic,
+    crop: CropType.bajra,
   );
 
-  List<FarmSystem> get systems => [
-        _agroforestrySystem1,
-        _agroforestrySystem2,
-        _agroforestrySystem3,
-        _monocultureSystem1,
-        _monocultureSystem2,
-      ];
+  static const List<FarmSystem> systems = [
+    _agroforestrySystem1,
+    _monocultureSystem1,
+    _agroforestrySystem2,
+    _agroforestrySystem3,
+    _monocultureSystem2,
+  ];
 }

@@ -1,15 +1,16 @@
 import '../enums/agroforestry_type.dart';
 import '../enums/farm_system_type.dart';
-import '../world/components/land/components/farm/model/content.dart';
+import '../world/components/land/components/farm/components/crop/enums/crop_type.dart';
+import '../world/components/land/components/farm/components/tree/enums/tree_type.dart';
+import '../world/components/land/components/farm/model/fertilizer/fertilizer_type.dart';
 
 abstract interface class FarmSystem {
   FarmSystemType get farmSystemType;
-  double get estimatedSetupCost;
 }
 
 class MonocultureSystem implements FarmSystem {
-  final Content fertilizer;
-  final Content crop;
+  final FertilizerType fertilizer;
+  final CropType crop;
 
   const MonocultureSystem({
     required this.fertilizer,
@@ -19,15 +20,9 @@ class MonocultureSystem implements FarmSystem {
   @override
   FarmSystemType get farmSystemType => FarmSystemType.monoculture;
 
-  @override
-  double get estimatedSetupCost {
-    /// TODO: calculate estimated setup depending upon factors
-    return 0.0;
-  }
-
   MonocultureSystem copyWith({
-    Content? fertilizer,
-    Content? crop,
+    FertilizerType? fertilizer,
+    CropType? crop,
   }) {
     return MonocultureSystem(
       fertilizer: fertilizer ?? this.fertilizer,
@@ -38,8 +33,8 @@ class MonocultureSystem implements FarmSystem {
 
 class AgroforestrySystem implements FarmSystem {
   final AgroforestryType agroforestryType;
-  final List<Content> trees;
-  final Content crop;
+  final List<TreeType> trees;
+  final CropType crop;
 
   const AgroforestrySystem({
     required this.agroforestryType,
@@ -50,16 +45,10 @@ class AgroforestrySystem implements FarmSystem {
   @override
   FarmSystemType get farmSystemType => FarmSystemType.agroforestry;
 
-  @override
-  double get estimatedSetupCost {
-    /// TODO: calculate estimated setup depending upon factors
-    return 0.0;
-  }
-
   AgroforestrySystem copyWith({
     AgroforestryType? agroforestryType,
-    List<Content>? trees,
-    Content? crop,
+    List<TreeType>? trees,
+    CropType? crop,
   }) {
     return AgroforestrySystem(
       agroforestryType: agroforestryType ?? this.agroforestryType,

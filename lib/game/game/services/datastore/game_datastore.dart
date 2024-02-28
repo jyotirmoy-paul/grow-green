@@ -4,12 +4,10 @@ import '../../../../services/database/interface/db_manager_service.dart';
 import '../../../../services/utils/service_action.dart';
 import '../../world/components/land/components/farm/model/farm_state_model.dart';
 import '../game_services/monetary/models/money_model.dart';
-import 'system_datastore.dart';
 
 class GameDatastore {
   static const tag = 'GameDatastore';
 
-  final _systemDatastore = SystemDatastore();
   final DbManagerService _dbManagerService;
 
   /// Ids used in database
@@ -105,6 +103,4 @@ class GameDatastore {
 
   /// TODO: Other db requirements!
   /// 1. Achievements
-
-  SystemDatastore get systemDatastore => _systemDatastore;
 }
