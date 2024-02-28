@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 
+import '../game/services/game_services/monetary/models/money_model.dart';
 import 'game_extensions.dart';
 
 class GameUtils {
@@ -9,6 +10,8 @@ class GameUtils {
   static final tileSize = Vector2(1024, 640);
   static const maxZoom = 0.8;
   static const maxCloudVelocity = 20.0;
+
+  static final farmInitialPrice = MoneyModel(rupees: 3000000);
 
   final Vector2 gameWorldSize;
   final double isoAngle;

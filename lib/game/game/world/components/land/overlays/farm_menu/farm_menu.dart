@@ -5,12 +5,10 @@ import '../../../../../../../utils/extensions/list_extensions.dart';
 import '../../../../../grow_green_game.dart';
 import '../../components/farm/farm.dart';
 import '../system_selector_menu/model/farm_notifier.dart';
-import 'enum/farm_menu_option.dart';
+import 'farm_menu_helper.dart';
 import 'model/animation_object.dart';
 import 'model/farm_menu_model.dart';
 import 'model/three_point_offset_tween.dart';
-
-/// TODO: Language
 
 class FarmMenu extends StatefulWidget {
   static const overlayName = 'farm-menu';
@@ -39,8 +37,11 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
 
   late AnimationController _opacityAnimationController;
   late Animation<double> _opacityAnimation;
+
   final List<AnimatableFarmMenuModel> _farmModels = [];
+
   Farm? _currentFarm;
+  String _titleText = '';
 
   Future<void> _doAnimation({bool reverse = false}) async {
     final futures = <Future>[];
@@ -118,7 +119,7 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
     _farmModels.clear();
   }
 
-  void _initAnimationControllers(List<FarmMenuModel> farmModels) {
+  void _initAnimationControllers(List<FarmMenuItemModel> farmModels) {
     _clearOldAnimationControllers();
 
     const animationDurationInMs = 200;
@@ -173,28 +174,17 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
     );
   }
 
-  List<FarmMenuModel> _getChildren() {
-    final models = <FarmMenuModel>[];
-
-    for (int i = 0; i < 3; i++) {
-      models.add(
-        FarmMenuModel(
-          option: FarmMenuOption.buyFarm,
-          bgColor: Colors.red,
-          image: '',
-          data: FarmMenuData(
-            data: 'Data: $i',
-            image: '',
-          ),
-        ),
-      );
+  void _populateNewChildren() {
+    final currentFarm = _currentFarm;
+    if (currentFarm == null) {
+      throw Exception('$tag: _populateNewChildren() invoked with null farm data!');
     }
 
-    return models;
-  }
+    final farmModel = FarmMenuHelper.getFarmMenuModel(currentFarm);
 
-  void _populateNewChildren() {
-    _initAnimationControllers(_getChildren());
+    /// set farm data
+    _titleText = farmModel.title;
+    _initAnimationControllers(farmModel.models);
   }
 
   /// populates children & initializes animation
@@ -242,7 +232,7 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.min,
             children: [
               /// title
-              Text('Hi there, how are you doing!: ${_currentFarm?.farmId}'),
+              Text(_titleText),
 
               const Gap(32.0),
 
