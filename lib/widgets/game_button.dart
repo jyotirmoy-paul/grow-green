@@ -9,6 +9,8 @@ import 'stylized_container.dart';
 enum GameButtonType {
   menuItem,
   text,
+  image,
+  textImage,
 }
 
 class GameButton extends StatelessWidget {
@@ -65,12 +67,65 @@ class GameButton extends StatelessWidget {
     );
   }
 
+  factory GameButton.image({
+    Key? key,
+    required String image,
+    required VoidCallback onTap,
+    Color? bgColor,
+  }) {
+    return GameButton._(
+      key: key,
+      type: GameButtonType.image,
+      image: image,
+      onTap: onTap,
+      color: bgColor,
+    );
+  }
+
+  factory GameButton.textImage({
+    Key? key,
+    required String text,
+    required String image,
+    required VoidCallback onTap,
+    Color? bgColor,
+  }) {
+    return GameButton._(
+      key: key,
+      type: GameButtonType.textImage,
+      onTap: onTap,
+      text: text,
+      image: image,
+      color: bgColor,
+    );
+  }
+
+  bool _applyColorOpacity() {
+    switch (type) {
+      case GameButtonType.menuItem:
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+  EdgeInsets _padding() {
+    switch (type) {
+      case GameButtonType.image:
+        return EdgeInsets.all(6.s);
+
+      default:
+        return EdgeInsets.all(12.s);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ButtonAnimator(
       onPressed: onTap,
       child: StylizedContainer(
-        padding: EdgeInsets.all(12.s),
+        applyColorOpacity: _applyColorOpacity(),
+        padding: _padding(),
         color: color,
         child: () {
           switch (type) {
@@ -83,7 +138,23 @@ class GameButton extends StatelessWidget {
               );
 
             case GameButtonType.text:
-              return _TextButton();
+              return _TextButton(
+                key: const ValueKey('text-button'),
+                text: text!,
+              );
+
+            case GameButtonType.image:
+              return _ImageButton(
+                key: const ValueKey('image-button'),
+                image: image!,
+              );
+
+            case GameButtonType.textImage:
+              return _TextImageButton(
+                key: const ValueKey('text-image'),
+                text: text!,
+                image: image!,
+              );
           }
         }(),
       ),
@@ -91,8 +162,55 @@ class GameButton extends StatelessWidget {
   }
 }
 
+class _TextImageButton extends StatelessWidget {
+  final String text;
+  final String image;
+
+  const _TextImageButton({
+    super.key,
+    required this.text,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          text,
+          style: TextStyles.s28,
+        ),
+        Gap(5.s),
+        Image.asset(
+          image,
+          height: 50.s,
+        ),
+      ],
+    );
+  }
+}
+
+class _ImageButton extends StatelessWidget {
+  final String image;
+  const _ImageButton({
+    super.key,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(image);
+  }
+}
+
 class _TextButton extends StatelessWidget {
-  const _TextButton({super.key});
+  final String text;
+
+  const _TextButton({
+    super.key,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +232,8 @@ class _MenuItemButton extends StatelessWidget {
     this.dataImage,
   });
 
+  bool get hasExtraData => dataText != null || dataImage != null;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox.square(
@@ -122,10 +242,13 @@ class _MenuItemButton extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           /// image
-          Image.asset(
-            image,
-            height: 60.s,
-            fit: BoxFit.contain,
+          Align(
+            alignment: hasExtraData ? Alignment.center : Alignment.topCenter,
+            child: Image.asset(
+              image,
+              height: hasExtraData ? 60.s : 70.s,
+              fit: BoxFit.contain,
+            ),
           ),
 
           Column(
@@ -140,7 +263,7 @@ class _MenuItemButton extends StatelessWidget {
                       /// data
                       Text(
                         dataText!,
-                        style: TextStyles.s5,
+                        style: TextStyles.s12,
                       ),
 
                       /// spacer
@@ -154,7 +277,10 @@ class _MenuItemButton extends StatelessWidget {
                     ],
                   );
                 } else if (dataText != null) {
-                  return Text(dataText!);
+                  return Text(
+                    dataText!,
+                    style: TextStyles.s20,
+                  );
                 }
 
                 return const SizedBox.shrink();
@@ -167,6 +293,7 @@ class _MenuItemButton extends StatelessWidget {
               Text(
                 text,
                 style: TextStyles.s20,
+                textAlign: TextAlign.center,
               ),
             ],
           ),

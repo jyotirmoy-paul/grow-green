@@ -7,12 +7,14 @@ class StylizedContainer extends StatefulWidget {
   final EdgeInsets padding;
   final EdgeInsets? margin;
   final Color color;
+  final applyColorOpacity;
 
   const StylizedContainer({
     Key? key,
     required this.child,
     EdgeInsets? padding,
     this.margin,
+    this.applyColorOpacity = false,
     Color? color,
   })  : padding = padding ?? const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
         color = color ?? Colors.white,
@@ -57,7 +59,7 @@ class _StylizedContainerState extends State<StylizedContainer> {
       height: size.height * 0.50 - marginValue * 2,
       width: size.width - marginValue * 2,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.60),
+        color: Colors.white.withOpacity(0.6),
         borderRadius: BorderRadius.circular(8.s),
       ),
     );
@@ -78,7 +80,7 @@ class _StylizedContainerState extends State<StylizedContainer> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: widget.color.withOpacity(0.7),
+        color: widget.applyColorOpacity ? widget.color.withOpacity(0.8) : widget.color,
         borderRadius: BorderRadius.circular(12.s),
         border: Border.all(
           color: Colors.black,

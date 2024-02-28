@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../utils/game_icons.dart';
 import '../../../../../../utils/game_utils.dart';
 import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm.dart';
+import '../farm_composition_dialog/farm_composition_dialog.dart';
+import '../farm_history_dialog/farm_history_dialog.dart';
+import '../purchase_farm_dialog/purchase_farm_dialog.dart';
+import '../soil_health_dialog/soil_health_dialog.dart';
 import 'enum/farm_menu_option.dart';
 import 'model/farm_menu_model.dart';
 
@@ -91,7 +96,7 @@ class FarmMenuHelper {
     return FarmMenuItemModel(
       text: 'Soil Health',
       option: FarmMenuOption.soilHealth,
-      bgColor: Colors.brown,
+      bgColor: Colors.amber,
       image: GameIcons.soilHealth,
       data: FarmMenuItemData(
         data: '${farm.farmController.soilHealthPercentage} %',
@@ -103,9 +108,9 @@ class FarmMenuHelper {
   /// farm composition
   static FarmMenuItemModel _getFarmComposition(Farm farm) {
     return const FarmMenuItemModel(
-      text: 'Composition',
+      text: 'Content',
       option: FarmMenuOption.composition,
-      bgColor: Colors.white,
+      bgColor: Colors.blue,
       image: GameIcons.composition,
     );
   }
@@ -120,8 +125,72 @@ class FarmMenuHelper {
     );
   }
 
-  static void onMenuItemTap({
+  static String _titleFrom(FarmMenuOption menuOption) {
+    switch (menuOption) {
+      case FarmMenuOption.buyFarm:
+        return 'Buy Farm?';
+
+      case FarmMenuOption.soilHealth:
+        return 'Soil Health';
+
+      case FarmMenuOption.composition:
+        return 'Composition';
+
+      case FarmMenuOption.history:
+        return 'History';
+    }
+  }
+
+  static DialogType _dialogType(FarmMenuOption menuOption) {
+    switch (menuOption) {
+      case FarmMenuOption.buyFarm:
+        return DialogType.small;
+
+      case FarmMenuOption.soilHealth:
+      case FarmMenuOption.composition:
+      case FarmMenuOption.history:
+        return DialogType.large;
+    }
+  }
+
+  static Future<bool> onMenuItemTap({
     required FarmMenuOption menuOption,
     required BuildContext context,
-  }) {}
+    required Farm farm,
+  }) async {
+    final response = await showGeneralDialog(
+      barrierLabel: 'Dialog for ${menuOption.name}',
+      barrierColor: Colors.transparent,
+      barrierDismissible: true,
+      context: context,
+      transitionDuration: Duration.zero,
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return child;
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return DialogContainer(
+          title: _titleFrom(menuOption),
+          dialogType: _dialogType(menuOption),
+          child: () {
+            switch (menuOption) {
+              case FarmMenuOption.buyFarm:
+                return PurchaseFarmDialog(farm: farm);
+
+              case FarmMenuOption.soilHealth:
+                return SoilHealthDialog();
+
+              case FarmMenuOption.composition:
+                return FarmCompositionDialog();
+
+              case FarmMenuOption.history:
+                return FarmHistoryDialog();
+            }
+          }(),
+        );
+      },
+    );
+
+    if (response is bool) return response;
+    return false;
+  }
 }
