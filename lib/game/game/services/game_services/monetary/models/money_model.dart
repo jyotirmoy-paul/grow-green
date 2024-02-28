@@ -17,7 +17,7 @@ class MoneyModel {
     required int rupees,
   }) : rupees = rupees < 0 ? throw ArgumentError('rupees cannot be negative!') : rupees;
 
-  String get formattedRupees => _formatter.format(rupees);
+  String get formattedRupees => _formatter.format(rupees).replaceAll(',', ' ');
 
   bool isNegative() {
     return rupees < 0;

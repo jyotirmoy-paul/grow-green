@@ -5,7 +5,7 @@ import 'farm_menu_model.dart';
 class AnimatableFarmMenuModel {
   final AnimationController controller;
   final Animation<Offset> offsetAnimation;
-  final FarmMenuModel model;
+  final FarmMenuItemModel model;
 
   AnimatableFarmMenuModel({
     required this.model,

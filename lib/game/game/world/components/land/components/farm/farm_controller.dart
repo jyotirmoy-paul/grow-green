@@ -40,6 +40,7 @@ class FarmController {
 
   FarmState get farmState => _farmCoreService.farmState;
   FarmContent? get farmContent => _farmCoreService.farmContent;
+  double get soilHealthPercentage => _farmCoreService.soilHealthPercentage;
 
   VoidCallback? onFarmTap;
 

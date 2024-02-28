@@ -63,6 +63,7 @@ class FarmCoreService {
   GameDatastore get gameDatastore => farm.game.gameDatastore;
   FarmState get farmState => _farmStateModelValue.farmState;
   FarmContent? get farmContent => _farmStateModelValue.farmContent;
+  double get soilHealthPercentage => _farmStateModelValue.soilHealthPercentage;
   DateTime? get _treeLastHarvestedOn => _farmStateModelValue.treeLastHarvestedOn;
 
   /// streams available for getting updates of farm!
