@@ -12,6 +12,10 @@ enum DialogType {
   large,
 }
 
+enum DialogEndType {
+  close,
+}
+
 class DialogContainer extends StatelessWidget {
   final String title;
   final Widget child;
@@ -23,21 +27,25 @@ class DialogContainer extends StatelessWidget {
     DialogType dialogType = DialogType.small,
     required this.title,
     required this.child,
-  }) : _size = dialogType == DialogType.small ? Size(500.s, 300.s) : Size(1000.s, 600.s);
+  }) : _size = dialogType == DialogType.small ? Size(500.s, 300.s) : Size(1060.s, 670.s);
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Material(
-        type: MaterialType.transparency,
+      child: Dialog(
+        // type: MaterialType.transparency,
         child: Container(
           width: _size.width,
           height: _size.height,
           padding: EdgeInsets.all(10.s),
           decoration: BoxDecoration(
-            color: Colors.brown[400],
+            color: const Color(0xff503C3C),
             borderRadius: BorderRadius.circular(12.s),
-            boxShadow: Utils.generalOutlineShadows,
+            border: Border.all(
+              color: Colors.black,
+              width: 7.s,
+              strokeAlign: BorderSide.strokeAlignOutside,
+            ),
           ),
           child: Column(
             children: [
@@ -64,7 +72,7 @@ class DialogContainer extends StatelessWidget {
 
                     Text(
                       title,
-                      style: TextStyles.s28,
+                      style: TextStyles.s32,
                     ),
 
                     Align(
@@ -72,7 +80,7 @@ class DialogContainer extends StatelessWidget {
                       child: GameButton.image(
                         image: GameIcons.close,
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.pop(context, DialogEndType.close);
                         },
                         bgColor: Colors.red,
                       ),

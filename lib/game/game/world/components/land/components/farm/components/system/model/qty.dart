@@ -13,6 +13,10 @@ class Qty {
 
   const Qty({required this.value, required this.scale});
 
+  String get readableFormat {
+    return '$value ${scale.name.toLowerCase()}';
+  }
+
   @override
   String toString() {
     return 'Qty($value, $scale)';

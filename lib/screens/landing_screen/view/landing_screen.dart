@@ -33,6 +33,7 @@ class LandingScreen extends StatelessWidget {
         ),
         child: Scaffold(
           body: Stack(
+            clipBehavior: Clip.none,
             children: [
               /// Background image
 

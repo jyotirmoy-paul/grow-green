@@ -4,6 +4,7 @@ import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/game_button.dart';
+import '../../../../../../../../widgets/shadowed_container.dart';
 import '../../../../../../../utils/game_icons.dart';
 import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../enums/farm_system_type.dart';
@@ -14,16 +15,22 @@ import '../../../components/farm/components/crop/enums/crop_stage.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/components/tree/enums/tree_stage.dart';
 import '../../../components/farm/farm.dart';
+import '../../farm_menu/farm_menu_helper.dart';
+import 'menu_item_skeleton.dart';
 
 /// TODO: Language
 class SystemItemWidget extends StatelessWidget {
   final Farm farm;
   final FarmSystem farmSystem;
+  final Color bgColor;
+  final Color secondaryColor;
 
   const SystemItemWidget({
     super.key,
     required this.farm,
     required this.farmSystem,
+    this.bgColor = Colors.green,
+    this.secondaryColor = Colors.blueAccent,
   });
 
   String _getTitle() {
@@ -51,8 +58,10 @@ class SystemItemWidget extends StatelessWidget {
     final treeQty = QtyCalculator.getNumOfSaplingsFor(system.agroforestryType);
 
     final treesData = _SystemComponent(
+      key: ValueKey('trees-${system.agroforestryType}'),
       text: '${treeQty.value} ${treeQty.scale.name} of ${treeType.name}',
       componentImage: 'assets/images/${TreeAsset.of(treeType).at(TreeStage.adult)}',
+      bgColor: secondaryColor,
     );
 
     /// crops
@@ -63,14 +72,18 @@ class SystemItemWidget extends StatelessWidget {
     );
 
     final cropsData = _SystemComponent(
+      key: ValueKey('crops-${system.agroforestryType}'),
       text: '${cropQty.value} ${cropQty.scale.name} of ${cropType.name}',
       componentImage: 'assets/images/${CropAsset.of(cropType).at(CropStage.maturity)}',
+      bgColor: secondaryColor,
     );
 
     /// system
     final systemData = _SystemComponent(
+      key: ValueKey('system-${system.agroforestryType}'),
       text: system.agroforestryType.name,
       componentImage: treesData.componentImage,
+      bgColor: secondaryColor,
     );
 
     return [
@@ -91,6 +104,7 @@ class SystemItemWidget extends StatelessWidget {
     final cropsData = _SystemComponent(
       text: '${cropQty.value} ${cropQty.scale.name} of ${cropType.name}',
       componentImage: 'assets/images/${CropAsset.of(cropType).at(CropStage.maturity)}',
+      bgColor: secondaryColor,
     );
 
     /// fertilizer
@@ -104,6 +118,7 @@ class SystemItemWidget extends StatelessWidget {
     final fertilierData = _SystemComponent(
       text: '${fertilizerQty.value} ${fertilizerQty.scale.name} of ${fertilizerType.name}',
       componentImage: cropsData.componentImage,
+      bgColor: secondaryColor,
     );
 
     return [
@@ -124,100 +139,60 @@ class SystemItemWidget extends StatelessWidget {
     return const [];
   }
 
-  void _onInfoTap() {}
+  void _onInfoTap() {
+    /// TODO: handle on info tap
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.hardEdge,
-      width: 300.s,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.s),
-        color: Colors.green,
-        boxShadow: Utils.tappableOutlineShadows,
+    return MenuItemSkeleton(
+      width: 380.s,
+      bgColor: bgColor,
+      header: Center(
+        child: Text(
+          _getTitle(),
+          textAlign: TextAlign.center,
+          style: TextStyles.s28,
+        ),
       ),
-      child: Column(
+      body: Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        runAlignment: WrapAlignment.center,
+        spacing: 16.s,
+        runSpacing: 16.s,
+        children: buildComponents()
+            .map(
+              (e) => SizedBox.square(
+                dimension: 160.s,
+                child: e,
+              ),
+            )
+            .toList(),
+      ),
+      footer: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
         children: [
-          /// header
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(12.s),
-              decoration: BoxDecoration(
-                color: Utils.darkenColor(Colors.green, 0.2),
-                border: Border(
-                  bottom: BorderSide(
-                    color: Utils.lightenColor(Colors.green, 0.4),
-                    width: 3.s,
-                  ),
-                ),
+          /// price
+          Text(
+            '₹ ${FarmMenuHelper.getPriceForFarmSystem(
+              farmSystem: farmSystem,
+              soilHealthPercentage: farm.farmController.soilHealthPercentage,
+            ).formattedRupees}',
+            style: TextStyles.s28,
+          ),
+
+          /// info button to learn more
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.s),
+              child: GameButton.image(
+                image: GameIcons.info,
+                bgColor: secondaryColor,
+                onTap: _onInfoTap,
               ),
-              child: Center(
-                child: Text(
-                  _getTitle(),
-                  textAlign: TextAlign.center,
-                  style: TextStyles.s24,
-                ),
-              ),
-            ),
-          ),
-
-          /// body
-          Expanded(
-            flex: 3,
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              runAlignment: WrapAlignment.center,
-              spacing: 10.s,
-              runSpacing: 10.s,
-              children: buildComponents()
-                  .map(
-                    (e) => SizedBox.square(
-                      dimension: 135.s,
-                      child: e,
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-
-          Container(
-            height: 2.s,
-            color: Colors.black.withOpacity(0.7),
-          ),
-          Container(
-            height: 2.s,
-            color: Utils.lightenColor(Colors.green, 0.4),
-          ),
-
-          /// footer
-          Expanded(
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                /// price
-                /// TODO: get actual price
-                Text(
-                  '₹ 2 00 000',
-                  style: TextStyles.s20,
-                ),
-
-                /// info button to learn more
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.s),
-                    child: SizedBox(
-                      width: 50.s,
-                      child: GameButton.image(
-                        image: GameIcons.info,
-                        bgColor: Colors.blueAccent,
-                        onTap: _onInfoTap,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ],
@@ -229,36 +204,37 @@ class SystemItemWidget extends StatelessWidget {
 class _SystemComponent extends StatelessWidget {
   final String componentImage;
   final String text;
+  final Color bgColor;
 
   const _SystemComponent({
     super.key,
     required this.text,
     required this.componentImage,
+    required this.bgColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ShadowedContainer(
       padding: EdgeInsets.all(12.s),
+      shadowOffset: Offset(8.s, 8.s),
       decoration: BoxDecoration(
-        color: Colors.blueAccent,
+        color: bgColor,
         borderRadius: BorderRadius.circular(12.s),
-        boxShadow: Utils.tappableOutlineShadows,
         border: Border.all(
-          color: Utils.lightenColor(Colors.blueAccent),
+          color: Utils.lightenColor(bgColor),
           width: 2.s,
         ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(
+          Expanded(
             child: Image.asset(componentImage),
           ),
           Text(
             text,
-            style: TextStyles.s16,
+            style: TextStyles.s24,
             textAlign: TextAlign.center,
           )
         ],

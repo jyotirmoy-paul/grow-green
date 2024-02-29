@@ -8,4 +8,6 @@ abstract class GameIcons {
   static const soilHealth = '$_base/icon.png';
   static const composition = '$_base/icon.png';
   static const history = '$_base/icon.png';
+  static const edit = '$_base/icon.png';
+  static const remove = '$_base/icon.png';
 }

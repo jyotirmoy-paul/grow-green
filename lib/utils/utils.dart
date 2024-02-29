@@ -3,6 +3,26 @@ import 'package:flutter/material.dart';
 import 'extensions/num_extensions.dart';
 
 abstract class Utils {
+  static Future<T?> showNonAnimatedDialog<T extends Object?>({
+    required String barrierLabel,
+    required BuildContext context,
+    required Widget Function(BuildContext) builder,
+  }) {
+    return showGeneralDialog<T>(
+      barrierLabel: barrierLabel,
+      barrierColor: Colors.transparent,
+      barrierDismissible: true,
+      context: context,
+      transitionDuration: Duration.zero,
+      transitionBuilder: (_, __, ___, child) {
+        return child;
+      },
+      pageBuilder: (context, _, __) {
+        return builder(context);
+      },
+    );
+  }
+
   static Color darkenColor(Color color, [double amount = 0.30]) {
     assert(amount >= 0 && amount <= 1);
     final hsl = HSLColor.fromColor(color);
