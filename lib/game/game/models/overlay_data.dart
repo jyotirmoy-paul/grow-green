@@ -1,8 +1,6 @@
 import '../world/components/land/components/farm/farm.dart';
 import '../world/components/land/components/farm/model/farm_content.dart';
 import '../world/components/land/overlays/bill_menu/enums/bill_state.dart';
-import '../world/components/land/overlays/system_selector_menu/enum/component_id.dart';
-import '../world/components/land/overlays/system_selector_menu/model/component_selection_model.dart';
 import '../world/components/land/overlays/system_selector_menu/model/farm_notifier.dart';
 
 class OverlayData {
@@ -24,10 +22,10 @@ class OverlayData {
   }
 
   /// component selection model
-  ComponentSelectionModel componentSelectionModel = ComponentSelectionModel(
-    componentId: ComponentId.none,
-    componentTappedIndex: -1,
-  );
+  // ComponentSelectionModel componentSelectionModel = ComponentSelectionModel(
+  //   componentId: ComponentId.none,
+  //   componentTappedIndex: -1,
+  // );
 
   /// farm content
   FarmContent? _farmContent;

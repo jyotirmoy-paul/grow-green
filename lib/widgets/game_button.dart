@@ -177,14 +177,16 @@ class _TextImageButton extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          text,
-          style: TextStyles.s28,
+        Flexible(
+          child: Text(
+            text,
+            style: TextStyles.s26,
+          ),
         ),
-        Gap(5.s),
+        Gap(10.s),
         Image.asset(
           image,
-          height: 50.s,
+          height: 45.s,
         ),
       ],
     );
@@ -200,9 +202,13 @@ class _ImageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      image,
-      fit: BoxFit.contain,
+    return SizedBox(
+      width: 50.s,
+      height: 50.s,
+      child: Image.asset(
+        image,
+        fit: BoxFit.contain,
+      ),
     );
   }
 }
@@ -242,6 +248,7 @@ class _MenuItemButton extends StatelessWidget {
     return SizedBox.square(
       dimension: 100.s,
       child: Stack(
+        clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
           /// image

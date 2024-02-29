@@ -7,7 +7,7 @@ class StylizedContainer extends StatefulWidget {
   final EdgeInsets padding;
   final EdgeInsets? margin;
   final Color color;
-  final applyColorOpacity;
+  final bool applyColorOpacity;
 
   const StylizedContainer({
     Key? key,
@@ -69,10 +69,12 @@ class _StylizedContainerState extends State<StylizedContainer> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        topReflectionWidget = _buildTopReflectionWidget();
-        sideReflectionWidget = _buildSideReflectionWidget();
-      });
+      if (mounted) {
+        setState(() {
+          topReflectionWidget = _buildTopReflectionWidget();
+          sideReflectionWidget = _buildSideReflectionWidget();
+        });
+      }
     });
   }
 
@@ -89,6 +91,7 @@ class _StylizedContainerState extends State<StylizedContainer> {
         ),
       ),
       child: Stack(
+        clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
         children: [
           // reflection widget

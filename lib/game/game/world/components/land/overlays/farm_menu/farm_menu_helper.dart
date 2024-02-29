@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../services/log/log.dart';
+import '../../../../../../../utils/utils.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../utils/game_icons.dart';
 import '../../../../../../utils/game_utils.dart';
+import '../../../../../enums/farm_system_type.dart';
+import '../../../../../enums/system_type.dart';
+import '../../../../../models/farm_system.dart';
+import '../../../../../services/game_services/monetary/models/money_model.dart';
+import '../../components/farm/components/crop/enums/crop_type.dart';
+import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
+import '../../components/farm/components/system/real_life/utils/qty_calculator.dart';
+import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm.dart';
+import '../../components/farm/model/content.dart';
+import '../../components/farm/model/farm_content.dart';
+import '../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../farm_composition_dialog/choose_components_dialog.dart';
 import '../farm_composition_dialog/choose_system_dialog.dart';
 import '../farm_history_dialog/farm_history_dialog.dart';
 import '../purchase_farm_dialog/purchase_farm_dialog.dart';
 import '../soil_health_dialog/soil_health_dialog.dart';
+import '../system_selector_menu/enum/component_id.dart';
 import 'enum/farm_menu_option.dart';
 import 'model/farm_menu_model.dart';
 
@@ -184,16 +198,10 @@ class FarmMenuHelper {
     required BuildContext context,
     required Farm farm,
   }) async {
-    final response = await showGeneralDialog(
+    final response = await Utils.showNonAnimatedDialog(
       barrierLabel: 'Dialog for ${menuOption.name}',
-      barrierColor: Colors.transparent,
-      barrierDismissible: true,
       context: context,
-      transitionDuration: Duration.zero,
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return child;
-      },
-      pageBuilder: (context, animation, secondaryAnimation) {
+      builder: (context) {
         return DialogContainer(
           title: _titleFrom(
             menuOption: menuOption,
@@ -206,13 +214,28 @@ class FarmMenuHelper {
                 return PurchaseFarmDialog(farm: farm);
 
               case FarmMenuOption.soilHealth:
-                return SoilHealthDialog();
+                return SoilHealthDialog(farm: farm);
 
               case FarmMenuOption.composition:
-                if (farm.farmController.farmState == FarmState.notFunctioning) {
+                final farmState = farm.farmController.farmState;
+
+                if (farmState == FarmState.notFunctioning) {
                   return ChooseSystemDialog(farm: farm);
                 }
-                return ChooseComponentsDialog(farm: farm);
+
+                final farmContent = farm.farmController.farmContent;
+                if (farmContent == null) {
+                  throw Exception(
+                    '$tag: onMenuItemTap() invoked with null farm content in $farmState state',
+                  );
+                }
+
+                return ChooseComponentsDialog(
+                  farmContent: farmContent,
+                  editableComponents: getEditableComponentIdsAt(farmState),
+                  isNotFunctioningFarm: farmState == FarmState.notFunctioning,
+                  soilHealthPercentage: farm.farmController.soilHealthPercentage,
+                );
 
               case FarmMenuOption.history:
                 return FarmHistoryDialog(farm: farm);
@@ -224,5 +247,191 @@ class FarmMenuHelper {
 
     if (response is bool) return response;
     return false;
+  }
+
+  static List<ComponentId> getEditableComponentIdsAt(FarmState farmState) {
+    switch (farmState) {
+      case FarmState.notBought:
+      case FarmState.notFunctioning:
+      case FarmState.barren:
+        throw Exception('$tag: getEditableComponentIdsAt($farmState) invoked at wrong farm state');
+
+      case FarmState.onlyCropsWaiting:
+        return const [];
+
+      case FarmState.functioning:
+      case FarmState.functioningOnlyCrops:
+      case FarmState.treesAndCropsButCropsWaiting:
+        return const [
+          ComponentId.trees,
+        ];
+
+      case FarmState.functioningOnlyTrees:
+        return const [
+          ComponentId.crop,
+          ComponentId.trees,
+        ];
+    }
+  }
+
+  static Content getCropContent({
+    required CropType cropType,
+    required SystemType systemType,
+  }) {
+    return Content(
+      type: cropType,
+      qty: QtyCalculator.getSeedQtyRequireFor(
+        systemType: systemType,
+        cropType: cropType,
+      ),
+    );
+  }
+
+  static Content getFertilizerContent({
+    required FertilizerType fertilizerType,
+    required double soilHealthPercentage,
+    required SystemType systemType,
+    required CropType cropType,
+  }) {
+    return Content(
+      type: fertilizerType,
+      qty: QtyCalculator.getFertilizerQtyRequiredFor(
+        systemType: systemType,
+        soilHealthPercentage: soilHealthPercentage,
+        cropType: cropType,
+      ),
+    );
+  }
+
+  static Content getTreeContent({
+    required TreeType treeType,
+    required SystemType systemType,
+  }) {
+    return Content(
+      type: treeType,
+      qty: QtyCalculator.getNumOfSaplingsFor(systemType),
+    );
+  }
+
+  static FarmContent getFarmContentFromSystem({
+    required FarmSystem farmSystem,
+    required double soilHealthPercentage,
+  }) {
+    Content? crop;
+    List<Content>? trees;
+    Content? fertilizer;
+    late SystemType systemType;
+
+    if (farmSystem.farmSystemType == FarmSystemType.monoculture) {
+      final system = farmSystem as MonocultureSystem;
+
+      crop = getCropContent(
+        cropType: system.crop,
+        systemType: FarmSystemType.monoculture,
+      );
+
+      fertilizer = getFertilizerContent(
+        fertilizerType: system.fertilizer,
+        systemType: FarmSystemType.monoculture,
+        soilHealthPercentage: soilHealthPercentage,
+        cropType: system.crop,
+      );
+
+      systemType = FarmSystemType.monoculture;
+    } else {
+      final system = farmSystem as AgroforestrySystem;
+
+      crop = getCropContent(
+        cropType: system.crop,
+        systemType: system.agroforestryType,
+      );
+
+      trees = [];
+
+      for (final tree in system.trees) {
+        trees.add(
+          getTreeContent(treeType: tree, systemType: system.agroforestryType),
+        );
+      }
+
+      systemType = system.agroforestryType;
+    }
+
+    return FarmContent(
+      crop: crop,
+      trees: trees,
+      fertilizer: fertilizer,
+      systemType: systemType,
+    );
+  }
+
+  static void purchaseFarmContents({
+    required FarmContent farmSystem,
+    required MoneyModel totalCost,
+  }) {
+    Log.d('$tag: purchaseFarmContents() invoked with farmSystem: $farmSystem, totalCost: $totalCost');
+
+    /// TODO: implement
+  }
+
+  static MoneyModel getPriceForFarmSystem({
+    required FarmSystem farmSystem,
+    required double soilHealthPercentage,
+  }) {
+    MoneyModel totalPrice = MoneyModel.zero();
+
+    final system = farmSystem;
+    if (system is AgroforestrySystem) {
+      /// crops price
+      final cropType = system.crop;
+      totalPrice += MoneyModel(
+        rupees: CostCalculator.seedCost(
+          seedsRequired: QtyCalculator.getSeedQtyRequireFor(
+            systemType: system.agroforestryType,
+            cropType: cropType,
+          ),
+          cropType: cropType,
+        ),
+      );
+
+      /// trees price
+      for (final tree in system.trees) {
+        totalPrice += MoneyModel(
+          rupees: CostCalculator.saplingCost(
+            saplingQty: QtyCalculator.getNumOfSaplingsFor(system.agroforestryType),
+            treeType: tree,
+          ),
+        );
+      }
+
+      /// TODO: may be fertilizer price
+    }
+
+    if (system is MonocultureSystem) {
+      /// crops price
+      final cropType = system.crop;
+      totalPrice += MoneyModel(
+        rupees: CostCalculator.seedCost(
+          seedsRequired: QtyCalculator.getSeedQtyRequireFor(
+            systemType: FarmSystemType.monoculture,
+            cropType: cropType,
+          ),
+          cropType: cropType,
+        ),
+      );
+
+      /// fertilizer price
+      totalPrice += MoneyModel(
+        rupees: CostCalculator.getFertilizerCost(
+          qty: QtyCalculator.getFertilizerQtyRequiredFor(
+            systemType: FarmSystemType.monoculture,
+            soilHealthPercentage: soilHealthPercentage,
+            cropType: cropType,
+          ),
+        ),
+      );
+    }
+
+    return totalPrice;
   }
 }

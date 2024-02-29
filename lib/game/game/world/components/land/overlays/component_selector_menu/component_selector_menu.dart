@@ -18,10 +18,11 @@ import 'widget/component_item.dart';
 class ComponentSelectorMenu extends StatefulWidget {
   static const overlayName = 'component-selector-menu';
   static Widget builder(BuildContext context, GrowGreenGame game) {
-    return ComponentSelectorMenu(
-      componentSelectionModel: game.gameController.overlayData.componentSelectionModel,
-      game: game,
-    );
+    return const SizedBox();
+    // return ComponentSelectorMenu(
+    //   componentSelectionModel: game.gameController.overlayData.componentSelectionModel,
+    //   game: game,
+    // );
   }
 
   final ComponentSelectionModel componentSelectionModel;
@@ -85,16 +86,16 @@ class _ComponentSelectorMenuState extends State<ComponentSelectorMenu> with Sing
           ),
         );
 
-      case ComponentId.none:
-        return;
+      // case ComponentId.none:
+      //   return;
 
-      case ComponentId.action:
-        return models.addAll(
-          [
-            CsmItemModel(name: 'Cancel', image: ''),
-            CsmItemModel(name: 'Confirm', image: ''),
-          ],
-        );
+      // case ComponentId.action:
+      //   return models.addAll(
+      //     [
+      //       CsmItemModel(name: 'Cancel', image: ''),
+      //       CsmItemModel(name: 'Confirm', image: ''),
+      //     ],
+      //   );
     }
   }
 
@@ -149,9 +150,9 @@ class _ComponentSelectorMenuState extends State<ComponentSelectorMenu> with Sing
 
   void _componentSelectionListener() async {
     /// stop process if component id is none
-    if (widget.componentSelectionModel.componentId == ComponentId.none) {
-      return _closeMenu();
-    }
+    // if (widget.componentSelectionModel.componentId == ComponentId.none) {
+    //   return _closeMenu();
+    // }
 
     /// component selection model is updated
     await _animationController.reverse();
@@ -277,14 +278,14 @@ class _ComponentSelectorMenuState extends State<ComponentSelectorMenu> with Sing
                 borderRadius: BorderRadius.circular(12.0),
               ),
               padding: const EdgeInsets.all(12.0),
-              child: Text(
-                componentId == ComponentId.action
-                    ? 'Are you sure you want remove the tree?'
-                    : 'Choose your ${componentId.name}',
-                style: const TextStyle(
-                  fontSize: 32.0,
-                ),
-              ),
+              // child: Text(
+              //   componentId == ComponentId.action
+              //       ? 'Are you sure you want remove the tree?'
+              //       : 'Choose your ${componentId.name}',
+              //   style: const TextStyle(
+              //     fontSize: 32.0,
+              //   ),
+              // ),
             ),
 
             const Gap(32.0),

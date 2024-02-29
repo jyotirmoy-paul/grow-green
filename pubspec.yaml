@@ -49,6 +49,7 @@ flutter:
     - assets/images/trees/
     - assets/images/crops/
     - assets/images/icons/
+    - assets/images/images/
     - assets/images/props/
     - assets/images/animations/
     - assets/images/animations/coins/

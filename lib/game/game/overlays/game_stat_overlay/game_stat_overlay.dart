@@ -20,6 +20,7 @@ class GameStatOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const SizedBox.shrink();
     return Material(
       type: MaterialType.transparency,
       child: Stack(

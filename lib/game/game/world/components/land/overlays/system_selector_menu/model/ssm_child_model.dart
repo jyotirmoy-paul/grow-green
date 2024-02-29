@@ -9,7 +9,7 @@ class SsmChildModel extends Equatable {
   final bool editable;
 
   const SsmChildModel({
-    this.componentId = ComponentId.none,
+    this.componentId = ComponentId.agroforestryLayout,
     required this.shortName,
     required this.image,
     this.editable = true,
