@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../../screens/game_screen/bloc/game_bloc.dart';
 import '../../../../../../../services/log/log.dart';
 import '../../../../../../../utils/utils.dart';
 import '../../../../../../../widgets/dialog_container.dart';
@@ -8,6 +10,7 @@ import '../../../../../../utils/game_utils.dart';
 import '../../../../../enums/farm_system_type.dart';
 import '../../../../../enums/system_type.dart';
 import '../../../../../models/farm_system.dart';
+import '../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
@@ -374,12 +377,25 @@ class FarmMenuHelper {
   }
 
   static void purchaseFarmContents({
+    required BuildContext context,
     required FarmContent farmSystem,
     required MoneyModel totalCost,
-  }) {
+  }) async {
     Log.d('$tag: purchaseFarmContents() invoked with farmSystem: $farmSystem, totalCost: $totalCost');
 
-    /// TODO: implement
+    /// do a transaction
+    final gameState = context.read<GameBloc>().state;
+    if (gameState is! GameLoaded) {
+      throw Exception('$tag: purchaseFarmContents() invoked without GameLoad!!?');
+    }
+
+    final success = await gameState.game.monetaryService.transact(
+      transactionType: TransactionType.debit,
+      value: totalCost,
+    );
+
+    
+
   }
 
   static MoneyModel getPriceForFarmSystem({

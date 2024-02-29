@@ -36,7 +36,7 @@ class _OffsetRestoration {
 }
 
 /// TODO: language
-class ChooseSystemDialog extends StatelessWidget {
+class ChooseSystemDialog extends StatefulWidget {
   final Farm farm;
   final List<FarmSystem> farmSystems;
   static final offsetRestoration = _OffsetRestoration();
@@ -45,6 +45,17 @@ class ChooseSystemDialog extends StatelessWidget {
     super.key,
     required this.farm,
   }) : farmSystems = SystemDatastore.systems;
+
+  @override
+  State<ChooseSystemDialog> createState() => _ChooseSystemDialogState();
+}
+
+class _ChooseSystemDialogState extends State<ChooseSystemDialog> {
+  @override
+  void dispose() {
+    ChooseSystemDialog.offsetRestoration.createNewController();
+    super.dispose();
+  }
 
   String _getChooseComponentsDialogTitle({
     required FarmSystem farmSystem,
@@ -60,7 +71,7 @@ class ChooseSystemDialog extends StatelessWidget {
     required FarmSystem farmSystem,
     required BuildContext context,
   }) async {
-    offsetRestoration.save();
+    ChooseSystemDialog.offsetRestoration.save();
 
     /// close the choose system dialog
     Navigator.pop(context);
@@ -76,7 +87,7 @@ class ChooseSystemDialog extends StatelessWidget {
           child: ChooseComponentsDialog(
             farmContent: FarmMenuHelper.getFarmContentFromSystem(
               farmSystem: farmSystem,
-              soilHealthPercentage: farm.farmController.soilHealthPercentage,
+              soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
             ),
             editableComponents: const [
               ComponentId.trees,
@@ -84,23 +95,23 @@ class ChooseSystemDialog extends StatelessWidget {
               ComponentId.fertilizer,
               ComponentId.agroforestryLayout,
             ],
-            isNotFunctioningFarm: farm.farmController.farmState == FarmState.notFunctioning,
-            soilHealthPercentage: farm.farmController.soilHealthPercentage,
+            isNotFunctioningFarm: widget.farm.farmController.farmState == FarmState.notFunctioning,
+            soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
           ),
         );
       },
     );
 
     if (response == DialogEndType.close) {
-      offsetRestoration.restoreController();
+      ChooseSystemDialog.offsetRestoration.restoreController();
 
       FarmMenuHelper.onMenuItemTap(
         menuOption: FarmMenuOption.composition,
         context: Navigation.navigationKey.currentContext!,
-        farm: farm,
+        farm: widget.farm,
       );
     } else {
-      offsetRestoration.createNewController();
+      ChooseSystemDialog.offsetRestoration.createNewController();
     }
   }
 
@@ -108,19 +119,19 @@ class ChooseSystemDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ListView.separated(
-        controller: offsetRestoration.scrollController,
-        padding: EdgeInsets.all(15.s),
+        controller: ChooseSystemDialog.offsetRestoration.scrollController,
+        padding: EdgeInsets.symmetric(horizontal: 15.s, vertical: 30.s),
         scrollDirection: Axis.horizontal,
-        itemCount: farmSystems.length,
+        itemCount: widget.farmSystems.length,
         itemBuilder: (_, int index) {
-          final farmSystem = farmSystems[index];
+          final farmSystem = widget.farmSystems[index];
 
           return ButtonAnimator(
             onPressed: () {
               _onSystemSelected(farmSystem: farmSystem, context: context);
             },
             child: SystemItemWidget(
-              farm: farm,
+              farm: widget.farm,
               farmSystem: farmSystem,
             ),
           );
