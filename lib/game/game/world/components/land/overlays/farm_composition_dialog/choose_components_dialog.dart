@@ -318,10 +318,11 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       },
     );
 
-    if (mounted)
+    if (mounted) {
       setState(() {
         isHidden = false;
       });
+    }
 
     /// if dialog box was close, ignore
     if (newComponentIndex is! int) return;
@@ -334,6 +335,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
   void _onPurchaseTap() {
     FarmMenuHelper.purchaseFarmContents(
+      context: context,
       farmSystem: _currentFarmContent,
       totalCost: _totalCost,
     );
@@ -376,10 +378,11 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: EdgeInsets.all(8.s),
+                          padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
                           child: Text(
                             model.descriptionText!,
-                            style: TextStyles.s26,
+                            style: TextStyles.s25,
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ),

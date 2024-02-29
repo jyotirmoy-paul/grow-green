@@ -26,7 +26,7 @@ class DialogContainer extends StatelessWidget {
     DialogType dialogType = DialogType.small,
     required this.title,
     required this.child,
-  }) : _size = dialogType == DialogType.small ? Size(500.s, 300.s) : Size(1060.s, 670.s);
+  }) : _size = dialogType == DialogType.small ? Size(500.s, 300.s) : Size(1060.s, 700.s);
 
   @override
   Widget build(BuildContext context) {

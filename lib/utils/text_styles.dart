@@ -44,6 +44,11 @@ abstract class TextStyles {
     letterSpacing: 1.s,
   );
 
+  static final s25 = TextStyle(
+    color: Colors.white,
+    fontSize: 25.s,
+  );
+
   static final s24 = TextStyle(
     color: Colors.white,
     fontSize: 24.s,

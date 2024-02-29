@@ -203,8 +203,8 @@ class _ImageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 50.s,
-      height: 50.s,
+      width: 60.s,
+      height: 60.s,
       child: Image.asset(
         image,
         fit: BoxFit.contain,
