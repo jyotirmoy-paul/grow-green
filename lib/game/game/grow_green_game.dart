@@ -20,6 +20,9 @@ class GrowGreenGame extends FlameGame with ScaleDetector {
 
   @override
   FutureOr<void> onLoad() async {
+    /// remove default camera
+    remove(camera);
+
     debugMode = false;
     final components = await gameController.initialize(game: this);
     addAll(components);

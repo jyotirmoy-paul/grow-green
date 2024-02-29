@@ -223,65 +223,61 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
       alignment: Alignment.bottomCenter,
       child: Padding(
         padding: EdgeInsets.only(bottom: 120.s),
-        // padding: EdgeInsets.only(bottom: 120.h),
-        child: Material(
-          type: MaterialType.transparency,
-          child: AnimatedBuilder(
-            animation: _opacityAnimationController,
-            builder: (_, child) {
-              return Opacity(
-                opacity: _opacityAnimation.value,
-                child: child,
-              );
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                /// title
-                Text(_titleText, style: TextStyles.s32),
+        child: AnimatedBuilder(
+          animation: _opacityAnimationController,
+          builder: (_, child) {
+            return Opacity(
+              opacity: _opacityAnimation.value,
+              child: child,
+            );
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              /// title
+              Text(_titleText, style: TextStyles.s32),
 
-                Gap(32.s),
+              Gap(32.s),
 
-                /// children
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: _farmModels
-                      .map(
-                        (fm) => AnimatedBuilder(
-                          animation: fm.controller,
-                          builder: (_, child) {
-                            return Transform.translate(
-                              offset: fm.offsetAnimation.value,
-                              child: child,
+              /// children
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: _farmModels
+                    .map(
+                      (fm) => AnimatedBuilder(
+                        animation: fm.controller,
+                        builder: (_, child) {
+                          return Transform.translate(
+                            offset: fm.offsetAnimation.value,
+                            child: child,
+                          );
+                        },
+                        child: GameButton.menuItem(
+                          text: fm.model.text,
+                          image: fm.model.image,
+                          dataImage: fm.model.data?.image,
+                          dataText: fm.model.data?.data,
+                          color: fm.model.bgColor,
+                          onTap: () async {
+                            if (_currentFarm == null) return;
+
+                            final response = await FarmMenuHelper.onMenuItemTap(
+                              menuOption: fm.model.option,
+                              context: context,
+                              farm: _currentFarm!,
                             );
+
+                            ///  if we get back true, let's close the farm menu
+                            if (response) {
+                              _closeMenu();
+                            }
                           },
-                          child: GameButton.menuItem(
-                            text: fm.model.text,
-                            image: fm.model.image,
-                            dataImage: fm.model.data?.image,
-                            dataText: fm.model.data?.data,
-                            color: fm.model.bgColor,
-                            onTap: () async {
-                              if (_currentFarm == null) return;
-
-                              final response = await FarmMenuHelper.onMenuItemTap(
-                                menuOption: fm.model.option,
-                                context: context,
-                                farm: _currentFarm!,
-                              );
-
-                              ///  if we get back true, let's close the farm menu
-                              if (response) {
-                                _closeMenu();
-                              }
-                            },
-                          ),
                         ),
-                      )
-                      .addSeparator(Gap(26.s)),
-                ),
-              ],
-            ),
+                      ),
+                    )
+                    .addSeparator(Gap(26.s)),
+              ),
+            ],
           ),
         ),
       ),

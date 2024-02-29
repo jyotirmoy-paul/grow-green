@@ -1,4 +1,0 @@
-enum ActionState {
-  cancel,
-  confirm,
-}

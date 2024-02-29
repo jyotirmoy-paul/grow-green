@@ -38,15 +38,18 @@ class MenuItemSkeleton extends StatelessWidget {
               padding: EdgeInsets.all(12.s),
               decoration: BoxDecoration(
                 color: Utils.darkenColor(bgColor, 0.2),
-                border: Border(
-                  bottom: BorderSide(
-                    color: Utils.lightenColor(bgColor, 0.4),
-                    width: 3.s,
-                  ),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12.0),
                 ),
+                // border: Border(
               ),
               child: header,
             ),
+          ),
+
+          Container(
+            height: 3.s,
+            color: Utils.lightenColor(bgColor, 0.4),
           ),
 
           /// body
