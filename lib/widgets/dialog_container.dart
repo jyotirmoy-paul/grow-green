@@ -4,7 +4,6 @@ import 'package:gap/gap.dart';
 import '../game/utils/game_icons.dart';
 import '../utils/extensions/num_extensions.dart';
 import '../utils/text_styles.dart';
-import '../utils/utils.dart';
 import 'game_button.dart';
 
 enum DialogType {
@@ -31,78 +30,78 @@ class DialogContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Dialog(
-        // type: MaterialType.transparency,
-        child: Container(
-          width: _size.width,
-          height: _size.height,
-          padding: EdgeInsets.all(10.s),
-          decoration: BoxDecoration(
-            color: const Color(0xff503C3C),
-            borderRadius: BorderRadius.circular(12.s),
-            border: Border.all(
-              color: Colors.black,
-              width: 7.s,
-              strokeAlign: BorderSide.strokeAlignOutside,
-            ),
+    return Dialog(
+      insetAnimationDuration: Duration.zero,
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        width: _size.width,
+        height: _size.height,
+        padding: EdgeInsets.all(10.s),
+        decoration: BoxDecoration(
+          color: Colors.brown[400],
+          borderRadius: BorderRadius.circular(12.s),
+          border: Border.all(
+            color: Colors.black,
+            width: 4.s,
+            strokeAlign: BorderSide.strokeAlignOutside,
           ),
-          child: Column(
-            children: [
-              /// header
-              SizedBox(
-                height: 50.s,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.center,
-                  children: [
-                    /// background shine
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        height: 25.s,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.30),
-                          borderRadius: BorderRadius.circular(6.s),
-                        ),
+        ),
+        child: Column(
+          children: [
+            /// header
+            SizedBox(
+              height: 50.s,
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  /// background shine
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      height: 25.s,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.30),
+                        borderRadius: BorderRadius.circular(6.s),
                       ),
                     ),
-
-                    /// header content
-
-                    Text(
-                      title,
-                      style: TextStyles.s32,
-                    ),
-
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: GameButton.image(
-                        image: GameIcons.close,
-                        onTap: () {
-                          Navigator.pop(context, DialogEndType.close);
-                        },
-                        bgColor: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Gap(10.s),
-
-              /// body
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.brown[50],
-                    borderRadius: BorderRadius.circular(12.s),
                   ),
-                  child: child,
-                ),
+
+                  /// header content
+
+                  Text(
+                    title,
+                    style: TextStyles.s32,
+                  ),
+
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GameButton.image(
+                      image: GameIcons.close,
+                      onTap: () {
+                        Navigator.pop(context, DialogEndType.close);
+                      },
+                      bgColor: Colors.red,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+
+            Gap(10.s),
+
+            /// body
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.brown[50],
+                  borderRadius: BorderRadius.circular(12.s),
+                ),
+                child: child,
+              ),
+            ),
+          ],
         ),
       ),
     );

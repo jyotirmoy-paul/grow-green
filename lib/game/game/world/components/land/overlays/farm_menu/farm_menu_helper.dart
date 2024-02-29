@@ -25,6 +25,7 @@ import '../purchase_farm_dialog/purchase_farm_dialog.dart';
 import '../soil_health_dialog/soil_health_dialog.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import 'enum/farm_menu_option.dart';
+import 'farm_menu.dart';
 import 'model/farm_menu_model.dart';
 
 /// TODO: Language
@@ -198,6 +199,10 @@ class FarmMenuHelper {
     required BuildContext context,
     required Farm farm,
   }) async {
+    /// remove non visible elements
+    farm.game.overlays.remove(FarmMenu.overlayName);
+    farm.farmController.isFarmSelected = false;
+
     final response = await Utils.showNonAnimatedDialog(
       barrierLabel: 'Dialog for ${menuOption.name}',
       context: context,
@@ -244,6 +249,9 @@ class FarmMenuHelper {
         );
       },
     );
+
+    farm.game.overlays.add(FarmMenu.overlayName);
+    farm.farmController.isFarmSelected = true;
 
     if (response is bool) return response;
     return false;

@@ -21,9 +21,15 @@ class GameStatOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SizedBox.shrink();
+
     return Material(
-      type: MaterialType.transparency,
+      // insetAnimationDuration: Duration.zero,
+      // elevation: 0.0,
+      // alignment: Alignment.bottomCenter,
+      // backgroundColor: Colors.transparent,
+      // insetPadding: EdgeInsets.zero,
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           /// background
           Align(
@@ -49,6 +55,7 @@ class GameStatOverlay extends StatelessWidget {
           Positioned.fill(
             child: SafeArea(
               child: Stack(
+                clipBehavior: Clip.none,
                 children: [
                   /// show calender on top
                   const Align(

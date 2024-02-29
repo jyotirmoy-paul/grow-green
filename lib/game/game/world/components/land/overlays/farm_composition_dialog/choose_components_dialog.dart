@@ -281,8 +281,14 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     });
   }
 
+  bool isHidden = false;
+
   /// this method is only allowed for items which can be edited
   void onComponentTap(ComponentId componentId) async {
+    setState(() {
+      isHidden = true;
+    });
+
     final newComponentIndex = await Utils.showNonAnimatedDialog(
       barrierLabel: 'Choose component dialog',
       context: context,
@@ -312,6 +318,11 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       },
     );
 
+    if (mounted)
+      setState(() {
+        isHidden = false;
+      });
+
     /// if dialog box was close, ignore
     if (newComponentIndex is! int) return;
 
@@ -330,6 +341,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    if (isHidden) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
