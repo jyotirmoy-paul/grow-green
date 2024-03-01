@@ -5,6 +5,7 @@ import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../utils/game_icons.dart';
 import '../../../../../../utils/game_utils.dart';
+import '../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../components/farm/farm.dart';
 
 /// TODO: Language
@@ -22,7 +23,7 @@ class PurchaseFarmDialog extends StatelessWidget {
     if (canBuy) {
       Navigator.pop(context, true);
     } else {
-      /// TODO: notification: insufficient balance
+      NotificationHelper.cannotAffordFarm();
     }
   }
 

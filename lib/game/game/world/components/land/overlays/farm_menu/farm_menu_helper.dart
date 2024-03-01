@@ -9,6 +9,7 @@ import '../../../../../../utils/game_utils.dart';
 import '../../../../../enums/farm_system_type.dart';
 import '../../../../../enums/system_type.dart';
 import '../../../../../models/farm_system.dart';
+import '../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
@@ -392,7 +393,7 @@ class FarmMenuHelper {
 
     final canAfford = moneytaryService.canAfford(totalCost);
     if (!canAfford) {
-      /// TODO: Notificaiton
+      NotificationHelper.cannotAffordFarmContents();
       return;
     }
 
@@ -411,7 +412,7 @@ class FarmMenuHelper {
       );
     }
 
-    /// TODO: notification
+    NotificationHelper.farmContentsPurchaseFailed();
   }
 
   static MoneyModel getPriceForFarmSystem({

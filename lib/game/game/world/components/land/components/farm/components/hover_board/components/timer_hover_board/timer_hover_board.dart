@@ -64,7 +64,7 @@ class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, Tim
 
     final imageBackground = RoundedRectangleComponent(
       borderRadius: 4.0,
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.black.withOpacity(0.3),
       position: imageComponent.position.translated(
         -imageComponent.width / 2,
         0,
@@ -93,7 +93,7 @@ class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, Tim
   void onDone() async {
     _isDone = true;
 
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 1000 ~/ TimeService().timePace));
 
     /// once progress factor crosses boundary, remove widget from parent
     removeFromParent();

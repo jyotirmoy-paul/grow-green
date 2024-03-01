@@ -49,12 +49,19 @@ class SoilHealthCalculator {
     }
   }
 
-  static double updateSoilHealth({
+  static double getNewSoilHealth({
     required double soilHealthPercentage,
     required Content fertilzerQty,
     required SystemType systemType,
     required bool treesPresent,
+    required int cropAgeInDays,
   }) {
+
+    /// TODO: following changes were discussed for chagne
+    /// 1. usage of crop age to understand the duration of farming
+    /// 2. capping the soil health growth at some percentage (may be 20%)
+    /// 3. using a logarithmic function to lessen the growth everytime
+
     final fertilzerEffect = _fertilizerEffect(fertilizer: fertilzerQty, soilHealthPercentage: soilHealthPercentage);
     final systemTypeEffectValue = _systemTypeAffect(systemType: systemType, treesPresent: treesPresent);
 

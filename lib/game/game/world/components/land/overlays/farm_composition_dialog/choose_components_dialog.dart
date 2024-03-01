@@ -265,14 +265,12 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
         /// process new fertilizer selection
         _currentFarmContent = _currentFarmContent.copyWith(
-          trees: [
-            FarmMenuHelper.getFertilizerContent(
-              fertilizerType: fertilizer,
-              systemType: _currentFarmContent.systemType,
-              soilHealthPercentage: widget.soilHealthPercentage,
-              cropType: _currentFarmContent.crop!.type as CropType,
-            ),
-          ],
+          fertilizer: FarmMenuHelper.getFertilizerContent(
+            fertilizerType: fertilizer,
+            systemType: _currentFarmContent.systemType,
+            soilHealthPercentage: widget.soilHealthPercentage,
+            cropType: _currentFarmContent.crop!.type as CropType,
+          ),
         );
 
         break;

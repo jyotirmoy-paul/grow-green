@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../game/game/overlays/notification_overlay/game_notification_widget.dart';
 import '../../routes/app_routes.dart';
 import '../../routes/routes.dart';
 import '../../screens/game_screen/bloc/game_bloc.dart';
@@ -37,6 +38,11 @@ class App extends StatelessWidget {
         onGenerateRoute: AppRoutes.generateRoutes,
         initialRoute: RouteName.splashScreen.name,
         theme: ThemeData(fontFamily: kFontFamily),
+        builder: (_, child) {
+          return Stack(
+            children: [child!, const GameNotificationWidget()],
+          );
+        },
       ),
     );
   }
