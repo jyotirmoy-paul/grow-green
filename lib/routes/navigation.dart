@@ -9,4 +9,8 @@ abstract class Navigation {
   static Future<void> pushReplacement(RouteName routeName) {
     return _navigatorState.pushReplacementNamed(routeName.name);
   }
+
+  static void popToFirst() {
+    _navigatorState.popUntil((route) => route.isFirst);
+  }
 }

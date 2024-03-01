@@ -8,6 +8,7 @@ import 'game_button.dart';
 
 enum DialogType {
   small,
+  medium,
   large,
 }
 
@@ -21,12 +22,25 @@ class DialogContainer extends StatelessWidget {
 
   final Size _size;
 
+  static Size _determineSize(DialogType dialogType) {
+    switch (dialogType) {
+      case DialogType.small:
+        return Size(500.s, 300.s);
+
+      case DialogType.medium:
+        return Size(780.s, 500.s);
+
+      case DialogType.large:
+        return Size(1060.s, 700.s);
+    }
+  }
+
   DialogContainer({
     super.key,
     DialogType dialogType = DialogType.small,
     required this.title,
     required this.child,
-  }) : _size = dialogType == DialogType.small ? Size(500.s, 300.s) : Size(1060.s, 700.s);
+  }) : _size = _determineSize(dialogType);
 
   @override
   Widget build(BuildContext context) {

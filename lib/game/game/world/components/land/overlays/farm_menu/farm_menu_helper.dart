@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../../routes/routes.dart';
 import '../../../../../../../screens/game_screen/bloc/game_bloc.dart';
 import '../../../../../../../services/log/log.dart';
 import '../../../../../../../utils/utils.dart';
@@ -253,8 +254,10 @@ class FarmMenuHelper {
       },
     );
 
-    farm.game.overlays.add(FarmMenu.overlayName);
-    farm.farmController.isFarmSelected = true;
+    if (response == DialogEndType.close) {
+      farm.game.overlays.add(FarmMenu.overlayName);
+      farm.farmController.isFarmSelected = true;
+    }
 
     if (response is bool) return response;
     return false;
@@ -390,6 +393,9 @@ class FarmMenuHelper {
       /// TODO: Notificaiton
       return;
     }
+
+    /// pop all dialogs
+    Navigation.popToFirst();
 
     /// do the actual transaction
     final success = await farmController.game.monetaryService.transact(
