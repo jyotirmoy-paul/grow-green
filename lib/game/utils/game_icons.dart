@@ -10,4 +10,5 @@ abstract class GameIcons {
   static const history = '$_base/icon.png';
   static const edit = '$_base/icon.png';
   static const remove = '$_base/icon.png';
+  static const cutTree = '$_base/icon.png';
 }

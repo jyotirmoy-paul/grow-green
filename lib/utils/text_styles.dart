@@ -54,8 +54,7 @@ abstract class TextStyles {
     fontSize: 24.s,
   );
 
-  /// normal text styles
-  static final n18 = TextStyle(
+  static final s18 = TextStyle(
     color: Colors.black,
     fontSize: 18.s,
   );

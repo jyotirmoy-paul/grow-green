@@ -5,6 +5,7 @@ import 'package:flame/experimental.dart';
 
 import '../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/extensions/date_time_extensions.dart';
+import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../services/datastore/game_datastore.dart';
 import '../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../../../../services/game_services/time/time_service.dart';
@@ -21,6 +22,7 @@ import '../farm.dart';
 import '../model/farm_content.dart';
 import '../model/farm_state_model.dart';
 import '../model/harvest_model.dart';
+import '../model/tree_data.dart';
 import 'harvest/harvest_core_service.dart';
 
 class FarmCoreService {
@@ -65,6 +67,23 @@ class FarmCoreService {
   FarmContent? get farmContent => _farmStateModelValue.farmContent;
   double get soilHealthPercentage => _farmStateModelValue.soilHealthPercentage;
   DateTime? get _treeLastHarvestedOn => _farmStateModelValue.treeLastHarvestedOn;
+  TreeData get treeData {
+    final farmContent = this.farmContent;
+    if (farmContent == null) {
+      throw Exception('$tag: treeData getter invoked at null farmContent, how can this happen?');
+    }
+
+    final trees = _trees;
+    if (trees == null) {
+      throw Exception('$tag: treeData getter invoked at null trees, how can this happen?');
+    }
+
+    return TreeData(
+      agroforestryType: farmContent.systemType as AgroforestryType,
+      treeType: trees.treeType,
+      lifeStartedAt: trees.lifeStartedAt,
+    );
+  }
 
   /// streams available for getting updates of farm!
   Stream<FarmState> get farmStateStream => _farmStateModelStreamController.stream.map<FarmState>(

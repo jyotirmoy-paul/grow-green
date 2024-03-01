@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../services/log/log.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../utils/utils.dart';
@@ -27,6 +28,7 @@ import '../farm_menu/farm_menu_helper.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import 'choose_component_dialog.dart';
 import 'widgets/menu_item_skeleton.dart';
+import 'widgets/sell_tree_widget.dart';
 
 /// TODO: Language
 class ChooseComponentsDialog extends StatefulWidget {
@@ -97,8 +99,11 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       (treeContent) {
         final treeType = treeContent.type as TreeType;
         final treeCost = MoneyModel(rupees: CostCalculator.saplingCostFromContent(treeContent: treeContent));
+        final countTreeIn = widget.isNotFunctioningFarm;
 
-        _totalCost += treeCost;
+        if (countTreeIn) {
+          _totalCost += treeCost;
+        }
 
         return _ComponentsModel(
           headerText: 'Tree',
@@ -108,7 +113,9 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
           isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
           footerImage: widget.isNotFunctioningFarm ? GameIcons.edit : GameIcons.remove,
           buttonColor: widget.isNotFunctioningFarm ? null : Colors.red,
-          descriptionText: '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedRupees}',
+          descriptionText: countTreeIn
+              ? '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedRupees}'
+              : treeContent.qty.readableFormat,
         );
       },
     ).toList();
@@ -286,8 +293,34 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
   bool isHidden = false;
 
+  /// handle sell tree case
+  void _sellTree() async {
+    Log.i('$tag: _sellTree invoked');
+
+    final sellTree = await Utils.showNonAnimatedDialog(
+      barrierLabel: 'Sell tree dialog',
+      context: context,
+      builder: (context) {
+        return DialogContainer(
+          title: 'Sell tree?',
+          dialogType: DialogType.medium,
+          child: SellTreeWidget(farmController: widget.farmController),
+        );
+      },
+    );
+
+    /// ignore cancellations
+    if (sellTree is! bool) return;
+
+    if (sellTree) {}
+  }
+
   /// this method is only allowed for items which can be edited
   void onComponentTap(ComponentId componentId) async {
+    if (!widget.isNotFunctioningFarm && componentId == ComponentId.trees) {
+      return _sellTree();
+    }
+
     setState(() {
       isHidden = true;
     });
@@ -337,6 +370,9 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   }
 
   void _onPurchaseTap() {
+    /// nothing is selected
+    if (_totalCost.isZero()) return;
+
     FarmMenuHelper.purchaseFarmContents(
       farmController: widget.farmController,
       farmContent: _currentFarmContent,
@@ -431,7 +467,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
             key: ValueKey(_totalCost.formattedRupees),
             text: 'Buy ₹ ${_totalCost.formattedRupees}',
             image: GameIcons.coin,
-            bgColor: Colors.green,
+            bgColor: _totalCost.isZero() ? Colors.grey : Colors.green,
             onTap: _onPurchaseTap,
           ),
         ),

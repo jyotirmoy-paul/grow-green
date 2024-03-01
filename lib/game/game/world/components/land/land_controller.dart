@@ -177,6 +177,14 @@ class LandController {
       return farm.farmController.onFarmTap!();
     }
 
+    /// if the farm is already selected deselect it & close farm menu
+    if (farm.farmController.isFarmSelected) {
+      farm.farmController.isFarmSelected = false;
+      _farmNotifier.farm = null;
+      return;
+    }
+    farm.farmController.isFarmSelected = true;
+
     /// open farm menu
     _farmNotifier.farm = farm;
 
@@ -205,7 +213,6 @@ class LandController {
 
       if (containsPoint) {
         selectedFarm = farm;
-        farm.farmController.isFarmSelected = true;
       } else {
         farm.farmController.isFarmSelected = false;
       }
