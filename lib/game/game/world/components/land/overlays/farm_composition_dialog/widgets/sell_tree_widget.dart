@@ -6,6 +6,7 @@ import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../widgets/game_button.dart';
 import '../../../../../../../utils/game_icons.dart';
+import '../../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../../components/farm/farm_controller.dart';
 import '../../../components/farm/model/tree_data.dart';
 
@@ -21,7 +22,7 @@ class SellTreeWidget extends StatelessWidget {
   void _sellTree() {
     farmController.sellTree();
 
-    /// TODO: notification
+    NotificationHelper.treesSold();
 
     /// close everything!
     Navigation.popToFirst();

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 
 import '../../../routes/routes.dart';
@@ -15,7 +16,7 @@ class SplashScreenCubit extends Cubit<SplashScreenState> {
   }) : super(SplashScreenInitial());
 
   Future<void> init() async {
-    /// TODO: On web: Pre fetch the assets
+    await Flame.images.loadAllImages();
 
     /// Initialize authentication
     authBloc.add(AuthInitializeEvent());

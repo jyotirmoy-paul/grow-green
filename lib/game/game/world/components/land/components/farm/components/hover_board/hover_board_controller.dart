@@ -66,7 +66,7 @@ class HoverBoardController {
       /// basic hover board
       hoverBoardItem = BasicHoverBoard(
         model: hoverBoardModel,
-        farmCenter: farmCenter.translated(0, -320),
+        farmCenter: farmCenter.translated(0, -50),
         onTap: onTap,
         farm: farm,
       );
@@ -75,7 +75,7 @@ class HoverBoardController {
       hoverBoardItem = TimerHoverBoard(
         model: hoverBoardModel,
         farm: farm,
-        farmCenter: farmCenter,
+        farmCenter: farmCenter.translated(0, 50),
       );
     }
 
