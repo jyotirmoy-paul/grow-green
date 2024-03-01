@@ -9,6 +9,9 @@ class MoneyModel {
 
   final int rupees;
 
+  /// internal constructor
+  MoneyModel._(this.rupees);
+
   factory MoneyModel.zero() {
     return MoneyModel(rupees: 0);
   }
@@ -33,9 +36,7 @@ class MoneyModel {
   }
 
   MoneyModel operator -(MoneyModel other) {
-    return MoneyModel(
-      rupees: rupees - other.rupees,
-    );
+    return MoneyModel._(rupees - other.rupees);
   }
 
   MoneyModel operator +(MoneyModel other) {

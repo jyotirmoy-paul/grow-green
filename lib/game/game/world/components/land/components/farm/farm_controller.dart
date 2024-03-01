@@ -171,15 +171,15 @@ class FarmController {
     _selectionAnimation.update(dt);
   }
 
+  final _farmSelectionPaint = Paint()..style = PaintingStyle.fill;
+
   void render(Canvas canvas) {
     if (isFarmSelected) {
-      final paint = Paint()
-        ..color = Colors.black.withOpacity(_selectionAnimation.value)
-        ..style = PaintingStyle.fill;
+      _farmSelectionPaint.color = Colors.green.withOpacity(_selectionAnimation.value);
 
       canvas.drawPath(
         _polygonPath,
-        paint,
+        _farmSelectionPaint,
       );
     }
 
