@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../game/game/grow_green_game.dart';
 import '../../../game/game/overlays/game_stat_overlay/cubit/calender_cubit.dart';
 import '../../../game/game/overlays/game_stat_overlay/game_stat_overlay.dart';
+import '../../../game/game/overlays/notification_overlay/notification_overlay.dart';
 import '../../../game/game/world/components/land/overlays/farm_menu/farm_menu.dart';
 import '../bloc/game_bloc.dart';
 
@@ -17,6 +18,7 @@ class GameScreen extends StatelessWidget {
   static const overlayBuilderMap = <String, Widget Function(BuildContext, GrowGreenGame)>{
     FarmMenu.overlayName: FarmMenu.builder,
     GameStatOverlay.overlayName: GameStatOverlay.builder,
+    NotificationOverlay.overlayName: NotificationOverlay.builder,
   };
 
   @override
@@ -42,6 +44,7 @@ class GameScreen extends StatelessWidget {
               overlayBuilderMap: overlayBuilderMap,
               initialActiveOverlays: const [
                 GameStatOverlay.overlayName,
+                NotificationOverlay.overlayName,
               ],
             );
           },
