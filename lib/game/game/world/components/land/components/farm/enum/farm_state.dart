@@ -8,6 +8,9 @@ enum FarmState {
   /// farm is initialized with crops & trees, and we are waiting for the crops as it's not correct sow time
   treesAndCropsButCropsWaiting,
 
+  /// farm was initialized with crops & trees, and before crops were sown, trees were removed
+  treesRemovedOnlyCropsWaiting,
+
   /// farm is at work, crops & trees / crops are getting grown
   functioning,
 

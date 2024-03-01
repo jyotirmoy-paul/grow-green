@@ -44,6 +44,7 @@ const _$FarmStateEnumMap = {
   FarmState.notBought: 'notBought',
   FarmState.onlyCropsWaiting: 'onlyCropsWaiting',
   FarmState.treesAndCropsButCropsWaiting: 'treesAndCropsButCropsWaiting',
+  FarmState.treesRemovedOnlyCropsWaiting: 'treesRemovedOnlyCropsWaiting',
   FarmState.functioning: 'functioning',
   FarmState.functioningOnlyTrees: 'functioningOnlyTrees',
   FarmState.functioningOnlyCrops: 'functioningOnlyCrops',

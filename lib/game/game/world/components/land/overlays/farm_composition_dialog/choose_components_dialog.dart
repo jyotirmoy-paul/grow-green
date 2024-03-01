@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -84,12 +85,12 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   /// no crop
   _ComponentsModel noCrop() {
     return _ComponentsModel(
-      headerText: 'Empty Crop',
+      headerText: 'No Crop',
       image: GameImages.noCrop,
       footerText: '',
       componentId: ComponentId.crop,
       isComponentEditable: widget.editableComponents.contains(ComponentId.crop),
-      footerImage: GameIcons.edit,
+      footerImage: GameIcons.add,
     );
   }
 
@@ -99,7 +100,12 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       (treeContent) {
         final treeType = treeContent.type as TreeType;
         final treeCost = MoneyModel(rupees: CostCalculator.saplingCostFromContent(treeContent: treeContent));
-        final countTreeIn = widget.isNotFunctioningFarm;
+
+        /// we will count trees in only in two cases
+        /// 1. Either farm is non functional (this happens when we first time setup a farm system)
+        /// 2. We come to this menu with no tree then have made a selection - so no tree initially
+        final noTreesInitially = !widget.farmContent.hasTrees;
+        final countTreeIn = widget.isNotFunctioningFarm || noTreesInitially;
 
         if (countTreeIn) {
           _totalCost += treeCost;
@@ -111,8 +117,8 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
           footerText: treeType.name.toUpperCase(),
           componentId: ComponentId.trees,
           isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
-          footerImage: widget.isNotFunctioningFarm ? GameIcons.edit : GameIcons.remove,
-          buttonColor: widget.isNotFunctioningFarm ? null : Colors.red,
+          footerImage: countTreeIn ? GameIcons.edit : GameIcons.remove,
+          buttonColor: countTreeIn ? null : Colors.red,
           descriptionText: countTreeIn
               ? '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedRupees}'
               : treeContent.qty.readableFormat,
@@ -123,12 +129,13 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
   _ComponentsModel noTree() {
     return _ComponentsModel(
-      headerText: 'Empty Tree',
+      headerText: 'No Tree',
       image: GameImages.noTree,
       footerText: '',
       componentId: ComponentId.trees,
-      isComponentEditable: widget.editableComponents.contains(ComponentId.crop),
-      footerImage: GameIcons.edit,
+      isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
+      footerImage: GameIcons.add,
+      buttonColor: Colors.green,
     );
   }
 
@@ -294,10 +301,10 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   bool isHidden = false;
 
   /// handle sell tree case
-  void _sellTree() async {
+  void _sellTree() {
     Log.i('$tag: _sellTree invoked');
 
-    final sellTree = await Utils.showNonAnimatedDialog(
+    Utils.showNonAnimatedDialog(
       barrierLabel: 'Sell tree dialog',
       context: context,
       builder: (context) {
@@ -308,16 +315,12 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
         );
       },
     );
-
-    /// ignore cancellations
-    if (sellTree is! bool) return;
-
-    if (sellTree) {}
   }
 
   /// this method is only allowed for items which can be edited
   void onComponentTap(ComponentId componentId) async {
-    if (!widget.isNotFunctioningFarm && componentId == ComponentId.trees) {
+    if (componentId == ComponentId.trees && widget.farmContent.hasTrees && !widget.isNotFunctioningFarm) {
+      /// we came into this menu with a functional tree and this is not a non functioning farm, so sell tree is allowed
       return _sellTree();
     }
 

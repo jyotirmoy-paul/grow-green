@@ -75,8 +75,14 @@ class CropTimer {
 
   void _initiateBootupSequence() {
     _farmStateSubscription = farmCoreService.farmStateStream.listen((farmState) {
-      if (farmState == FarmState.onlyCropsWaiting || farmState == FarmState.treesAndCropsButCropsWaiting) {
-        _onNeedToWaitForCrop();
+      switch (farmState) {
+        case FarmState.onlyCropsWaiting:
+        case FarmState.treesAndCropsButCropsWaiting:
+        case FarmState.treesRemovedOnlyCropsWaiting:
+          return _onNeedToWaitForCrop();
+
+        default:
+          return;
       }
     });
   }

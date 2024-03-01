@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../routes/routes.dart';
-import '../../../../../../../screens/game_screen/bloc/game_bloc.dart';
 import '../../../../../../../services/log/log.dart';
 import '../../../../../../../utils/utils.dart';
 import '../../../../../../../widgets/dialog_container.dart';
@@ -49,6 +47,7 @@ class FarmMenuHelper {
       case FarmState.functioningOnlyTrees:
       case FarmState.functioningOnlyCrops:
       case FarmState.treesAndCropsButCropsWaiting:
+      case FarmState.treesRemovedOnlyCropsWaiting:
         return 'Agroforestry Farm';
 
       case FarmState.onlyCropsWaiting:
@@ -81,6 +80,7 @@ class FarmMenuHelper {
       /// soil health, farm composition, farm history
       case FarmState.onlyCropsWaiting:
       case FarmState.treesAndCropsButCropsWaiting:
+      case FarmState.treesRemovedOnlyCropsWaiting:
       case FarmState.functioning:
       case FarmState.functioningOnlyTrees:
       case FarmState.functioningOnlyCrops:
@@ -157,6 +157,7 @@ class FarmMenuHelper {
         return 'Monoculture Crops';
 
       case FarmState.treesAndCropsButCropsWaiting:
+      case FarmState.treesRemovedOnlyCropsWaiting:
       case FarmState.functioning:
       case FarmState.functioningOnlyTrees:
       case FarmState.functioningOnlyCrops:
@@ -276,6 +277,7 @@ class FarmMenuHelper {
       case FarmState.functioning:
       case FarmState.functioningOnlyCrops:
       case FarmState.treesAndCropsButCropsWaiting:
+      case FarmState.treesRemovedOnlyCropsWaiting:
         return const [
           ComponentId.trees,
         ];

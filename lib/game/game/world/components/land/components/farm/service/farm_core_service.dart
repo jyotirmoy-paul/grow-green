@@ -198,6 +198,7 @@ class FarmCoreService {
     switch (farmState) {
       case FarmState.onlyCropsWaiting:
       case FarmState.treesAndCropsButCropsWaiting:
+      case FarmState.treesRemovedOnlyCropsWaiting:
         if (farmContent == null) {
           throw Exception('$tag: invalid farm content for farmState: $farmState');
         }
@@ -284,10 +285,16 @@ class FarmCoreService {
     removeComponent(trees);
 
     /// update farm state
-    if (_crops == null) {
+    if (farmStateModel.farmContent?.crop == null) {
       farmStateModel.farmState = FarmState.notFunctioning;
     } else {
-      farmStateModel.farmState = FarmState.functioningOnlyCrops;
+      /// farm has crops
+      if (_crops == null) {
+        /// crops were not ready, and still waiting
+        farmStateModel.farmState = FarmState.treesRemovedOnlyCropsWaiting;
+      } else {
+        farmStateModel.farmState = FarmState.functioningOnlyCrops;
+      }
     }
 
     /// update farm content
@@ -331,6 +338,7 @@ class FarmCoreService {
 
       /// only crops are functioning, tree spaces are available, trees can be updated
       case FarmState.functioningOnlyCrops:
+      case FarmState.treesRemovedOnlyCropsWaiting:
         return _addTreesToFarm(farmContent);
     }
   }
@@ -461,6 +469,8 @@ class FarmCoreService {
 
     if (farmState == FarmState.functioningOnlyCrops) {
       return FarmState.functioning;
+    } else if (farmState == FarmState.treesRemovedOnlyCropsWaiting) {
+      return FarmState.treesAndCropsButCropsWaiting;
     }
 
     return null;
@@ -473,10 +483,13 @@ class FarmCoreService {
   }) {
     Log.i('$tag: _putCropsWhenReady invoked, waiting until harvest season for ${crops.cropType}');
 
-    if (areTreesAvailable) {
-      farmStateModel.farmState = FarmState.treesAndCropsButCropsWaiting;
-    } else {
-      farmStateModel.farmState = FarmState.onlyCropsWaiting;
+    /// if trees were not removed while waiting for crop, handle the farm state accordingly
+    if (farmState != FarmState.treesRemovedOnlyCropsWaiting) {
+      if (areTreesAvailable) {
+        farmStateModel.farmState = FarmState.treesAndCropsButCropsWaiting;
+      } else {
+        farmStateModel.farmState = FarmState.onlyCropsWaiting;
+      }
     }
 
     /// write to server
