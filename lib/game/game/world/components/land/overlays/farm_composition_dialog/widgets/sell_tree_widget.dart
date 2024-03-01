@@ -42,9 +42,10 @@ class SellTreeWidget extends StatelessWidget {
                 /// text
                 Expanded(
                   child: Text(
-                    'You may be loosing out on recurring revenue & huge tree potential over time',
-                    style: TextStyles.s25.copyWith(
+                    'You may be loosing out on recurring revenue & tree potential over time',
+                    style: TextStyles.s32.copyWith(
                       color: Colors.black,
+                      height: 1.2,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -57,7 +58,10 @@ class SellTreeWidget extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.center,
                       color: Colors.grey,
-                      child: Text('Graph here'),
+                      child: Text(
+                        'Graph here',
+                        style: TextStyles.s32,
+                      ),
                     ),
                   ),
                 ),
@@ -84,9 +88,10 @@ class SellTreeWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'On the other hand, the tree has removed 200 metric tones of CO2 over the last 10 years, if you keep for another 10 years, another 200 metric tones of CO2 will be removed from the atmosphere, making your village\'s climate much better!',
-                    style: TextStyles.s26.copyWith(
+                    style: TextStyles.s28.copyWith(
                       color: Colors.black,
                       letterSpacing: 0.6,
+                      height: 1.15,
                     ),
                   ),
                 ),

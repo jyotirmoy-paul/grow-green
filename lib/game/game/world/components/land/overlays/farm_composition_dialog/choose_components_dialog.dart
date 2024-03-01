@@ -7,10 +7,12 @@ import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../utils/utils.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../../widgets/game_button.dart';
+import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_icons.dart';
 import '../../../../../../utils/game_images.dart';
 import '../../../../../enums/agroforestry_type.dart';
 import '../../../../../enums/farm_system_type.dart';
+import '../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../components/farm/asset/crop_asset.dart';
 import '../../components/farm/asset/tree_asset.dart';
@@ -314,6 +316,23 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     );
   }
 
+  /// show notfication to user, about why an action is not allowed
+  void nonEditableComponentTap(ComponentId componentId) {
+    switch (componentId) {
+      case ComponentId.crop:
+        return;
+
+      case ComponentId.trees:
+        return;
+
+      case ComponentId.fertilizer:
+        return;
+
+      case ComponentId.agroforestryLayout:
+        return NotificationHelper.agroforestrySystemTapNotAllowed();
+    }
+  }
+
   /// this method is only allowed for items which can be edited
   void onComponentTap(ComponentId componentId) async {
     if (componentId == ComponentId.trees && widget.farmContent.hasTrees && !widget.isNotFunctioningFarm) {
@@ -371,7 +390,9 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
   void _onPurchaseTap() {
     /// nothing is selected
-    if (_totalCost.isZero()) return;
+    if (_totalCost.isZero()) {
+      return NotificationHelper.nothingToBuy();
+    }
 
     FarmMenuHelper.purchaseFarmContents(
       farmController: widget.farmController,
@@ -399,10 +420,12 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                 width: 300.s,
                 bgColor: model.isComponentEditable ? model.color ?? Colors.orange : Colors.blueGrey,
                 header: Center(
-                  child: Text(
-                    model.headerText,
-                    style: TextStyles.s28,
-                    textAlign: TextAlign.center,
+                  child: StylizedText(
+                    text: Text(
+                      model.headerText,
+                      style: TextStyles.s35,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
                 body: Stack(
@@ -418,10 +441,12 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                         alignment: Alignment.bottomCenter,
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
-                          child: Text(
-                            model.descriptionText!,
-                            style: TextStyles.s25,
-                            textAlign: TextAlign.center,
+                          child: StylizedText(
+                            text: Text(
+                              model.descriptionText!,
+                              style: TextStyles.s30,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),
@@ -433,9 +458,11 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       /// footer text
-                      Text(
-                        model.footerText,
-                        style: TextStyles.s24,
+                      StylizedText(
+                        text: Text(
+                          model.footerText,
+                          style: TextStyles.s28,
+                        ),
                       ),
 
                       /// button
@@ -443,8 +470,8 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                         bgColor: model.isComponentEditable ? (model.buttonColor ?? Colors.blue) : Colors.grey,
                         image: model.footerImage,
                         onTap: () {
-                          if (!model.isComponentEditable) return;
-                          onComponentTap(model.componentId);
+                          if (model.isComponentEditable) return onComponentTap(model.componentId);
+                          nonEditableComponentTap(model.componentId);
                         },
                       ),
                     ],

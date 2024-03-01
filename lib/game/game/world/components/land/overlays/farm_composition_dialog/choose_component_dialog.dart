@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/button_animator.dart';
+import '../../../../../../../widgets/stylized_container.dart';
+import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_images.dart';
 import '../../../../../enums/agroforestry_type.dart';
 import '../../components/farm/asset/crop_asset.dart';
@@ -141,9 +143,11 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
           child: MenuItemSkeleton(
             bgColor: bgColor,
             header: Center(
-              child: Text(
-                model.name,
-                style: TextStyles.s30,
+              child: StylizedText(
+                text: Text(
+                  model.name,
+                  style: TextStyles.s35,
+                ),
               ),
             ),
             body: Column(

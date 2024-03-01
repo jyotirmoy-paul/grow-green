@@ -59,7 +59,7 @@ class _StylizedContainerState extends State<StylizedContainer> {
       height: size.height * 0.50 - marginValue * 2,
       width: size.width - marginValue * 2,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.5),
         borderRadius: BorderRadius.circular(8.s),
       ),
     );
@@ -78,11 +78,23 @@ class _StylizedContainerState extends State<StylizedContainer> {
     });
   }
 
+  Color get bgColor {
+    if (widget.applyColorOpacity) {
+      if (widget.color == Colors.white) {
+        return Colors.white.withOpacity(0.5);
+      }
+
+      return widget.color.withOpacity(0.9);
+    }
+
+    return widget.color;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: widget.applyColorOpacity ? widget.color.withOpacity(0.8) : widget.color,
+        color: bgColor,
         borderRadius: BorderRadius.circular(12.s),
         border: Border.all(
           color: Colors.black,
