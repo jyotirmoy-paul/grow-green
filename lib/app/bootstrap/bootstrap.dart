@@ -6,12 +6,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
+import 'package:macos_window_utils/window_manipulator.dart';
 
 import '../../firebase_options.dart';
 import '../../services/log/log.dart';
 import 'app_bloc_observer.dart';
 
-const useFirebaseEmulator = true;
+const useFirebaseEmulator = false;
 
 Future<void> _setupFirebaseEmulator() async {
   const macIp = '192.168.0.108';
@@ -36,6 +37,11 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   return runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      // For macos window , hide zoom button and enter fullscreen
+      await WindowManipulator.initialize();
+      await WindowManipulator.hideZoomButton();
+      await WindowManipulator.enterFullscreen();
 
       await Flame.device.fullScreen();
       await Flame.device.setLandscape();
