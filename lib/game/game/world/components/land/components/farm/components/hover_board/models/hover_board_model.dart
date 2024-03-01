@@ -14,13 +14,11 @@ abstract interface class HoverBoardModel {
 
   /// timer hover board factory
   factory HoverBoardModel.timer({
-    required String text,
     required String image,
     required DateTime futureDateTime,
     required DateTime startDateTime,
   }) {
     return TimerHoverBoardModel(
-      text: text,
       image: image,
       startDateTime: startDateTime,
       futureDateTime: futureDateTime,
@@ -46,14 +44,12 @@ class BasicHoverBoardModel implements HoverBoardModel {
 }
 
 class TimerHoverBoardModel implements HoverBoardModel {
-  final String text;
   final String image;
   final DateTime startDateTime;
   final DateTime futureDateTime;
   final int totalWaitDays;
 
   TimerHoverBoardModel({
-    required this.text,
     required this.image,
     required this.startDateTime,
     required this.futureDateTime,
@@ -62,6 +58,6 @@ class TimerHoverBoardModel implements HoverBoardModel {
 
   @override
   String toString() {
-    return 'TimerHoverBoardModel(text:$text, image: $image, futureDateTime: $futureDateTime)';
+    return 'TimerHoverBoardModel(image: $image, futureDateTime: $futureDateTime)';
   }
 }

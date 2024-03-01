@@ -53,6 +53,8 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
     );
 
     addAll(components);
+
+    return super.onLoad();
   }
 
   @override

@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
-import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../../../../services/log/log.dart';
-import '../../../../../../../../../../../utils/constants.dart';
+import '../../../../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../../grow_green_game.dart';
 import '../../../../../../../../../services/game_services/time/time_aware.dart';
+import '../../../../../../../../../services/game_services/time/time_service.dart';
 import '../../../../farm.dart';
 import '../../models/hover_board_model.dart';
 import '../hover_board_item.dart';
 import 'progress_bar.dart';
+import 'rounded_rectangle_component.dart';
 
 class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, TimeAware {
   final TimerHoverBoardModel model;
@@ -26,62 +26,74 @@ class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, Tim
   }) : tag = 'TimerHoverBoard[${farm.farmId}]';
 
   ProgressBar? _progressBar;
+  TextComponent? _textComponent;
   bool _isDone = false;
 
+  int _daysLeft = 0;
+  String get _formattedDaysLeft => '${_daysLeft + 1} d';
+
   double getWaitPercentage(DateTime currentDateTime) {
-    final daysLeft = model.futureDateTime.difference(currentDateTime).inDays;
-    return 1 - (daysLeft / model.totalWaitDays);
+    _daysLeft = model.futureDateTime.difference(currentDateTime).inDays;
+    return 1 - (_daysLeft / model.totalWaitDays);
   }
 
   /// FIXME: remove duplicate method
   TextPaint _getPaint() {
     return TextPaint(
-      style: const TextStyle(
-        fontFamily: kFontFamily,
-        fontSize: 24.0,
-        color: Colors.white,
-        shadows: [
-          BoxShadow(
-            color: Colors.black,
-            offset: Offset(-2.0, -2.0),
-            spreadRadius: 2.0,
-          )
-        ],
-      ),
+      style: TextStyles.n20,
     );
   }
 
   @override
   FutureOr<void> onLoad() async {
-    final textComponent = TextComponent(
-      text: model.text,
+    final progressFactor = getWaitPercentage(TimeService().currentDateTime);
+
+    _textComponent = TextComponent(
+      text: _formattedDaysLeft,
       textRenderer: _getPaint(),
       anchor: Anchor.bottomCenter,
-      position: farmCenter.translated(0, -60.0),
+      position: farmCenter.translated(0, 0.0),
     );
 
     final imageComponent = SpriteComponent(
       sprite: Sprite(await game.images.load(model.image)),
-      size: Vector2.all(40.0),
-      anchor: Anchor.bottomCenter,
-      position: farmCenter.translated(0, -16.0),
+      size: Vector2.all(35.0),
+      anchor: Anchor.centerRight,
+      position: farmCenter.translated(-60.0, 0.0),
     );
 
+    final imageBackground = RoundedRectangleComponent(
+      borderRadius: 4.0,
+      color: Colors.black.withOpacity(0.5),
+      position: imageComponent.position.translated(
+        -imageComponent.width / 2,
+        0,
+      ),
+      size: imageComponent.size,
+    )
+      ..anchor = Anchor.center
+      ..scale = Vector2.all(1.28);
+
     /// create progress bar
-    _progressBar = ProgressBar(
-      progressFactor: getWaitPercentage(model.startDateTime),
-    )..position = farmCenter;
+    _progressBar = ProgressBar(progressFactor: progressFactor)
+      ..anchor = Anchor.center
+      ..position = farmCenter;
 
     /// add all components
     addAll([
-      textComponent,
+      imageBackground,
       imageComponent,
       _progressBar!,
+      _textComponent!,
     ]);
+
+    return super.onLoad();
   }
 
-  void onDone() {
+  void onDone() async {
     _isDone = true;
+
+    await Future.delayed(const Duration(seconds: 1));
 
     /// once progress factor crosses boundary, remove widget from parent
     removeFromParent();
@@ -92,15 +104,15 @@ class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, Tim
 
   @override
   void onTimeChange(DateTime dateTime) {
-    Log.d('$tag: onTimeChange: $dateTime');
-
     if (_isDone) return;
 
     final progressFactor = getWaitPercentage(dateTime);
 
+    /// update
     _progressBar?.progressFactor = progressFactor;
+    _textComponent?.text = _formattedDaysLeft;
 
-    if (progressFactor >= 1.0) {
+    if (_daysLeft <= 0) {
       onDone();
     }
   }

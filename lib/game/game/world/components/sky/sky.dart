@@ -28,5 +28,7 @@ class Sky extends PositionComponent with HasGameRef<GrowGreenGame> {
     position = skyPosition;
 
     addAll(components);
+
+    return super.onLoad();
   }
 }

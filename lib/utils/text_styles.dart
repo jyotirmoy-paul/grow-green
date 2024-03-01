@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'extensions/num_extensions.dart';
 
 abstract class TextStyles {
-  /// stylized text styles
+  /// scaled text styles
   static final TextStyle s12 = TextStyle(
     color: Colors.white,
     fontSize: 12.s,
@@ -57,5 +57,11 @@ abstract class TextStyles {
   static final s18 = TextStyle(
     color: Colors.black,
     fontSize: 18.s,
+  );
+
+  /// non scaled text styles
+  static final n20 = const TextStyle(
+    color: Colors.white,
+    fontSize: 20,
   );
 }

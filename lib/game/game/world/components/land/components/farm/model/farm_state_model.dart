@@ -14,6 +14,7 @@ class FarmStateModel {
   FarmContent? farmContent;
   DateTime? treeLastHarvestedOn;
   DateTime? treesLifeStartedAt;
+  DateTime? cropSowRequestedAt;
   DateTime? cropsLifeStartedAt;
   List<HarvestModel>? harvestModels;
 
@@ -24,6 +25,7 @@ class FarmStateModel {
     this.farmContent,
     this.treeLastHarvestedOn,
     this.treesLifeStartedAt,
+    this.cropSowRequestedAt,
     this.cropsLifeStartedAt,
     this.harvestModels,
   });
@@ -40,6 +42,7 @@ class FarmStateModel {
     FarmContent? farmContent,
     DateTime? treeLastHarvestedOn,
     DateTime? treesLifeStartedAt,
+    DateTime? cropSowRequestedAt,
     DateTime? cropsLifeStartedAt,
     List<HarvestModel>? harvestModels,
   }) {
@@ -51,6 +54,7 @@ class FarmStateModel {
       treeLastHarvestedOn: treeLastHarvestedOn ?? this.treeLastHarvestedOn,
       treesLifeStartedAt: treesLifeStartedAt ?? this.treesLifeStartedAt,
       cropsLifeStartedAt: cropsLifeStartedAt ?? this.cropsLifeStartedAt,
+      cropSowRequestedAt: cropSowRequestedAt ?? this.cropSowRequestedAt,
       harvestModels: harvestModels ?? this.harvestModels,
     );
   }

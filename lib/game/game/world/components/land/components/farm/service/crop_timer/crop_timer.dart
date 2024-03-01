@@ -54,7 +54,7 @@ class CropTimer {
 
     /// find periods and sort them
     final periods = baseCropCalculator.sowData();
-    periods.sort((a, b) => (a.sowMonth.index - b.sowMonth.index)); // bajra - jun, nov
+    periods.sort((a, b) => (a.sowMonth.index - b.sowMonth.index));
 
     final nextSowDate = baseCropCalculator.getNextSowDateFrom(currentDateTime);
 
@@ -62,9 +62,8 @@ class CropTimer {
     _hoverBoardController.addHoverBoard(
       type: HoverBoardType.cropsWaiting,
       model: HoverBoardModel.timer(
-        text: 'waiting for ${cropType.name}',
         image: CropAsset.of(cropType).at(CropStage.maturity),
-        startDateTime: currentDateTime,
+        startDateTime: farmCoreService.cropSowRequestedAt ?? currentDateTime,
         futureDateTime: nextSowDate,
       ),
       onTap: () {

@@ -33,7 +33,7 @@ class _IntervalSyncDbManagerService implements DbManagerService {
 
   @override
   Future<ServiceAction> configure({
-    Duration syncInterval = const Duration(seconds: 30),
+    Duration syncInterval = const Duration(seconds: 20),
     required User user,
   }) async {
     /// initialize the cloud db service
