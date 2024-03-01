@@ -47,9 +47,9 @@ class HoverBoardController {
 
     /// check if a hover board of type already exists
     if (_hoverBoards.containsKey(type)) {
-      final hoverBoard = _hoverBoards[type];
+      final hoverBoard = _hoverBoards[type]!;
 
-      if (hoverBoard!.isMounted) {
+      if (hoverBoard.isMounted || hoverBoard.isLoading) {
         Log.d('$tag: $type hover board already exist, update method will be invoked!');
         _hoverBoards[type]!.updateData(model);
         return;
@@ -66,7 +66,7 @@ class HoverBoardController {
       /// basic hover board
       hoverBoardItem = BasicHoverBoard(
         model: hoverBoardModel,
-        farmCenter: farmCenter.translated(0, -100),
+        farmCenter: farmCenter.translated(0, -320),
         onTap: onTap,
         farm: farm,
       );

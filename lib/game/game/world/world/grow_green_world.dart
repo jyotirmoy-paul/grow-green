@@ -15,5 +15,7 @@ class GrowGreenWorld extends World with HasGameRef<GrowGreenGame> {
       add: add,
     );
     addAll(components);
+
+    return super.onLoad();
   }
 }

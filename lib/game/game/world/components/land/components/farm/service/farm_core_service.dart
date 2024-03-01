@@ -66,6 +66,7 @@ class FarmCoreService {
   FarmState get farmState => _farmStateModelValue.farmState;
   FarmContent? get farmContent => _farmStateModelValue.farmContent;
   double get soilHealthPercentage => _farmStateModelValue.soilHealthPercentage;
+  DateTime? get cropSowRequestedAt => _farmStateModelValue.cropSowRequestedAt;
   DateTime? get _treeLastHarvestedOn => _farmStateModelValue.treeLastHarvestedOn;
   TreeData get treeData {
     final farmContent = this.farmContent;
@@ -103,6 +104,10 @@ class FarmCoreService {
     if (!_initPhase) {
       if (_crops == null) {
         newFarmStateModel.cropsLifeStartedAt = null;
+      }
+
+      if (newFarmStateModel.farmContent?.crop == null) {
+        newFarmStateModel.cropSowRequestedAt = null;
       }
 
       if (_trees == null) {
@@ -491,6 +496,10 @@ class FarmCoreService {
         farmStateModel.farmState = FarmState.onlyCropsWaiting;
       }
     }
+
+    /// keep a record of when crop sow was requested
+    final cropSowRequestedAt = farmStateModel.cropSowRequestedAt ?? _dateTime;
+    farmStateModel.cropSowRequestedAt = cropSowRequestedAt;
 
     /// write to server
     updateFarmStateModel(farmStateModel);

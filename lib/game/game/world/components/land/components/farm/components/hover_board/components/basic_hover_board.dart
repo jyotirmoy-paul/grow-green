@@ -15,7 +15,7 @@ import '../models/hover_board_model.dart';
 import 'hover_board_item.dart';
 
 class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
-  static const imageSize = 60.0;
+  static const imageSize = 70.0;
   static const textSize = 24.0;
 
   static const animationDuration = 2.0;
@@ -123,6 +123,8 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
   FutureOr<void> onLoad() async {
     final components = await _prepare();
     addAll(components);
+
+    return super.onLoad();
   }
 
   void _onTap() {

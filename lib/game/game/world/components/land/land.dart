@@ -13,6 +13,7 @@ class Land extends PositionComponent with HasGameRef<GrowGreenGame>, TapCallback
   FutureOr<void> onLoad() async {
     final components = await landController.initialize(game);
     addAll(components);
+    return super.onLoad();
   }
 
   @override

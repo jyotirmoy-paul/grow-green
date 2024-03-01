@@ -12,5 +12,7 @@ class Farmer extends PositionComponent with HasGameRef<GrowGreenGame> {
   FutureOr<void> onLoad() async {
     final components = await farmerController.initialize(game: game);
     addAll(components);
+
+    return super.onLoad();
   }
 }

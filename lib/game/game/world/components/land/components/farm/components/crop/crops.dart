@@ -34,6 +34,8 @@ class Crops extends PositionComponent with HasGameRef<GrowGreenGame> {
   FutureOr<void> onLoad() async {
     final components = await cropsController.initialize(game: game);
     addAll(components);
+
+    return super.onLoad();
   }
 
   @override

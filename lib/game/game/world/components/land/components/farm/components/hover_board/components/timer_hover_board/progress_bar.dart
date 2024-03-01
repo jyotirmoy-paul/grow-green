@@ -27,6 +27,8 @@ class ProgressBar extends PositionComponent {
   FutureOr<void> onLoad() {
     size = Vector2(progressWidth, progressHeight);
     anchor = Anchor.center;
+
+    return super.onLoad();
   }
 
   @override

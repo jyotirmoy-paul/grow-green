@@ -37,6 +37,8 @@ class Trees extends PositionComponent with HasGameRef<GrowGreenGame> {
     priority = -1;
 
     addAll(components);
+
+    return super.onLoad();
   }
 
   @override

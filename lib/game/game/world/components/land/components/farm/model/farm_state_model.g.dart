@@ -20,6 +20,9 @@ FarmStateModel _$FarmStateModelFromJson(Map<String, dynamic> json) =>
       treesLifeStartedAt: json['treesLifeStartedAt'] == null
           ? null
           : DateTime.parse(json['treesLifeStartedAt'] as String),
+      cropSowRequestedAt: json['cropSowRequestedAt'] == null
+          ? null
+          : DateTime.parse(json['cropSowRequestedAt'] as String),
       cropsLifeStartedAt: json['cropsLifeStartedAt'] == null
           ? null
           : DateTime.parse(json['cropsLifeStartedAt'] as String),
@@ -36,6 +39,7 @@ Map<String, dynamic> _$FarmStateModelToJson(FarmStateModel instance) =>
       'farmContent': instance.farmContent?.toJson(),
       'treeLastHarvestedOn': instance.treeLastHarvestedOn?.toIso8601String(),
       'treesLifeStartedAt': instance.treesLifeStartedAt?.toIso8601String(),
+      'cropSowRequestedAt': instance.cropSowRequestedAt?.toIso8601String(),
       'cropsLifeStartedAt': instance.cropsLifeStartedAt?.toIso8601String(),
       'harvestModels': instance.harvestModels?.map((e) => e.toJson()).toList(),
     };
