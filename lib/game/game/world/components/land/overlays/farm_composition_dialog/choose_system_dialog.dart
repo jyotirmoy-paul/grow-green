@@ -8,7 +8,6 @@ import '../../../../../../../widgets/button_animator.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../models/farm_system.dart';
 import '../../../../../services/datastore/system_datastore.dart';
-import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm.dart';
 import '../farm_menu/enum/farm_menu_option.dart';
 import '../farm_menu/farm_menu_helper.dart';
@@ -95,8 +94,7 @@ class _ChooseSystemDialogState extends State<ChooseSystemDialog> {
               ComponentId.fertilizer,
               ComponentId.agroforestryLayout,
             ],
-            isNotFunctioningFarm: widget.farm.farmController.farmState == FarmState.notFunctioning,
-            soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
+            farmController: widget.farm.farmController,
           ),
         );
       },

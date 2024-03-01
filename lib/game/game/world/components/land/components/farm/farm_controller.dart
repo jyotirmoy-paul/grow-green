@@ -120,7 +120,7 @@ class FarmController {
     ];
   }
 
-  void purchaseFarm() async {
+  void _purchaseFarm() async {
     final success = await game.monetaryService.transact(
       transactionType: TransactionType.debit,
       value: GameUtils.farmInitialPrice,
@@ -128,7 +128,20 @@ class FarmController {
 
     if (success) {
       _farmCoreService.purchaseSuccess();
-    } else {}
+    } else {
+      /// TODO: Notification
+    }
+  }
+
+  bool purchaseFarm() {
+    final canAffordFarm = game.monetaryService.canAfford(GameUtils.farmInitialPrice);
+
+    if (canAffordFarm) {
+      _purchaseFarm();
+      return true;
+    }
+
+    return false;
   }
 
   void updateFarmComposition({required FarmContent farmContent}) {
