@@ -18,6 +18,8 @@ import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
 import '../../components/farm/components/tree/enums/tree_stage.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
+import '../../components/farm/enum/farm_state.dart';
+import '../../components/farm/farm_controller.dart';
 import '../../components/farm/model/content.dart';
 import '../../components/farm/model/farm_content.dart';
 import '../../components/farm/model/fertilizer/fertilizer_type.dart';
@@ -28,20 +30,21 @@ import 'widgets/menu_item_skeleton.dart';
 
 /// TODO: Language
 class ChooseComponentsDialog extends StatefulWidget {
-  final bool isNotFunctioningFarm;
   final FarmContent farmContent;
+  final FarmController farmController;
+  final bool isNotFunctioningFarm;
   final double soilHealthPercentage;
 
   /// components that are can be edited
   final List<ComponentId> editableComponents;
 
-  const ChooseComponentsDialog({
+  ChooseComponentsDialog({
     super.key,
     required this.farmContent,
     required this.editableComponents,
-    required this.isNotFunctioningFarm,
-    required this.soilHealthPercentage,
-  });
+    required this.farmController,
+  })  : isNotFunctioningFarm = farmController.farmState == FarmState.notFunctioning,
+        soilHealthPercentage = farmController.soilHealthPercentage;
 
   @override
   State<ChooseComponentsDialog> createState() => _ChooseComponentsDialogState();
@@ -335,8 +338,8 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
   void _onPurchaseTap() {
     FarmMenuHelper.purchaseFarmContents(
-      context: context,
-      farmSystem: _currentFarmContent,
+      farmController: widget.farmController,
+      farmContent: _currentFarmContent,
       totalCost: _totalCost,
     );
   }

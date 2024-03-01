@@ -17,8 +17,13 @@ class PurchaseFarmDialog extends StatelessWidget {
   });
 
   void _purchaseFarm(BuildContext context) {
-    farm.farmController.purchaseFarm();
-    Navigator.pop(context, true);
+    final canBuy = farm.farmController.purchaseFarm();
+
+    if (canBuy) {
+      Navigator.pop(context, true);
+    } else {
+      /// TODO: notification: insufficient balance
+    }
   }
 
   @override

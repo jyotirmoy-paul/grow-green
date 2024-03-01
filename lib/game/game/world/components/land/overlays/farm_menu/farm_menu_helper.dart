@@ -18,6 +18,7 @@ import '../../components/farm/components/system/real_life/utils/qty_calculator.d
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm.dart';
+import '../../components/farm/farm_controller.dart';
 import '../../components/farm/model/content.dart';
 import '../../components/farm/model/farm_content.dart';
 import '../../components/farm/model/fertilizer/fertilizer_type.dart';
@@ -241,8 +242,7 @@ class FarmMenuHelper {
                 return ChooseComponentsDialog(
                   farmContent: farmContent,
                   editableComponents: getEditableComponentIdsAt(farmState),
-                  isNotFunctioningFarm: farmState == FarmState.notFunctioning,
-                  soilHealthPercentage: farm.farmController.soilHealthPercentage,
+                  farmController: farm.farmController,
                 );
 
               case FarmMenuOption.history:
@@ -377,25 +377,33 @@ class FarmMenuHelper {
   }
 
   static void purchaseFarmContents({
-    required BuildContext context,
-    required FarmContent farmSystem,
+    required FarmController farmController,
+    required FarmContent farmContent,
     required MoneyModel totalCost,
   }) async {
-    Log.d('$tag: purchaseFarmContents() invoked with farmSystem: $farmSystem, totalCost: $totalCost');
+    Log.d('$tag: purchaseFarmContents() invoked with farmContent: $farmContent, totalCost: $totalCost');
 
-    /// do a transaction
-    final gameState = context.read<GameBloc>().state;
-    if (gameState is! GameLoaded) {
-      throw Exception('$tag: purchaseFarmContents() invoked without GameLoad!!?');
+    final moneytaryService = farmController.game.monetaryService;
+
+    final canAfford = moneytaryService.canAfford(totalCost);
+    if (!canAfford) {
+      /// TODO: Notificaiton
+      return;
     }
 
-    final success = await gameState.game.monetaryService.transact(
+    /// do the actual transaction
+    final success = await farmController.game.monetaryService.transact(
       transactionType: TransactionType.debit,
       value: totalCost,
     );
 
-    
+    if (success) {
+      return farmController.updateFarmComposition(
+        farmContent: farmContent,
+      );
+    }
 
+    /// TODO: notification
   }
 
   static MoneyModel getPriceForFarmSystem({

@@ -86,6 +86,11 @@ class MonetaryService {
     }
   }
 
+  bool canAfford(MoneyModel cost) {
+    final balance = _balance - cost;
+    return !balance.isNegative();
+  }
+
   MoneyModel get balance => _balance;
   Stream<MoneyModel> get balanceStream => _balanceStreamController.stream;
 }
