@@ -5,6 +5,7 @@ import '../game/utils/game_icons.dart';
 import '../utils/extensions/num_extensions.dart';
 import '../utils/text_styles.dart';
 import 'game_button.dart';
+import 'stylized_text.dart';
 
 enum DialogType {
   small,
@@ -83,10 +84,11 @@ class DialogContainer extends StatelessWidget {
                   ),
 
                   /// header content
-
-                  Text(
-                    title,
-                    style: TextStyles.s32,
+                  StylizedText(
+                    text: Text(
+                      title,
+                      style: TextStyles.s42,
+                    ),
                   ),
 
                   Align(

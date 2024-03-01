@@ -6,6 +6,8 @@ import 'package:gap/gap.dart';
 import '../../../../services/log/log.dart';
 import '../../../../utils/extensions/num_extensions.dart';
 import '../../../../utils/text_styles.dart';
+import '../../../../widgets/stylized_container.dart';
+import '../../../../widgets/stylized_text.dart';
 import 'model/notification_model.dart';
 import 'service/notification_service.dart';
 import 'widget/fading_widget.dart';
@@ -21,6 +23,7 @@ class GameNotificationWidget extends StatefulWidget {
 
 class _GameNotificationWidgetState extends State<GameNotificationWidget> {
   static const tag = '_NotificationOverlayState';
+  static const maxNotificationsVisible = 4;
   static const routineNotificationCheckDuration = Duration(seconds: 10);
 
   StreamSubscription? _streamSubscription;
@@ -33,6 +36,14 @@ class _GameNotificationWidgetState extends State<GameNotificationWidget> {
     Log.d('$tag: received a new notification: $notification');
     final newNotifications = List.of(_notifications.value);
     newNotifications.insert(0, notification);
+
+    if (newNotifications.length > maxNotificationsVisible) {
+      /// keep only n, ignore extras!
+      final newShortNotifications = newNotifications.sublist(0, maxNotificationsVisible);
+      _notifications.value = newShortNotifications;
+      return;
+    }
+
     _notifications.value = newNotifications;
   }
 
@@ -92,7 +103,7 @@ class _GameNotificationWidgetState extends State<GameNotificationWidget> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SizedBox(
-          height: 340.s,
+          height: 260.s,
           child: Center(
             child: ValueListenableBuilder(
               valueListenable: _notifications,
@@ -111,10 +122,14 @@ class _GameNotificationWidgetState extends State<GameNotificationWidget> {
                       child: FadingWidget(
                         id: notification.id,
                         onFinish: (notificationId) => _expiredNotificationIds.add(notificationId),
-                        child: Text(
-                          notification.text,
-                          style: TextStyles.s28.copyWith(
-                            color: notification.textColor,
+                        child: StylizedText(
+                          strokeWidth: 4.s,
+                          text: Text(
+                            notification.text,
+                            style: TextStyles.s32.copyWith(
+                              color: notification.textColor,
+                              letterSpacing: 3.s,
+                            ),
                           ),
                         ),
                       ),

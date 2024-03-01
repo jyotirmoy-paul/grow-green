@@ -67,7 +67,7 @@ flutter:
 # xxxhdpi     4.0x
 
   fonts:
-    - family: Freshman
+    - family: Lapsus Pro
       fonts:
-        - asset: assets/fonts/freshman.ttf
+        - asset: assets/fonts/lapsuspro.otf
 

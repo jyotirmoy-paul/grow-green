@@ -5,6 +5,7 @@ import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/game_button.dart';
 import '../../../../../../../../widgets/shadowed_container.dart';
+import '../../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../../utils/game_icons.dart';
 import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../enums/farm_system_type.dart';
@@ -149,10 +150,12 @@ class SystemItemWidget extends StatelessWidget {
       width: 380.s,
       bgColor: bgColor,
       header: Center(
-        child: Text(
-          _getTitle(),
-          textAlign: TextAlign.center,
-          style: TextStyles.s28,
+        child: StylizedText(
+          text: Text(
+            _getTitle(),
+            textAlign: TextAlign.center,
+            style: TextStyles.s35,
+          ),
         ),
       ),
       body: Wrap(
@@ -175,12 +178,14 @@ class SystemItemWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           /// price
-          Text(
-            '₹ ${FarmMenuHelper.getPriceForFarmSystem(
-              farmSystem: farmSystem,
-              soilHealthPercentage: farm.farmController.soilHealthPercentage,
-            ).formattedRupees}',
-            style: TextStyles.s28,
+          StylizedText(
+            text: Text(
+              '₹ ${FarmMenuHelper.getPriceForFarmSystem(
+                farmSystem: farmSystem,
+                soilHealthPercentage: farm.farmController.soilHealthPercentage,
+              ).formattedRupees}',
+              style: TextStyles.s32,
+            ),
           ),
 
           /// info button to learn more
@@ -217,7 +222,7 @@ class _SystemComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShadowedContainer(
       padding: EdgeInsets.all(12.s),
-      shadowOffset: Offset(8.s, 8.s),
+      shadowOffset: Offset(6.s, 6.s),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(12.s),
@@ -232,10 +237,12 @@ class _SystemComponent extends StatelessWidget {
           Expanded(
             child: Image.asset(componentImage),
           ),
-          Text(
-            text,
-            style: TextStyles.s24,
-            textAlign: TextAlign.center,
+          StylizedText(
+            text: Text(
+              text,
+              style: TextStyles.s26,
+              textAlign: TextAlign.center,
+            ),
           )
         ],
       ),

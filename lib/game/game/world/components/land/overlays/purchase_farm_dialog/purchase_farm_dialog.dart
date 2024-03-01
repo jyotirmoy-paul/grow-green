@@ -39,7 +39,7 @@ class PurchaseFarmDialog extends StatelessWidget {
             /// confirmation text
             Text(
               'Are you sure you want to purchase the farm?',
-              style: TextStyles.s18,
+              style: TextStyles.s28brown,
             ),
 
             const Spacer(),

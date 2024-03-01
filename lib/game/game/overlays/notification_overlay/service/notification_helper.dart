@@ -28,6 +28,24 @@ abstract class NotificationHelper {
     );
   }
 
+  static void agroforestrySystemTapNotAllowed() {
+    NotificationService().notify(
+      NotificationModel(
+        text: 'Editing agroforestry system is not allowed with trees present!',
+        textColor: Colors.red,
+      ),
+    );
+  }
+
+  static void nothingToBuy() {
+    NotificationService().notify(
+      NotificationModel(
+        text: 'Nothing to buy!',
+        textColor: Colors.red,
+      ),
+    );
+  }
+
   /// others
   static void treesSold() {
     NotificationService().notify(

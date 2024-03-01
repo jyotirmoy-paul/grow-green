@@ -1,5 +1,5 @@
 /// font style
-const kFontFamily = 'Freshman';
+const kFontFamily = 'Lapsus Pro';
 
 /// durations
 const kMS50 = Duration(milliseconds: 50);

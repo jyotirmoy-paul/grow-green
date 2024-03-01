@@ -23,7 +23,10 @@ class RoundedRectangleComponent extends PositionComponent {
   void render(Canvas canvas) {
     super.render(canvas);
 
-    final rRect = RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.x, size.y), Radius.circular(borderRadius));
+    final rRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, size.x, size.y),
+      Radius.circular(borderRadius),
+    );
 
     canvas.drawRRect(rRect, Paint()..color = color);
   }

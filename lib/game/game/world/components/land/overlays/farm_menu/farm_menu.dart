@@ -5,6 +5,7 @@ import '../../../../../../../utils/extensions/list_extensions.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/game_button.dart';
+import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../grow_green_game.dart';
 import '../../components/farm/farm.dart';
 import '../system_selector_menu/model/farm_notifier.dart';
@@ -235,9 +236,14 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.min,
             children: [
               /// title
-              Text(_titleText, style: TextStyles.s32),
+              StylizedText(
+                text: Text(
+                  _titleText,
+                  style: TextStyles.s42,
+                ),
+              ),
 
-              Gap(32.s),
+              Gap(16.s),
 
               /// children
               Row(

@@ -5,6 +5,7 @@ import '../utils/extensions/num_extensions.dart';
 import '../utils/text_styles.dart';
 import 'button_animator.dart';
 import 'stylized_container.dart';
+import 'stylized_text.dart';
 
 enum GameButtonType {
   menuItem,
@@ -109,13 +110,14 @@ class GameButton extends StatelessWidget {
     }
   }
 
-  EdgeInsets _padding() {
+  EdgeInsets get _padding {
     switch (type) {
+      case GameButtonType.menuItem:
       case GameButtonType.image:
         return EdgeInsets.all(6.s);
 
       default:
-        return EdgeInsets.all(12.s);
+        return EdgeInsets.symmetric(horizontal: 16.s, vertical: 8.s);
     }
   }
 
@@ -125,7 +127,7 @@ class GameButton extends StatelessWidget {
       onPressed: onTap,
       child: StylizedContainer(
         applyColorOpacity: _applyColorOpacity(),
-        padding: _padding(),
+        padding: _padding,
         color: color,
         child: () {
           switch (type) {
@@ -177,13 +179,20 @@ class _TextImageButton extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        /// text
         Flexible(
-          child: Text(
-            text,
-            style: TextStyles.s26,
+          child: StylizedText(
+            text: Text(
+              text,
+              style: TextStyles.s30,
+            ),
           ),
         ),
+
+        /// gap
         Gap(10.s),
+
+        /// image
         Image.asset(
           image,
           height: 45.s,
@@ -256,7 +265,7 @@ class _MenuItemButton extends StatelessWidget {
             alignment: hasExtraData ? Alignment.center : Alignment.topCenter,
             child: Image.asset(
               image,
-              height: hasExtraData ? 60.s : 70.s,
+              height: hasExtraData ? 50.s : 60.s,
               fit: BoxFit.contain,
             ),
           ),
@@ -271,9 +280,11 @@ class _MenuItemButton extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       /// data
-                      Text(
-                        dataText!,
-                        style: TextStyles.s12,
+                      StylizedText(
+                        text: Text(
+                          dataText!,
+                          style: TextStyles.s18,
+                        ),
                       ),
 
                       /// spacer
@@ -287,9 +298,11 @@ class _MenuItemButton extends StatelessWidget {
                     ],
                   );
                 } else if (dataText != null) {
-                  return Text(
-                    dataText!,
-                    style: TextStyles.s20,
+                  return StylizedText(
+                    text: Text(
+                      dataText!,
+                      style: TextStyles.s23,
+                    ),
                   );
                 }
 
@@ -300,10 +313,12 @@ class _MenuItemButton extends StatelessWidget {
               const Spacer(),
 
               /// text
-              Text(
-                text,
-                style: TextStyles.s20,
-                textAlign: TextAlign.center,
+              StylizedText(
+                text: Text(
+                  text,
+                  style: TextStyles.s23,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),
