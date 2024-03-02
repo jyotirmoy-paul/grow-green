@@ -45,16 +45,19 @@ abstract class BaseTreeCalculator {
 
     switch (growthFactor) {
       case < .03:
-        return TreeStage.seedling;
+        return TreeStage.sprout;
 
-      case < .3:
-        return TreeStage.plant;
+      case < .2:
+        return TreeStage.sapling;
 
-      case < .6:
-        return TreeStage.adult;
+      case < .35:
+        return TreeStage.maturing;
+
+      case < .55:
+        return TreeStage.flourishing;
 
       default:
-        return TreeStage.giant;
+        return TreeStage.elder;
     }
   }
 

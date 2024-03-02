@@ -1,6 +1,8 @@
 enum CropStage {
-  sowing,
-  seedling,
-  flowering,
-  maturity,
+  germination,
+  sprouting,
+  flourishing,
+  ripe;
+
+  String get assetName => '${index + 1}.png';
 }

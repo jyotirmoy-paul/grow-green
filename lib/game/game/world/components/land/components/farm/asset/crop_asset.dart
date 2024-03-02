@@ -2,17 +2,24 @@ import '../components/crop/enums/crop_stage.dart';
 import '../components/crop/enums/crop_type.dart';
 
 class CropAsset {
-  static const tag = 'CropAsset';
-  static const prefix = 'crops';
-
   final CropType cropType;
-  CropAsset._(this.cropType);
+  final String prefix;
+
+  CropAsset._(this.cropType, this.prefix);
 
   factory CropAsset.of(CropType cropType) {
-    return CropAsset._(cropType);
+    return CropAsset._(cropType, 'crops');
+  }
+
+  factory CropAsset.raw(CropType cropType) {
+    return CropAsset._(cropType, 'assets/images/crops');
   }
 
   String at(CropStage cropStage) {
-    return '$prefix/${cropType.name}_${cropStage.name}.png';
+    return '$prefix/${cropType.name}/${cropStage.assetName}';
+  }
+
+  static String representativeOf(CropType cropType) {
+    return CropAsset.raw(cropType).at(CropStage.ripe);
   }
 }

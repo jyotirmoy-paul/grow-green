@@ -40,6 +40,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    # maps & tiles
     - assets/images/
     - assets/images/tiles/
     - assets/images/river/1/
@@ -47,8 +48,25 @@ flutter:
     - assets/images/river/3/
     - assets/images/river/4/
     - assets/images/river/5/
-    - assets/images/trees/
-    - assets/images/crops/
+
+    # tree assets
+    - assets/images/trees/coconut/
+    - assets/images/trees/jackfruit/
+    - assets/images/trees/mahagony/
+    - assets/images/trees/mango/
+    - assets/images/trees/neem/
+    - assets/images/trees/rosewood/
+    - assets/images/trees/teakwood/
+
+    # crop assets
+    - assets/images/crops/bajra/
+    - assets/images/crops/banana/
+    - assets/images/crops/groundnut/
+    - assets/images/crops/maize/
+    - assets/images/crops/pepper/
+    - assets/images/crops/wheat/
+    
+    # game props
     - assets/images/icons/
     - assets/images/images/
     - assets/images/props/

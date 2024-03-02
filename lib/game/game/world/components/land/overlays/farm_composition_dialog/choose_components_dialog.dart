@@ -16,7 +16,6 @@ import '../../../../../overlays/notification_overlay/service/notification_helper
 import '../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../components/farm/asset/crop_asset.dart';
 import '../../components/farm/asset/tree_asset.dart';
-import '../../components/farm/components/crop/enums/crop_stage.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
 import '../../components/farm/components/tree/enums/tree_stage.dart';
@@ -74,7 +73,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
     return _ComponentsModel(
       headerText: 'Crop',
-      image: 'assets/images/${CropAsset.of(cropType).at(CropStage.maturity)}',
+      image: CropAsset.representativeOf(cropType),
       footerText: cropType.name.toUpperCase(),
       componentId: ComponentId.crop,
       isComponentEditable: isCropEditable,
@@ -114,7 +113,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
         return _ComponentsModel(
           headerText: 'Tree',
-          image: 'assets/images/${TreeAsset.of(treeType).at(TreeStage.giant)}',
+          image: TreeAsset.raw(treeType).at(TreeStage.elder),
           footerText: treeType.name.toUpperCase(),
           componentId: ComponentId.trees,
           isComponentEditable: widget.editableComponents.contains(ComponentId.trees),

@@ -12,7 +12,6 @@ import '../../../../../../enums/farm_system_type.dart';
 import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/asset/crop_asset.dart';
 import '../../../components/farm/asset/tree_asset.dart';
-import '../../../components/farm/components/crop/enums/crop_stage.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/components/tree/enums/tree_stage.dart';
 import '../../../components/farm/farm.dart';
@@ -61,7 +60,7 @@ class SystemItemWidget extends StatelessWidget {
     final treesData = _SystemComponent(
       key: ValueKey('trees-${system.agroforestryType}'),
       text: '${treeQty.value} ${treeQty.scale.name} of ${treeType.name}',
-      componentImage: 'assets/images/${TreeAsset.of(treeType).at(TreeStage.adult)}',
+      componentImage: TreeAsset.raw(treeType).at(TreeStage.elder),
       bgColor: secondaryColor,
     );
 
@@ -75,7 +74,7 @@ class SystemItemWidget extends StatelessWidget {
     final cropsData = _SystemComponent(
       key: ValueKey('crops-${system.agroforestryType}'),
       text: '${cropQty.value} ${cropQty.scale.name} of ${cropType.name}',
-      componentImage: 'assets/images/${CropAsset.of(cropType).at(CropStage.maturity)}',
+      componentImage: CropAsset.representativeOf(cropType),
       bgColor: secondaryColor,
     );
 
@@ -104,7 +103,7 @@ class SystemItemWidget extends StatelessWidget {
 
     final cropsData = _SystemComponent(
       text: '${cropQty.value} ${cropQty.scale.name} of ${cropType.name}',
-      componentImage: 'assets/images/${CropAsset.of(cropType).at(CropStage.maturity)}',
+      componentImage: CropAsset.representativeOf(cropType),
       bgColor: secondaryColor,
     );
 

@@ -4,13 +4,11 @@ import 'package:gap/gap.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/button_animator.dart';
-import '../../../../../../../widgets/stylized_container.dart';
 import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_images.dart';
 import '../../../../../enums/agroforestry_type.dart';
 import '../../components/farm/asset/crop_asset.dart';
 import '../../components/farm/asset/tree_asset.dart';
-import '../../components/farm/components/crop/enums/crop_stage.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/tree/enums/tree_stage.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
@@ -37,7 +35,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
     for (final crop in CropType.values) {
       models.add(
         _ComponentModel(
-          image: 'assets/images/${CropAsset.of(crop).at(CropStage.maturity)}',
+          image: CropAsset.representativeOf(crop),
           name: crop.name.toUpperCase(),
           info: const [],
         ),
@@ -49,7 +47,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
     for (final tree in TreeType.values) {
       models.add(
         _ComponentModel(
-          image: 'assets/images/${TreeAsset.of(tree).at(TreeStage.giant)}',
+          image: TreeAsset.raw(tree).at(TreeStage.elder),
           name: tree.name.toUpperCase(),
           info: const [],
         ),

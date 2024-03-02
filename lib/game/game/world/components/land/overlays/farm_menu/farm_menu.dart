@@ -281,7 +281,7 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
                         ),
                       ),
                     )
-                    .addSeparator(Gap(26.s)),
+                    .addSeparator(Gap(13.s)),
               ),
             ],
           ),

@@ -30,7 +30,7 @@ class TreesController {
   Image? treeAsset;
   SpriteBatch? treeSpriteBatch;
 
-  TreeStage treeStage = TreeStage.seedling;
+  TreeStage treeStage = TreeStage.sprout;
 
   GameAnimation? bounceAnimation;
 
