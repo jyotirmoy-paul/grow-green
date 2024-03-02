@@ -21,7 +21,7 @@ class _TimeMenuState extends State<TimeMenu> with TickerProviderStateMixin {
   final timeSpeedUpSetting = <int>[
     1,
     10,
-    30,
+    40,
   ];
 
   final buttons = <IconData>[
@@ -139,7 +139,7 @@ class _TimeMenuState extends State<TimeMenu> with TickerProviderStateMixin {
     } else if (index == 1) {
       TimeService().timePace = 10;
     } else if (index == 2) {
-      TimeService().timePace = 30;
+      TimeService().timePace = 40;
     }
   }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../../../../services/log/log.dart';
 import '../../../../../services/utils/service_action.dart';
+import '../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../datastore/game_datastore.dart';
 import 'enums/transaction_type.dart';
 import 'models/money_model.dart';
@@ -77,12 +78,18 @@ class MonetaryService {
     required TransactionType transactionType,
     required MoneyModel value,
   }) async {
-    switch (transactionType) {
-      case TransactionType.debit:
-        return _transactDebit(value);
+    try {
+      switch (transactionType) {
+        case TransactionType.debit:
+          return _transactDebit(value).timeout(const Duration(milliseconds: 1000));
 
-      case TransactionType.credit:
-        return _transactCredit(value);
+        case TransactionType.credit:
+          return _transactCredit(value).timeout(const Duration(milliseconds: 1000));
+      }
+    } on TimeoutException catch (_) {
+      Log.e('$tag: transaction timed out');
+      NotificationHelper.transactionFailed();
+      return false;
     }
   }
 

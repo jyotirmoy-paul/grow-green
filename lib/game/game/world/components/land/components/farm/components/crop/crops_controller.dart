@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
+import '../../../../../../../../utils/game_utils.dart';
 import '../../../../../../../grow_green_game.dart';
 import '../../animations/game_animation.dart';
 import '../../asset/crop_asset.dart';
@@ -17,13 +20,19 @@ class CropsController {
   final Vector2 cropSize;
   final List<Vector2> cropPositions;
   final Vector2 farmSize;
+  final math.Random _random;
 
   CropsController({
     required this.cropType,
     required this.cropSize,
     required this.cropPositions,
     required this.farmSize,
-  });
+  }) : _random = math.Random() {
+    /// sort the tree positions for better z-index rendering
+    cropPositions.sort((a, b) {
+      return (a.x + a.y).compareTo((b.x + b.y));
+    });
+  }
 
   late final GrowGreenGame game;
 
@@ -33,6 +42,9 @@ class CropsController {
   CropStage cropStage = CropStage.germination;
 
   GameAnimation? bounceAnimation;
+
+  final List<bool> _isCropAssetFlippedList = [];
+  final List<double> _cropScaleList = [];
 
   void _populateSpriteBatchWithAnimation() {
     if (bounceAnimation != null) return;
@@ -59,14 +71,17 @@ class CropsController {
     final bounceAnimationScaleFactor = bounceAnimation?.value ?? 1.0;
     final finalScale = scale * bounceAnimationScaleFactor;
 
-    for (final position in cropPositions) {
+    for (int i = 0; i < cropPositions.length; i++) {
+      final position = cropPositions[i];
+      final isAssetFlipped = _isCropAssetFlippedList[i];
       final cartPosition = position.toCart(farmSize.half());
 
       cropSpriteBatch?.add(
         source: cropSource,
-        offset: Vector2(cartPosition.x, cartPosition.y + ((originCropSize.y / 2) * scale)),
-        anchor: Vector2(originCropSize.x / 2, originCropSize.y / 2),
-        scale: finalScale,
+        offset: Vector2(cartPosition.x, cartPosition.y + ((originCropSize.y / 4) * scale)),
+        anchor: Vector2(originCropSize.x / 2, originCropSize.y),
+        scale: finalScale * _cropScaleList[i],
+        flip: isAssetFlipped,
       );
     }
   }
@@ -76,10 +91,22 @@ class CropsController {
     cropSpriteBatch = SpriteBatch(cropAsset!);
   }
 
+  void _randomizeCropCharacter() {
+    for (final _ in cropPositions) {
+      /// randomize tree flip
+      _isCropAssetFlippedList.add(_random.nextBool());
+
+      /// randomize tree scale
+      _cropScaleList.add(GameUtils().getRandomNumberBetween(min: 1.7, max: 2.2));
+    }
+  }
+
   Future<List<Component>> initialize({
     required GrowGreenGame game,
   }) async {
     this.game = game;
+
+    _randomizeCropCharacter();
 
     /// animate to show addition occured
     await _populateSpriteBatch();

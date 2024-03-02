@@ -20,27 +20,22 @@ class StylizedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shadowedText = _ShadowedText(
-      key: const ValueKey('shadowed-text'),
-      text: text.data,
-      textStyle: text.style,
-      textAlign: text.textAlign,
-      strokeWidth: magicNumber,
-    );
-
     return RepaintBoundary(
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         textDirection: text.textDirection,
         children: [
-          /// stroke
-          // if (!optimized) shadowedText,
-
           /// translate stroke
           Transform.translate(
             offset: Offset(0, magicNumber * 0.2),
-            child: shadowedText,
+            child: _ShadowedText(
+              key: const ValueKey('shadowed-text'),
+              text: text.data,
+              textStyle: text.style,
+              textAlign: text.textAlign,
+              strokeWidth: magicNumber,
+            ),
           ),
 
           /// actual text
