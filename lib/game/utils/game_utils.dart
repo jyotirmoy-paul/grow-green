@@ -38,6 +38,8 @@ class GameUtils {
 
   /// generates random double between `min` & `max` values
   double getRandomNumberBetween({required double min, required double max}) {
-    return _random.nextDouble() * (max - min) + min;
+    double rnd = _random.nextDouble();
+    double bias = math.sin(rnd * math.pi - (math.pi / 2)) / 2 + 0.5;
+    return bias * (max - min) + min;
   }
 }

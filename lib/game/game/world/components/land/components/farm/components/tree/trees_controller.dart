@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/game_extensions.dart';
+import '../../../../../../../../utils/game_utils.dart';
 import '../../../../../../../grow_green_game.dart';
 import '../../animations/game_animation.dart';
 import '../../asset/tree_asset.dart';
@@ -17,13 +20,19 @@ class TreesController {
   final Vector2 farmSize;
   final Vector2 treeSize;
   final List<Vector2> treePositions;
+  final math.Random _random;
 
   TreesController({
     required this.treeType,
     required this.farmSize,
     required this.treeSize,
     required this.treePositions,
-  });
+  }) : _random = math.Random() {
+    /// sort the tree positions for better z-index rendering
+    treePositions.sort((a, b) {
+      return (a.x + a.y).compareTo((b.x + b.y));
+    });
+  }
 
   late final GrowGreenGame game;
 
@@ -34,12 +43,15 @@ class TreesController {
 
   GameAnimation? bounceAnimation;
 
+  final List<bool> _isTreeAssetFlippedList = [];
+  final List<double> _treeScaleList = [];
+
   void _populateSpriteBatchWithAnimation() {
     if (bounceAnimation != null) return;
 
     bounceAnimation = GameAnimation(
       totalDuration: 0.626,
-      maxValue: 1.6,
+      maxValue: 1.2,
       onComplete: () {
         bounceAnimation = null;
       },
@@ -54,19 +66,23 @@ class TreesController {
 
     final originalTreeSize = treeAsset!.size;
     final treeSource = originalTreeSize.toRect();
-    final scale = treeSize.length / originalTreeSize.length;
+    final scale = (treeSize.length / originalTreeSize.length);
 
     final bounceAnimationScaleFactor = bounceAnimation?.value ?? 1.0;
     final finalScale = scale * bounceAnimationScaleFactor;
 
-    for (final position in treePositions) {
+    for (int i = 0; i < treePositions.length; i++) {
+      final position = treePositions[i];
+      final isAssetFlipped = _isTreeAssetFlippedList[i];
+
       final cartPosition = position.toCart(farmSize.half());
 
       treeSpriteBatch?.add(
         source: treeSource,
-        offset: Vector2(cartPosition.x, cartPosition.y + ((originalTreeSize.y / 2) * scale)),
-        anchor: Vector2(originalTreeSize.x / 2, originalTreeSize.y / 2),
-        scale: finalScale,
+        offset: Vector2(cartPosition.x, cartPosition.y + ((originalTreeSize.y / 4) * scale)),
+        anchor: Vector2(originalTreeSize.x / 2, originalTreeSize.y),
+        scale: finalScale * _treeScaleList[i],
+        flip: isAssetFlipped,
       );
     }
   }
@@ -77,8 +93,20 @@ class TreesController {
     treeSpriteBatch = SpriteBatch(treeAsset!);
   }
 
+  void _randomizeTreeCharacter() {
+    for (final _ in treePositions) {
+      /// randomize tree flip
+      _isTreeAssetFlippedList.add(_random.nextBool());
+
+      /// randomize tree scale
+      _treeScaleList.add(GameUtils().getRandomNumberBetween(min: 1.8, max: 2.4));
+    }
+  }
+
   Future<List<Component>> initialize({required GrowGreenGame game}) async {
     this.game = game;
+
+    _randomizeTreeCharacter();
 
     /// animate to show addition occured
     await _populateSpriteBatch();

@@ -8,12 +8,20 @@ abstract class NotificationHelper {
   /// non user issues
   static void farmPurchaseFailed() {}
   static void farmContentsPurchaseFailed() {}
+  static void transactionFailed() {
+    NotificationService().notify(
+      NotificationModel(
+        text: 'Transaction failed, something went wrong',
+        textColor: Colors.red,
+      ),
+    );
+  }
 
   /// user issues
   static void cannotAffordFarm() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Insufficient funds to buy the farm.',
+        text: 'Insufficient funds to buy the farm',
         textColor: Colors.red,
       ),
     );
@@ -50,7 +58,7 @@ abstract class NotificationHelper {
   static void treesSold() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Yay! Sold the trees successfully.',
+        text: 'Yay! Sold the trees successfully',
         textColor: Colors.green,
       ),
     );

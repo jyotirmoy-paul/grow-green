@@ -22,7 +22,7 @@ class GameNotificationWidget extends StatefulWidget {
 
 class _GameNotificationWidgetState extends State<GameNotificationWidget> {
   static const tag = '_NotificationOverlayState';
-  static const maxNotificationsVisible = 4;
+  static const maxNotificationsVisible = 5;
   static const routineNotificationCheckDuration = Duration(seconds: 10);
 
   StreamSubscription? _streamSubscription;
@@ -101,45 +101,43 @@ class _GameNotificationWidgetState extends State<GameNotificationWidget> {
       ignoring: true,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: SizedBox(
-          height: 260.s,
-          child: Center(
-            child: ValueListenableBuilder(
-              valueListenable: _notifications,
-              builder: (_, notifications, ___) {
-                return ListView.separated(
-                  clipBehavior: Clip.none,
-                  // shrinkWrap: true,
-                  reverse: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: notifications.length,
-                  itemBuilder: (_, index) {
-                    final notification = notifications[index];
+        body: FractionallySizedBox(
+          heightFactor: 0.5,
+          child: ValueListenableBuilder(
+            valueListenable: _notifications,
+            builder: (_, notifications, ___) {
+              return ListView.separated(
+                clipBehavior: Clip.none,
+                // shrinkWrap: true,
+                reverse: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: notifications.length,
+                itemBuilder: (_, index) {
+                  final notification = notifications[index];
 
-                    return Center(
-                      key: notification.key,
-                      child: FadingWidget(
-                        id: notification.id,
-                        onFinish: (notificationId) => _expiredNotificationIds.add(notificationId),
-                        child: StylizedText(
-                          strokeWidth: 4.s,
-                          text: Text(
-                            notification.text,
-                            style: TextStyles.s32.copyWith(
-                              color: notification.textColor,
-                              letterSpacing: 3.s,
-                            ),
+                  return Center(
+                    key: notification.key,
+                    child: FadingWidget(
+                      id: notification.id,
+                      onFinish: (notificationId) => _expiredNotificationIds.add(notificationId),
+                      child: StylizedText(
+                        strokeWidth: 4.s,
+                        text: Text(
+                          notification.text,
+                          style: TextStyles.s32.copyWith(
+                            color: notification.textColor,
+                            letterSpacing: 3.s,
                           ),
                         ),
                       ),
-                    );
-                  },
-                  separatorBuilder: (_, __) {
-                    return Gap(12.s);
-                  },
-                );
-              },
-            ),
+                    ),
+                  );
+                },
+                separatorBuilder: (_, __) {
+                  return Gap(12.s);
+                },
+              );
+            },
           ),
         ),
       ),
