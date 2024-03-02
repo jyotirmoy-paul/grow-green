@@ -30,7 +30,7 @@ class CropsController {
   Image? cropAsset;
   SpriteBatch? cropSpriteBatch;
 
-  CropStage cropStage = CropStage.sowing;
+  CropStage cropStage = CropStage.germination;
 
   GameAnimation? bounceAnimation;
 

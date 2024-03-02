@@ -63,16 +63,16 @@ abstract class BaseCropCalculator {
 
     switch (growthFactor) {
       case < .1:
-        return CropStage.sowing;
+        return CropStage.germination;
 
       case < .3:
-        return CropStage.seedling;
+        return CropStage.sprouting;
 
       case < .8:
-        return CropStage.flowering;
+        return CropStage.flourishing;
 
       case < 1.0:
-        return CropStage.maturity;
+        return CropStage.ripe;
     }
 
     throw Exception('$tag: getCropStage: invalid growthFactor value: $growthFactor');

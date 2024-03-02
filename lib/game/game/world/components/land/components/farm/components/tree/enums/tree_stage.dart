@@ -1,6 +1,9 @@
 enum TreeStage {
-  seedling,
-  plant,
-  adult,
-  giant,
+  sprout,
+  sapling,
+  maturing,
+  flourishing,
+  elder;
+
+  String get assetName => '${index + 1}.png';
 }

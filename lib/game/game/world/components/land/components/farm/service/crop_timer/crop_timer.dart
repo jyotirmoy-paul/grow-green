@@ -62,7 +62,7 @@ class CropTimer {
     _hoverBoardController.addHoverBoard(
       type: HoverBoardType.cropsWaiting,
       model: HoverBoardModel.timer(
-        image: CropAsset.of(cropType).at(CropStage.maturity),
+        image: CropAsset.of(cropType).at(CropStage.ripe),
         startDateTime: farmCoreService.cropSowRequestedAt ?? currentDateTime,
         futureDateTime: nextSowDate,
       ),

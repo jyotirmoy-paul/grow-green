@@ -6,7 +6,6 @@ import 'package:gap/gap.dart';
 import '../../../../services/log/log.dart';
 import '../../../../utils/extensions/num_extensions.dart';
 import '../../../../utils/text_styles.dart';
-import '../../../../widgets/stylized_container.dart';
 import '../../../../widgets/stylized_text.dart';
 import 'model/notification_model.dart';
 import 'service/notification_service.dart';

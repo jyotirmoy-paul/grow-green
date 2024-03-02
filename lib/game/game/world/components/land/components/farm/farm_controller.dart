@@ -6,7 +6,6 @@ import '../../../../../../utils/game_extensions.dart';
 import '../../../../../../utils/game_utils.dart';
 import '../../../../../grow_green_game.dart';
 import '../../../../../overlays/notification_overlay/service/notification_helper.dart';
-import '../../../../../overlays/notification_overlay/service/notification_service.dart';
 import '../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../services/game_services/monetary/models/money_model.dart';
 import 'animations/enums/game_animation_type.dart';
