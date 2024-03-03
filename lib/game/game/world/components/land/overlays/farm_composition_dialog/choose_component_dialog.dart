@@ -4,16 +4,20 @@ import 'package:gap/gap.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/button_animator.dart';
+import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_images.dart';
 import '../../../../../enums/agroforestry_type.dart';
 import '../../components/farm/asset/crop_asset.dart';
 import '../../components/farm/asset/tree_asset.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
+import '../../components/farm/components/system/real_life/calculators/trees/base_tree.dart';
 import '../../components/farm/components/tree/enums/tree_stage.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../system_selector_menu/enum/component_id.dart';
+import 'widgets/age_revenue_widget/logic/age_revenue_fetcher.dart';
+import 'widgets/age_revenue_widget/view/age_revenue_chart.dart';
 import 'widgets/menu_item_skeleton.dart';
 
 class ChooseComponentDialog extends StatefulWidget {
@@ -133,7 +137,8 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
       padding: EdgeInsets.all(16.s),
       itemBuilder: (context, index) {
         final model = models[index];
-
+        final treeType = TreeType.values.elementAtOrNull(index);
+        final treeSaplingCost = BaseTreeCalculator.fromTreeType(treeType ?? TreeType.coconut).saplingCost;
         return ButtonAnimator(
           onPressed: () {
             Navigator.pop(context, index);
@@ -151,7 +156,24 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
             body: Column(
               children: [
                 Image.asset(model.image),
+                if (widget.componentId == ComponentId.trees)
+                  AgeRevenueChart.fromAgeRevenueModels(
+                    ageRevenueModels: AgeRevenueFetcher(treeType: treeType ?? TreeType.coconut).fetch(),
+                    size: Size(200.s, 180.s),
+                  )
               ],
+            ),
+            footer: Container(
+              height: 30,
+              alignment: Alignment.center,
+              child: FittedBox(
+                child: GameButton.textImage(
+                  text: "Buy $treeSaplingCost ",
+                  image: GameImages.noFertilizer,
+                  onTap: () {},
+                  bgColor: Colors.deepOrangeAccent,
+                ),
+              ),
             ),
           ),
         );
