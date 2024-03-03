@@ -2,7 +2,7 @@ abstract class GameIcons {
   static const _base = 'assets/images/icons';
 
   static const info = '$_base/icon.png';
-  static const close = '$_base/icon.png';
+  static const close = '$_base/close.png';
   static const coin = '$_base/icon.png';
   static const buyFarm = '$_base/icon.png';
   static const soilHealth = '$_base/icon.png';

@@ -73,6 +73,7 @@ class GameButton extends StatelessWidget {
     required String image,
     required VoidCallback onTap,
     Color? bgColor,
+    EdgeInsets? padding,
   }) {
     return GameButton._(
       key: key,
@@ -149,6 +150,7 @@ class GameButton extends StatelessWidget {
               return _ImageButton(
                 key: const ValueKey('image-button'),
                 image: image!,
+                padding: _padding,
               );
 
             case GameButtonType.textImage:
@@ -204,9 +206,12 @@ class _TextImageButton extends StatelessWidget {
 
 class _ImageButton extends StatelessWidget {
   final String image;
+  final EdgeInsets padding;
+
   const _ImageButton({
     super.key,
     required this.image,
+    required this.padding,
   });
 
   @override
@@ -214,9 +219,12 @@ class _ImageButton extends StatelessWidget {
     return SizedBox(
       width: 60.s,
       height: 60.s,
-      child: Image.asset(
-        image,
-        fit: BoxFit.contain,
+      child: Padding(
+        padding: padding,
+        child: Image.asset(
+          image,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
