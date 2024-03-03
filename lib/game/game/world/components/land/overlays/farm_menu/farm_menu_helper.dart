@@ -118,13 +118,13 @@ class FarmMenuHelper {
   /// soil health
   static FarmMenuItemModel _getSoilHealth(Farm farm) {
     return FarmMenuItemModel(
-      text: 'Soil Health',
+      text: 'Health',
       option: FarmMenuOption.soilHealth,
-      bgColor: Colors.amber,
+      bgColor: Colors.white,
       image: GameIcons.soilHealth,
       data: FarmMenuItemData(
         data: '${farm.farmController.soilHealthPercentage.toStringAsFixed(1)} %',
-        image: null,
+        image: "assets/images/icons/soil_health.png",
       ),
     );
   }
@@ -134,8 +134,8 @@ class FarmMenuHelper {
     return const FarmMenuItemModel(
       text: 'Content',
       option: FarmMenuOption.composition,
-      bgColor: Colors.blue,
-      image: GameIcons.composition,
+      bgColor: Colors.white,
+      image: "assets/images/icons/farm_view.png",
     );
   }
 
@@ -145,7 +145,7 @@ class FarmMenuHelper {
       text: 'History',
       option: FarmMenuOption.history,
       bgColor: Colors.white,
-      image: GameIcons.history,
+      image: "assets/images/icons/clock.png",
     );
   }
 

@@ -68,18 +68,21 @@ abstract class BaseTreeCalculator {
     if (age > maturityAge()) return getPotentialPrice(maturityAge());
     final p1 = agePriceData().p1;
     final p2 = agePriceData().p2;
-    final m = (p2.potentialPrice - p1.potentialPrice) / (p2.age - p1.age);
 
+    if (p1.age == p2.age) return p1.potentialPrice;
+    final m = (p2.potentialPrice - p1.potentialPrice) / (p2.age - p1.age);
     final price = p1.potentialPrice + ((age - p1.age) * m).round();
     return price;
   }
 
+  // returns the price of produce from the tree at the given age
   int getRecurringHarvest(int age) {
     if (age < harvestReadyAge()) return 0;
     if (age > maturityAge()) return getRecurringHarvest(maturityAge());
 
     final p1 = recurringHarvestData().p1;
     final p2 = recurringHarvestData().p2;
+    if (p1.age == p2.age) return p1.potentialPrice;
 
     final m = (p2.potentialPrice - p1.potentialPrice) / (p2.age - p1.age);
     final price = p1.potentialPrice + ((age - p1.age) * m).round();
