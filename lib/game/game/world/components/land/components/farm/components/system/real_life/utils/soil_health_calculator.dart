@@ -1,10 +1,11 @@
+import '../../../../../../../../../../utils/game_utils.dart';
 import '../../../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../../../enums/system_type.dart';
 import '../../../../model/content.dart';
 import '../../../../model/fertilizer/fertilizer_type.dart';
 import 'qty_calculator.dart';
 
-class SoilHealthCalculator {
+abstract class SoilHealthCalculator {
   static const tag = 'SoilHealthCalculator';
 
   static double _fertilizerEffect({
@@ -49,22 +50,22 @@ class SoilHealthCalculator {
     }
   }
 
+  /// this method is build on the assumption that, it will be invoked at every tick!
   static double getNewSoilHealth({
-    required double soilHealthPercentage,
-    required Content fertilzerQty,
-    required SystemType systemType,
-    required bool treesPresent,
-    required int cropAgeInDays,
+    required double currentSoilHealth,
+    required Content? currentFertilizerInUse,
+    required SystemType currentSystemType,
+    required bool areTreesPresent,
   }) {
-
     /// TODO: following changes were discussed for chagne
     /// 1. usage of crop age to understand the duration of farming
     /// 2. capping the soil health growth at some percentage (may be 20%)
     /// 3. using a logarithmic function to lessen the growth everytime
 
-    final fertilzerEffect = _fertilizerEffect(fertilizer: fertilzerQty, soilHealthPercentage: soilHealthPercentage);
-    final systemTypeEffectValue = _systemTypeAffect(systemType: systemType, treesPresent: treesPresent);
+    // final fertilzerEffect = _fertilizerEffect(fertilizer: fertilzerQty, soilHealthPercentage: soilHealthPercentage);
+    // final systemTypeEffectValue = _systemTypeAffect(systemType: systemType, treesPresent: treesPresent);
 
-    return soilHealthPercentage + fertilzerEffect + systemTypeEffectValue;
+    // return soilHealthPercentage + fertilzerEffect + systemTypeEffectValue;
+    return currentSoilHealth * GameUtils().getRandomNumberBetween(min: 0.9999996, max: 1.000002);
   }
 }

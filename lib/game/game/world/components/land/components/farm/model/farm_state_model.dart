@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../enum/farm_state.dart';
 import 'farm_content.dart';
-import 'harvest_model.dart';
 
 part 'farm_state_model.g.dart';
 
@@ -57,4 +56,16 @@ class FarmStateModel {
   String toString() {
     return 'FarmStateModel(farmId: $farmId, soilHealthPercentage: $soilHealthPercentage, farmState: $farmState)';
   }
+}
+
+@JsonSerializable(explicitToJson: true, includeIfNull: true)
+class SoilHealthValueUpdateModel {
+  double soilHealthPercentage;
+
+  SoilHealthValueUpdateModel({
+    required this.soilHealthPercentage,
+  });
+
+  factory SoilHealthValueUpdateModel.fromJson(Map<String, dynamic> json) => _$SoilHealthValueUpdateModelFromJson(json);
+  Map<String, dynamic> toJson() => _$SoilHealthValueUpdateModelToJson(this);
 }

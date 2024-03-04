@@ -14,6 +14,7 @@ import '../components/crop/enums/crop_type.dart';
 import '../components/system/enum/growable.dart';
 import '../components/system/real_life/calculators/crops/base_crop.dart';
 import '../components/system/real_life/calculators/trees/base_tree.dart';
+import '../components/system/real_life/utils/soil_health_calculator.dart';
 import '../components/system/ui/layout_distribution.dart';
 import '../components/tree/enums/tree_type.dart';
 import '../components/tree/trees.dart';
@@ -21,19 +22,24 @@ import '../enum/farm_state.dart';
 import '../farm.dart';
 import '../model/farm_content.dart';
 import '../model/farm_state_model.dart';
+import '../model/fertilizer/fertilizer_type.dart';
 import '../model/harvest_model.dart';
+import '../model/soil_health_model.dart';
 import '../model/tree_data.dart';
 import 'harvest/harvest_core_service.dart';
 import 'harvest/harvest_recorder.dart';
+import 'soil_health/soil_health_recorder.dart';
 
 class FarmCoreService {
   static const treeSize = 50.0;
   static const cropSize = 25.0;
+  static const soilHealthRecordIntervalTick = 16;
 
   final String tag;
   final Rectangle farmRect;
   final Farm farm;
   final HarvestRecorder _harvestRecorder;
+  final SoilHealthRecorder _soilHealthRecorder;
   final void Function(List<Component>) addComponents;
   final void Function(Component) addComponent;
   final void Function(List<Component>) removeComponents;
@@ -48,11 +54,13 @@ class FarmCoreService {
     required this.removeComponent,
   })  : tag = 'FarmCoreService[${farm.farmId}]',
         _dateTime = TimeService().currentDateTime,
-        _harvestRecorder = HarvestRecorder(farmId: farm.farmId, gameDatastore: farm.game.gameDatastore);
+        _harvestRecorder = HarvestRecorder(farmId: farm.farmId, gameDatastore: farm.game.gameDatastore),
+        _soilHealthRecorder = SoilHealthRecorder(farmId: farm.farmId, gameDatastore: farm.game.gameDatastore);
 
   final _farmStateModelStreamController = StreamController<FarmStateModel>.broadcast();
 
   bool _initPhase = true;
+  int _soilHealthRecorderCurrentTick = 0;
 
   late FarmStateModel _farmStateModelValue;
 
@@ -63,12 +71,14 @@ class FarmCoreService {
   Crops? _crops;
   BaseTreeCalculator? _baseTreeCalculator;
   BaseCropCalculator? _baseCropCalculator;
+  double? _updatedSoilhealthPercentage;
 
   /// getters
   GameDatastore get gameDatastore => farm.game.gameDatastore;
   FarmState get farmState => _farmStateModelValue.farmState;
   FarmContent? get farmContent => _farmStateModelValue.farmContent;
   List<HarvestModel> get harvestModels => _harvestRecorder.harvestModels;
+  List<SoilHealthModel> get soilHealthModels => _soilHealthRecorder.soilHealthModels;
   double get soilHealthPercentage => _farmStateModelValue.soilHealthPercentage;
   DateTime? get cropSowRequestedAt => _farmStateModelValue.cropSowRequestedAt;
   DateTime? get _treeLastHarvestedOn => _farmStateModelValue.treeLastHarvestedOn;
@@ -97,6 +107,32 @@ class FarmCoreService {
 
   Stream<List<HarvestModelNonAckData>> get harvestNotAckDataStream => _harvestRecorder.harvestNotAckDataStream;
 
+  FarmContent? _getFarmContentAsPerFarmState(FarmStateModel newFarmStateModel) {
+    switch (newFarmStateModel.farmState) {
+      case FarmState.notBought:
+      case FarmState.barren:
+      case FarmState.notFunctioning:
+        return null;
+
+      case FarmState.onlyCropsWaiting:
+      case FarmState.treesAndCropsButCropsWaiting:
+      case FarmState.functioning:
+        return newFarmStateModel.farmContent;
+
+      case FarmState.functioningOnlyTrees:
+        return newFarmStateModel.farmContent?.copyWith(
+          crop: null,
+          fertilizer: null,
+        );
+
+      case FarmState.treesRemovedOnlyCropsWaiting:
+      case FarmState.functioningOnlyCrops:
+        return newFarmStateModel.farmContent?.copyWith(
+          trees: null,
+        );
+    }
+  }
+
   void updateFarmStateModel(FarmStateModel newFarmStateModel) {
     Log.d('$tag: updating _farmStateModel to $newFarmStateModel, _initPhase: $_initPhase');
 
@@ -116,6 +152,8 @@ class FarmCoreService {
         newFarmStateModel.treeLastHarvestedOn = null;
         newFarmStateModel.treesLifeStartedAt = null;
       }
+
+      newFarmStateModel.farmContent = _getFarmContentAsPerFarmState(newFarmStateModel);
     }
 
     /// update farm state model & farm state
@@ -240,8 +278,9 @@ class FarmCoreService {
     /// init phase is true
     _initPhase = true;
 
-    /// fetch data for harvest recorder
+    /// fetch harvest recorder & soil health data
     await _harvestRecorder.init();
+    await _soilHealthRecorder.init();
 
     final farmStateModel = await farm.game.gameDatastore.getFarmState(farm.farmId);
 
@@ -466,11 +505,85 @@ class FarmCoreService {
     trees.updateTreeStage(treeStage);
   }
 
+  bool isSoilHealthAffected() {
+    if (farmContent == null) return false;
+
+    final hasFertilizerEffect = _crops != null;
+    final hasTreeEffect = farmContent?.hasTrees ?? false;
+
+    if (!hasFertilizerEffect && !hasTreeEffect) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /// update the soil health based on the contents of the current farm
+  /// this is done on every tick
+  void _updateSoilHealth() {
+    if (!isSoilHealthAffected()) return;
+
+    final newSoilHealth = SoilHealthCalculator.getNewSoilHealth(
+      currentSoilHealth: soilHealthPercentage,
+
+      /// we don't care about fertilizer used, until there's crop in the farm
+      currentFertilizerInUse: _crops == null ? null : farmContent!.fertilizer,
+      currentSystemType: farmContent!.systemType,
+      areTreesPresent: farmContent!.hasTrees,
+    );
+
+    /// we store the updated soil health locally and DO NOT sync the data immediately
+    /// so whenever a sync happens, the soil health gets updated
+    _updatedSoilhealthPercentage = newSoilHealth;
+  }
+
+  void _recordSoilHealth() async {
+    if (!isSoilHealthAffected()) return;
+
+    final newSoilHealth = _updatedSoilhealthPercentage!;
+    Log.i('$tag: invoked _recordSoilHealth(), recording current soil health of: $newSoilHealth');
+
+    final soilHealthModel = SoilHealthModel(
+      recordedOnDate: _dateTime,
+      currentSoilHealth: newSoilHealth,
+      systemType: farmContent!.systemType,
+
+      /// we don't care about fertilizer used, until there's crop in the farm
+      fertilizerType: _crops == null ? null : farmContent!.fertilizer?.type as FertilizerType?,
+      areTreesPresent: farmContent!.hasTrees,
+    );
+
+    await _soilHealthRecorder.record(soilHealthModel);
+
+    /// this will sync the latest soilHealth value
+    await gameDatastore.updateSoilHealth(
+      farmId: farm.farmId,
+      data: SoilHealthValueUpdateModel(soilHealthPercentage: newSoilHealth),
+    );
+  }
+
+  void _checkToRecordSoilHealthData() {
+    if (_soilHealthRecorderCurrentTick == soilHealthRecordIntervalTick) {
+      /// reset soil health recorder tick value
+      _soilHealthRecorderCurrentTick = 0;
+
+      /// record soil health
+      _recordSoilHealth();
+    } else {
+      _soilHealthRecorderCurrentTick++;
+    }
+  }
+
   void onTimeChange(DateTime dateTime) {
     _dateTime = dateTime;
 
+    /// trees & crops
     _updateCrops();
     _updateTrees();
+
+    /// soil health
+    _updateSoilHealth();
+    _checkToRecordSoilHealthData();
   }
 
   FarmState? _putTreesAndGetFarmState({required Trees trees}) {

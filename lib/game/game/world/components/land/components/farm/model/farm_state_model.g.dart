@@ -51,3 +51,15 @@ const _$FarmStateEnumMap = {
   FarmState.notFunctioning: 'notFunctioning',
   FarmState.barren: 'barren',
 };
+
+SoilHealthValueUpdateModel _$SoilHealthValueUpdateModelFromJson(
+        Map<String, dynamic> json) =>
+    SoilHealthValueUpdateModel(
+      soilHealthPercentage: (json['soilHealthPercentage'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$SoilHealthValueUpdateModelToJson(
+        SoilHealthValueUpdateModel instance) =>
+    <String, dynamic>{
+      'soilHealthPercentage': instance.soilHealthPercentage,
+    };

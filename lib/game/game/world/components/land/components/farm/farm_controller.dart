@@ -15,6 +15,7 @@ import 'enum/farm_state.dart';
 import 'farm.dart';
 import 'model/farm_content.dart';
 import 'model/harvest_model.dart';
+import 'model/soil_health_model.dart';
 import 'model/tree_data.dart';
 import 'service/crop_timer/crop_timer.dart';
 import 'service/farm_core_service.dart';
@@ -49,6 +50,7 @@ class FarmController {
   TreeData get treeData => _farmCoreService.treeData;
 
   List<HarvestModel> get harvestModels => _farmCoreService.harvestModels;
+  List<SoilHealthModel> get soilHealthModels => _farmCoreService.soilHealthModels;
 
   VoidCallback? onFarmTap;
 
