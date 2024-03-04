@@ -15,7 +15,7 @@ abstract interface class DbManagerService {
     Duration syncInterval,
   });
 
-  Future<ServiceAction> set({
+  Future<ServiceAction> update({
     required String id,
     required Map<String, dynamic> data,
   });

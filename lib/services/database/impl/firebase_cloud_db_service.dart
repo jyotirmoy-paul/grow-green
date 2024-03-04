@@ -143,4 +143,21 @@ class _FirebaseCloudDbService implements CloudDbService {
       return (ServiceAction.failure, const <Map<String, dynamic>>[]);
     }
   }
+
+  @override
+  Future<ServiceAction> addToList({
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      final collectionRef = collectionReference.doc(id).collection(listId);
+      await collectionRef.add(data);
+
+      return ServiceAction.success;
+    } catch (e) {
+      Log.e('$tag: addToList(id: $id, listId: $listId) threw exception: $e');
+      return ServiceAction.failure;
+    }
+  }
 }

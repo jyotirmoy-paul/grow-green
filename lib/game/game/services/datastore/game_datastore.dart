@@ -6,6 +6,7 @@ import '../../../../services/database/interface/db_manager_service.dart';
 import '../../../../services/utils/service_action.dart';
 import '../../world/components/land/components/farm/model/farm_state_model.dart';
 import '../../world/components/land/components/farm/model/harvest_model.dart';
+import '../../world/components/land/components/farm/model/soil_health_model.dart';
 import '../game_services/monetary/models/money_model.dart';
 
 class GameDatastore {
@@ -15,6 +16,7 @@ class GameDatastore {
 
   /// Ids used in database
   static const _harvestModelsListId = 'harvestModels';
+  static const _soilHealthModelsListId = 'soilHealthModels';
 
   static const _dateId = 'date';
   static const _dateTime = 'dateTime';
@@ -38,7 +40,7 @@ class GameDatastore {
 
   /// date
   Future<ServiceAction> saveDate(DateTime dateTime) {
-    return _dbManagerService.set(
+    return _dbManagerService.update(
       id: _dateId,
       data: {
         _dateTime: dateTime.toIso8601String(),
@@ -61,7 +63,7 @@ class GameDatastore {
 
   /// money
   Future<ServiceAction> saveMoney(MoneyModel money) async {
-    final status = await _dbManagerService.set(
+    final status = await _dbManagerService.update(
       id: _moneyId,
       data: money.toJson(),
     );
@@ -86,7 +88,7 @@ class GameDatastore {
 
   /// farm
   Future<ServiceAction> saveFarmState(FarmStateModel farmState) async {
-    final status = await _dbManagerService.set(
+    final status = await _dbManagerService.update(
       id: _farmId(farmState.farmId),
       data: farmState.toJson(),
     );
@@ -109,6 +111,16 @@ class GameDatastore {
     return FarmStateModel.fromJson(data);
   }
 
+  Future<List<SoilHealthModel>> getSoilHealthModelFor(String farmId) async {
+    final (serviceAction, data) = await _dbManagerService.getList(id: _farmId(farmId), listId: _soilHealthModelsListId);
+
+    if (serviceAction == ServiceAction.failure) {
+      throw Exception('$tag: getSoilHealthModelFor($farmId) failed');
+    }
+
+  return data.map<SoilHealthModel>((d) => SoilHealthModel.fromJson(d)).toList();
+  }
+
   Future<List<HarvestModel>> getHarvestModelsFor(String farmId) async {
     final (serviceAction, data) = await _dbManagerService.getList(id: _farmId(farmId), listId: _harvestModelsListId);
 
@@ -117,6 +129,18 @@ class GameDatastore {
     }
 
     return data.map<HarvestModel>((d) => HarvestModel.fromJson(d)).toList();
+  }
+
+  Future<ServiceAction> addSoilHealthModelFor(
+    String farmId, {
+    required SoilHealthModel soilHealthModel,
+  }) {
+    return _dbManagerService.addToListAt(
+      soilHealthModel.id,
+      id: _farmId(farmId),
+      listId: _soilHealthModelsListId,
+      data: soilHealthModel.toJson(),
+    );
   }
 
   Future<ServiceAction> addHarvestModelFor(
@@ -149,6 +173,17 @@ class GameDatastore {
     }
 
     return ServiceAction.success;
+  }
+
+  Future<ServiceAction> updateSoilHealth({
+    required String farmId,
+    required SoilHealthValueUpdateModel data,
+  }) async {
+    final status = await _dbManagerService.update(id: _farmId(farmId), data: data.toJson());
+    if (status == ServiceAction.failure) return status;
+
+    /// updating soil health is an important action, we must immediately sync
+    return _dbManagerService.sync();
   }
 
   /// TODO: Other db requirements!

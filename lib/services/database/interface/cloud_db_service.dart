@@ -28,4 +28,10 @@ abstract interface class CloudDbService {
     required String id,
     required String listId,
   });
+
+  Future<ServiceAction> addToList({
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  });
 }

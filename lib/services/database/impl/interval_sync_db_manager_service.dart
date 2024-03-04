@@ -96,7 +96,7 @@ class _IntervalSyncDbManagerService implements DbManagerService {
   }
 
   @override
-  Future<ServiceAction> set({required String id, required Map<String, dynamic> data}) async {
+  Future<ServiceAction> update({required String id, required Map<String, dynamic> data}) async {
     return lock.synchronized<ServiceAction>(() {
       if (id != 'date') {
         /// a temp hack
