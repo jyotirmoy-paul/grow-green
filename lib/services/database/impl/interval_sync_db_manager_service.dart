@@ -103,8 +103,7 @@ class _IntervalSyncDbManagerService implements DbManagerService {
         Log.d('$tag: set(id: $id, data: $data) is invoked');
       }
 
-      _cache.update(id: id, data: data);
-      return ServiceAction.success;
+      return _cache.update(id: id, data: data);
     });
   }
 
@@ -113,8 +112,50 @@ class _IntervalSyncDbManagerService implements DbManagerService {
     return lock.synchronized(() {
       Log.d('$tag: delete(id: $id) is invoked');
 
-      _cache.delete(id: id);
-      return ServiceAction.success;
+      return _cache.delete(id: id);
+    });
+  }
+
+  @override
+  Future<ServiceAction> addToListAt(
+    String itemId, {
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  }) {
+    return lock.synchronized(() {
+      Log.d('$tag: addToListAt(itemId: $itemId, id: $id, listId: $listId) is invoked');
+
+      return _cache.setAtList(
+        itemId,
+        id: id,
+        listId: listId,
+        data: data,
+      );
+    });
+  }
+
+  @override
+  Future<(ServiceAction, List<Map<String, dynamic>>)> getList({required String id, required String listId}) {
+    return cloudDbService.getList(id: id, listId: listId);
+  }
+
+  @override
+  Future<ServiceAction> updateListItemAt(
+    String itemId, {
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  }) {
+    return lock.synchronized(() {
+      Log.d('$tag: updateListItemAt(itemId: $itemId, id: $id, listId: $listId) is invoked');
+
+      return _cache.updateAtList(
+        itemId,
+        id: id,
+        listId: listId,
+        data: data,
+      );
     });
   }
 }

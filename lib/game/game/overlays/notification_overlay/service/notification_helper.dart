@@ -54,7 +54,16 @@ abstract class NotificationHelper {
     );
   }
 
-  /// others
+  /// success
+  static void farmPurchaseSuccess() {
+    NotificationService().notify(
+      NotificationModel(
+        text: 'Woohoo! Bought the farm',
+        textColor: Colors.green,
+      ),
+    );
+  }
+
   static void treesSold() {
     NotificationService().notify(
       NotificationModel(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../../routes/routes.dart';
 import '../../../../../../../services/log/log.dart';
+import '../../../../../../../utils/extensions/date_time_extensions.dart';
 import '../../../../../../../utils/utils.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../utils/game_icons.dart';
@@ -207,7 +208,7 @@ class FarmMenuHelper {
     required Farm farm,
   }) async {
     /// remove non visible elements
-    farm.game.overlays.remove(FarmMenu.overlayName);
+    farm.game.gameController.overlayData.farmNotifier.farm = null;
     farm.farmController.isFarmSelected = false;
 
     final response = await Utils.showNonAnimatedDialog(
@@ -256,7 +257,8 @@ class FarmMenuHelper {
       },
     );
 
-    if (response == DialogEndType.close) {
+    if (response == DialogEndType.close || response == null) {
+      farm.game.gameController.overlayData.farmNotifier.farm = farm;
       farm.game.overlays.add(FarmMenu.overlayName);
       farm.farmController.isFarmSelected = true;
     }

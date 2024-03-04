@@ -52,4 +52,46 @@ class _FirebaseDbWriteBatch implements DbBatch {
 
     return ServiceAction.failure;
   }
+
+  @override
+  ServiceAction setAtList(
+    String itemId, {
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  }) {
+    try {
+      writeBatch.set(
+        collectionReference.doc(id).collection(listId).doc(itemId),
+        data,
+      );
+
+      return ServiceAction.success;
+    } catch (e) {
+      Log.d('$tag: setAtList(itemId: $itemId, id: $id, listId: $listId) thew exception: $e');
+    }
+
+    return ServiceAction.failure;
+  }
+
+  @override
+  ServiceAction updateAtList(
+    String itemId, {
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  }) {
+    try {
+      writeBatch.update(
+        collectionReference.doc(id).collection(listId).doc(itemId),
+        data,
+      );
+
+      return ServiceAction.success;
+    } catch (e) {
+      Log.d('$tag: updateAtList(itemId: $itemId, id: $id, listId: $listId) thew exception: $e');
+    }
+
+    return ServiceAction.failure;
+  }
 }

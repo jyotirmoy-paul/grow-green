@@ -24,6 +24,7 @@ import '../model/farm_state_model.dart';
 import '../model/harvest_model.dart';
 import '../model/tree_data.dart';
 import 'harvest/harvest_core_service.dart';
+import 'harvest/harvest_recorder.dart';
 
 class FarmCoreService {
   static const treeSize = 50.0;
@@ -32,6 +33,7 @@ class FarmCoreService {
   final String tag;
   final Rectangle farmRect;
   final Farm farm;
+  final HarvestRecorder _harvestRecorder;
   final void Function(List<Component>) addComponents;
   final void Function(Component) addComponent;
   final void Function(List<Component>) removeComponents;
@@ -45,7 +47,8 @@ class FarmCoreService {
     required this.removeComponents,
     required this.removeComponent,
   })  : tag = 'FarmCoreService[${farm.farmId}]',
-        _dateTime = TimeService().currentDateTime;
+        _dateTime = TimeService().currentDateTime,
+        _harvestRecorder = HarvestRecorder(farmId: farm.farmId, gameDatastore: farm.game.gameDatastore);
 
   final _farmStateModelStreamController = StreamController<FarmStateModel>.broadcast();
 
@@ -91,9 +94,7 @@ class FarmCoreService {
         (e) => e.farmState,
       );
 
-  Stream<List<HarvestModel>> get harvestModelsStream => _farmStateModelStreamController.stream.map<List<HarvestModel>>(
-        (e) => List.from(e.harvestModels ?? const []),
-      );
+  Stream<List<HarvestModelNonAckData>> get harvestNotAckDataStream => _harvestRecorder.harvestNotAckDataStream;
 
   void updateFarmStateModel(FarmStateModel newFarmStateModel) {
     Log.d('$tag: updating _farmStateModel to $newFarmStateModel, _initPhase: $_initPhase');
@@ -234,6 +235,9 @@ class FarmCoreService {
     /// init phase is true
     _initPhase = true;
 
+    /// fetch data for harvest recorder
+    await _harvestRecorder.init();
+
     final farmStateModel = await farm.game.gameDatastore.getFarmState(farm.farmId);
 
     /// write to server
@@ -314,7 +318,7 @@ class FarmCoreService {
     );
 
     final harvestModel = treeHarvestService.sell();
-    farmStateModel.addToHarvestModel(harvestModel);
+    _harvestRecorder.recordHarvest(harvestModel);
 
     /// write to server
     updateFarmStateModel(farmStateModel);
@@ -360,7 +364,7 @@ class FarmCoreService {
     );
 
     final harvestModel = cropHarvestService.harvest();
-    farmStateModel.addToHarvestModel(harvestModel);
+    _harvestRecorder.recordHarvest(harvestModel);
 
     /// remove crops reference
     _crops = null;
@@ -420,7 +424,7 @@ class FarmCoreService {
     );
 
     final harvestModel = treeHarvestService.harvest();
-    farmStateModel.addToHarvestModel(harvestModel);
+    _harvestRecorder.recordHarvest(harvestModel);
 
     /// write to server
     updateFarmStateModel(farmStateModel);
@@ -642,27 +646,10 @@ class FarmCoreService {
     updateFarmStateModel(farmStateModel);
   }
 
-  void markAllHarvestsAck() {
-    Log.d('markAllHarvestsAck() invoked, to mark existing harvest models as ack');
-
-    final farmStateModel = _farmStateModelValue;
-    final models = farmStateModel.harvestModels;
-    if (models == null || models.isEmpty) {
-      throw Exception('$tag: No harvest models available to mark them ack');
-    }
-
-    final newHarvestModels = <HarvestModel>[];
-
-    for (final m in models) {
-      if (m.isAck()) {
-        newHarvestModels.add(m);
-      } else {
-        newHarvestModels.add(m.ackHarvestState());
-      }
-    }
-
-    farmStateModel.harvestModels = newHarvestModels;
-
-    updateFarmStateModel(farmStateModel);
+  void markHarvestsAckFor({
+    required List<String> ids,
+  }) {
+    Log.d('markAllHarvestsAck($ids) invoked, to mark given harvest models as ack');
+    _harvestRecorder.updateAckStatusFor(ids);
   }
 }

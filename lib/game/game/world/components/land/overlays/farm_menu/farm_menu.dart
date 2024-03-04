@@ -48,6 +48,8 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
   String _titleText = '';
 
   Future<void> _doAnimation({bool reverse = false}) async {
+    if (!mounted) return;
+
     final futures = <Future>[];
 
     /// child animations

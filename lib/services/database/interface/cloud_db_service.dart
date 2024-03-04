@@ -23,4 +23,9 @@ abstract interface class CloudDbService {
   Future<ServiceAction> delete({
     required String id,
   });
+
+  Future<(ServiceAction, List<Map<String, dynamic>>)> getList({
+    required String id,
+    required String listId,
+  });
 }

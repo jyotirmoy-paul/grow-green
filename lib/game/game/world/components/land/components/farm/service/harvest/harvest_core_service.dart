@@ -52,7 +52,7 @@ class CropHarvestCoreService implements HarvestCoreService {
     return HarvestModel(
       harvestType: HarvestType.oneTime,
       yield: 1.0, // FIXME probably need Qty calculator
-      money: MoneyModel(rupees: 10000), // FIXME probably need Qty calculator
+      revenue: MoneyModel(rupees: 10000), // FIXME probably need Qty calculator
       growable: cropType,
       dateOfHarvest: currentDateTime,
       ageInDaysAtHarvest: cropAgeInDays,
@@ -79,7 +79,7 @@ class TreeHarvestCoreService implements HarvestCoreService {
     return HarvestModel(
       harvestType: HarvestType.recurring,
       yield: 1.0,
-      money: MoneyModel(rupees: treeRecurringValue), // FIXME: probably no of trees needs to be considered
+      revenue: MoneyModel(rupees: treeRecurringValue), // FIXME: probably no of trees needs to be considered
       growable: treeType,
       dateOfHarvest: currentDateTime,
       ageInDaysAtHarvest: treeAgeInDays,
@@ -92,7 +92,7 @@ class TreeHarvestCoreService implements HarvestCoreService {
     return HarvestModel(
       harvestType: HarvestType.oneTime,
       yield: 1.0,
-      money: MoneyModel(rupees: treePotentialPrice), // FIXME: probably no of trees needs to be considered
+      revenue: MoneyModel(rupees: treePotentialPrice), // FIXME: probably no of trees needs to be considered
       growable: treeType,
       dateOfHarvest: currentDateTime,
       ageInDaysAtHarvest: treeAgeInDays,

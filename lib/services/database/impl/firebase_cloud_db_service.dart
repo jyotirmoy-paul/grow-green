@@ -127,4 +127,20 @@ class _FirebaseCloudDbService implements CloudDbService {
 
     return ServiceAction.failure;
   }
+
+  @override
+  Future<(ServiceAction, List<Map<String, dynamic>>)> getList({required String id, required String listId}) async {
+    try {
+      final querySnapshot = await collectionReference.doc(id).collection(listId).get(
+            const GetOptions(source: Source.server),
+          );
+
+      final data = querySnapshot.docs.map<Map<String, dynamic>>((doc) => doc.data()).toList();
+
+      return (ServiceAction.success, data);
+    } catch (e) {
+      Log.e('$tag: getList(id: $id, listId: $listId) threw exception: $e');
+      return (ServiceAction.failure, const <Map<String, dynamic>>[]);
+    }
+  }
 }

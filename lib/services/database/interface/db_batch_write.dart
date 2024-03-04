@@ -12,4 +12,18 @@ abstract interface class DbBatch {
   ServiceAction delete({
     required String id,
   });
+
+  ServiceAction setAtList(
+    String itemId, {
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  });
+
+  ServiceAction updateAtList(
+    String itemId, {
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  });
 }

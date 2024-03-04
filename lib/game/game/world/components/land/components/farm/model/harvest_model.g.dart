@@ -7,9 +7,10 @@ part of 'harvest_model.dart';
 // **************************************************************************
 
 HarvestModel _$HarvestModelFromJson(Map<String, dynamic> json) => HarvestModel(
+      id: json['id'] as String?,
       harvestType: $enumDecode(_$HarvestTypeEnumMap, json['harvestType']),
       yield: (json['yield'] as num).toDouble(),
-      money: MoneyModel.fromJson(json['money'] as Map<String, dynamic>),
+      revenue: MoneyModel.fromJson(json['revenue'] as Map<String, dynamic>),
       growable: const GrowableConverter().fromJson(json['growable'] as String),
       dateOfHarvest: DateTime.parse(json['dateOfHarvest'] as String),
       ageInDaysAtHarvest: json['ageInDaysAtHarvest'] as int,
@@ -20,12 +21,13 @@ HarvestModel _$HarvestModelFromJson(Map<String, dynamic> json) => HarvestModel(
 
 Map<String, dynamic> _$HarvestModelToJson(HarvestModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'harvestType': _$HarvestTypeEnumMap[instance.harvestType]!,
       'growable': const GrowableConverter().toJson(instance.growable),
       'dateOfHarvest': instance.dateOfHarvest.toIso8601String(),
       'ageInDaysAtHarvest': instance.ageInDaysAtHarvest,
       'yield': instance.yield,
-      'money': instance.money.toJson(),
+      'revenue': instance.revenue.toJson(),
       'harvestState': _$HarvestStateEnumMap[instance.harvestState]!,
     };
 
@@ -38,3 +40,9 @@ const _$HarvestStateEnumMap = {
   HarvestState.ack: 'ack',
   HarvestState.waitingAck: 'waitingAck',
 };
+
+Map<String, dynamic> _$HarvestStateUpdateModelToJson(
+        HarvestStateUpdateModel instance) =>
+    <String, dynamic>{
+      'harvestState': _$HarvestStateEnumMap[instance.harvestState]!,
+    };

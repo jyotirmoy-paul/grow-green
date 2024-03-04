@@ -131,6 +131,7 @@ class FarmController {
 
     if (success) {
       _farmCoreService.purchaseSuccess();
+      NotificationHelper.farmPurchaseSuccess();
     } else {
       NotificationHelper.farmPurchaseFailed();
     }
