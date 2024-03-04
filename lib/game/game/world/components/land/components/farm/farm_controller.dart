@@ -14,6 +14,7 @@ import 'components/hover_board/hover_board.dart';
 import 'enum/farm_state.dart';
 import 'farm.dart';
 import 'model/farm_content.dart';
+import 'model/harvest_model.dart';
 import 'model/tree_data.dart';
 import 'service/crop_timer/crop_timer.dart';
 import 'service/farm_core_service.dart';
@@ -46,6 +47,8 @@ class FarmController {
   FarmContent? get farmContent => _farmCoreService.farmContent;
   double get soilHealthPercentage => _farmCoreService.soilHealthPercentage;
   TreeData get treeData => _farmCoreService.treeData;
+
+  List<HarvestModel> get harvestModels => _farmCoreService.harvestModels;
 
   VoidCallback? onFarmTap;
 
@@ -117,6 +120,11 @@ class FarmController {
     /// prepare farm service
     /// a call to `initialize` returns back initial components that needs to be shown
     await _farmCoreService.initialize();
+
+    /// once hoverboard is loaded, let's notify the harvest model data
+    hoverBoard.loaded.then((_) {
+      _farmCoreService.notifyHarvestModelData();
+    });
 
     return [
       hoverBoard,
