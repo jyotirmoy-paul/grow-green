@@ -33,7 +33,10 @@ class HarvestReflector {
     _initiateBootupSequence();
   }
 
-  void _onHoverBoardTap(MoneyModel totalMoney) {
+  void _onHoverBoardTap({
+    required MoneyModel totalMoney,
+    required List<String> ids,
+  }) {
     Log.d('$tag: hoverboard was tap, moneyContents: $totalMoney');
 
     /// add the total money to user's balance
@@ -43,22 +46,21 @@ class HarvestReflector {
     ));
 
     /// notify farm core service to update harvest models to ack state
-    farmCoreService.markAllHarvestsAck();
+    farmCoreService.markHarvestsAckFor(ids: ids);
   }
 
-  void _onHarvestModelsChange(List<HarvestModel> harvestModels) {
-    MoneyModel totalMoney = MoneyModel.zero();
-    for (final hm in harvestModels) {
-      /// collect only the money whose acknowledgement is not done by the user
-      if (hm.harvestState == HarvestState.waitingAck) {
-        totalMoney += hm.money;
-      }
+  void _onHarvestModelsChange(List<HarvestModelNonAckData> nonAckHarvestModel) {
+    if (nonAckHarvestModel.isEmpty) {
+      Log.d('$tag: nothing to collect in the farm');
+      return;
     }
 
-    if (totalMoney.isZero()) {
-      Log.d('$tag: no money to collect in the farm');
+    MoneyModel totalMoney = MoneyModel.zero();
+    List<String> nonAckHarvestModelIds = [];
 
-      return;
+    for (final hm in nonAckHarvestModel) {
+      totalMoney += hm.money;
+      nonAckHarvestModelIds.add(hm.id);
     }
 
     Log.d('$tag: total money accumulated in the farm: ${totalMoney.formattedRupees}');
@@ -74,16 +76,16 @@ class HarvestReflector {
         animationPrefix: 'animations/coins',
       ),
       onTap: () {
-        _onHoverBoardTap(totalMoney);
+        _onHoverBoardTap(totalMoney: totalMoney, ids: nonAckHarvestModelIds);
       },
     );
   }
 
   void _initiateBootupSequence() {
-    _harvestModelsSubscription = farmCoreService.harvestModelsStream.listen(
-      (harvestModels) {
-        Log.i('$tag: received ${harvestModels.length} harvest models');
-        _onHarvestModelsChange(harvestModels);
+    _harvestModelsSubscription = farmCoreService.harvestNotAckDataStream.listen(
+      (nonAckHarvestModel) {
+        Log.i('$tag: received ${nonAckHarvestModel.length} harvest models which are not ack-ed');
+        _onHarvestModelsChange(nonAckHarvestModel);
       },
     );
   }

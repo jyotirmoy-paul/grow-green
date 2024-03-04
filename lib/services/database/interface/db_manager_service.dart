@@ -24,6 +24,25 @@ abstract interface class DbManagerService {
     required String id,
   });
 
+  Future<(ServiceAction, List<Map<String, dynamic>>)> getList({
+    required String id,
+    required String listId,
+  });
+
+  Future<ServiceAction> addToListAt(
+    String itemId, {
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  });
+
+  Future<ServiceAction> updateListItemAt(
+    String itemId, {
+    required String id,
+    required String listId,
+    required Map<String, dynamic> data,
+  });
+
   Future<ServiceAction> delete({
     required String id,
   });

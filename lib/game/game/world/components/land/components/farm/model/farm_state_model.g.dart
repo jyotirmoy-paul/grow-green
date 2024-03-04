@@ -26,9 +26,6 @@ FarmStateModel _$FarmStateModelFromJson(Map<String, dynamic> json) =>
       cropsLifeStartedAt: json['cropsLifeStartedAt'] == null
           ? null
           : DateTime.parse(json['cropsLifeStartedAt'] as String),
-      harvestModels: (json['harvestModels'] as List<dynamic>?)
-          ?.map((e) => HarvestModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
     );
 
 Map<String, dynamic> _$FarmStateModelToJson(FarmStateModel instance) =>
@@ -41,7 +38,6 @@ Map<String, dynamic> _$FarmStateModelToJson(FarmStateModel instance) =>
       'treesLifeStartedAt': instance.treesLifeStartedAt?.toIso8601String(),
       'cropSowRequestedAt': instance.cropSowRequestedAt?.toIso8601String(),
       'cropsLifeStartedAt': instance.cropsLifeStartedAt?.toIso8601String(),
-      'harvestModels': instance.harvestModels?.map((e) => e.toJson()).toList(),
     };
 
 const _$FarmStateEnumMap = {

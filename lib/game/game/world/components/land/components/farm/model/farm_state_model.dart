@@ -16,7 +16,6 @@ class FarmStateModel {
   DateTime? treesLifeStartedAt;
   DateTime? cropSowRequestedAt;
   DateTime? cropsLifeStartedAt;
-  List<HarvestModel>? harvestModels;
 
   FarmStateModel({
     required this.farmId,
@@ -27,13 +26,7 @@ class FarmStateModel {
     this.treesLifeStartedAt,
     this.cropSowRequestedAt,
     this.cropsLifeStartedAt,
-    this.harvestModels,
   });
-
-  void addToHarvestModel(HarvestModel harvestModel) {
-    harvestModels ??= [];
-    harvestModels!.add(harvestModel);
-  }
 
   FarmStateModel copyWith({
     String? farmId,
@@ -44,7 +37,6 @@ class FarmStateModel {
     DateTime? treesLifeStartedAt,
     DateTime? cropSowRequestedAt,
     DateTime? cropsLifeStartedAt,
-    List<HarvestModel>? harvestModels,
   }) {
     return FarmStateModel(
       farmId: farmId ?? this.farmId,
@@ -55,7 +47,6 @@ class FarmStateModel {
       treesLifeStartedAt: treesLifeStartedAt ?? this.treesLifeStartedAt,
       cropsLifeStartedAt: cropsLifeStartedAt ?? this.cropsLifeStartedAt,
       cropSowRequestedAt: cropSowRequestedAt ?? this.cropSowRequestedAt,
-      harvestModels: harvestModels ?? this.harvestModels,
     );
   }
 
