@@ -17,7 +17,7 @@ class HarvestRecorder {
 
   Stream<List<HarvestModelNonAckData>> get harvestNotAckDataStream => _streamController.stream;
   List<HarvestModel> get harvestModels {
-    return List<HarvestModel>.from(_harvestModels.values)..sort((a, b) => a.dateOfHarvest.compareTo(b.dateOfHarvest));
+    return List<HarvestModel>.from(_harvestModels.values)..sort((a, b) => b.dateOfHarvest.compareTo(a.dateOfHarvest));
   }
 
   void _notify() {
@@ -32,14 +32,16 @@ class HarvestRecorder {
     _streamController.add(data);
   }
 
+  void notiy() {
+    _notify();
+  }
+
   /// fetches the initial harvest data
   Future<void> init() async {
     final harvestModels = await gameDatastore.getHarvestModelsFor(farmId);
     for (final hm in harvestModels) {
       _harvestModels[hm.id] = hm;
     }
-
-    _notify();
   }
 
   ///  records harvest model

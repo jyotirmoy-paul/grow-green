@@ -68,6 +68,7 @@ class FarmCoreService {
   GameDatastore get gameDatastore => farm.game.gameDatastore;
   FarmState get farmState => _farmStateModelValue.farmState;
   FarmContent? get farmContent => _farmStateModelValue.farmContent;
+  List<HarvestModel> get harvestModels => _harvestRecorder.harvestModels;
   double get soilHealthPercentage => _farmStateModelValue.soilHealthPercentage;
   DateTime? get cropSowRequestedAt => _farmStateModelValue.cropSowRequestedAt;
   DateTime? get _treeLastHarvestedOn => _farmStateModelValue.treeLastHarvestedOn;
@@ -228,6 +229,10 @@ class FarmCoreService {
       case FarmState.notFunctioning:
         return;
     }
+  }
+
+  void notifyHarvestModelData() {
+    _harvestRecorder.notiy();
   }
 
   /// read farm state from db
