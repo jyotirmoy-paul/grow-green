@@ -1,4 +1,6 @@
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
@@ -6,20 +8,20 @@ import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/game_button.dart';
 import '../../../../../../../../widgets/shadowed_container.dart';
 import '../../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../../utils/game_icons.dart';
 import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../enums/farm_system_type.dart';
+import '../../../../../../enums/system_type.dart';
 import '../../../../../../models/farm_system.dart';
-import '../../../components/farm/asset/crop_asset.dart';
-import '../../../components/farm/asset/tree_asset.dart';
+import '../../../components/farm/asset/layout_asset.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
-import '../../../components/farm/components/tree/enums/tree_stage.dart';
 import '../../../components/farm/farm.dart';
 import '../../farm_menu/farm_menu_helper.dart';
-import 'menu_item_skeleton.dart';
+import '../choose_components_dialog.dart';
+import '../infomatics/layout_info.dart';
+import 'menu_item_flip_skeleton.dart';
 
 /// TODO: Language
-class SystemItemWidget extends StatelessWidget {
+class SystemItemWidget extends StatefulWidget {
   final Farm farm;
   final FarmSystem farmSystem;
   final Color bgColor;
@@ -30,15 +32,168 @@ class SystemItemWidget extends StatelessWidget {
     required this.farm,
     required this.farmSystem,
     this.bgColor = Colors.green,
-    this.secondaryColor = Colors.blueAccent,
+    this.secondaryColor = Colors.white38,
   });
 
+  @override
+  State<SystemItemWidget> createState() => _SystemItemWidgetState();
+}
+
+class _SystemItemWidgetState extends State<SystemItemWidget> {
+  late final FlipCardController flipCardController;
+
+  @override
+  void initState() {
+    super.initState();
+    flipCardController = FlipCardController();
+  }
+
+  void _onInfoTap() {
+    flipCardController.toggleCard();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuItemFlipSkeleton(
+      width: 300.s,
+      bgColor: widget.bgColor,
+      flipCardController: flipCardController,
+      header: _header,
+      backHeader: _header,
+      body: _body,
+      backBody: _backBody,
+      footer: _footer,
+      backFooter: _footer,
+    );
+  }
+
+  Widget get _header {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.s),
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          /// price
+          Align(
+            alignment: Alignment.centerLeft,
+            child: StylizedText(
+              text: Text(
+                _getTitle(),
+                style: TextStyles.s26,
+              ),
+            ),
+          ),
+
+          /// info button to learn more
+          Align(
+            alignment: Alignment.centerRight,
+            child: GameButton.text(
+              text: "i",
+              size: Size.square(40.s),
+              onTap: _onInfoTap,
+              color: Colors.blue.shade800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get _body {
+    return Padding(
+      padding: EdgeInsets.all(20.0.s),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(child: systemWidget),
+          Gap(8.s),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: StylizedText(text: Text("You need", style: TextStyles.s23)),
+          ),
+          Center(
+            child: Column(
+              children: [
+                ShadowedContainer(
+                  padding: EdgeInsets.symmetric(horizontal: 6.s, vertical: 12.s),
+                  shadowOffset: Offset(6.s, 6.s),
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(12.s),
+                    border: Border.all(
+                      color: Utils.lightenColor(Colors.white24),
+                      width: 2.s,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _getComponents,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<SizedBox> get _getComponents =>
+      buildComponents().map((e) => SizedBox.square(dimension: 120.s, child: e)).toList();
+
+  Column get _backBody {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Flexible(child: systemWidget),
+        Expanded(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.s),
+              child: StylizedText(
+                text: Text(
+                  LayoutInfo.fromSystemType(widget.farmSystem).info,
+                  style: TextStyles.s18,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget get _footer {
+    return MenuFooterTextRow(
+      leftText: "Min Cost",
+      rightText: '₹ ${FarmMenuHelper.getPriceForFarmSystem(
+        farmSystem: widget.farmSystem,
+        soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
+      ).formattedValue}',
+    );
+  }
+
+  Widget systemImage(SystemType systemType) {
+    return BackgroundGlow(
+      dimension: 34.s,
+      child: Image.asset(
+        LayoutAsset.representativeOf(systemType),
+        width: 200.s,
+        height: 200.s,
+      ),
+    );
+  }
+
   String _getTitle() {
-    if (farmSystem.farmSystemType == FarmSystemType.monoculture) {
+    if (widget.farmSystem.farmSystemType == FarmSystemType.monoculture) {
       return 'Monoculture';
     }
 
-    final agroType = (farmSystem as AgroforestrySystem).agroforestryType;
+    final agroType = (widget.farmSystem as AgroforestrySystem).agroforestryType;
 
     switch (agroType) {
       case AgroforestryType.alley:
@@ -54,14 +209,14 @@ class SystemItemWidget extends StatelessWidget {
 
   List<Widget> buildComponentsFromAgroforestry(AgroforestrySystem system) {
     /// trees
-    final treeType = system.trees.first;
     final treeQty = QtyCalculator.getNumOfSaplingsFor(system.agroforestryType);
 
     final treesData = _SystemComponent(
       key: ValueKey('trees-${system.agroforestryType}'),
-      text: '${treeQty.value} ${treeQty.scale.name} of ${treeType.name}',
-      componentImage: TreeAsset.raw(treeType).at(TreeStage.elder),
-      bgColor: secondaryColor,
+      footer: treeQty.readableFormat,
+      componentImage: "assets/images/icons/sapling.png",
+      bgColor: widget.secondaryColor,
+      header: "Saplings",
     );
 
     /// crops
@@ -73,24 +228,26 @@ class SystemItemWidget extends StatelessWidget {
 
     final cropsData = _SystemComponent(
       key: ValueKey('crops-${system.agroforestryType}'),
-      text: '${cropQty.value} ${cropQty.scale.name} of ${cropType.name}',
-      componentImage: CropAsset.representativeOf(cropType),
-      bgColor: secondaryColor,
-    );
-
-    /// system
-    final systemData = _SystemComponent(
-      key: ValueKey('system-${system.agroforestryType}'),
-      text: system.agroforestryType.name,
-      componentImage: treesData.componentImage,
-      bgColor: secondaryColor,
+      footer: cropQty.readableFormat,
+      componentImage: "assets/images/icons/seeds.png",
+      bgColor: widget.secondaryColor,
+      header: "Crop Seeds",
     );
 
     return [
       treesData,
       cropsData,
-      systemData,
     ];
+  }
+
+  Widget get systemWidget {
+    if (widget.farmSystem is AgroforestrySystem) {
+      return systemImage((widget.farmSystem as AgroforestrySystem).agroforestryType);
+    } else if (widget.farmSystem is MonocultureSystem) {
+      return systemImage((widget.farmSystem as MonocultureSystem).farmSystemType);
+    }
+
+    return const SizedBox();
   }
 
   List<Widget> buildComponentsFromMonoculture(MonocultureSystem system) {
@@ -102,23 +259,24 @@ class SystemItemWidget extends StatelessWidget {
     );
 
     final cropsData = _SystemComponent(
-      text: '${cropQty.value} ${cropQty.scale.name} of ${cropType.name}',
-      componentImage: CropAsset.representativeOf(cropType),
-      bgColor: secondaryColor,
+      footer: cropQty.readableFormat,
+      componentImage: "assets/images/icons/seeds.png",
+      bgColor: widget.secondaryColor,
+      header: "Crop Seeds",
     );
 
     /// fertilizer
     final fertilizerQty = QtyCalculator.getFertilizerQtyRequiredFor(
       systemType: system.farmSystemType,
-      soilHealthPercentage: farm.farmController.soilHealthPercentage,
+      soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
       cropType: cropType,
     );
 
-    final fertilizerType = system.fertilizer;
     final fertilierData = _SystemComponent(
-      text: '${fertilizerQty.value} ${fertilizerQty.scale.name} of ${fertilizerType.name}',
-      componentImage: cropsData.componentImage,
-      bgColor: secondaryColor,
+      footer: fertilizerQty.readableFormat,
+      componentImage: "assets/images/icons/fertilizer.png",
+      bgColor: widget.secondaryColor,
+      header: "Fertilizer",
     );
 
     return [
@@ -128,7 +286,7 @@ class SystemItemWidget extends StatelessWidget {
   }
 
   List<Widget> buildComponents() {
-    final system = farmSystem;
+    final system = widget.farmSystem;
 
     if (system is AgroforestrySystem) {
       return buildComponentsFromAgroforestry(system);
@@ -138,64 +296,42 @@ class SystemItemWidget extends StatelessWidget {
 
     return const [];
   }
+}
 
-  void _onInfoTap() {
-    /// TODO: handle on info tap
-  }
+class MenuFooterTextRow extends StatelessWidget {
+  final String leftText;
+  final String rightText;
+  const MenuFooterTextRow({
+    super.key,
+    required this.leftText,
+    required this.rightText,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MenuItemSkeleton(
-      width: 380.s,
-      bgColor: bgColor,
-      header: Center(
-        child: StylizedText(
-          text: Text(
-            _getTitle(),
-            textAlign: TextAlign.center,
-            style: TextStyles.s35,
-          ),
-        ),
-      ),
-      body: Wrap(
-        alignment: WrapAlignment.center,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        runAlignment: WrapAlignment.center,
-        spacing: 16.s,
-        runSpacing: 16.s,
-        children: buildComponents()
-            .map(
-              (e) => SizedBox.square(
-                dimension: 160.s,
-                child: e,
-              ),
-            )
-            .toList(),
-      ),
-      footer: Stack(
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.s),
+      child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
           /// price
-          StylizedText(
-            text: Text(
-              '₹ ${FarmMenuHelper.getPriceForFarmSystem(
-                farmSystem: farmSystem,
-                soilHealthPercentage: farm.farmController.soilHealthPercentage,
-              ).formattedValue}',
-              style: TextStyles.s32,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: StylizedText(
+              text: Text(
+                leftText,
+                style: TextStyles.s28,
+              ),
             ),
           ),
 
-          /// info button to learn more
           Align(
             alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.s),
-              child: GameButton.image(
-                image: GameIcons.info,
-                bgColor: secondaryColor,
-                onTap: _onInfoTap,
+            child: StylizedText(
+              text: Text(
+                rightText,
+                style: TextStyles.s28,
               ),
             ),
           ),
@@ -205,46 +341,88 @@ class SystemItemWidget extends StatelessWidget {
   }
 }
 
+class BackgroundGlow extends StatelessWidget {
+  final Color glowColor = Colors.white38;
+  final Widget child;
+  final double? dimension;
+  const BackgroundGlow({
+    super.key,
+    required this.child,
+    Color glowColor = Colors.black,
+    this.dimension,
+  });
+
+  double get _dimension => dimension ?? 20.s;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: _dimension,
+          height: _dimension,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: glowColor,
+                blurRadius: _dimension,
+                spreadRadius: _dimension,
+              ),
+            ],
+          ),
+        ),
+        child,
+      ],
+    );
+  }
+}
+
 class _SystemComponent extends StatelessWidget {
   final String componentImage;
-  final String text;
+  final String header;
+  final String footer;
   final Color bgColor;
 
   const _SystemComponent({
     super.key,
-    required this.text,
+    required this.header,
+    required this.footer,
     required this.componentImage,
     required this.bgColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ShadowedContainer(
-      padding: EdgeInsets.all(12.s),
-      shadowOffset: Offset(6.s, 6.s),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12.s),
-        border: Border.all(
-          color: Utils.lightenColor(bgColor),
-          width: 2.s,
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: Image.asset(componentImage),
-          ),
-          StylizedText(
-            text: Text(
-              text,
-              style: TextStyles.s26,
-              textAlign: TextAlign.center,
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: Center(
+            child: MenuImage(
+              imageAssetPath: componentImage,
+              dimension: 100.s,
+              shape: BoxShape.circle,
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+        Gap(10.s),
+        StylizedText(
+          text: Text(
+            header,
+            style: TextStyles.s18,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        StylizedText(
+          text: Text(
+            footer,
+            style: TextStyles.s18,
+            textAlign: TextAlign.center,
+          ),
+        )
+      ],
     );
   }
 }

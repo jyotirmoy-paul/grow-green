@@ -15,7 +15,7 @@ class CostCalculator {
 
   static int seedCost({required Qty seedsRequired, required CropType cropType}) {
     final crop = BaseCropCalculator.fromCropType(cropType);
-    final totalCost = seedsRequired.value * crop.getSellingPricePerKg();
+    final totalCost = seedsRequired.value * crop.getSellingPricePerKg;
     return totalCost;
   }
 

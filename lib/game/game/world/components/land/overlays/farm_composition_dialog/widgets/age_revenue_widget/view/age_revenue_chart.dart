@@ -23,7 +23,7 @@ class AgeRevenueChart extends StatelessWidget {
     final headerTree = AgeRevenueTree(
       rootTitles: const ["Sold At", "Yearly", "Total"],
       size: treeSize,
-      rootTitleColor: Colors.deepOrangeAccent,
+      rootTitleColor: Colors.black26,
       topImageFooterShape: TopImageFooterShape.circle,
     );
     final revenueTrees = ageRevenueModels.map((ageRevenueModel) {

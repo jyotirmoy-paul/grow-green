@@ -19,7 +19,15 @@ class CropAsset {
     return '$prefix/${cropType.name}/${cropStage.assetName}';
   }
 
+  String get menuImage {
+    return '$prefix/${cropType.name}/4_with_land.png';
+  }
+
   static String representativeOf(CropType cropType) {
     return CropAsset.raw(cropType).at(CropStage.ripe);
+  }
+
+  static String menuRepresentativeOf(CropType cropType) {
+    return CropAsset.raw(cropType).menuImage;
   }
 }
