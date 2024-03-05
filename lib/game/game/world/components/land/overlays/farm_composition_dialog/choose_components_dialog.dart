@@ -65,7 +65,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   _ComponentsModel forCrop(Content cropContent) {
     final cropType = cropContent.type as CropType;
     final isCropEditable = widget.editableComponents.contains(ComponentId.crop);
-    final cropCost = MoneyModel(rupees: CostCalculator.seedCostFromContent(cropContent: cropContent));
+    final cropCost = MoneyModel(value: CostCalculator.seedCostFromContent(cropContent: cropContent));
 
     if (isCropEditable) {
       _totalCost += cropCost;
@@ -78,7 +78,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       componentId: ComponentId.crop,
       isComponentEditable: isCropEditable,
       footerImage: GameIcons.edit,
-      descriptionText: '${cropContent.qty.readableFormat} | ₹ ${cropCost.formattedRupees}',
+      descriptionText: '${cropContent.qty.readableFormat} | ₹ ${cropCost.formattedValue}',
     );
   }
 
@@ -99,7 +99,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     return treeContents.map(
       (treeContent) {
         final treeType = treeContent.type as TreeType;
-        final treeCost = MoneyModel(rupees: CostCalculator.saplingCostFromContent(treeContent: treeContent));
+        final treeCost = MoneyModel(value: CostCalculator.saplingCostFromContent(treeContent: treeContent));
 
         /// we will count trees in only in two cases
         /// 1. Either farm is non functional (this happens when we first time setup a farm system)
@@ -120,7 +120,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
           footerImage: countTreeIn ? GameIcons.edit : GameIcons.remove,
           buttonColor: countTreeIn ? null : Colors.red,
           descriptionText: countTreeIn
-              ? '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedRupees}'
+              ? '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedValue}'
               : treeContent.qty.readableFormat,
         );
       },
@@ -143,7 +143,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   _ComponentsModel forFertilizer(Content fertilizerContent) {
     final fertilizerType = fertilizerContent.type as FertilizerType;
     final fertilizerCost = MoneyModel(
-      rupees: CostCalculator.fertilizerCostFromContent(fertilizerContent: fertilizerContent),
+      value: CostCalculator.fertilizerCostFromContent(fertilizerContent: fertilizerContent),
     );
 
     _totalCost += fertilizerCost;
@@ -155,7 +155,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       componentId: ComponentId.fertilizer,
       isComponentEditable: widget.editableComponents.contains(ComponentId.fertilizer),
       footerImage: GameIcons.edit,
-      descriptionText: '${fertilizerContent.qty.readableFormat} | ₹ ${fertilizerCost.formattedRupees}',
+      descriptionText: '${fertilizerContent.qty.readableFormat} | ₹ ${fertilizerCost.formattedValue}',
     );
   }
 
@@ -490,8 +490,8 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
             top: 8.s,
           ),
           child: GameButton.textImage(
-            key: ValueKey(_totalCost.formattedRupees),
-            text: 'Buy ₹ ${_totalCost.formattedRupees}',
+            key: ValueKey(_totalCost.formattedValue),
+            text: 'Buy ₹ ${_totalCost.formattedValue}',
             image: GameIcons.coin,
             bgColor: _totalCost.isZero() ? Colors.grey : Colors.green,
             onTap: _onPurchaseTap,

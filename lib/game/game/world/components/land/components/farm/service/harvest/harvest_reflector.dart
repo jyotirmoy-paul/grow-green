@@ -63,7 +63,7 @@ class HarvestReflector {
       nonAckHarvestModelIds.add(hm.id);
     }
 
-    Log.d('$tag: total money accumulated in the farm: ${totalMoney.formattedRupees}');
+    Log.d('$tag: total money accumulated in the farm: ${totalMoney.formattedValue}');
 
     /// show a component
     _hoverBoardController.addHoverBoard(
@@ -71,7 +71,7 @@ class HarvestReflector {
 
       /// TODO: Replace asset & fix text
       model: HoverBoardModel.basic(
-        text: '₹ ${totalMoney.formattedRupees}',
+        text: '₹ ${totalMoney.formattedValue}',
         image: 'props/coin.png',
         animationPrefix: 'animations/coins',
       ),

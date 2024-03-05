@@ -46,7 +46,7 @@ exports.onUserCreation = functions.auth.user().onCreate(async (user) => {
   // write money
   const moneyDocRef = collectionRef.doc(moneyDocId);
   batch.set(moneyDocRef, {
-    rupees: initialMoney,
+    value: initialMoney,
   });
 
   // write

@@ -12,7 +12,7 @@ class MonetaryService {
 
   final GameDatastore gameDatastore;
 
-  MoneyModel _balanceValue = MoneyModel(rupees: 0);
+  MoneyModel _balanceValue = MoneyModel(value: 0);
   MoneyModel get _balance => _balanceValue;
   set _balance(MoneyModel value) {
     _balanceValue = value;

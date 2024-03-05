@@ -7,10 +7,10 @@ part of 'money_model.dart';
 // **************************************************************************
 
 MoneyModel _$MoneyModelFromJson(Map<String, dynamic> json) => MoneyModel(
-      rupees: json['rupees'] as int,
+      value: json['value'] as int,
     );
 
 Map<String, dynamic> _$MoneyModelToJson(MoneyModel instance) =>
     <String, dynamic>{
-      'rupees': instance.rupees,
+      'value': instance.value,
     };

@@ -182,7 +182,7 @@ class SystemItemWidget extends StatelessWidget {
               '₹ ${FarmMenuHelper.getPriceForFarmSystem(
                 farmSystem: farmSystem,
                 soilHealthPercentage: farm.farmController.soilHealthPercentage,
-              ).formattedRupees}',
+              ).formattedValue}',
               style: TextStyles.s32,
             ),
           ),

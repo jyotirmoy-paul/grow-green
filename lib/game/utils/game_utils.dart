@@ -11,7 +11,7 @@ class GameUtils {
   static const maxZoom = 0.8;
   static const maxCloudVelocity = 20.0;
 
-  static final farmInitialPrice = MoneyModel(rupees: 3000000);
+  static final farmInitialPrice = MoneyModel(value: 3000000);
 
   final Vector2 gameWorldSize;
   final double isoAngle;

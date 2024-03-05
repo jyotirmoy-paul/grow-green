@@ -46,7 +46,7 @@ class PurchaseFarmDialog extends StatelessWidget {
 
             /// buy button
             GameButton.textImage(
-              text: GameUtils.farmInitialPrice.formattedRupees,
+              text: GameUtils.farmInitialPrice.formattedValue,
               image: GameIcons.coin,
               onTap: () => _purchaseFarm(context),
               bgColor: Colors.lightGreen,
