@@ -7,41 +7,41 @@ part 'money_model.g.dart';
 class MoneyModel {
   static final _formatter = NumberFormat.decimalPattern('en_IN');
 
-  final int rupees;
+  final int value;
 
   /// internal constructor
-  MoneyModel._(this.rupees);
+  MoneyModel._(this.value);
 
   factory MoneyModel.zero() {
-    return MoneyModel(rupees: 0);
+    return MoneyModel(value: 0);
   }
 
   MoneyModel({
-    required int rupees,
-  }) : rupees = rupees < 0 ? throw ArgumentError('rupees cannot be negative!') : rupees;
+    required int value,
+  }) : value = value < 0 ? throw ArgumentError('value cannot be negative!') : value;
 
-  String get formattedRupees => _formatter.format(rupees).replaceAll(',', ' ');
+  String get formattedValue => _formatter.format(value).replaceAll(',', ' ');
 
   bool isNegative() {
-    return rupees < 0;
+    return value < 0;
   }
 
   bool isZero() {
-    return rupees == 0;
+    return value == 0;
   }
 
   @override
   String toString() {
-    return 'Money($formattedRupees)';
+    return 'Money($formattedValue)';
   }
 
   MoneyModel operator -(MoneyModel other) {
-    return MoneyModel._(rupees - other.rupees);
+    return MoneyModel._(value - other.value);
   }
 
   MoneyModel operator +(MoneyModel other) {
     return MoneyModel(
-      rupees: rupees + other.rupees,
+      value: value + other.value,
     );
   }
 

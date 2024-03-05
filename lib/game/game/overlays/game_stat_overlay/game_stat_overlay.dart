@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
+import '../../../../utils/extensions/num_extensions.dart';
 import '../../grow_green_game.dart';
 import 'widget/calender_stat.dart';
 import 'widget/money_stat.dart';
@@ -20,69 +22,66 @@ class GameStatOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return const SizedBox.shrink();
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.s,
+          vertical: 20.s,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// money, temperature
+            Column(
+              children: [
+                /// money
+                MoneyStat(monetaryService: game.monetaryService),
 
-    return Material(
-      type: MaterialType.transparency,
-      // insetAnimationDuration: Duration.zero,
-      // elevation: 0.0,
-      // alignment: Alignment.bottomCenter,
-      // backgroundColor: Colors.transparent,
-      // insetPadding: EdgeInsets.zero,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          /// background
-          Align(
-            alignment: Alignment.topCenter,
-            child: IgnorePointer(
-              ignoring: true,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.20,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.6),
-                      Colors.black.withOpacity(0.0),
-                    ],
-                  ),
-                ),
-              ),
+                /// temperature
+              ],
             ),
-          ),
 
-          Positioned.fill(
-            child: SafeArea(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  /// show calender on top
-                  const Align(
-                    alignment: Alignment.topCenter,
-                    child: CalenderStat(),
-                  ),
+            /// spacer
+            const Spacer(),
 
-                  /// menu for editing time factor
-                  const Align(
-                    alignment: Alignment.topRight,
-                    child: TimeMenu(),
-                  ),
+            /// timer & calender
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// calender
+                const CalenderStat(),
 
-                  /// show money on top left
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: MoneyStat(
-                      monetaryService: game.gameController.monetaryService,
-                    ),
-                  ),
-                ],
-              ),
+                Gap(25.s),
+
+                /// time menu
+                const TimeMenu(),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
+/**
+ * /// show calender on top
+          const Align(
+            alignment: Alignment.topCenter,
+            child: CalenderStat(),
+          ),
+
+          /// menu for editing time factor
+          const Align(
+            alignment: Alignment.topRight,
+            child: TimeMenu(),
+          ),
+
+          /// show money on top left
+          Align(
+            alignment: Alignment.topLeft,
+            child: MoneyStat(
+              monetaryService: game.gameController.monetaryService,
+            ),
+          ),
+ */

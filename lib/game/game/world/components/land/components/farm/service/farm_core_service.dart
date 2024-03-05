@@ -319,7 +319,7 @@ class FarmCoreService {
     final treeAge = _dateTime.difference(trees.lifeStartedAt).inDays;
     final value = treesCalculator.getPotentialPrice(treeAge);
 
-    return MoneyModel(rupees: value);
+    return MoneyModel(value: value);
   }
 
   void sellTree() async {

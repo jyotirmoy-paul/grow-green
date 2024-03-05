@@ -109,7 +109,7 @@ class FarmMenuHelper {
       bgColor: Colors.greenAccent,
       image: GameIcons.buyFarm,
       data: FarmMenuItemData(
-        data: GameUtils.farmInitialPrice.formattedRupees,
+        data: GameUtils.farmInitialPrice.formattedValue,
         image: GameIcons.coin,
       ),
     );
@@ -123,7 +123,7 @@ class FarmMenuHelper {
       bgColor: Colors.amber,
       image: GameIcons.soilHealth,
       data: FarmMenuItemData(
-        data: '${farm.farmController.soilHealthPercentage} %',
+        data: '${farm.farmController.soilHealthPercentage.toStringAsFixed(1)} %',
         image: null,
       ),
     );
@@ -427,7 +427,7 @@ class FarmMenuHelper {
       /// crops price
       final cropType = system.crop;
       totalPrice += MoneyModel(
-        rupees: CostCalculator.seedCost(
+        value: CostCalculator.seedCost(
           seedsRequired: QtyCalculator.getSeedQtyRequireFor(
             systemType: system.agroforestryType,
             cropType: cropType,
@@ -439,7 +439,7 @@ class FarmMenuHelper {
       /// trees price
       for (final tree in system.trees) {
         totalPrice += MoneyModel(
-          rupees: CostCalculator.saplingCost(
+          value: CostCalculator.saplingCost(
             saplingQty: QtyCalculator.getNumOfSaplingsFor(system.agroforestryType),
             treeType: tree,
           ),
@@ -453,7 +453,7 @@ class FarmMenuHelper {
       /// crops price
       final cropType = system.crop;
       totalPrice += MoneyModel(
-        rupees: CostCalculator.seedCost(
+        value: CostCalculator.seedCost(
           seedsRequired: QtyCalculator.getSeedQtyRequireFor(
             systemType: FarmSystemType.monoculture,
             cropType: cropType,
@@ -464,7 +464,7 @@ class FarmMenuHelper {
 
       /// fertilizer price
       totalPrice += MoneyModel(
-        rupees: CostCalculator.getFertilizerCost(
+        value: CostCalculator.getFertilizerCost(
           qty: QtyCalculator.getFertilizerQtyRequiredFor(
             systemType: FarmSystemType.monoculture,
             soilHealthPercentage: soilHealthPercentage,

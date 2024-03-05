@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../utils/extensions/num_extensions.dart';
+import '../../../../../utils/text_styles.dart';
+import '../../../../../widgets/stylized_text.dart';
+import '../../../../utils/game_icons.dart';
+import '../../../services/game_services/monetary/models/money_model.dart';
 import '../../../services/game_services/monetary/monetary_service.dart';
+import 'int_tween_animation.dart';
+import 'stat_skeleton_widget.dart';
 
 class MoneyStat extends StatelessWidget {
   final MonetaryService monetaryService;
@@ -12,27 +19,27 @@ class MoneyStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      margin: const EdgeInsets.all(24.0),
-      padding: const EdgeInsets.all(12.0),
+    return StatSkeletonWidget(
+      imageAlignment: StatSkeletonImageAlignment.left,
+      width: 220.s,
+      iconAsset: GameIcons.coin,
       child: StreamBuilder(
         stream: monetaryService.balanceStream,
         initialData: monetaryService.balance,
         builder: (context, snapshot) {
-          final money = snapshot.data;
-          if (money == null) return const CircularProgressIndicator();
+          final money = snapshot.data ?? MoneyModel.zero();
 
-          return Text(
-            'Rs ${money.formattedRupees}',
-            style: const TextStyle(
-              color: Colors.black,
-              letterSpacing: 1.0,
-              fontSize: 18.0,
-            ),
+          return IntTweenAnimation(
+            value: money.value,
+            builder: (_, value) {
+              return StylizedText(
+                text: Text(
+                  MoneyModel(value: value).formattedValue,
+                  style: TextStyles.s28,
+                  textAlign: TextAlign.center,
+                ),
+              );
+            },
           );
         },
       ),

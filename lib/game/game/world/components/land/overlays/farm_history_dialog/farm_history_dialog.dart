@@ -24,7 +24,7 @@ class FarmHistoryDialog extends StatelessWidget {
         return Column(
           children: [
             Text(harvestModel.dateOfHarvest.toIso8601String()),
-            Text('money: ${harvestModel.revenue.formattedRupees}'),
+            Text('money: ${harvestModel.revenue.formattedValue}'),
           ],
         );
       },

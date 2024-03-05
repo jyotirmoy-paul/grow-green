@@ -8,6 +8,7 @@ import '../../../../utils/game_assets.dart';
 import '../../../../utils/game_extensions.dart';
 import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
+import '../../../services/game_services/time/time_service.dart';
 import '../../../services/priority/priority_engine.dart';
 import 'components/farm/farm.dart';
 import 'overlays/farm_menu/farm_menu.dart';
@@ -67,13 +68,13 @@ class LandController {
     return 'river/$riverId/$frameId.png';
   }
 
-  Future<List<Component>> getRivers() async {
+  Future<List<SpriteAnimationComponent>> getRivers() async {
     final riverObjectGroup = map.tileMap.getLayer<ObjectGroup>(_riverLayerName);
     if (riverObjectGroup == null) {
       throw Exception('$tag: $_riverLayerName layer not found! Have you added it in the map?');
     }
 
-    final rivers = <Component>[];
+    final rivers = <SpriteAnimationComponent>[];
 
     for (final riverObj in riverObjectGroup.objects) {
       final rectangle = Rectangle.fromLTWH(
@@ -135,6 +136,25 @@ class LandController {
     return nonFarms;
   }
 
+  void onTimePaceChange({
+    required int timePace,
+    required List<SpriteAnimationComponent> riverAnimation,
+  }) {
+    for (final animation in riverAnimation) {
+      /// decide weather to play the animation or not
+      animation.playing = timePace != 0;
+
+      /// if the animation is playing, decide the step time
+      if (animation.playing) {
+        if (timePace == 1) {
+          animation.animation?.stepTime = riverAnimationSpeed;
+        } else {
+          animation.animation?.stepTime = riverAnimationSpeed * 0.3;
+        }
+      }
+    }
+  }
+
   Future<List<Component>> initialize(GrowGreenGame game) async {
     this.game = game;
 
@@ -157,6 +177,13 @@ class LandController {
 
     final river = await getRivers();
     final nonFarms = await getNonFarms();
+
+    /// listen for time pace changes
+    TimeService().timePaceStream.listen(
+      (timePace) {
+        onTimePaceChange(timePace: timePace, riverAnimation: river);
+      },
+    );
 
     return [
       map,

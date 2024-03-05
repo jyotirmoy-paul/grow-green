@@ -93,6 +93,7 @@ class _StylizedContainerState extends State<StylizedContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.none,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(12.s),

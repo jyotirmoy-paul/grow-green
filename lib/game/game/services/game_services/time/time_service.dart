@@ -34,7 +34,15 @@ class TimeService {
     /// cancel any existing timer
     _timer?.cancel();
 
-    _currentPeriod = Duration(milliseconds: 1000 ~/ _timePace);
+    /// notify time pace has changed
+    _timePaceStreamController.add(_timePace);
+
+    if (_timePace == 0) {
+      /// cancelling the timer is good enough, as now period becomes infinite!
+      return;
+    } else {
+      _currentPeriod = Duration(milliseconds: 1000 ~/ _timePace);
+    }
 
     /// start a new timer with new period
     _timer = Timer.periodic(
@@ -45,9 +53,6 @@ class TimeService {
         _notifySubscribers();
       },
     );
-
-    /// notify time pace has changed
-    _timePaceStreamController.add(_timePace);
   }
 
   void _notifySubscribers() {
@@ -100,11 +105,8 @@ class TimeService {
   int get timePace => _timePace;
   set timePace(int v) {
     if (v < 0) throw Exception('$tag: timeAccelerationFactor invalid value $v, Factor cannot be negative!');
-    if (v < 1) throw Exception('$tag: timeAccelerationFactor invalid value $v, Time cannot be slowed down!');
 
     _timePace = v;
     _initializeTimer();
   }
-
-  Duration get currentPeriod => _currentPeriod;
 }
