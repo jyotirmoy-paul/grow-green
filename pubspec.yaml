@@ -30,6 +30,7 @@ dependencies:
   json_annotation: ^4.8.1
   uuid: ^4.2.2
   macos_window_utils: ^1.5.0
+  flip_card: ^0.7.0
 
 dev_dependencies:
   build_runner: ^2.4.8
@@ -43,6 +44,7 @@ flutter:
   assets:
     # maps & tiles
     - assets/images/
+    - assets/images/layouts/
     - assets/images/tiles/
     - assets/images/river/1/
     - assets/images/river/2/
@@ -66,7 +68,7 @@ flutter:
     - assets/images/crops/maize/
     - assets/images/crops/pepper/
     - assets/images/crops/wheat/
-    
+
     # game props
     - assets/images/icons/
     - assets/images/images/
@@ -89,4 +91,3 @@ flutter:
     - family: Lapsus Pro
       fonts:
         - asset: assets/fonts/lapsuspro.otf
-

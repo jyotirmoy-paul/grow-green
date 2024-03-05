@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import '../../../../services/log/log.dart';
 import '../../../../utils/extensions/num_extensions.dart';
 import '../../../../utils/text_styles.dart';
+import '../../../../widgets/shadowed_container.dart';
 import '../../../../widgets/stylized_text.dart';
 import 'model/notification_model.dart';
 import 'service/notification_service.dart';
@@ -101,43 +102,57 @@ class _GameNotificationWidgetState extends State<GameNotificationWidget> {
       ignoring: true,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: FractionallySizedBox(
-          heightFactor: 0.5,
-          child: ValueListenableBuilder(
-            valueListenable: _notifications,
-            builder: (_, notifications, ___) {
-              return ListView.separated(
-                clipBehavior: Clip.none,
-                // shrinkWrap: true,
-                reverse: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: notifications.length,
-                itemBuilder: (_, index) {
-                  final notification = notifications[index];
+        body: Container(
+          alignment: Alignment.bottomCenter,
+          padding: EdgeInsets.only(bottom: 20.s),
+          child: FractionallySizedBox(
+            heightFactor: 0.5,
+            child: ValueListenableBuilder(
+              valueListenable: _notifications,
+              builder: (_, notifications, ___) {
+                return ListView.separated(
+                  clipBehavior: Clip.none,
+                  // shrinkWrap: true,
+                  reverse: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: notifications.length,
+                  itemBuilder: (_, index) {
+                    final notification = notifications[index];
 
-                  return Center(
-                    key: notification.key,
-                    child: FadingWidget(
-                      id: notification.id,
-                      onFinish: (notificationId) => _expiredNotificationIds.add(notificationId),
-                      child: StylizedText(
-                        strokeWidth: 4.s,
-                        text: Text(
-                          notification.text,
-                          style: TextStyles.s32.copyWith(
-                            color: notification.textColor,
-                            letterSpacing: 3.s,
+                    return Center(
+                      key: notification.key,
+                      child: FadingWidget(
+                        id: notification.id,
+                        onFinish: (notificationId) => _expiredNotificationIds.add(notificationId),
+                        child: ShadowedContainer(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.s),
+                            color: Colors.white70,
+                          ),
+                          shadowOffset: Offset(10.s, 10.s),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 10.s),
+                            child: StylizedText(
+                              strokeWidth: 4.s,
+                              text: Text(
+                                notification.text,
+                                style: TextStyles.s32.copyWith(
+                                  color: notification.textColor,
+                                  letterSpacing: 3.s,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                separatorBuilder: (_, __) {
-                  return Gap(12.s);
-                },
-              );
-            },
+                    );
+                  },
+                  separatorBuilder: (_, __) {
+                    return Gap(12.s);
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),

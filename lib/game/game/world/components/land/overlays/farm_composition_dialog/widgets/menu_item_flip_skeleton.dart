@@ -1,10 +1,12 @@
+import 'package:flip_card/flip_card.dart';
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/shadowed_container.dart';
 
-class MenuItemSkeleton extends StatelessWidget {
+class MenuItemFlipSkeleton extends StatelessWidget {
   final Color bgColor;
   final double width;
 
@@ -12,14 +14,58 @@ class MenuItemSkeleton extends StatelessWidget {
   final Widget body;
   final Widget footer;
 
-  const MenuItemSkeleton({
+  final Widget? backHeader;
+  final Widget backBody;
+  final Widget backFooter;
+
+  final FlipCardController? flipCardController;
+  const MenuItemFlipSkeleton({
     super.key,
     this.bgColor = Colors.green,
     this.width = 380.0,
     this.header,
     this.body = const SizedBox.shrink(),
     this.footer = const SizedBox.shrink(),
+    this.backHeader = const SizedBox.shrink(),
+    this.backBody = const SizedBox.shrink(),
+    this.backFooter = const SizedBox.shrink(),
+    this.flipCardController,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    return FlipCard(
+      flipOnTouch: false,
+      front: front,
+      back: back,
+      controller: flipCardController,
+    );
+  }
+
+  Widget get front {
+    return MenuItemSkeleton(width: width, bgColor: bgColor, header: header, body: body, footer: footer);
+  }
+
+  Widget get back {
+    return MenuItemSkeleton(width: width, bgColor: bgColor, header: backHeader, body: backBody, footer: backFooter);
+  }
+}
+
+class MenuItemSkeleton extends StatelessWidget {
+  const MenuItemSkeleton({
+    super.key,
+    required this.width,
+    required this.bgColor,
+    required this.header,
+    required this.body,
+    required this.footer,
+  });
+
+  final double width;
+  final Color bgColor;
+  final Widget? header;
+  final Widget body;
+  final Widget footer;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +74,14 @@ class MenuItemSkeleton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.s),
         color: bgColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            spreadRadius: 10.s,
+            blurRadius: 10.s,
+            blurStyle: BlurStyle.outer,
+          ),
+        ],
       ),
       shadowOffset: Offset(10.s, 10.s),
       child: Column(

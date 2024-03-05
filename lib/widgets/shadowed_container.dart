@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:growgreen/utils/utils.dart';
+
+import '../utils/extensions/num_extensions.dart';
 
 class ShadowedContainer extends StatefulWidget {
   final Widget child;
@@ -22,6 +25,24 @@ class ShadowedContainer extends StatefulWidget {
     this.margin,
   });
 
+  factory ShadowedContainer.preset({
+    required Widget child,
+  }) {
+    return ShadowedContainer(
+      padding: EdgeInsets.symmetric(horizontal: 6.s, vertical: 12.s),
+      shadowOffset: Offset(6.s, 6.s),
+      decoration: BoxDecoration(
+        color: Colors.white24,
+        borderRadius: BorderRadius.circular(12.s),
+        border: Border.all(
+          color: Utils.lightenColor(Colors.white24),
+          width: 2.s,
+        ),
+      ),
+      child: child,
+    );
+  }
+
   @override
   State<ShadowedContainer> createState() => _ShadowedContainerState();
 }
@@ -41,9 +62,10 @@ class _ShadowedContainerState extends State<ShadowedContainer> {
           width: size.width,
           height: size.height,
           decoration: BoxDecoration(
-            borderRadius: widget.decoration?.borderRadius,
-            color: Colors.black,
-          ),
+              // borderRadius: widget.decoration?.borderRadius,
+              // color: Colors.black,
+
+              ),
         );
       },
     );
@@ -57,27 +79,15 @@ class _ShadowedContainerState extends State<ShadowedContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        /// shadow illusion
-        Transform.translate(
-          offset: widget.shadowOffset,
-          child: shadowContainer ?? const SizedBox.shrink(),
-        ),
-
-        /// main child
-        Container(
-          clipBehavior: widget.clipBehavior,
-          padding: widget.padding,
-          margin: widget.margin,
-          width: widget.width,
-          height: widget.height,
-          decoration: widget.decoration,
-          key: globalKey,
-          child: widget.child,
-        ),
-      ],
+    return Container(
+      clipBehavior: widget.clipBehavior,
+      padding: widget.padding,
+      margin: widget.margin,
+      width: widget.width,
+      height: widget.height,
+      decoration: widget.decoration,
+      key: globalKey,
+      child: widget.child,
     );
   }
 }

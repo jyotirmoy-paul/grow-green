@@ -1,3 +1,4 @@
+import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -20,10 +21,9 @@ enum DialogEndType {
 class DialogContainer extends StatelessWidget {
   final String title;
   final Widget child;
+  final DialogType dialogType;
 
-  final Size _size;
-
-  static Size _determineSize(DialogType dialogType) {
+  Size get _size {
     switch (dialogType) {
       case DialogType.small:
         return Size(500.s, 300.s);
@@ -36,12 +36,12 @@ class DialogContainer extends StatelessWidget {
     }
   }
 
-  DialogContainer({
+  const DialogContainer({
     super.key,
-    DialogType dialogType = DialogType.small,
+    this.dialogType = DialogType.large,
     required this.title,
     required this.child,
-  }) : _size = _determineSize(dialogType);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class DialogContainer extends StatelessWidget {
         height: _size.height,
         padding: EdgeInsets.all(10.s),
         decoration: BoxDecoration(
-          color: Colors.brown[400],
+          color: Colors.brown.brighten(0.4),
           borderRadius: BorderRadius.circular(12.s),
           border: Border.all(
             color: Colors.black,

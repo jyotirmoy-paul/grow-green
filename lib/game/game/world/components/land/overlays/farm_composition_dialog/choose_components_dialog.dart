@@ -1,10 +1,12 @@
+import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 import '../../../../../../../services/log/log.dart';
+import '../../../../../../../utils/app_colors.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../utils/utils.dart';
+import '../../../../../../../widgets/button_animator.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../../widgets/stylized_text.dart';
@@ -18,7 +20,6 @@ import '../../components/farm/asset/crop_asset.dart';
 import '../../components/farm/asset/tree_asset.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
-import '../../components/farm/components/tree/enums/tree_stage.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm_controller.dart';
@@ -28,8 +29,9 @@ import '../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../farm_menu/farm_menu_helper.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import 'choose_component_dialog.dart';
-import 'widgets/menu_item_skeleton.dart';
+import 'widgets/menu_item_flip_skeleton.dart';
 import 'widgets/sell_tree_widget.dart';
+import 'widgets/system_item_widget.dart';
 
 /// TODO: Language
 class ChooseComponentsDialog extends StatefulWidget {
@@ -61,6 +63,10 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   late FarmContent _currentFarmContent;
   MoneyModel _totalCost = MoneyModel.zero();
 
+  static const kChange = "CHANGE";
+  static const kAdd = "ADD";
+  static const kRemove = "REMOVE";
+
   /// crop
   _ComponentsModel forCrop(Content cropContent) {
     final cropType = cropContent.type as CropType;
@@ -73,12 +79,14 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
     return _ComponentsModel(
       headerText: 'Crop',
-      image: CropAsset.representativeOf(cropType),
-      footerText: cropType.name.toUpperCase(),
+      image: CropAsset.menuRepresentativeOf(cropType),
+      footerText: '',
       componentId: ComponentId.crop,
       isComponentEditable: isCropEditable,
-      footerImage: GameIcons.edit,
-      descriptionText: '${cropContent.qty.readableFormat} | ₹ ${cropCost.formattedValue}',
+      footerButtonText: kChange,
+      descriptionText:
+          "${cropType.name.toUpperCase()}\n${cropContent.qty.readableFormat} | ₹ ${cropCost.formattedValue} ",
+      color: AppColors.kCropMenuCardBg,
     );
   }
 
@@ -90,7 +98,8 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       footerText: '',
       componentId: ComponentId.crop,
       isComponentEditable: widget.editableComponents.contains(ComponentId.crop),
-      footerImage: GameIcons.add,
+      footerButtonText: kAdd,
+      color: AppColors.kCropMenuCardBg,
     );
   }
 
@@ -111,17 +120,19 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
           _totalCost += treeCost;
         }
 
+        final qtyDescription = countTreeIn
+            ? '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedValue}'
+            : treeContent.qty.readableFormat;
         return _ComponentsModel(
           headerText: 'Tree',
-          image: TreeAsset.raw(treeType).at(TreeStage.elder),
-          footerText: treeType.name.toUpperCase(),
+          image: TreeAsset.menuRepresentativeOf(treeType),
+          footerText: "",
           componentId: ComponentId.trees,
           isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
-          footerImage: countTreeIn ? GameIcons.edit : GameIcons.remove,
+          footerButtonText: countTreeIn ? kChange : kRemove,
           buttonColor: countTreeIn ? null : Colors.red,
-          descriptionText: countTreeIn
-              ? '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedValue}'
-              : treeContent.qty.readableFormat,
+          descriptionText: "${treeType.name.toUpperCase()}\n$qtyDescription",
+          color: AppColors.kTreeMenuCardBg,
         );
       },
     ).toList();
@@ -134,7 +145,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       footerText: '',
       componentId: ComponentId.trees,
       isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
-      footerImage: GameIcons.add,
+      footerButtonText: kAdd,
       buttonColor: Colors.green,
     );
   }
@@ -154,8 +165,9 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       footerText: fertilizerType.name.toUpperCase(),
       componentId: ComponentId.fertilizer,
       isComponentEditable: widget.editableComponents.contains(ComponentId.fertilizer),
-      footerImage: GameIcons.edit,
+      footerButtonText: kChange,
       descriptionText: '${fertilizerContent.qty.readableFormat} | ₹ ${fertilizerCost.formattedValue}',
+      color: AppColors.kFertilizerMenuCardBg,
     );
   }
 
@@ -173,11 +185,12 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
             return GameImages.blockPlantation;
         }
       }(),
-      footerText: agroforestryType.name.toUpperCase(),
+      descriptionText: "${agroforestryType.name.toUpperCase()}\nPLANTATION",
+      footerText: "",
       componentId: ComponentId.agroforestryLayout,
       isComponentEditable: widget.editableComponents.contains(ComponentId.agroforestryLayout),
-      footerImage: GameIcons.edit,
-      color: Colors.blueGrey,
+      footerButtonText: kChange,
+      color: Colors.blue.darken(0.5),
     );
   }
 
@@ -408,77 +421,73 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       children: [
         /// body
         Expanded(
-          child: ListView.separated(
+          child: Padding(
             padding: EdgeInsets.all(16.s),
-            scrollDirection: Axis.horizontal,
-            itemCount: children.length,
-            itemBuilder: (_, index) {
-              final model = children[index];
-
-              return MenuItemSkeleton(
-                width: 300.s,
-                bgColor: model.isComponentEditable ? model.color ?? Colors.orange : Colors.blueGrey,
-                header: Center(
-                  child: StylizedText(
-                    text: Text(
-                      model.headerText,
-                      style: TextStyles.s35,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                body: Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.center,
-                  children: [
-                    /// image
-                    Image.asset(model.image),
-
-                    /// description
-                    if (model.descriptionText != null)
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
-                          child: StylizedText(
-                            text: Text(
-                              model.descriptionText!,
-                              style: TextStyles.s30,
-                              textAlign: TextAlign.center,
-                            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children.map(
+                (model) {
+                  return ButtonAnimator(
+                    onPressed: () {
+                      if (model.isComponentEditable) return onComponentTap(model.componentId);
+                      nonEditableComponentTap(model.componentId);
+                    },
+                    child: MenuItemFlipSkeleton(
+                      width: 300.s,
+                      bgColor: model.color ?? Colors.red.darken(0.3),
+                      header: Center(
+                        child: StylizedText(
+                          text: Text(
+                            model.headerText,
+                            style: TextStyles.s35,
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ),
-                  ],
-                ),
-                footer: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 12.s),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      /// footer text
-                      StylizedText(
-                        text: Text(
-                          model.footerText,
-                          style: TextStyles.s28,
+                      body: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            /// image
+                            MenuImage(imageAssetPath: model.image),
+
+                            /// description
+                            if (model.descriptionText != null)
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
+                                child: StylizedText(
+                                  text: Text(
+                                    model.descriptionText!,
+                                    style: TextStyles.s30,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-
-                      /// button
-                      GameButton.image(
-                        bgColor: model.isComponentEditable ? (model.buttonColor ?? Colors.blue) : Colors.grey,
-                        image: model.footerImage,
-                        onTap: () {
-                          if (model.isComponentEditable) return onComponentTap(model.componentId);
-                          nonEditableComponentTap(model.componentId);
-                        },
+                      footer: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.s, vertical: 12.s),
+                        child: Center(
+                          /// button
+                          child: GameButton.text(
+                            color: model.isComponentEditable ? (model.buttonColor ?? Colors.blue) : Colors.grey,
+                            text: model.footerButtonText,
+                            onTap: () {
+                              if (model.isComponentEditable) return onComponentTap(model.componentId);
+                              nonEditableComponentTap(model.componentId);
+                            },
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            separatorBuilder: (_, __) => Gap(32.s),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
           ),
         ),
 
@@ -502,6 +511,56 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   }
 }
 
+class MenuImage extends StatelessWidget {
+  final String imageAssetPath;
+  final double? dimension;
+  final double? blurRadius;
+  final Color? blurColor;
+  final BoxShape shape;
+  const MenuImage({
+    super.key,
+    required this.imageAssetPath,
+    this.dimension,
+    this.blurRadius,
+    this.blurColor,
+    this.shape = BoxShape.rectangle,
+  });
+
+  double get _dimension => dimension ?? 150.s;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: _dimension,
+      height: _dimension,
+      decoration: BoxDecoration(
+        color: Colors.white12,
+        shape: shape,
+        borderRadius: shape == BoxShape.rectangle ? BorderRadius.circular(20.s) : null,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            spreadRadius: _dimension / 20,
+            blurRadius: _dimension / 20,
+            blurStyle: BlurStyle.outer,
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(_dimension * 0.1),
+      child: BackgroundGlow(
+        dimension: blurRadius ?? _dimension / 5,
+        glowColor: blurColor ?? Colors.white,
+        child: Image.asset(
+          imageAssetPath,
+          height: _dimension,
+          width: _dimension,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+}
+
 class _ComponentsModel {
   final String headerText;
   final String image;
@@ -509,7 +568,7 @@ class _ComponentsModel {
   final String footerText;
   final ComponentId componentId;
   final bool isComponentEditable;
-  final String footerImage;
+  final String footerButtonText;
   final Color? color;
   final Color? buttonColor;
 
@@ -519,7 +578,7 @@ class _ComponentsModel {
     required this.footerText,
     required this.componentId,
     required this.isComponentEditable,
-    required this.footerImage,
+    required this.footerButtonText,
     this.descriptionText,
     this.color,
     this.buttonColor,

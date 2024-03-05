@@ -19,6 +19,7 @@ abstract class BaseCropCalculator {
   CropType cropType();
   double getYieldKgPerSquareM();
   Qty getSeedsRequiredPerHacter();
+
   List<HarvestPeriod> sowData();
 
   DateTime getNextSowDateFrom(DateTime currentDateTime) {
@@ -47,7 +48,7 @@ abstract class BaseCropCalculator {
   // Age is calculated including sowing month and excluding harvest month
   int get maxAgeInMonths;
 
-  int getSellingPricePerKg() => CropMarket.pricePerQty(cropType());
+  int get getSellingPricePerKg => CropMarket.pricePerQty(cropType());
 
   bool canSow(Month month) {
     return sowData().any((period) => period.sowMonth == month);
