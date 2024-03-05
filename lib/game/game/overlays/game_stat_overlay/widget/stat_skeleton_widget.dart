@@ -25,7 +25,7 @@ class StatSkeletonWidget extends StatelessWidget {
 
   Widget get image {
     return Transform.scale(
-      scale: 1.4.s,
+      scale: 1.4,
       alignment: () {
         switch (imageAlignment) {
           case StatSkeletonImageAlignment.left:
