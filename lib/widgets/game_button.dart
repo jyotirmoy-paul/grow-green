@@ -22,6 +22,7 @@ class GameButton extends StatelessWidget {
   final String? image;
   final String? dataText;
   final String? dataImage;
+  final Size? size;
 
   const GameButton._({
     super.key,
@@ -32,6 +33,7 @@ class GameButton extends StatelessWidget {
     this.image,
     this.dataText,
     this.dataImage,
+    this.size,
   });
 
   factory GameButton.menuItem({
@@ -59,12 +61,16 @@ class GameButton extends StatelessWidget {
     Key? key,
     required String text,
     required VoidCallback onTap,
+    Size? size,
+    Color? color,
   }) {
     return GameButton._(
       key: key,
       type: GameButtonType.text,
       onTap: onTap,
       text: text,
+      size: size,
+      color: color,
     );
   }
 
@@ -144,6 +150,8 @@ class GameButton extends StatelessWidget {
               return _TextButton(
                 key: const ValueKey('text-button'),
                 text: text!,
+                size: size,
+                bgColor: color,
               );
 
             case GameButtonType.image:
@@ -232,15 +240,30 @@ class _ImageButton extends StatelessWidget {
 
 class _TextButton extends StatelessWidget {
   final String text;
+  final Size? size;
+  final Color? bgColor;
 
   const _TextButton({
     super.key,
     required this.text,
+    this.size,
+    this.bgColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return SizedBox.fromSize(
+      size: size,
+      child: Center(
+        child: StylizedText(
+          text: Text(
+            text,
+            style: TextStyles.s28,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
   }
 }
 

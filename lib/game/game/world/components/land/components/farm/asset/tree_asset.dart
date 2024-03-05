@@ -19,7 +19,15 @@ class TreeAsset {
     return '$prefix/${treeType.name}/${treeStage.assetName}';
   }
 
+  String get menuImage {
+    return '$prefix/${treeType.name}/5_with_land.png';
+  }
+
   static String representativeOf(TreeType treeType) {
     return TreeAsset.raw(treeType).at(TreeStage.elder);
+  }
+
+  static String menuRepresentativeOf(TreeType treeType) {
+    return TreeAsset.raw(treeType).menuImage;
   }
 }

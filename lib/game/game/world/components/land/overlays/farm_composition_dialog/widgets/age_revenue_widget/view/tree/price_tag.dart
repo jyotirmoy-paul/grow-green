@@ -17,7 +17,7 @@ class PriceTag extends StatelessWidget {
     this.textColor = Colors.white,
   }) : super(key: key);
 
-  Color get _backgroundColor => backgroundColor ?? const Color(0xff34BD39);
+  Color get _backgroundColor => backgroundColor ?? Colors.white24;
 
   @override
   Widget build(BuildContext context) {

@@ -60,10 +60,10 @@ class _ChooseSystemDialogState extends State<ChooseSystemDialog> {
     required FarmSystem farmSystem,
   }) {
     if (farmSystem is AgroforestrySystem) {
-      return 'Choose content for Agoroforestry System';
+      return 'Choose content';
     }
 
-    return 'Choose content for monoculture';
+    return 'Choose content';
   }
 
   void _onSystemSelected({
@@ -118,7 +118,7 @@ class _ChooseSystemDialogState extends State<ChooseSystemDialog> {
     return Center(
       child: ListView.separated(
         controller: ChooseSystemDialog.offsetRestoration.scrollController,
-        padding: EdgeInsets.symmetric(horizontal: 15.s, vertical: 30.s),
+        padding: EdgeInsets.symmetric(horizontal: 30.s, vertical: 40.s),
         scrollDirection: Axis.horizontal,
         itemCount: widget.farmSystems.length,
         itemBuilder: (_, int index) {
@@ -134,7 +134,7 @@ class _ChooseSystemDialogState extends State<ChooseSystemDialog> {
             ),
           );
         },
-        separatorBuilder: (_, __) => Gap(30.s),
+        separatorBuilder: (_, __) => Gap(40.s),
       ),
     );
   }
