@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,9 +40,11 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       WidgetsFlutterBinding.ensureInitialized();
 
       // For macos window , hide zoom button and enter fullscreen
-      await WindowManipulator.initialize();
-      await WindowManipulator.hideZoomButton();
-      await WindowManipulator.enterFullscreen();
+      if (Platform.isMacOS) {
+        await WindowManipulator.initialize();
+        await WindowManipulator.hideZoomButton();
+        await WindowManipulator.enterFullscreen();
+      }
 
       await Flame.device.fullScreen();
       await Flame.device.setLandscape();
