@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../../../components/farm/asset/tree_asset.dart';
 import '../../../../../components/farm/components/system/real_life/calculators/trees/base_tree.dart';
-import '../../../../../components/farm/components/tree/enums/tree_stage.dart';
 import '../logic/age_revenue_models.dart';
 import 'tree/age_revenue_tree.dart';
 
 class AgeRevenueChart extends StatelessWidget {
   final List<Widget> ageRevenueTrees;
   final Size size;
-  AgeRevenueChart({
+
+  const AgeRevenueChart({
     super.key,
     required this.ageRevenueTrees,
     required this.size,
