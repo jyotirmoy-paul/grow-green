@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../utils/extensions/num_extensions.dart';
-import '../../../../../utils/text_styles.dart';
-import '../../../../../widgets/stylized_text.dart';
-import '../../../../utils/game_icons.dart';
-import '../../../services/game_services/monetary/models/money_model.dart';
-import '../../../services/game_services/monetary/monetary_service.dart';
+import '../../../../../../utils/extensions/num_extensions.dart';
+import '../../../../../../utils/text_styles.dart';
+import '../../../../../../widgets/stylized_text.dart';
+import '../../../../../utils/game_icons.dart';
+import '../../../../services/game_services/monetary/models/money_model.dart';
+import '../../../../services/game_services/monetary/monetary_service.dart';
+import '../stat_skeleton_widget.dart';
 import 'int_tween_animation.dart';
-import 'stat_skeleton_widget.dart';
 
 class MoneyStat extends StatelessWidget {
   final MonetaryService monetaryService;

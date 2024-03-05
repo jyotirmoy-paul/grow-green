@@ -3,8 +3,9 @@ import 'package:gap/gap.dart';
 
 import '../../../../utils/extensions/num_extensions.dart';
 import '../../grow_green_game.dart';
-import 'widget/calender_stat.dart';
-import 'widget/money_stat.dart';
+import 'widget/money/money_stat.dart';
+import 'widget/temperature_stat.dart';
+import 'widget/time_menu/calender_stat.dart';
 import 'widget/time_menu/time_menu.dart';
 
 class GameStatOverlay extends StatelessWidget {
@@ -33,11 +34,15 @@ class GameStatOverlay extends StatelessWidget {
           children: [
             /// money, temperature
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 /// money
                 MoneyStat(monetaryService: game.monetaryService),
 
+                Gap(10.s),
+
                 /// temperature
+                const TemperatureStat(),
               ],
             ),
 
@@ -63,25 +68,3 @@ class GameStatOverlay extends StatelessWidget {
     );
   }
 }
-
-/**
- * /// show calender on top
-          const Align(
-            alignment: Alignment.topCenter,
-            child: CalenderStat(),
-          ),
-
-          /// menu for editing time factor
-          const Align(
-            alignment: Alignment.topRight,
-            child: TimeMenu(),
-          ),
-
-          /// show money on top left
-          Align(
-            alignment: Alignment.topLeft,
-            child: MoneyStat(
-              monetaryService: game.gameController.monetaryService,
-            ),
-          ),
- */
