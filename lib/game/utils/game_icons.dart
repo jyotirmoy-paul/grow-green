@@ -13,4 +13,5 @@ abstract class GameIcons {
   static const remove = '$_base/icon.png';
   static const cutTree = '$_base/icon.png';
   static const calender = '$_base/icon.png';
+  static const temperature = '$_base/icon.png';
 }
