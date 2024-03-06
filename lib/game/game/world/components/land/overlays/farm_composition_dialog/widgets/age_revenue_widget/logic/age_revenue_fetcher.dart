@@ -14,7 +14,7 @@ class AgeRevenueFetcher {
     final harvestReadyAge = tree.harvestReadyAge();
     final maturityAge = tree.maturityAge();
 
-    final requestedAges = [sowAge, harvestReadyAge, maturityAge];
+    final requestedAges = [harvestReadyAge, maturityAge];
 
     return requestedAges.map((age) => _fetchForAge(age: age)).toList();
   }

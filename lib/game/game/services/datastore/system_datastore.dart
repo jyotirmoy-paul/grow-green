@@ -13,6 +13,7 @@ abstract class SystemDatastore {
       TreeType.coconut,
     ],
     crop: CropType.bajra,
+    fertilizer: FertilizerType.organic,
   );
 
   /// Block agroforestry system
@@ -22,6 +23,7 @@ abstract class SystemDatastore {
       TreeType.coconut,
     ],
     crop: CropType.maize,
+    fertilizer: FertilizerType.organic,
   );
 
   /// Boundary agroforestry system
@@ -31,6 +33,7 @@ abstract class SystemDatastore {
       TreeType.mango,
     ],
     crop: CropType.pepper,
+    fertilizer: FertilizerType.organic,
   );
 
   /// Organic fertilizer monoculture system
