@@ -35,11 +35,14 @@ class AgroforestrySystem implements FarmSystem {
   final AgroforestryType agroforestryType;
   final List<TreeType> trees;
   final CropType crop;
+    final FertilizerType fertilizer;
+
 
   const AgroforestrySystem({
     required this.agroforestryType,
     required this.trees,
     required this.crop,
+    required this.fertilizer,
   });
 
   @override
@@ -49,11 +52,13 @@ class AgroforestrySystem implements FarmSystem {
     AgroforestryType? agroforestryType,
     List<TreeType>? trees,
     CropType? crop,
+    FertilizerType? fertilizer,
   }) {
     return AgroforestrySystem(
       agroforestryType: agroforestryType ?? this.agroforestryType,
       trees: trees ?? this.trees,
       crop: crop ?? this.crop,
+      fertilizer: fertilizer ?? this.fertilizer,
     );
   }
 }

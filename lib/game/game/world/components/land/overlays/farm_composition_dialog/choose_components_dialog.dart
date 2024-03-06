@@ -171,42 +171,12 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     );
   }
 
-  /// system
-  _ComponentsModel forAgroforestryType(AgroforestryType agroforestryType) {
-    return _ComponentsModel(
-      headerText: 'Agroforestry System',
-      image: () {
-        switch (agroforestryType) {
-          case AgroforestryType.alley:
-            return GameImages.alleyPlanation;
-          case AgroforestryType.boundary:
-            return GameImages.boundaryPlantation;
-          case AgroforestryType.block:
-            return GameImages.blockPlantation;
-        }
-      }(),
-      descriptionText: "${agroforestryType.name.toUpperCase()}\nPLANTATION",
-      footerText: "",
-      componentId: ComponentId.agroforestryLayout,
-      isComponentEditable: widget.editableComponents.contains(ComponentId.agroforestryLayout),
-      footerButtonText: kChange,
-      color: AppColors.kSystemMenuCardBg,
-    );
-  }
-
   void _calculateDataFor(FarmContent farmContent) {
     /// clearn up
     children.clear();
     _totalCost = MoneyModel.zero();
 
     final isAgroforestry = farmContent.systemType != FarmSystemType.monoculture;
-
-    /// system
-    if (isAgroforestry) {
-      children.add(
-        forAgroforestryType(farmContent.systemType as AgroforestryType),
-      );
-    }
 
     /// crop
     if (farmContent.hasCrop) {

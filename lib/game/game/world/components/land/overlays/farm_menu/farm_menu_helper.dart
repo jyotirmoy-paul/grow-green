@@ -360,6 +360,13 @@ class FarmMenuHelper {
         systemType: system.agroforestryType,
       );
 
+      fertilizer = getFertilizerContent(
+        fertilizerType: system.fertilizer,
+        systemType: system.agroforestryType,
+        soilHealthPercentage: soilHealthPercentage,
+        cropType: system.crop,
+      );
+
       trees = [];
 
       for (final tree in system.trees) {
