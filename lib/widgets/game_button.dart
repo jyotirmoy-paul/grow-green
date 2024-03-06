@@ -258,7 +258,7 @@ class _TextButton extends StatelessWidget {
         child: StylizedText(
           text: Text(
             text,
-            style: TextStyles.s28,
+            style: TextStyles.s24,
             textAlign: TextAlign.center,
           ),
         ),

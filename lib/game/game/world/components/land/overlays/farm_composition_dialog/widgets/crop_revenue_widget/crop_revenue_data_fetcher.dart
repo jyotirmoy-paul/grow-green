@@ -37,17 +37,20 @@ class CropRevenueDataFetcher {
     return periods;
   }
 
-  double get revenuePerKgSeedSown {
+  int get revenuePerKgSeedSown {
     final seedsRequriedPerSquareM = crop.getSeedsRequiredPerHacter().value / 10000;
     final yieldKgPerUnitSeedQty = crop.getYieldKgPerSquareM() / seedsRequriedPerSquareM;
-    return yieldKgPerUnitSeedQty * crop.getSellingPricePerKg;
+    final result = yieldKgPerUnitSeedQty * crop.getSellingPricePerKg;
+    return result.toInt();
   }
 
-  int get costPerSeed {
+  int get costPerUnitSeed {
     final unitQty = crop.getSeedsRequiredPerHacter().copyWith(value: 1);
     return CostCalculator.seedCost(seedsRequired: unitQty, cropType: cropType);
   }
 
   String get germinationAssetPath => CropAsset.of(cropType).at(CropStage.germination);
   String get ripeAssetPath => CropAsset.of(cropType).at(CropStage.ripe);
+
+  String get qtyType => crop.getSeedsRequiredPerHacter().scale.name;
 }
