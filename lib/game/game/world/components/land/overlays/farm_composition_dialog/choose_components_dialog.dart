@@ -190,7 +190,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       componentId: ComponentId.agroforestryLayout,
       isComponentEditable: widget.editableComponents.contains(ComponentId.agroforestryLayout),
       footerButtonText: kChange,
-      color: Colors.blue.darken(0.5),
+      color: AppColors.kSystemMenuCardBg,
     );
   }
 
@@ -452,7 +452,10 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             /// image
-                            MenuImage(imageAssetPath: model.image),
+                            MenuImage(
+                              imageAssetPath: model.image,
+                              dimension: 130.s,
+                            ),
 
                             /// description
                             if (model.descriptionText != null)
@@ -461,7 +464,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                                 child: StylizedText(
                                   text: Text(
                                     model.descriptionText!,
-                                    style: TextStyles.s30,
+                                    style: TextStyles.s24,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -474,7 +477,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                         child: Center(
                           /// button
                           child: GameButton.text(
-                            color: model.isComponentEditable ? (model.buttonColor ?? Colors.blue) : Colors.grey,
+                            color: model.isComponentEditable ? (model.buttonColor ?? Colors.white12) : Colors.grey,
                             text: model.footerButtonText,
                             onTap: () {
                               if (model.isComponentEditable) return onComponentTap(model.componentId);
@@ -537,6 +540,10 @@ class MenuImage extends StatelessWidget {
         color: Colors.white12,
         shape: shape,
         borderRadius: shape == BoxShape.rectangle ? BorderRadius.circular(20.s) : null,
+        border: Border.all(
+          color: Colors.white.withOpacity(0.5),
+          width: 2.s,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5),
@@ -547,15 +554,11 @@ class MenuImage extends StatelessWidget {
         ],
       ),
       padding: EdgeInsets.all(_dimension * 0.1),
-      child: BackgroundGlow(
-        dimension: blurRadius ?? _dimension / 5,
-        glowColor: blurColor ?? Colors.white,
-        child: Image.asset(
-          imageAssetPath,
-          height: _dimension,
-          width: _dimension,
-          fit: BoxFit.contain,
-        ),
+      child: Image.asset(
+        imageAssetPath,
+        height: _dimension,
+        width: _dimension,
+        fit: BoxFit.contain,
       ),
     );
   }

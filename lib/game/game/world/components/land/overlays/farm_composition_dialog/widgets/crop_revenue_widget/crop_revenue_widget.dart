@@ -1,9 +1,11 @@
 import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../../widgets/stylized_text.dart';
+import '../../../../../../../../utils/game_icons.dart';
 import '../../../../components/farm/components/crop/enums/crop_type.dart';
 import 'crop_revenue_data_fetcher.dart';
 
@@ -17,8 +19,8 @@ class CropRevenueWidget extends StatelessWidget {
     this.bgColor = Colors.transparent,
   });
 
-  final Size size = Size(250.s, 150.s);
-  final double cropAssetHeight = 50.s;
+  final Size size = Size(270.s, 150.s);
+  final double cropAssetHeight = 60.s;
   double get cropAssetWidth => cropAssetHeight * 0.4;
 
   final double revenueRowHeight = 40.s;
@@ -32,14 +34,19 @@ class CropRevenueWidget extends StatelessWidget {
     return Center(
       child: SizedBox.fromSize(
         size: size,
-        child: Stack(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Positioned(
-              top: cropAssetHeight - revenueRowHeight / 2,
-              width: size.width,
-              child: Center(child: revenueRow),
+            Stack(
+              children: [
+                Positioned(
+                  top: cropAssetHeight - revenueRowHeight / 2,
+                  width: size.width,
+                  child: Center(child: revenueRow),
+                ),
+                Center(child: intervalHanger),
+              ],
             ),
-            intervalHanger,
           ],
         ),
       ),
@@ -50,8 +57,14 @@ class CropRevenueWidget extends StatelessWidget {
     return SizedBox(
       height: revenueRowHeight,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(child: Container(height: 3, color: Colors.red)),
+          revenueWidget(label: dataFetcher.costPerUnitSeed.toString(), assetPath: GameIcons.minus),
+          SizedBox(
+            width: intervalHangerWidth * (1 + 4 * hBarSpaceRatio),
+            child: Container(height: 2, color: Colors.white),
+          ),
+          revenueWidget(label: dataFetcher.revenuePerKgSeedSown.toString(), assetPath: GameIcons.plus),
         ],
       ),
     );
@@ -64,7 +77,7 @@ class CropRevenueWidget extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         child: Image.asset(
           assetPath,
-          fit: BoxFit.contain,
+          fit: BoxFit.fill,
           width: cropAssetWidth,
         ),
       ),
@@ -140,6 +153,42 @@ class CropRevenueWidget extends StatelessWidget {
       width: 2.s,
       height: 10.s,
       color: Colors.white,
+    );
+  }
+
+  Widget revenueWidget({required String label, required String assetPath}) {
+    return Container(
+      height: 30.s,
+      width: intervalHangerWidth * (1 - 4 * hBarSpaceRatio),
+      decoration: BoxDecoration(
+        color: bgColor.darken(0.3),
+        borderRadius: BorderRadius.circular(10.s),
+        border: Border.all(color: Colors.white, width: 1.s),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 10.s),
+      child: FittedBox(
+        child: Row(
+          children: [
+            Image.asset(
+              assetPath,
+              width: 10.s,
+              height: 10.s,
+              fit: BoxFit.contain,
+            ),
+            Gap(5.s),
+            FittedBox(
+              child: StylizedText(
+                text: Text(
+                  label,
+                  style: TextStyles.s14,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -54,10 +53,10 @@ class DialogContainer extends StatelessWidget {
         height: _size.height,
         padding: EdgeInsets.all(10.s),
         decoration: BoxDecoration(
-          color: Colors.brown.brighten(0.4),
+          color: Colors.blueGrey,
           borderRadius: BorderRadius.circular(12.s),
           border: Border.all(
-            color: Colors.black,
+            color: Colors.white,
             width: 4.s,
             strokeAlign: BorderSide.strokeAlignOutside,
           ),
@@ -75,7 +74,7 @@ class DialogContainer extends StatelessWidget {
                   Align(
                     alignment: Alignment.topCenter,
                     child: Container(
-                      height: 25.s,
+                      height: 0.s,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.30),
                         borderRadius: BorderRadius.circular(6.s),
@@ -84,10 +83,12 @@ class DialogContainer extends StatelessWidget {
                   ),
 
                   /// header content
-                  StylizedText(
-                    text: Text(
-                      title,
-                      style: TextStyles.s42,
+                  FittedBox(
+                    child: StylizedText(
+                      text: Text(
+                        title,
+                        style: TextStyles.s42,
+                      ),
                     ),
                   ),
 

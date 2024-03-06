@@ -1,3 +1,4 @@
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -5,19 +6,26 @@ import '../../../../../../../utils/app_colors.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/button_animator.dart';
+import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_images.dart';
 import '../../../../../enums/agroforestry_type.dart';
 import '../../components/farm/asset/crop_asset.dart';
 import '../../components/farm/asset/tree_asset.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
+import '../../components/farm/components/system/model/qty.dart';
 import '../../components/farm/components/system/real_life/calculators/trees/base_tree.dart';
+import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import 'choose_components_dialog.dart';
+import 'infomatics/crop_info.dart';
+import 'infomatics/fertililizer_info.dart';
+import 'infomatics/tree_info.dart';
 import 'widgets/age_revenue_widget/logic/age_revenue_fetcher.dart';
 import 'widgets/age_revenue_widget/view/age_revenue_chart.dart';
+import 'widgets/crop_revenue_widget/crop_revenue_data_fetcher.dart';
 import 'widgets/crop_revenue_widget/crop_revenue_widget.dart';
 import 'widgets/menu_item_flip_skeleton.dart';
 import 'widgets/system_item_widget.dart';
@@ -128,7 +136,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
         return AppColors.kFertilizerMenuCardBg;
 
       case ComponentId.agroforestryLayout:
-        return const Color(0xffC7B7A3);
+        return AppColors.kSystemMenuCardBg;
     }
   }
 
@@ -139,47 +147,25 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
       padding: EdgeInsets.symmetric(horizontal: 30.s, vertical: 40.s),
       itemBuilder: (context, index) {
         final model = models[index];
-        final treeType = TreeType.values.elementAtOrNull(index);
-        final cropType = CropType.values.elementAtOrNull(index);
-        final treeSaplingCost = BaseTreeCalculator.fromTreeType(treeType ?? TreeType.coconut).saplingCost;
+        final flipCardController = FlipCardController();
+        onTap() {
+          flipCardController.toggleCard();
+        }
+
         return ButtonAnimator(
           onPressed: () {
             Navigator.pop(context, index);
           },
           child: MenuItemFlipSkeleton(
+            flipCardController: flipCardController,
             bgColor: bgColor,
             width: 300.s,
-            header: Center(
-              child: StylizedText(
-                text: Text(
-                  model.name,
-                  style: TextStyles.s35,
-                ),
-              ),
-            ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Gap(10.s),
-                MenuImage(
-                  imageAssetPath: model.image,
-                ),
-                if (widget.componentId == ComponentId.trees)
-                  AgeRevenueChart.fromAgeRevenueModels(
-                    ageRevenueModels: AgeRevenueFetcher(treeType: treeType ?? TreeType.coconut).fetch(),
-                    size: Size(200.s, 180.s),
-                  ),
-                if (widget.componentId == ComponentId.crop)
-                  CropRevenueWidget(
-                    cropType: cropType ?? CropType.wheat,
-                    bgColor: bgColor,
-                  )
-              ],
-            ),
-            footer: MenuFooterTextRow(
-              leftText: "1 Sapling cost",
-              rightText: "$treeSaplingCost",
-            ),
+            header: _header(model, onTap),
+            backHeader: _header(model, onTap),
+            body: _body(index),
+            backBody: _backBody(index),
+            footer: _footer(index),
+            backFooter: _footer(index),
           ),
         );
       },
@@ -188,6 +174,148 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
       },
       itemCount: models.length,
     );
+  }
+
+  Widget _header(_ComponentModel model, void Function() onTap) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.s),
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          /// price
+          Align(
+            alignment: Alignment.centerLeft,
+            child: StylizedText(
+              text: Text(
+                model.name,
+                style: TextStyles.s25,
+              ),
+            ),
+          ),
+
+          /// info button to learn more
+          Align(
+            alignment: Alignment.centerRight,
+            child: GameButton.text(
+              text: "i",
+              size: Size.square(40.s),
+              onTap: onTap,
+              color: Colors.blue.shade800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _body(index) {
+    final model = models[index];
+    final treeType = TreeType.values.elementAtOrNull(index);
+    final cropType = CropType.values.elementAtOrNull(index);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Gap(10.s),
+        MenuImage(
+          imageAssetPath: model.image,
+          dimension: 130.s,
+        ),
+        if (widget.componentId == ComponentId.trees)
+          AgeRevenueChart.fromAgeRevenueModels(
+            ageRevenueModels: AgeRevenueFetcher(treeType: treeType ?? TreeType.coconut).fetch(),
+            size: Size(200.s, 140.s),
+          ),
+        if (widget.componentId == ComponentId.crop)
+          CropRevenueWidget(
+            cropType: cropType ?? CropType.wheat,
+            bgColor: bgColor,
+          )
+      ],
+    );
+  }
+
+  Widget _backBody(int index) {
+    final model = models[index];
+
+    String info = '';
+    switch (widget.componentId) {
+      case ComponentId.crop:
+        {
+          final cropType = CropType.values.elementAtOrNull(index);
+          info = CropInfo.getCropInfo(cropType);
+        }
+        break;
+      case ComponentId.trees:
+        {
+          final treeType = TreeType.values.elementAtOrNull(index);
+
+          info = TreeInfo.getTreeInfo(treeType);
+        }
+        break;
+      case ComponentId.fertilizer:
+        {
+          final fertilizerType = FertilizerType.values.elementAtOrNull(index);
+          info = FertilizerInfo.getFertilizerInfo(fertilizerType);
+        }
+        break;
+      case ComponentId.agroforestryLayout:
+        break;
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.s),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Gap(10.s),
+          MenuImage(imageAssetPath: model.image),
+          Gap(10.s),
+          Text(
+            info,
+            style: TextStyles.s18,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _footer(int index) {
+    switch (widget.componentId) {
+      case ComponentId.crop:
+        {
+          final cropType = CropType.values.elementAtOrNull(index);
+          final dataFetcher = CropRevenueDataFetcher(cropType: cropType ?? CropType.wheat);
+
+          return MenuFooterTextRow(
+            leftText: "Cost per ${dataFetcher.qtyType}",
+            rightText: "${dataFetcher.costPerUnitSeed}",
+          );
+        }
+      case ComponentId.trees:
+        {
+          final treeType = TreeType.values.elementAtOrNull(index);
+          final treeSaplingCost = BaseTreeCalculator.fromTreeType(treeType ?? TreeType.coconut).saplingCost;
+          return MenuFooterTextRow(
+            leftText: "1 Sapling cost",
+            rightText: "$treeSaplingCost",
+          );
+        }
+      case ComponentId.fertilizer:
+        {
+          // final fertilizerType = FertilizerType.values.elementAtOrNull(index);
+          final cost = CostCalculator.getFertilizerCost(qty: const Qty(value: 1, scale: Scale.kg));
+          return MenuFooterTextRow(
+            leftText: "Cost per kg",
+            rightText: cost.toString(),
+          );
+        }
+      case ComponentId.agroforestryLayout:
+        {
+          return const SizedBox.shrink();
+        }
+    }
   }
 }
 

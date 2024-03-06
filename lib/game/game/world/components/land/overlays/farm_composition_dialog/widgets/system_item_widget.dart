@@ -8,6 +8,7 @@ import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/game_button.dart';
 import '../../../../../../../../widgets/shadowed_container.dart';
 import '../../../../../../../../widgets/stylized_text.dart';
+import '../../../../../../../utils/game_icons.dart';
 import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../enums/farm_system_type.dart';
 import '../../../../../../enums/system_type.dart';
@@ -80,7 +81,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
             child: StylizedText(
               text: Text(
                 _getTitle(),
-                style: TextStyles.s26,
+                style: TextStyles.s18,
               ),
             ),
           ),
@@ -143,27 +144,30 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
   List<SizedBox> get _getComponents =>
       buildComponents().map((e) => SizedBox.square(dimension: 120.s, child: e)).toList();
 
-  Column get _backBody {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Flexible(child: systemWidget),
-        Expanded(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.s),
-              child: StylizedText(
-                text: Text(
-                  LayoutInfo.fromSystemType(widget.farmSystem).info,
-                  style: TextStyles.s18,
-                  textAlign: TextAlign.center,
+  Padding get _backBody {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.s),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Flexible(child: systemWidget),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.s),
+                child: StylizedText(
+                  text: Text(
+                    LayoutInfo.fromSystemType(widget.farmSystem).info,
+                    style: TextStyles.s14,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 
@@ -363,7 +367,6 @@ class BackgroundGlow extends StatelessWidget {
           width: _dimension,
           height: _dimension,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
                 color: glowColor,

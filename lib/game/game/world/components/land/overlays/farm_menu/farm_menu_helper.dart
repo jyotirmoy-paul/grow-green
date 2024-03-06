@@ -117,15 +117,11 @@ class FarmMenuHelper {
 
   /// soil health
   static FarmMenuItemModel _getSoilHealth(Farm farm) {
-    return FarmMenuItemModel(
+    return const FarmMenuItemModel(
       text: 'Health',
       option: FarmMenuOption.soilHealth,
       bgColor: Colors.white,
       image: GameIcons.soilHealth,
-      data: FarmMenuItemData(
-        data: '${farm.farmController.soilHealthPercentage.toStringAsFixed(1)} %',
-        image: "assets/images/icons/soil_health.png",
-      ),
     );
   }
 

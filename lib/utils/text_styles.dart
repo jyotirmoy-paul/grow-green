@@ -70,6 +70,12 @@ abstract class TextStyles {
         letterSpacing: 1.1.s,
       );
 
+  static TextStyle get s14 => TextStyle(
+        color: Colors.white,
+        fontSize: 14.s,
+        letterSpacing: 1.1.s,
+      );
+
   /// non scaled text styles
   static TextStyle get n20 => TextStyle(
         color: Colors.white,
