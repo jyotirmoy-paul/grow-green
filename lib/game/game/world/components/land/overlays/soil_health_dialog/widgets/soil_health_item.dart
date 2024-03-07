@@ -63,7 +63,7 @@ class SoilHealthItem extends StatelessWidget {
                 style: TextStyles.s15,
               ),
               Text(
-                mergedSoilHealthModel.soilHealth.toStringAsFixed(2),
+                mergedSoilHealthModel.soilHealth.toStringAsFixed(3),
                 style: TextStyles.s28,
               ),
             ],

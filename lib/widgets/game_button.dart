@@ -320,7 +320,7 @@ class _MenuItemButton extends StatelessWidget {
                       StylizedText(
                         text: Text(
                           dataText!,
-                          style: TextStyles.s18,
+                          style: TextStyles.s16,
                         ),
                       ),
 

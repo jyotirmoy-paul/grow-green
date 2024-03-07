@@ -15,6 +15,7 @@ class SoilHealthSummary extends StatelessWidget {
   final double yearsInterval;
   final double minSoilHealth;
   final double maxSoilHealth;
+  final bool minMaxTooNear;
   final int farmingForYears;
 
   SoilHealthSummary({
@@ -25,7 +26,8 @@ class SoilHealthSummary extends StatelessWidget {
     required this.minSoilHealth,
     required this.maxSoilHealth,
   })  : yearsInterval = (mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year) / 6,
-        farmingForYears = mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year;
+        farmingForYears = mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year,
+        minMaxTooNear = (maxSoilHealth - minSoilHealth) < 0.001;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,7 @@ class SoilHealthSummary extends StatelessWidget {
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            interval: (maxSoilHealth - minSoilHealth) / 6,
+                            interval: minMaxTooNear ? 10 : (maxSoilHealth - minSoilHealth) / 6,
                             getTitlesWidget: (v, meta) {
                               if (v == meta.max || v == meta.min) return const SizedBox.shrink();
                               return Padding(
