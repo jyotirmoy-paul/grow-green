@@ -4,32 +4,26 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
-import '../../../../../../services/game_services/monetary/models/money_model.dart';
-import '../../../components/farm/model/harvest_model.dart';
+import '../../../../../../../utils/game_utils.dart';
 import '../../widgets/dialog_stats.dart';
-import '../models/harvest_revenue_data_point.dart';
+import '../models/merged_soil_health_model.dart';
 
-/// TODO: Language
-
-class HarvestSummary extends StatelessWidget {
+class SoilHealthSummary extends StatelessWidget {
   final GlobalKey chartRendererKey;
-  final List<HarvestModel> harvestModels;
-  final List<HarvestRevenueDataPoint> harvestRevenueDataPoints;
+  final List<MergedSoilHealthModel> mergedSoilHealthModels;
   final Color bgColor;
-  final MoneyModel totalRevenue;
   final double yearsInterval;
-  final double moneyInterval;
+  final double minSoilHealth;
+  final double maxSoilHealth;
 
-  HarvestSummary({
+  SoilHealthSummary({
     super.key,
-    required this.harvestModels,
-    required this.harvestRevenueDataPoints,
     required this.chartRendererKey,
-    this.bgColor = Colors.black,
-  })  : totalRevenue = harvestRevenueDataPoints.last.revenue,
-        yearsInterval = (harvestRevenueDataPoints.last.year - harvestRevenueDataPoints.first.year) / 6,
-        moneyInterval =
-            (harvestRevenueDataPoints.last.revenue.value - harvestRevenueDataPoints.first.revenue.value) / 3;
+    required this.mergedSoilHealthModels,
+    this.bgColor = const Color(0xff503C3C),
+    required this.minSoilHealth,
+    required this.maxSoilHealth,
+  }) : yearsInterval = (mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year) / 6;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +44,7 @@ class HarvestSummary extends StatelessWidget {
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 4.s),
                   child: Text(
-                    'Cummulative Revenue over the years',
+                    'Soil Health over the years',
                     style: TextStyles.s28.copyWith(
                       letterSpacing: 1.4.s,
                     ),
@@ -85,15 +79,13 @@ class HarvestSummary extends StatelessWidget {
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            interval: moneyInterval,
+                            interval: (maxSoilHealth - minSoilHealth) / 6,
                             getTitlesWidget: (v, meta) {
-                              /// if min & max not falling on interval, ignore them!
                               if (v == meta.max || v == meta.min) return const SizedBox.shrink();
-
                               return Padding(
                                 padding: EdgeInsets.only(right: 10.s),
                                 child: Text(
-                                  MoneyModel(value: v.toInt()).formattedValue,
+                                  v.toStringAsFixed(2),
                                   textAlign: TextAlign.end,
                                   style: TextStyles.s20.copyWith(
                                     color: bgColor,
@@ -114,36 +106,43 @@ class HarvestSummary extends StatelessWidget {
                           strokeAlign: BorderSide.strokeAlignOutside,
                         ),
                       ),
-                      minY: 0,
-                      maxY: (totalRevenue.value * 1.2).toDouble(),
+                      maxY: maxSoilHealth + 0.25,
+                      minY: minSoilHealth - 0.25,
                       lineTouchData: LineTouchData(
                         touchTooltipData: LineTouchTooltipData(
                           tooltipBgColor: bgColor,
                           maxContentWidth: 300.s,
                           tooltipRoundedRadius: 10.s,
                           getTooltipItems: (touchedSpots) {
-                            return touchedSpots.map((s) {
-                              return LineTooltipItem(
-                                MoneyModel(value: s.y.toInt()).formattedValue,
-                                TextStyles.s20,
-                              );
-                            }).toList();
+                            return touchedSpots.map(
+                              (s) {
+                                return LineTooltipItem(s.y.toStringAsFixed(3), TextStyles.s20);
+                              },
+                            ).toList();
                           },
                         ),
                       ),
                       lineBarsData: [
                         LineChartBarData(
-                          spots: harvestRevenueDataPoints
-                              .map<FlSpot>((d) => FlSpot(d.year.toDouble(), d.revenue.value.toDouble()))
+                          spots: mergedSoilHealthModels
+                              .map<FlSpot>((d) => FlSpot(d.year.toDouble(), d.soilHealth))
                               .toList(),
                           isCurved: false,
                           color: bgColor,
                           barWidth: 2.s,
                           isStrokeCapRound: true,
                           dotData: const FlDotData(show: false),
+                          aboveBarData: BarAreaData(
+                            show: true,
+                            cutOffY: GameUtils.cutOffSoilHealthInPercentage,
+                            applyCutOffY: true,
+                            gradient: AppColors.soilHealthNegativeGraphGradient,
+                          ),
                           belowBarData: BarAreaData(
                             show: true,
-                            gradient: AppColors.farmRevenueGraphGradient,
+                            cutOffY: GameUtils.cutOffSoilHealthInPercentage,
+                            applyCutOffY: true,
+                            gradient: AppColors.soilHealthPositiveGraphGradient,
                           ),
                         ),
                       ],
@@ -157,7 +156,7 @@ class HarvestSummary extends StatelessWidget {
           ),
         ),
 
-        Expanded(child: HarvestStats(harvestModels: harvestModels, bgColor: bgColor, totalRevenue: totalRevenue)),
+        Expanded(child: SoilHealthStats(bgColor: bgColor, maxSoilHealth: maxSoilHealth, minSoilHealth: minSoilHealth)),
       ],
     );
   }

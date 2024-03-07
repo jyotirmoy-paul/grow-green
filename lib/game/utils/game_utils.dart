@@ -10,6 +10,10 @@ class GameUtils {
   static final tileSize = Vector2(1024, 640);
   static const maxZoom = 0.8;
   static const maxCloudVelocity = 20.0;
+  static const startingSoilHealthInPercentage = 1.0;
+  static const cutOffSoilHealthInPercentage = 1.0;
+  static const maxSoilHealthInPercentage = 5.0;
+  static const minSoilHealthInPercentage = 0.03;
 
   static final farmInitialPrice = MoneyModel(value: 3000000);
 

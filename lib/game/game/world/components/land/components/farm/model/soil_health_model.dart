@@ -18,12 +18,13 @@ class SoilHealthModel {
   final bool areTreesPresent;
 
   SoilHealthModel({
+    String? id,
     required this.recordedOnDate,
     required this.currentSoilHealth,
     required this.systemType,
     required this.fertilizerType,
     required this.areTreesPresent,
-  }) : id = const Uuid().v1();
+  }) : id = id ?? const Uuid().v1();
 
   factory SoilHealthModel.fromJson(Map<String, dynamic> json) => _$SoilHealthModelFromJson(json);
   Map<String, dynamic> toJson() => _$SoilHealthModelToJson(this);

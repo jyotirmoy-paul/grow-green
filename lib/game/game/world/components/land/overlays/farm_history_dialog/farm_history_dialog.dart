@@ -44,7 +44,7 @@ class FarmHistoryDialog extends StatelessWidget {
           Gap(20.s),
           StylizedText(
             text: Text(
-              'Nothing to show!',
+              'Nothing to show yet, setup your farm today!',
               style: TextStyles.s28,
             ),
           ),
@@ -58,6 +58,8 @@ class FarmHistoryDialog extends StatelessWidget {
       padding: EdgeInsets.all(12.s),
       itemBuilder: (_, i) {
         if (i == 0) {
+          if (harvestRevenueDataPoints.length < 2) return const SizedBox.shrink();
+
           return HarvestSummary(
             chartRendererKey: chartRendererKey,
             harvestRevenueDataPoints: harvestRevenueDataPoints,

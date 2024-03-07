@@ -34,8 +34,8 @@ class FarmCoreService {
   static const treeSize = 50.0;
   static const cropSize = 25.0;
 
-  /// record soil health every 40 ticks (every 40 game days!)
-  static const soilHealthRecordIntervalTick = 40;
+  /// record soil health every 26 ticks (26 game days)
+  static const soilHealthRecordIntervalTick = 26;
 
   final String tag;
   final Rectangle farmRect;
@@ -136,7 +136,7 @@ class FarmCoreService {
     }
   }
 
-  void updateFarmStateModel(FarmStateModel newFarmStateModel) {
+  void updateFarmStateModel(FarmStateModel newFarmStateModel, {bool sync = true}) {
     Log.d('$tag: updating _farmStateModel to $newFarmStateModel, _initPhase: $_initPhase');
 
     /// update farm state value
@@ -163,7 +163,8 @@ class FarmCoreService {
     Log.d('$tag: notifying all listeners of changes in farm state model');
     _farmStateModelStreamController.add(newFarmStateModel);
 
-    if (!_initPhase) {
+    /// if sync is false, no need to sync changes to the server!
+    if (!_initPhase && sync) {
       /// sync changes to server - it's a fire and forget call
       /// there are internal mechanisms for retrying
       unawaited(gameDatastore.saveFarmState(newFarmStateModel));
@@ -558,6 +559,11 @@ class FarmCoreService {
           : farmContent!.cropSupportConfig?.fertilizerConfig.type as FertilizerType?,
       areTreesPresent: farmContent!.hasTrees,
     );
+
+    /// update the local farm state model without doing an entire state sync
+    final farmStateModel = _farmStateModelValue;
+    farmStateModel.soilHealthPercentage = newSoilHealth;
+    updateFarmStateModel(farmStateModel, sync: false);
 
     await _soilHealthRecorder.record(soilHealthModel);
 
