@@ -15,6 +15,7 @@ class SoilHealthSummary extends StatelessWidget {
   final double yearsInterval;
   final double minSoilHealth;
   final double maxSoilHealth;
+  final int farmingForYears;
 
   SoilHealthSummary({
     super.key,
@@ -23,7 +24,8 @@ class SoilHealthSummary extends StatelessWidget {
     this.bgColor = const Color(0xff503C3C),
     required this.minSoilHealth,
     required this.maxSoilHealth,
-  }) : yearsInterval = (mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year) / 6;
+  })  : yearsInterval = (mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year) / 6,
+        farmingForYears = mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year;
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +158,14 @@ class SoilHealthSummary extends StatelessWidget {
           ),
         ),
 
-        Expanded(child: SoilHealthStats(bgColor: bgColor, maxSoilHealth: maxSoilHealth, minSoilHealth: minSoilHealth)),
+        Expanded(
+          child: SoilHealthStats(
+            bgColor: bgColor,
+            maxSoilHealth: maxSoilHealth,
+            minSoilHealth: minSoilHealth,
+            farmingForYears: farmingForYears,
+          ),
+        ),
       ],
     );
   }

@@ -49,6 +49,7 @@ class SoilHealthDialog extends StatelessWidget {
       itemCount: mergedSoilHealthModels.length + 1,
       itemBuilder: (_, i) {
         if (i == 0) {
+          if (mergedSoilHealthModels.length < 2) return const SizedBox.shrink();
           final (minSoilHealth, maxSoilHealth) = MergedSoilHealthModel.minMaxSoilHealth(mergedSoilHealthModels);
 
           return SoilHealthSummary(
