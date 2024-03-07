@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../utils/utils.dart';
-import '../../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../components/farm/model/harvest_model.dart';
 import '../models/harvest_revenue_data_point.dart';
@@ -12,6 +11,7 @@ import '../models/harvest_revenue_data_point.dart';
 /// TODO: Language
 
 class HarvestSummary extends StatelessWidget {
+  final GlobalKey chartRendererKey;
   final List<HarvestModel> harvestModels;
   final List<HarvestRevenueDataPoint> harvestRevenueDataPoints;
   final Color bgColor;
@@ -23,11 +23,12 @@ class HarvestSummary extends StatelessWidget {
     super.key,
     required this.harvestModels,
     required this.harvestRevenueDataPoints,
+    required this.chartRendererKey,
     this.bgColor = Colors.black,
   })  : totalRevenue = harvestRevenueDataPoints.last.revenue,
-        yearsInterval = (harvestRevenueDataPoints.last.year - harvestRevenueDataPoints.first.year) / 10,
+        yearsInterval = (harvestRevenueDataPoints.last.year - harvestRevenueDataPoints.first.year) / 6,
         moneyInterval =
-            (harvestRevenueDataPoints.last.revenue.value - harvestRevenueDataPoints.first.revenue.value) / 4;
+            (harvestRevenueDataPoints.last.revenue.value - harvestRevenueDataPoints.first.revenue.value) / 3;
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +47,11 @@ class HarvestSummary extends StatelessWidget {
                     color: bgColor,
                     borderRadius: BorderRadius.circular(12.s),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.s, vertical: 4.s),
-                  child: StylizedText(
-                    text: Text(
-                      'Cummulative Revenue over the years!',
-                      style: TextStyles.s24.copyWith(
-                        letterSpacing: 1.4.s,
-                      ),
+                  padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 4.s),
+                  child: Text(
+                    'Cummulative Revenue over the years!',
+                    style: TextStyles.s28.copyWith(
+                      letterSpacing: 1.4.s,
                     ),
                   ),
                 ),
@@ -64,6 +63,7 @@ class HarvestSummary extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 2,
                   child: LineChart(
+                    chartRendererKey: chartRendererKey,
                     LineChartData(
                       gridData: const FlGridData(show: true),
                       titlesData: FlTitlesData(
@@ -80,9 +80,7 @@ class HarvestSummary extends StatelessWidget {
                                 return const SizedBox.shrink();
                               }
 
-                              return StylizedText(
-                                text: Text(v.toStringAsFixed(0), style: TextStyles.s20),
-                              );
+                              return Text(v.toStringAsFixed(0), style: TextStyles.s20.copyWith(color: bgColor));
                             },
                             reservedSize: 30.s,
                           ),
@@ -97,10 +95,15 @@ class HarvestSummary extends StatelessWidget {
                                 return const SizedBox.shrink();
                               }
 
-                              return StylizedText(
-                                text: Text(
+                              return Padding(
+                                padding: EdgeInsets.only(right: 10.s),
+                                child: Text(
                                   MoneyModel(value: v.toInt()).formattedValue,
-                                  style: TextStyles.s20,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyles.s20.copyWith(
+                                    color: bgColor,
+                                    letterSpacing: 1.s,
+                                  ),
                                 ),
                               );
                             },
@@ -142,7 +145,7 @@ class HarvestSummary extends StatelessWidget {
                           color: bgColor,
                           barWidth: 2.s,
                           isStrokeCapRound: true,
-                          dotData: const FlDotData(show: true),
+                          dotData: const FlDotData(show: false),
                           belowBarData: BarAreaData(
                             show: true,
                             gradient: LinearGradient(
@@ -150,9 +153,7 @@ class HarvestSummary extends StatelessWidget {
                               end: Alignment.bottomCenter,
                               colors: [
                                 bgColor,
-                                bgColor.withOpacity(0.6),
-                                bgColor.withOpacity(0.2),
-                                // Colors.transparent,
+                                bgColor.withOpacity(0.4),
                               ],
                             ),
                           ),
@@ -199,9 +200,7 @@ class _HarvestStats extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           /// heading
-          StylizedText(
-            text: Text('Stats', style: TextStyles.s28, textAlign: TextAlign.center),
-          ),
+          Text('Stats', style: TextStyles.s28, textAlign: TextAlign.center),
 
           Column(
             children: [
@@ -236,17 +235,13 @@ class _StatItem extends StatelessWidget {
     return Row(
       children: [
         /// text a
-        StylizedText(
-          text: Text(textA, style: TextStyles.s20),
-        ),
+        Text(textA, style: TextStyles.s20),
 
         /// spacer
         const Spacer(),
 
         /// text b
-        StylizedText(
-          text: Text(textB, style: TextStyles.s20),
-        ),
+        Text(textB, style: TextStyles.s20),
       ],
     );
   }

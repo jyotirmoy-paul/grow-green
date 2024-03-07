@@ -19,12 +19,14 @@ class FarmHistoryDialog extends StatelessWidget {
   final List<MergedHarvestModel> mergedHarvestModels;
   final List<HarvestRevenueDataPoint> harvestRevenueDataPoints;
   final Color bgColor;
+  final GlobalKey chartRendererKey;
 
   FarmHistoryDialog({
     super.key,
     required this.farm,
     this.bgColor = const Color(0xff474F7A),
-  })  : harvestModels = farm.farmController.harvestModels,
+  })  : chartRendererKey = GlobalKey(),
+        harvestModels = farm.farmController.harvestModels,
         mergedHarvestModels = MergedHarvestModel.generateMergedHarvestModelFrom(farm.farmController.harvestModels),
         harvestRevenueDataPoints = HarvestRevenueDataPoint.generateRevenueDataPoint(farm.farmController.harvestModels);
 
@@ -57,6 +59,7 @@ class FarmHistoryDialog extends StatelessWidget {
       itemBuilder: (_, i) {
         if (i == 0) {
           return HarvestSummary(
+            chartRendererKey: chartRendererKey,
             harvestRevenueDataPoints: harvestRevenueDataPoints,
             bgColor: bgColor,
             harvestModels: harvestModels,
