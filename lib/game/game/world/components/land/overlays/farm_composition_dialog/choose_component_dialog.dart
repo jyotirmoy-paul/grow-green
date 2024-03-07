@@ -304,8 +304,11 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
         }
       case ComponentId.fertilizer:
         {
-          // final fertilizerType = FertilizerType.values.elementAtOrNull(index);
-          final cost = CostCalculator.getFertilizerCost(qty: const Qty(value: 1, scale: Scale.kg));
+          final fertilizerType = FertilizerType.values.elementAtOrNull(index);
+          final cost = CostCalculator.getFertilizerCost(
+            qty: const Qty(value: 1, scale: Scale.kg),
+            type: fertilizerType ?? FertilizerType.chemical,
+          );
           return MenuFooterTextRow(
             leftText: "Cost per kg",
             rightText: cost.toString(),

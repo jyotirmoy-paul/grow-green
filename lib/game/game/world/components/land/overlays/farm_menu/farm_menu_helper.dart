@@ -14,6 +14,7 @@ import '../../../../../services/game_services/monetary/enums/transaction_type.da
 import '../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
 import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
+import '../../components/farm/components/system/real_life/utils/maintance_calculator.dart';
 import '../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/enum/farm_state.dart';
@@ -313,6 +314,8 @@ class FarmMenuHelper {
         systemType: systemType,
         soilHealthPercentage: soilHealthPercentage,
         cropType: cropType,
+        maintenanceFor: MaintenanceFor.cropAndTree,
+        fertilizerType: fertilizerType,
       ),
     );
   }
@@ -472,7 +475,10 @@ class FarmMenuHelper {
             systemType: FarmSystemType.monoculture,
             soilHealthPercentage: soilHealthPercentage,
             cropType: cropType,
+            fertilizerType: system.fertilizer,
+            maintenanceFor: MaintenanceFor.crop,
           ),
+          type: system.fertilizer,
         ),
       );
     }

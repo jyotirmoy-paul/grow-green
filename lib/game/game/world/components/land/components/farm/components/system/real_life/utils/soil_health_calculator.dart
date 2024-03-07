@@ -1,8 +1,10 @@
 import '../../../../../../../../../../utils/game_utils.dart';
 import '../../../../../../../../../enums/agroforestry_type.dart';
+import '../../../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../../../enums/system_type.dart';
 import '../../../../model/content.dart';
 import '../../../../model/fertilizer/fertilizer_type.dart';
+import 'maintance_calculator.dart';
 import 'qty_calculator.dart';
 
 abstract class SoilHealthCalculator {
@@ -12,18 +14,24 @@ abstract class SoilHealthCalculator {
     required Content fertilizer,
     required double soilHealthPercentage,
   }) {
-    final fertilizerPerYearPerHectar = QtyCalculator.getFertilizerQtyRequiredFromTime(
-      soilHealthPercentage: soilHealthPercentage,
-      ageInMonths: 12,
-    );
-    final fertilizerQty = fertilizer.qty.value;
-    final fertilizerUsedRatio = fertilizerQty / fertilizerPerYearPerHectar.value;
-
     if (fertilizer.type is! FertilizerType) {
       throw Exception('$tag: _fertilizerEffect() invoked with wrong fertilizer.type: ${fertilizer.type}');
     }
 
-    final fertilizerEffectWithFullQty = switch (fertilizer.type as FertilizerType) {
+    final fertilizerType = fertilizer.type as FertilizerType;
+
+    final fertilizerPerYearPerHectar = QtyCalculator.getFertilizerQtyRequiredFromTime(
+      soilHealthPercentage: soilHealthPercentage,
+      ageInMonths: 12,
+      fertilizerType: fertilizerType,
+      maintenanceFor: MaintenanceFor.cropAndTree,
+      systemType: FarmSystemType.monoculture,
+    );
+    final fertilizerQty = fertilizer.qty.value;
+
+    final fertilizerUsedRatio = fertilizerQty / fertilizerPerYearPerHectar.value;
+
+    final fertilizerEffectWithFullQty = switch (fertilizerType) {
       FertilizerType.organic => 0.2,
       FertilizerType.chemical => -0.2,
     };

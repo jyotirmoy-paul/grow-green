@@ -10,7 +10,6 @@ class AgeRevenueFetcher {
   AgeRevenueModels fetch() {
     final tree = BaseTreeCalculator.fromTreeType(treeType);
 
-    const sowAge = 0;
     final harvestReadyAge = tree.harvestReadyAge();
     final maturityAge = tree.maturityAge();
 
