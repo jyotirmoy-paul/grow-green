@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../utils/utils.dart';
@@ -50,8 +49,8 @@ class MergedHarvestItem extends StatelessWidget {
               child: StylizedText(
                 text: Text(
                   '$itemNo.',
-                  style: TextStyles.s24.copyWith(
-                    letterSpacing: 5,
+                  style: TextStyles.s28.copyWith(
+                    letterSpacing: 3.s,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -96,18 +95,14 @@ class MergedHarvestItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          StylizedText(
-                            text: Text(
-                              model.growable.growableName,
-                              style: TextStyles.s20,
-                            ),
+                          Text(
+                            model.growable.growableName,
+                            style: TextStyles.s25,
                           ),
                           Gap(8.s),
-                          StylizedText(
-                            text: Text(
-                              'x${model.noOfMergedItems}',
-                              style: TextStyles.s18,
-                            ),
+                          Text(
+                            'x${model.noOfMergedItems}',
+                            style: TextStyles.s23,
                           ),
                         ],
                       ),
@@ -124,19 +119,15 @@ class MergedHarvestItem extends StatelessWidget {
                       flex: 3,
                       child: Column(
                         children: [
-                          StylizedText(
-                            text: Text(
-                              'Yield',
-                              style: TextStyles.s15,
-                              textAlign: TextAlign.center,
-                            ),
+                          Text(
+                            'Yield',
+                            style: TextStyles.s18,
+                            textAlign: TextAlign.center,
                           ),
-                          StylizedText(
-                            text: Text(
-                              '${(model.yield * 100).toStringAsFixed(1)} %',
-                              style: TextStyles.s20,
-                              textAlign: TextAlign.center,
-                            ),
+                          Text(
+                            '${(model.yield * 100).toStringAsFixed(1)} %',
+                            style: TextStyles.s23,
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
@@ -148,11 +139,9 @@ class MergedHarvestItem extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          StylizedText(
-                            text: Text(
-                              model.totalRevenue.formattedValue,
-                              style: TextStyles.s24,
-                            ),
+                          Text(
+                            model.totalRevenue.formattedValue,
+                            style: TextStyles.s24,
                           ),
                           Gap(6.s),
                           Image.asset(
@@ -183,18 +172,16 @@ class _Date extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StylizedText(
-      text: Text(
-        () {
-          if (model.startDate == model.endDate) {
-            return Utils.monthYearDateFormat.format(model.startDate);
-          }
+    return Text(
+      () {
+        if (model.startDate == model.endDate) {
+          return Utils.monthYearDateFormat.format(model.startDate);
+        }
 
-          return '${Utils.monthYearDateFormat.format(model.startDate)} ... ${Utils.monthYearDateFormat.format(model.endDate)}';
-        }(),
-        style: TextStyles.s20.copyWith(
-          letterSpacing: 2.s,
-        ),
+        return '${Utils.monthYearDateFormat.format(model.startDate)} ... ${Utils.monthYearDateFormat.format(model.endDate)}';
+      }(),
+      style: TextStyles.s20.copyWith(
+        letterSpacing: 2.s,
       ),
     );
   }
@@ -212,12 +199,12 @@ class _HarvestType extends StatelessWidget {
     switch (model.harvestType) {
       case HarvestType.recurring:
         // return Colors.blueAccent;
-        return const Color(0xffFFC374);
+        return Colors.blue;
 
       case HarvestType.oneTime:
         return switch (model.growable.getGrowableType()) {
           GrowableType.tree => Colors.redAccent,
-          GrowableType.crop => Colors.lightGreen,
+          GrowableType.crop => Colors.green,
         };
     }
   }
@@ -243,18 +230,11 @@ class _HarvestType extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(8.s),
-          border: Border.all(
-            color: AppColors.white50,
-            width: 4.s,
-            strokeAlign: BorderSide.strokeAlignOutside,
-          ),
         ),
-        child: StylizedText(
-          text: Text(
-            text,
-            style: TextStyles.s20,
-            textAlign: TextAlign.center,
-          ),
+        child: Text(
+          text,
+          style: TextStyles.s23,
+          textAlign: TextAlign.center,
         ),
       ),
     );

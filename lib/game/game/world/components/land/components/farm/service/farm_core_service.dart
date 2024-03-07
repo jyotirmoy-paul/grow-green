@@ -33,7 +33,9 @@ import 'soil_health/soil_health_recorder.dart';
 class FarmCoreService {
   static const treeSize = 50.0;
   static const cropSize = 25.0;
-  static const soilHealthRecordIntervalTick = 16;
+
+  /// record soil health every 40 ticks (every 40 game days!)
+  static const soilHealthRecordIntervalTick = 40;
 
   final String tag;
   final Rectangle farmRect;
