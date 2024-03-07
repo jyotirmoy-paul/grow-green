@@ -1,0 +1,4 @@
+enum SoilHealthMovement {
+  up,
+  down,
+}

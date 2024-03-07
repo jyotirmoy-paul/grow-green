@@ -13,8 +13,8 @@ class MergedHarvestModel {
   final MoneyModel totalRevenue;
 
   /// start date and end date would be same for noOfMergedItems = 1
-  final DateTime startDate;
   final DateTime endDate;
+  final DateTime startDate;
 
   /// only useful for when trees are sold
   final int age;
@@ -25,8 +25,8 @@ class MergedHarvestModel {
     required this.harvestType,
     required this.yield,
     required this.totalRevenue,
-    required this.startDate,
     required this.endDate,
+    required this.startDate,
     required this.age,
   });
 
@@ -46,8 +46,8 @@ class MergedHarvestModel {
       harvestType: harvestType ?? this.harvestType,
       yield: yield ?? this.yield,
       totalRevenue: totalRevenue ?? this.totalRevenue,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
+      endDate: startDate ?? this.endDate,
+      startDate: endDate ?? this.startDate,
       age: age ?? this.age,
     );
   }
@@ -68,8 +68,8 @@ class MergedHarvestModel {
             harvestType: currentModel.harvestType,
             yield: currentModel.yield,
             totalRevenue: currentModel.revenue,
-            startDate: currentModel.dateOfHarvest,
             endDate: currentModel.dateOfHarvest,
+            startDate: currentModel.dateOfHarvest,
             age: currentModel.ageInDaysAtHarvest,
           ),
         );

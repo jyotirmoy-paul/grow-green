@@ -74,6 +74,7 @@ abstract class SoilHealthCalculator {
     // final systemTypeEffectValue = _systemTypeAffect(systemType: systemType, treesPresent: treesPresent);
 
     // return soilHealthPercentage + fertilzerEffect + systemTypeEffectValue;
-    return currentSoilHealth * GameUtils().getRandomNumberBetween(min: 0.9999996, max: 1.000002);
+    // return currentSoilHealth + GameUtils().getRandomNumberBetween(min: -1.1, max: -1.9);
+    return GameUtils().getRandomNumberBetween(min: 0.001, max: 0.1);
   }
 }

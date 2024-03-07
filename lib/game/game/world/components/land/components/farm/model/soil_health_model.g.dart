@@ -8,6 +8,7 @@ part of 'soil_health_model.dart';
 
 SoilHealthModel _$SoilHealthModelFromJson(Map<String, dynamic> json) =>
     SoilHealthModel(
+      id: json['id'] as String?,
       recordedOnDate: DateTime.parse(json['recordedOnDate'] as String),
       currentSoilHealth: (json['currentSoilHealth'] as num).toDouble(),
       systemType:
@@ -19,6 +20,7 @@ SoilHealthModel _$SoilHealthModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$SoilHealthModelToJson(SoilHealthModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'recordedOnDate': instance.recordedOnDate.toIso8601String(),
       'currentSoilHealth': instance.currentSoilHealth,
       'systemType': const SystemTypeConverter().toJson(instance.systemType),

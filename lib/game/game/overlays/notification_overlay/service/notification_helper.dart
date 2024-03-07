@@ -39,7 +39,7 @@ abstract class NotificationHelper {
   static void agroforestrySystemTapNotAllowed() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Editing agroforestry system is not allowed with trees present!',
+        text: 'Can\'t edit with trees present in the system!',
         textColor: Colors.red,
       ),
     );

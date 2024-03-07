@@ -174,8 +174,8 @@ class _Date extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       () {
-        if (model.startDate == model.endDate) {
-          return Utils.monthYearDateFormat.format(model.startDate);
+        if (model.endDate == model.startDate) {
+          return Utils.monthYearDateFormat.format(model.endDate);
         }
 
         return '${Utils.monthYearDateFormat.format(model.startDate)} ... ${Utils.monthYearDateFormat.format(model.endDate)}';
