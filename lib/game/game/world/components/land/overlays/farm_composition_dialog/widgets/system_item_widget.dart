@@ -8,12 +8,12 @@ import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/game_button.dart';
 import '../../../../../../../../widgets/shadowed_container.dart';
 import '../../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../../utils/game_icons.dart';
 import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../enums/farm_system_type.dart';
 import '../../../../../../enums/system_type.dart';
 import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/asset/layout_asset.dart';
+import '../../../components/farm/components/system/real_life/utils/maintance_calculator.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/farm.dart';
 import '../../farm_menu/farm_menu_helper.dart';
@@ -274,6 +274,8 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
       systemType: system.farmSystemType,
       soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
       cropType: cropType,
+      fertilizerType: system.fertilizer,
+      maintenanceFor: MaintenanceFor.crop,
     );
 
     final fertilierData = _SystemComponent(

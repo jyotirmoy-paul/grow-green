@@ -31,7 +31,6 @@ import '../system_selector_menu/enum/component_id.dart';
 import 'choose_component_dialog.dart';
 import 'widgets/menu_item_flip_skeleton.dart';
 import 'widgets/sell_tree_widget.dart';
-import 'widgets/system_item_widget.dart';
 
 /// TODO: Language
 class ChooseComponentsDialog extends StatefulWidget {
@@ -154,7 +153,10 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   _ComponentsModel forFertilizer(Content fertilizerContent) {
     final fertilizerType = fertilizerContent.type as FertilizerType;
     final fertilizerCost = MoneyModel(
-      value: CostCalculator.fertilizerCostFromContent(fertilizerContent: fertilizerContent),
+      value: CostCalculator.fertilizerCostFromContent(
+        fertilizerContent: fertilizerContent,
+        type: fertilizerType,
+      ),
     );
 
     _totalCost += fertilizerCost;
