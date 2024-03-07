@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'extensions/num_extensions.dart';
 
 abstract class Utils {
+  static final monthYearDateFormat = DateFormat('MMM, yyyy');
+  static final monthDateFormat = DateFormat('MMMM');
+
   static Future<T?> showNonAnimatedDialog<T extends Object?>({
     required String barrierLabel,
     required BuildContext context,

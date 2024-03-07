@@ -25,7 +25,6 @@ import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm_controller.dart';
 import '../../components/farm/model/content.dart';
 import '../../components/farm/model/farm_content.dart';
-import '../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../farm_menu/farm_menu_helper.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import 'choose_component_dialog.dart';
@@ -87,7 +86,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       footerButtonText: kChange,
       descriptionText:
           "${cropType.name.toUpperCase()}\n${cropContent.qty.readableFormat} | ₹ ${cropCost.formattedValue} ",
-      color: AppColors.kCropMenuCardBg,
+      color: AppColors.cropMenuCardBg,
     );
   }
 
@@ -100,7 +99,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       componentId: ComponentId.crop,
       isComponentEditable: widget.editableComponents.contains(ComponentId.crop),
       footerButtonText: kAdd,
-      color: AppColors.kCropMenuCardBg,
+      color: AppColors.cropMenuCardBg,
     );
   }
 

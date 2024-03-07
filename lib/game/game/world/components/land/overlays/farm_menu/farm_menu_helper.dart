@@ -198,7 +198,7 @@ class FarmMenuHelper {
         return 'Maintenance';
 
       case FarmMenuOption.history:
-        return 'History';
+        return 'Farm History';
     }
   }
 

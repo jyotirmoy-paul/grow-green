@@ -72,7 +72,7 @@ abstract class BaseCropCalculator {
       case < .8:
         return CropStage.flourishing;
 
-      case < 1.0:
+      case <= 1.0:
         return CropStage.ripe;
     }
 

@@ -129,13 +129,13 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
   Color get bgColor {
     switch (widget.componentId) {
       case ComponentId.crop:
-        return AppColors.kCropMenuCardBg;
+        return AppColors.cropMenuCardBg;
 
       case ComponentId.trees:
-        return AppColors.kTreeMenuCardBg;
+        return AppColors.treeMenuCardBg;
 
       case ComponentId.fertilizer:
-        return AppColors.kFertilizerMenuCardBg;
+        return AppColors.fertilizerMenuCardBg;
 
       case ComponentId.agroforestryLayout:
         return AppColors.kSystemMenuCardBg;
