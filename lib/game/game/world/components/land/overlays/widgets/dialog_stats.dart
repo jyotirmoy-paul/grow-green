@@ -10,12 +10,14 @@ class SoilHealthStats extends StatelessWidget {
   final Color bgColor;
   final double minSoilHealth;
   final double maxSoilHealth;
+  final int farmingForYears;
 
   const SoilHealthStats({
     super.key,
     required this.bgColor,
     required this.maxSoilHealth,
     required this.minSoilHealth,
+    required this.farmingForYears,
   });
 
   @override
@@ -42,6 +44,10 @@ class SoilHealthStats extends StatelessWidget {
               StatItem(
                 textA: 'Max',
                 textB: maxSoilHealth.toStringAsFixed(3),
+              ),
+              StatItem(
+                textA: 'Farming For',
+                textB: '$farmingForYears years',
               ),
             ],
           ),
