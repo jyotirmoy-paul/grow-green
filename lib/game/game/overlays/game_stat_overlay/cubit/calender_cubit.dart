@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:intl/intl.dart';
 
+import '../../../../../utils/utils.dart';
 import '../../../services/game_services/time/time_service.dart';
 
 part 'calender_state.dart';
@@ -11,14 +11,13 @@ class CalenderCubit extends Cubit<CalenderState> {
     _init();
   }
 
-  final _dateFormat = DateFormat('MMMM');
   int _lastMonth = -1;
 
   CalenderState _createCalenderStateFromDateTime(DateTime dateTime) {
     _lastMonth = dateTime.month;
 
     /// format month & year
-    final month = _dateFormat.format(dateTime);
+    final month = Utils.monthDateFormat.format(dateTime);
     final year = dateTime.year.toString();
 
     return CalenderState(
