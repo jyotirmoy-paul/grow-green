@@ -55,4 +55,18 @@ class Qty {
       scale: scale ?? this.scale,
     );
   }
+
+  Qty operator *(double factor) {
+    return Qty(
+      value: (value * factor).round(),
+      scale: scale,
+    );
+  }
+
+  Qty round() {
+    return Qty(
+      value: value.round(),
+      scale: scale,
+    );
+  }
 }

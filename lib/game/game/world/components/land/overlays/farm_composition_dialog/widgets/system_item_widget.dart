@@ -13,12 +13,12 @@ import '../../../../../../enums/farm_system_type.dart';
 import '../../../../../../enums/system_type.dart';
 import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/asset/layout_asset.dart';
-import '../../../components/farm/components/system/real_life/utils/maintance_calculator.dart';
+import '../../../components/farm/components/system/enum/growable.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/farm.dart';
 import '../../farm_menu/farm_menu_helper.dart';
-import '../choose_components_dialog.dart';
 import '../infomatics/layout_info.dart';
+import 'menu_image.dart';
 import 'menu_item_flip_skeleton.dart';
 
 /// TODO: Language
@@ -275,7 +275,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
       soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
       cropType: cropType,
       fertilizerType: system.fertilizer,
-      maintenanceFor: MaintenanceFor.crop,
+      growableType: GrowableType.crop,
     );
 
     final fertilierData = _SystemComponent(
@@ -307,10 +307,12 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
 class MenuFooterTextRow extends StatelessWidget {
   final String leftText;
   final String rightText;
+  final TextStyle? textStyle;
   const MenuFooterTextRow({
     super.key,
     required this.leftText,
     required this.rightText,
+    this.textStyle,
   });
 
   @override
@@ -327,7 +329,7 @@ class MenuFooterTextRow extends StatelessWidget {
             child: StylizedText(
               text: Text(
                 leftText,
-                style: TextStyles.s28,
+                style: textStyle ?? TextStyles.s28,
               ),
             ),
           ),
@@ -337,7 +339,7 @@ class MenuFooterTextRow extends StatelessWidget {
             child: StylizedText(
               text: Text(
                 rightText,
-                style: TextStyles.s28,
+                style: textStyle ?? TextStyles.s28,
               ),
             ),
           ),

@@ -122,13 +122,14 @@ class FarmCoreService {
       case FarmState.functioningOnlyTrees:
         return newFarmStateModel.farmContent?.copyWith(
           crop: null,
-          fertilizer: null,
+          cropSupportConfig: null,
         );
 
       case FarmState.treesRemovedOnlyCropsWaiting:
       case FarmState.functioningOnlyCrops:
         return newFarmStateModel.farmContent?.copyWith(
-          trees: null,
+          tree: null,
+          treeSupportConfig: null,
         );
     }
   }
@@ -219,7 +220,7 @@ class FarmCoreService {
     if (farmContent.hasTrees) {
       _trees = Trees(
         lifeStartedAt: _farmStateModelValue.treesLifeStartedAt!,
-        treeType: farmContent.trees![0].type as TreeType,
+        treeType: farmContent.tree!.type as TreeType,
         treePositions: treeData.$1,
         treeSize: treeData.$2,
         farmSize: farm.size,
@@ -527,7 +528,8 @@ class FarmCoreService {
       currentSoilHealth: soilHealthPercentage,
 
       /// we don't care about fertilizer used, until there's crop in the farm
-      currentFertilizerInUse: _crops == null ? null : farmContent!.fertilizer,
+      currentFertilizerInUse:
+          _crops == null ? null : farmContent!.cropSupportConfig?.fertilizerConfig,
       currentSystemType: farmContent!.systemType,
       areTreesPresent: farmContent!.hasTrees,
     );
@@ -549,7 +551,9 @@ class FarmCoreService {
       systemType: farmContent!.systemType,
 
       /// we don't care about fertilizer used, until there's crop in the farm
-      fertilizerType: _crops == null ? null : farmContent!.fertilizer?.type as FertilizerType?,
+      fertilizerType: _crops == null
+          ? null
+          : farmContent!.cropSupportConfig?.fertilizerConfig.type as FertilizerType?,
       areTreesPresent: farmContent!.hasTrees,
     );
 
@@ -678,7 +682,7 @@ class FarmCoreService {
 
       _trees = Trees(
         lifeStartedAt: treeLifeStartedAt,
-        treeType: farmContent.trees![0].type as TreeType,
+        treeType: farmContent.tree!.type as TreeType,
         treePositions: treeData.$1,
         treeSize: treeData.$2,
         farmSize: farm.size,
@@ -716,7 +720,7 @@ class FarmCoreService {
 
     farmStateModel.farmContent = this.farmContent!.copyWith(
           crop: farmContent.crop,
-          fertilizer: farmContent.fertilizer,
+          cropSupportConfig: farmContent.cropSupportConfig,
         );
 
     final (_, cropData) = _getTreesAndCropsPositionAndSizeFor(farmContent);
@@ -743,13 +747,13 @@ class FarmCoreService {
     final farmStateModel = _farmStateModelValue;
 
     farmStateModel.farmContent = this.farmContent!.copyWith(
-          trees: farmContent.trees,
+          tree: farmContent.tree,
         );
     final (treeData, _) = _getTreesAndCropsPositionAndSizeFor(farmContent);
 
     _trees = Trees(
       lifeStartedAt: _dateTime,
-      treeType: farmContent.trees![0].type as TreeType,
+      treeType: farmContent.tree!.type as TreeType,
       treePositions: treeData.$1,
       treeSize: treeData.$2,
       farmSize: farm.size,

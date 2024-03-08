@@ -3,6 +3,7 @@
 import '../../../../../../../../../enums/system_type.dart';
 import '../../../../model/fertilizer/fertilizer_type.dart';
 import '../../../crop/enums/crop_type.dart';
+import '../../enum/growable.dart';
 import '../../model/qty.dart';
 import '../calculators/crops/base_crop.dart';
 import '../systems/system.dart';
@@ -25,14 +26,14 @@ abstract class QtyCalculator {
     required double soilHealthPercentage,
     required CropType cropType,
     required FertilizerType fertilizerType,
-    required MaintenanceFor maintenanceFor,
+    required GrowableType growableType,
   }) {
     final cropMaxAgeInMonths = BaseCropCalculator.fromCropType(cropType).maxAgeInMonths;
     return getFertilizerQtyRequiredFromTime(
       soilHealthPercentage: soilHealthPercentage,
       ageInMonths: cropMaxAgeInMonths,
       fertilizerType: fertilizerType,
-      maintenanceFor: MaintenanceFor.crop,
+      growableType: growableType,
       systemType: systemType,
     );
   }
@@ -40,7 +41,7 @@ abstract class QtyCalculator {
   // TODO : area is required and should not be assumed to be full one hacter
   static Qty getFertilizerQtyRequiredFromTime({
     required double soilHealthPercentage,
-    required MaintenanceFor maintenanceFor,
+    required GrowableType growableType,
     required SystemType systemType,
     required FertilizerType fertilizerType,
     required int ageInMonths,
@@ -55,7 +56,7 @@ abstract class QtyCalculator {
     const hacterToSqMeter = 10000;
     final areaInSqMeter = MaintenanceCalculator.getMaintenanceArea(
       systemType: systemType,
-      maintenanceFor: maintenanceFor,
+      growableType: growableType,
     );
     final areaRatio = areaInSqMeter / hacterToSqMeter;
 
@@ -82,5 +83,18 @@ abstract class QtyCalculator {
       // soilHealthPercentage > 5
       return 0.4; // Reduction for excellent soil health
     }
+  }
+
+  static MaintenanceQty maintenanceQtyFromTime({
+    required SystemType systemType,
+    required GrowableType growableType,
+    required int ageInMonths, // age in months is the time for which maintenance is required
+  }) {
+    final yearFraction = ageInMonths / 12;
+    final maintenancePerYear = MaintenanceCalculator.getMaintenanceQtyPerYear(
+      systemType: systemType,
+      growableType: growableType,
+    );
+    return (maintenancePerYear * yearFraction);
   }
 }

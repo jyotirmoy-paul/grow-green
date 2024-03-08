@@ -29,6 +29,8 @@ import '../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../farm_menu/farm_menu_helper.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import 'choose_component_dialog.dart';
+import 'choose_maintenance/view/choose_maintenance_dialog.dart';
+import 'widgets/menu_image.dart';
 import 'widgets/menu_item_flip_skeleton.dart';
 import 'widgets/sell_tree_widget.dart';
 
@@ -103,38 +105,34 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   }
 
   /// trees
-  List<_ComponentsModel> forTrees(List<Content> treeContents) {
-    return treeContents.map(
-      (treeContent) {
-        final treeType = treeContent.type as TreeType;
-        final treeCost = MoneyModel(value: CostCalculator.saplingCostFromContent(treeContent: treeContent));
+  _ComponentsModel forTrees(Content treeContent) {
+    final treeType = treeContent.type as TreeType;
+    final treeCost = MoneyModel(value: CostCalculator.saplingCostFromContent(treeContent: treeContent));
 
-        /// we will count trees in only in two cases
-        /// 1. Either farm is non functional (this happens when we first time setup a farm system)
-        /// 2. We come to this menu with no tree then have made a selection - so no tree initially
-        final noTreesInitially = !widget.farmContent.hasTrees;
-        final countTreeIn = widget.isNotFunctioningFarm || noTreesInitially;
+    /// we will count trees in only in two cases
+    /// 1. Either farm is non functional (this happens when we first time setup a farm system)
+    /// 2. We come to this menu with no tree then have made a selection - so no tree initially
+    final noTreesInitially = !widget.farmContent.hasTrees;
+    final countTreeIn = widget.isNotFunctioningFarm || noTreesInitially;
 
-        if (countTreeIn) {
-          _totalCost += treeCost;
-        }
+    if (countTreeIn) {
+      _totalCost += treeCost;
+    }
 
-        final qtyDescription = countTreeIn
-            ? '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedValue}'
-            : treeContent.qty.readableFormat;
-        return _ComponentsModel(
-          headerText: 'Tree',
-          image: TreeAsset.menuRepresentativeOf(treeType),
-          footerText: "",
-          componentId: ComponentId.trees,
-          isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
-          footerButtonText: countTreeIn ? kChange : kRemove,
-          buttonColor: countTreeIn ? null : Colors.red,
-          descriptionText: "${treeType.name.toUpperCase()}\n$qtyDescription",
-          color: AppColors.kTreeMenuCardBg,
-        );
-      },
-    ).toList();
+    final qtyDescription = countTreeIn
+        ? '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedValue}'
+        : treeContent.qty.readableFormat;
+    return _ComponentsModel(
+      headerText: 'Tree',
+      image: TreeAsset.menuRepresentativeOf(treeType),
+      footerText: "",
+      componentId: ComponentId.trees,
+      isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
+      footerButtonText: countTreeIn ? kChange : kRemove,
+      buttonColor: countTreeIn ? null : Colors.red,
+      descriptionText: "${treeType.name.toUpperCase()}\n$qtyDescription",
+      color: AppColors.kTreeMenuCardBg,
+    );
   }
 
   _ComponentsModel noTree() {
@@ -146,30 +144,6 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
       footerButtonText: kAdd,
       buttonColor: Colors.green,
-    );
-  }
-
-  /// fertilizer
-  _ComponentsModel forFertilizer(Content fertilizerContent) {
-    final fertilizerType = fertilizerContent.type as FertilizerType;
-    final fertilizerCost = MoneyModel(
-      value: CostCalculator.fertilizerCostFromContent(
-        fertilizerContent: fertilizerContent,
-        type: fertilizerType,
-      ),
-    );
-
-    _totalCost += fertilizerCost;
-
-    return _ComponentsModel(
-      headerText: 'Fertilizer',
-      image: fertilizerType == FertilizerType.chemical ? GameImages.chemicalFertilizer : GameImages.organicFertilizer,
-      footerText: fertilizerType.name.toUpperCase(),
-      componentId: ComponentId.fertilizer,
-      isComponentEditable: widget.editableComponents.contains(ComponentId.fertilizer),
-      footerButtonText: kChange,
-      descriptionText: '${fertilizerContent.qty.readableFormat} | ₹ ${fertilizerCost.formattedValue}',
-      color: AppColors.kFertilizerMenuCardBg,
     );
   }
 
@@ -192,15 +166,10 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
     /// trees
     if (farmContent.hasTrees) {
-      children.addAll(forTrees(farmContent.trees!));
+      children.add(forTrees(farmContent.tree!));
     } else if (isAgroforestry) {
       /// if agroforestry system has no tree, add noTree
       children.add(noTree());
-    }
-
-    /// fertilizer
-    if (farmContent.fertilizer != null) {
-      children.add(forFertilizer(farmContent.fertilizer!));
     }
   }
 
@@ -236,31 +205,16 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
         /// process new tree selection
         _currentFarmContent = _currentFarmContent.copyWith(
-          trees: [
-            FarmMenuHelper.getTreeContent(
-              treeType: tree,
-              systemType: _currentFarmContent.systemType,
-            ),
-          ],
-        );
-
-        break;
-
-      case ComponentId.fertilizer:
-        final fertilizer = FertilizerType.values[index];
-
-        /// process new fertilizer selection
-        _currentFarmContent = _currentFarmContent.copyWith(
-          fertilizer: FarmMenuHelper.getFertilizerContent(
-            fertilizerType: fertilizer,
+          tree: FarmMenuHelper.getTreeContent(
+            treeType: tree,
             systemType: _currentFarmContent.systemType,
-            soilHealthPercentage: widget.soilHealthPercentage,
-            cropType: _currentFarmContent.crop!.type as CropType,
           ),
         );
 
         break;
 
+      case ComponentId.fertilizer:
+        break;
       case ComponentId.agroforestryLayout:
         final agroforestrySystem = AgroforestryType.values[index];
 
@@ -314,6 +268,8 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
 
       case ComponentId.agroforestryLayout:
         return NotificationHelper.agroforestrySystemTapNotAllowed();
+      case ComponentId.maintenance:
+        return;
     }
   }
 
@@ -372,16 +328,26 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     );
   }
 
-  void _onPurchaseTap() {
+  void _onSelectTap() async {
     /// nothing is selected
     if (_totalCost.isZero()) {
       return NotificationHelper.nothingToBuy();
     }
 
-    FarmMenuHelper.purchaseFarmContents(
-      farmController: widget.farmController,
-      farmContent: _currentFarmContent,
-      totalCost: _totalCost,
+    await Utils.showNonAnimatedDialog(
+      barrierLabel: 'Choose component dialog',
+      context: context,
+      builder: (context) {
+        return DialogContainer(
+          title: 'Choose Maintenance',
+          dialogType: DialogType.large,
+          child: ChooseMaintenanceDialog(
+            farmContent: _currentFarmContent,
+            farmController: widget.farmController,
+            startingDebit: _totalCost,
+          ),
+        );
+      },
     );
   }
 
@@ -475,63 +441,13 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
           ),
           child: GameButton.textImage(
             key: ValueKey(_totalCost.formattedValue),
-            text: 'Buy ₹ ${_totalCost.formattedValue}',
+            text: 'Total ₹ ${_totalCost.formattedValue}',
             image: GameIcons.coin,
             bgColor: _totalCost.isZero() ? Colors.grey : Colors.green,
-            onTap: _onPurchaseTap,
+            onTap: _onSelectTap,
           ),
         ),
       ],
-    );
-  }
-}
-
-class MenuImage extends StatelessWidget {
-  final String imageAssetPath;
-  final double? dimension;
-  final double? blurRadius;
-  final Color? blurColor;
-  final BoxShape shape;
-  const MenuImage({
-    super.key,
-    required this.imageAssetPath,
-    this.dimension,
-    this.blurRadius,
-    this.blurColor,
-    this.shape = BoxShape.rectangle,
-  });
-
-  double get _dimension => dimension ?? 150.s;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: _dimension,
-      height: _dimension,
-      decoration: BoxDecoration(
-        color: Colors.white12,
-        shape: shape,
-        borderRadius: shape == BoxShape.rectangle ? BorderRadius.circular(20.s) : null,
-        border: Border.all(
-          color: Colors.white.withOpacity(0.5),
-          width: 2.s,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            spreadRadius: _dimension / 20,
-            blurRadius: _dimension / 20,
-            blurStyle: BlurStyle.outer,
-          ),
-        ],
-      ),
-      padding: EdgeInsets.all(_dimension * 0.1),
-      child: Image.asset(
-        imageAssetPath,
-        height: _dimension,
-        width: _dimension,
-        fit: BoxFit.contain,
-      ),
     );
   }
 }

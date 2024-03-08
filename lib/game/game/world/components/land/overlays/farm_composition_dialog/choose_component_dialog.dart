@@ -19,7 +19,6 @@ import '../../components/farm/components/system/real_life/utils/cost_calculator.
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../system_selector_menu/enum/component_id.dart';
-import 'choose_components_dialog.dart';
 import 'infomatics/crop_info.dart';
 import 'infomatics/fertililizer_info.dart';
 import 'infomatics/tree_info.dart';
@@ -27,6 +26,7 @@ import 'widgets/age_revenue_widget/logic/age_revenue_fetcher.dart';
 import 'widgets/age_revenue_widget/view/age_revenue_chart.dart';
 import 'widgets/crop_revenue_widget/crop_revenue_data_fetcher.dart';
 import 'widgets/crop_revenue_widget/crop_revenue_widget.dart';
+import 'widgets/menu_image.dart';
 import 'widgets/menu_item_flip_skeleton.dart';
 import 'widgets/system_item_widget.dart';
 
@@ -115,6 +115,8 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
 
       case ComponentId.agroforestryLayout:
         return _populateAgroforestryLayout();
+      case ComponentId.maintenance:
+        return;
     }
   }
 
@@ -137,6 +139,8 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
 
       case ComponentId.agroforestryLayout:
         return AppColors.kSystemMenuCardBg;
+      case ComponentId.maintenance:
+        return Colors.transparent;
     }
   }
 
@@ -260,6 +264,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
         }
         break;
       case ComponentId.agroforestryLayout:
+      case ComponentId.maintenance:
         break;
     }
 
@@ -315,6 +320,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
           );
         }
       case ComponentId.agroforestryLayout:
+      case ComponentId.maintenance:
         {
           return const SizedBox.shrink();
         }
