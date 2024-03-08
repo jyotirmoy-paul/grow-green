@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../game/utils/game_icons.dart';
 import '../utils/extensions/num_extensions.dart';
 import '../utils/text_styles.dart';
 import 'game_button.dart';
@@ -94,12 +93,15 @@ class DialogContainer extends StatelessWidget {
 
                   Align(
                     alignment: Alignment.centerRight,
-                    child: GameButton.image(
-                      image: GameIcons.close,
-                      onTap: () {
-                        Navigator.pop(context, DialogEndType.close);
-                      },
-                      bgColor: Colors.red,
+                    child: SizedBox.square(
+                      dimension: 58.s,
+                      child: GameButton.text(
+                        text: 'X',
+                        onTap: () {
+                          Navigator.pop(context, DialogEndType.close);
+                        },
+                        color: Colors.red,
+                      ),
                     ),
                   ),
                 ],

@@ -1,5 +1,6 @@
 import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../../utils/extensions/num_extensions.dart';
@@ -30,7 +31,6 @@ import '../../../system_selector_menu/enum/component_id.dart';
 import '../../choose_component_dialog.dart';
 import '../../widgets/menu_image.dart';
 import '../../widgets/menu_item_flip_skeleton.dart';
-import '../../widgets/system_item_widget.dart';
 import '../logic/support_config.dart';
 
 class ChooseMaintenanceDialog extends StatefulWidget {
@@ -61,8 +61,6 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
   final children = <_ComponentsModel>[];
   bool isHidden = false;
 
-  get _anyOneisEditable => children.any((element) => element.isComponentEditable);
-
   @override
   void initState() {
     super.initState();
@@ -77,117 +75,157 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       children: [
         /// body
         Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(16.s),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: children.map(
-                (model) {
-                  return Opacity(
-                    opacity: _opacity(model),
-                    child: ButtonAnimator(
-                      onPressed: () {
-                        if (model.isComponentEditable) return onComponentTap(model);
-                      },
-                      child: SizedBox(
-                        height: 400.s,
-                        child: MenuItemFlipSkeleton(
-                          width: 200.s,
-                          bgColor: model.color ?? Colors.red.darken(0.3),
-                          header: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              MenuImage(
-                                imageAssetPath: model.upperImage,
-                                dimension: 40.s,
-                                shape: BoxShape.circle,
-                              ),
-                              StylizedText(
-                                text: Text(
-                                  model.headerText,
-                                  style: TextStyles.s18,
-                                  textAlign: TextAlign.center,
-                                ),
-                              )
-                            ],
-                          ),
-                          body: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                /// image
-                                MenuImage(
-                                  imageAssetPath: model.image,
-                                  dimension: 100.s,
-                                ),
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.all(32.s),
+            itemBuilder: (_, index) {
+              final model = children[index];
 
-                                /// description
-                                if (model.descriptionText != null)
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
-                                    child: StylizedText(
-                                      text: Text(
-                                        model.descriptionText!,
-                                        style: TextStyles.s18,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                              ],
+              final child = Opacity(
+                opacity: _opacity(model),
+                child: MenuItemFlipSkeleton(
+                  width: 260.s,
+                  bgColor: model.color ?? Colors.red.darken(0.3),
+                  header: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MenuImage(
+                        imageAssetPath: model.upperImage,
+                        dimension: 54.s,
+                        shape: BoxShape.circle,
+                      ),
+                      StylizedText(
+                        text: Text(
+                          model.headerText,
+                          style: TextStyles.s25,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                  body: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      /// image
+                      MenuImage(
+                        imageAssetPath: model.image,
+                        dimension: 100.s,
+                      ),
+
+                      /// description
+                      if (model.descriptionText != null)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
+                          child: StylizedText(
+                            text: Text(
+                              model.descriptionText!,
+                              style: TextStyles.s25,
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          footer: model.footerWidget ??
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 8.s),
-                                child: Center(
-                                  /// button
-                                  child: GameButton.text(
-                                    color: Colors.white12,
-                                    text: "CHANGE",
-                                    textStyle: TextStyles.s14,
-                                    onTap: () {
-                                      onComponentTap(model);
-                                    },
-                                  ),
-                                ),
-                              ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ).toList(),
-            ),
+                    ],
+                  ),
+                  footer: model.isComponentEditable
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 8.s),
+                          child: Center(
+                            /// button
+                            child: GameButton.text(
+                              color: Colors.white12,
+                              text: "CHANGE",
+                              onTap: () {
+                                onComponentTap(model);
+                              },
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              );
+
+              if (model.isComponentEditable) {
+                return ButtonAnimator(
+                  child: child,
+                  onPressed: () {
+                    onComponentTap(model);
+                  },
+                );
+              }
+
+              return child;
+            },
+            separatorBuilder: (_, index) {
+              if (index == 1) return Gap(100.s);
+
+              return Gap(32.s);
+            },
+            itemCount: children.length,
           ),
         ),
 
         /// button
-        if (totalCost.value != 0)
-          Padding(
-            padding: EdgeInsets.only(
-              right: 16.s,
-              bottom: 16.s,
-              top: 8.s,
-            ),
-            child: GameButton.textImage(
-              key: ValueKey(totalCost.formattedValue),
-              text: 'Total ₹ ${totalCost.formattedValue}',
-              image: GameIcons.coin,
-              bgColor: totalCost.isZero() ? Colors.grey : Colors.green,
-              onTap: _onPurchaseTap,
-            ),
+
+        Padding(
+          padding: EdgeInsets.only(
+            left: 16.s,
+            right: 16.s,
+            bottom: 16.s,
           ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              /// show breakup of cost only if a total cost is available
+              if (totalCost.value != 0)
+                Row(
+                  children: [
+                    Icon(
+                      Icons.info_rounded,
+                      size: 40.s,
+                      color: Colors.orange,
+                    ),
+
+                    Gap(6.s),
+
+                    /// price sum
+                    Text(
+                      '${widget.startingDebit.formattedValue} (Crops/Trees) + ${_calculateTotalSupportCost.formattedValue} (Maintainance)',
+                      style: TextStyles.s28.copyWith(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+
+              const Spacer(),
+
+              /// button
+              GameButton.textImage(
+                key: ValueKey(totalCost.formattedValue),
+                text: 'Buy for ${totalCost.formattedValue}',
+                image: GameIcons.coin,
+                bgColor: totalCost.isZero() ? Colors.grey : Colors.green,
+                onTap: _onPurchaseTap,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 
-  double _opacity(_ComponentsModel model) => _anyOneisEditable ? (model.isComponentEditable ? 1 : 0.5) : 1;
+  bool get _anyOneisEditable => children.any((element) => element.isComponentEditable);
+
+  double _opacity(_ComponentsModel model) {
+    if (model.componentId == ComponentId.maintenance) return 1.0;
+    if (_anyOneisEditable) return model.isComponentEditable ? 1 : 0.6;
+    return 1.0;
+  }
 
   MoneyModel get totalCost => widget.startingDebit + _calculateTotalSupportCost;
+
   void _onPurchaseTap() async {
     if (totalCost.isZero()) {
       return NotificationHelper.nothingToBuy();
@@ -247,18 +285,15 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       headerText: "Fertilizer",
       upperImage: upperImageAsset,
       image: fertilizerAsset,
-      descriptionText: "$fertilizerCost ₹ | ${fertilizerQty.readableFormat} ",
+      descriptionText: "${MoneyModel(value: fertilizerCost).formattedValue} | ${fertilizerQty.readableFormat}",
       componentId: ComponentId.fertilizer,
       isComponentEditable: isEditable,
       color: AppColors.kFertilizerMenuCardBg,
-      footerWidget: isEditable ? null : const SizedBox.shrink(),
       growableType: isCrop ? GrowableType.crop : GrowableType.tree,
     );
   }
 
-  _ComponentsModel buildMaintenanceComponent({
-    required bool isCrop,
-  }) {
+  _ComponentsModel buildMaintenanceComponent({required bool isCrop}) {
     final upperImageAsset = isCrop
         ? CropAsset.menuRepresentativeOf(_currentFarmContent.crop!.type as CropType)
         : TreeAsset.menuRepresentativeOf(_currentFarmContent.tree!.type as TreeType);
@@ -267,22 +302,14 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
         ? CostCalculator.maintenanceCost(_currentFarmContent.cropSupportConfig!.maintenanceConfig)
         : CostCalculator.maintenanceCost(_currentFarmContent.treeSupportConfig!.maintenanceConfig);
 
-    final footerWidget = MenuFooterTextRow(
-      leftText: "Total",
-      rightText: "₹ $maintenanceCost",
-      textStyle: TextStyles.s18,
-    );
-    final isEditable = isCrop ? !widget.isCropSupportPresent : !widget.isTreeSupportPresent;
-
     return _ComponentsModel(
       headerText: "Maintenance",
       upperImage: upperImageAsset,
       image: 'assets/images/icons/maintenance.png',
-      descriptionText: '',
+      descriptionText: MoneyModel(value: maintenanceCost).formattedValue,
       componentId: ComponentId.maintenance,
-      isComponentEditable: isEditable,
+      isComponentEditable: false,
       color: Colors.green,
-      footerWidget: footerWidget,
       growableType: isCrop ? GrowableType.crop : GrowableType.tree,
     );
   }
@@ -426,7 +453,6 @@ class _ComponentsModel {
   final GrowableType growableType;
   final bool isComponentEditable;
   final Color? color;
-  final Widget? footerWidget;
 
   _ComponentsModel({
     required this.headerText,
@@ -437,6 +463,5 @@ class _ComponentsModel {
     required this.growableType,
     this.descriptionText,
     this.color,
-    this.footerWidget,
   });
 }

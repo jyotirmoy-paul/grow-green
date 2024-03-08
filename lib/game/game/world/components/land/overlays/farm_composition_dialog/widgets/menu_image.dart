@@ -32,14 +32,6 @@ class MenuImage extends StatelessWidget {
           color: Colors.white.withOpacity(0.5),
           width: 2.s,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            spreadRadius: _dimension / 20,
-            blurRadius: _dimension / 20,
-            blurStyle: BlurStyle.outer,
-          ),
-        ],
       ),
       padding: EdgeInsets.all(_dimension * 0.1),
       child: Image.asset(

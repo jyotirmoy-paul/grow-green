@@ -115,6 +115,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
 
       case ComponentId.agroforestryLayout:
         return _populateAgroforestryLayout();
+
       case ComponentId.maintenance:
         return;
     }
@@ -139,6 +140,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
 
       case ComponentId.agroforestryLayout:
         return AppColors.kSystemMenuCardBg;
+
       case ComponentId.maintenance:
         return Colors.transparent;
     }
@@ -152,6 +154,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
       itemBuilder: (context, index) {
         final model = models[index];
         final flipCardController = FlipCardController();
+
         onTap() {
           flipCardController.toggleCard();
         }
@@ -164,8 +167,8 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
             flipCardController: flipCardController,
             bgColor: bgColor,
             width: 300.s,
-            header: _header(model, onTap),
-            backHeader: _header(model, onTap),
+            header: _header(model: model, onTap: onTap, isBack: false),
+            backHeader: _header(model: model, onTap: onTap, isBack: true),
             body: _body(index),
             backBody: _backBody(index),
             footer: _footer(index),
@@ -180,7 +183,11 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
     );
   }
 
-  Widget _header(_ComponentModel model, void Function() onTap) {
+  Widget _header({
+    required _ComponentModel model,
+    required void Function() onTap,
+    required bool isBack,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.s),
       child: Stack(
@@ -201,11 +208,13 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
           /// info button to learn more
           Align(
             alignment: Alignment.centerRight,
-            child: GameButton.text(
-              text: "i",
-              size: Size.square(40.s),
-              onTap: onTap,
-              color: Colors.blue.shade800,
+            child: SizedBox.square(
+              dimension: 48.s,
+              child: GameButton.text(
+                text: isBack ? 'x' : 'i',
+                onTap: onTap,
+                color: isBack ? Colors.redAccent : Colors.blue.shade800,
+              ),
             ),
           ),
         ],
@@ -321,9 +330,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
         }
       case ComponentId.agroforestryLayout:
       case ComponentId.maintenance:
-        {
-          return const SizedBox.shrink();
-        }
+        return const SizedBox.shrink();
     }
   }
 }
