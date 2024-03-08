@@ -1,0 +1,4 @@
+The source code for the flip_card widget is taken from this project: https://github.com/BrunoJurkovic/flip_card
+
+The reason for directly using the source code is this issue: https://github.com/BrunoJurkovic/flip_card/issues/79, and we locally attempt to fix it.
+Once the fix is proper we plan to raise a PR to fix it in the package.
