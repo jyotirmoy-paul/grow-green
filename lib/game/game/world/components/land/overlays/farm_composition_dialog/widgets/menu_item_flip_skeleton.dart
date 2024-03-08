@@ -1,9 +1,9 @@
-import 'package:flip_card/flip_card.dart';
-import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/utils.dart';
+import '../../../../../../../../widgets/flip_card/flip_card.dart';
+import '../../../../../../../../widgets/flip_card/flip_card_controller.dart';
 import '../../../../../../../../widgets/shadowed_container.dart';
 
 class MenuItemFlipSkeleton extends StatelessWidget {
