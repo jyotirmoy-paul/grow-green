@@ -410,11 +410,12 @@ class FarmCoreService {
     if (recordHarvest) {
       final treeAge = _dateTime.difference(trees.lifeStartedAt).inDays;
 
-      final treeHarvestService = HarvestCoreService.forTree(
-        treeType: trees.treeType,
-        treeAgeInDays: treeAge,
-        currentDateTime: _dateTime,
-      );
+    final treeHarvestService = HarvestCoreService.forTree(
+      treeType: trees.treeType,
+      treeAgeInDays: treeAge,
+      currentDateTime: _dateTime,
+      systemType: farmContent!.systemType,
+    );
 
       final harvestModel = treeHarvestService.sell();
       _harvestRecorder.recordHarvest(harvestModel);
@@ -510,6 +511,7 @@ class FarmCoreService {
       cropType: crop.cropType,
       currentDateTime: _dateTime,
       cropAgeInDays: cropAge,
+      systemType: farmContent!.systemType,
     );
 
     final harvestModel = cropHarvestService.harvest();
@@ -570,6 +572,7 @@ class FarmCoreService {
       treeType: trees.treeType,
       treeAgeInDays: treeAge,
       currentDateTime: _dateTime,
+      systemType: farmContent!.systemType,
     );
 
     final harvestModel = treeHarvestService.harvest();
@@ -633,6 +636,8 @@ class FarmCoreService {
 
     final newSoilHealth = SoilHealthCalculator.getNewSoilHealth(
       currentSoilHealth: soilHealthPercentage,
+
+      /// we don't care about fertilizer used, until there's crop in the farm
       currentFertilizerInUse: _crops == null ? null : farmContent!.cropSupportConfig?.fertilizerConfig,
       currentSystemType: farmContent!.systemType,
       areTreesPresent: farmContent!.hasTrees,

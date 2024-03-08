@@ -6,7 +6,7 @@ import '../base_crop.dart';
 
 class WheatCropCalculator extends BaseCropCalculator {
   @override
-  double getYieldKgPerSquareM() => 0.80;
+  double getYieldKgPerSquareM() => 0.40;
 
   @override
   List<HarvestPeriod> sowData() {
