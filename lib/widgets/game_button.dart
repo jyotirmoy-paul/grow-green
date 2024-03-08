@@ -22,8 +22,6 @@ class GameButton extends StatelessWidget {
   final String? image;
   final String? dataText;
   final String? dataImage;
-  final Size? size;
-  final TextStyle? textStyle;
 
   const GameButton._({
     super.key,
@@ -34,8 +32,6 @@ class GameButton extends StatelessWidget {
     this.image,
     this.dataText,
     this.dataImage,
-    this.size,
-    this.textStyle,
   });
 
   factory GameButton.menuItem({
@@ -63,7 +59,6 @@ class GameButton extends StatelessWidget {
     Key? key,
     required String text,
     required VoidCallback onTap,
-    Size? size,
     Color? color,
     TextStyle? textStyle,
   }) {
@@ -72,9 +67,7 @@ class GameButton extends StatelessWidget {
       type: GameButtonType.text,
       onTap: onTap,
       text: text,
-      size: size,
       color: color,
-      textStyle: textStyle,
     );
   }
 
@@ -127,6 +120,9 @@ class GameButton extends StatelessWidget {
       case GameButtonType.image:
         return EdgeInsets.all(6.s);
 
+      case GameButtonType.text:
+        return EdgeInsets.all(1.s);
+
       default:
         return EdgeInsets.symmetric(horizontal: 16.s, vertical: 8.s);
     }
@@ -154,7 +150,6 @@ class GameButton extends StatelessWidget {
               return _TextButton(
                 key: const ValueKey('text-button'),
                 text: text!,
-                size: size,
                 bgColor: color,
               );
 
@@ -244,29 +239,22 @@ class _ImageButton extends StatelessWidget {
 
 class _TextButton extends StatelessWidget {
   final String text;
-  final Size? size;
   final Color? bgColor;
-  final TextStyle? textStyle;
 
   const _TextButton({
     super.key,
     required this.text,
-    this.size,
     this.bgColor,
-    this.textStyle,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.fromSize(
-      size: size,
-      child: Center(
-        child: StylizedText(
-          text: Text(
-            text,
-            style: textStyle ?? TextStyles.s24,
-            textAlign: TextAlign.center,
-          ),
+    return Center(
+      child: StylizedText(
+        text: Text(
+          text,
+          style: TextStyles.s24,
+          textAlign: TextAlign.center,
         ),
       ),
     );

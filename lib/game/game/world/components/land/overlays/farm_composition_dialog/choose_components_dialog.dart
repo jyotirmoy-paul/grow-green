@@ -1,5 +1,6 @@
 import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../../../../services/log/log.dart';
 import '../../../../../../../utils/app_colors.dart';
@@ -85,7 +86,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       isComponentEditable: isCropEditable,
       footerButtonText: kChange,
       descriptionText:
-          "${cropType.name.toUpperCase()}\n${cropContent.qty.readableFormat} | ₹ ${cropCost.formattedValue} ",
+          "${cropType.name.toUpperCase()}\n${cropContent.qty.readableFormat} | ${cropCost.formattedValue} ",
       color: AppColors.cropMenuCardBg,
     );
   }
@@ -118,9 +119,8 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       _totalCost += treeCost;
     }
 
-    final qtyDescription = countTreeIn
-        ? '${treeContent.qty.readableFormat} | ₹ ${treeCost.formattedValue}'
-        : treeContent.qty.readableFormat;
+    final qtyDescription =
+        countTreeIn ? '${treeContent.qty.readableFormat} | ${treeCost.formattedValue}' : treeContent.qty.readableFormat;
     return _ComponentsModel(
       headerText: 'Tree',
       image: TreeAsset.menuRepresentativeOf(treeType),
@@ -358,76 +358,74 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       children: [
         /// body
         Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(16.s),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: children.map(
-                (model) {
-                  return ButtonAnimator(
-                    onPressed: () {
-                      if (model.isComponentEditable) return onComponentTap(model.componentId);
-                      nonEditableComponentTap(model.componentId);
-                    },
-                    child: MenuItemFlipSkeleton(
-                      width: 300.s,
-                      bgColor: model.color ?? Colors.red.darken(0.3),
-                      header: Center(
-                        child: StylizedText(
-                          text: Text(
-                            model.headerText,
-                            style: TextStyles.s35,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      body: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            /// image
-                            MenuImage(
-                              imageAssetPath: model.image,
-                              dimension: 130.s,
-                            ),
+          child: ListView.separated(
+            padding: EdgeInsets.all(32.s),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (_, index) {
+              final model = children[index];
 
-                            /// description
-                            if (model.descriptionText != null)
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
-                                child: StylizedText(
-                                  text: Text(
-                                    model.descriptionText!,
-                                    style: TextStyles.s24,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      footer: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.s, vertical: 12.s),
-                        child: Center(
-                          /// button
-                          child: GameButton.text(
-                            color: model.isComponentEditable ? (model.buttonColor ?? Colors.white12) : Colors.grey,
-                            text: model.footerButtonText,
-                            onTap: () {
-                              if (model.isComponentEditable) return onComponentTap(model.componentId);
-                              nonEditableComponentTap(model.componentId);
-                            },
-                          ),
-                        ),
+              return ButtonAnimator(
+                onPressed: () {
+                  if (model.isComponentEditable) return onComponentTap(model.componentId);
+                  nonEditableComponentTap(model.componentId);
+                },
+                child: MenuItemFlipSkeleton(
+                  width: 300.s,
+                  bgColor: model.color ?? Colors.red.darken(0.3),
+                  header: Center(
+                    child: StylizedText(
+                      text: Text(
+                        model.headerText,
+                        style: TextStyles.s35,
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  );
-                },
-              ).toList(),
-            ),
+                  ),
+                  body: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        /// image
+                        MenuImage(
+                          imageAssetPath: model.image,
+                          dimension: 130.s,
+                        ),
+
+                        /// description
+                        if (model.descriptionText != null)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
+                            child: StylizedText(
+                              text: Text(
+                                model.descriptionText!,
+                                style: TextStyles.s24,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  footer: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.s, vertical: 12.s),
+                    child: Center(
+                      /// button
+                      child: GameButton.text(
+                        color: model.isComponentEditable ? (model.buttonColor ?? Colors.white12) : Colors.grey,
+                        text: model.footerButtonText,
+                        onTap: () {
+                          if (model.isComponentEditable) return onComponentTap(model.componentId);
+                          nonEditableComponentTap(model.componentId);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (_, __) => Gap(32.s),
+            itemCount: children.length,
           ),
         ),
 
@@ -440,7 +438,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
           ),
           child: GameButton.textImage(
             key: ValueKey(_totalCost.formattedValue),
-            text: 'Total ₹ ${_totalCost.formattedValue}',
+            text: 'Continue for ${_totalCost.formattedValue}',
             image: GameIcons.coin,
             bgColor: _totalCost.isZero() ? Colors.grey : Colors.green,
             onTap: _onSelectTap,

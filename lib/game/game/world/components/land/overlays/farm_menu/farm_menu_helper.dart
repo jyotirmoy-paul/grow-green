@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../../../../routes/routes.dart';
 import '../../../../../../../services/log/log.dart';
+import '../../../../../../../utils/extensions/num_extensions.dart';
+import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../utils/utils.dart';
 import '../../../../../../../widgets/dialog_container.dart';
+import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_icons.dart';
+import '../../../../../../utils/game_images.dart';
 import '../../../../../../utils/game_utils.dart';
 import '../../../../../enums/farm_system_type.dart';
 import '../../../../../enums/system_type.dart';
@@ -264,25 +269,46 @@ class FarmMenuHelper {
 
               case FarmMenuOption.history:
                 return FarmHistoryDialog(farm: farm);
-              case FarmMenuOption.maintenance:
-                {
-                  final farmState = farm.farmController.farmState;
 
-                  if (farmState == FarmState.notFunctioning) {
-                    return ChooseSystemDialog(farm: farm);
-                  }
-                  final farmContent = farm.farmController.farmContent;
-                  if (farmContent == null) {
-                    throw Exception(
-                      '$tag: onMenuItemTap() invoked with null farm content in $farmState state',
-                    );
-                  }
-                  return ChooseMaintenanceDialog(
-                    farmContent: farmContent,
-                    farmController: farm.farmController,
-                    startingDebit: MoneyModel.zero(),
+              case FarmMenuOption.maintenance:
+                final farmState = farm.farmController.farmState;
+
+                if (farmState == FarmState.notFunctioning) {
+                  // return Center(
+                  //   child: Text('Nothing in farm to maintain! Keep Farming!'),
+                  // );
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Image.asset(
+                        GameImages.itSeemsEmptyHere,
+                        height: 200.s,
+                      ),
+                      Gap(20.s),
+                      StylizedText(
+                        text: Text(
+                          'Nothing for maintenance, keep farming!',
+                          style: TextStyles.s28,
+                        ),
+                      ),
+                    ],
                   );
                 }
+
+                final farmContent = farm.farmController.farmContent;
+
+                if (farmContent == null) {
+                  throw Exception(
+                    '$tag: onMenuItemTap() invoked with null farm content in $farmState state',
+                  );
+                }
+
+                return ChooseMaintenanceDialog(
+                  farmContent: farmContent,
+                  farmController: farm.farmController,
+                  startingDebit: MoneyModel.zero(),
+                );
             }
           }(),
         );

@@ -59,8 +59,8 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
       width: 300.s,
       bgColor: widget.bgColor,
       flipCardController: flipCardController,
-      header: _header,
-      backHeader: _header,
+      header: _header(isBack: false),
+      backHeader: _header(isBack: true),
       body: _body,
       backBody: _backBody,
       footer: _footer,
@@ -68,7 +68,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
     );
   }
 
-  Widget get _header {
+  Widget _header({required bool isBack}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.s),
       child: Stack(
@@ -89,11 +89,13 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
           /// info button to learn more
           Align(
             alignment: Alignment.centerRight,
-            child: GameButton.text(
-              text: "i",
-              size: Size.square(40.s),
-              onTap: _onInfoTap,
-              color: Colors.blue.shade800,
+            child: SizedBox.square(
+              dimension: 48.s,
+              child: GameButton.text(
+                text: isBack ? 'x' : 'i',
+                onTap: _onInfoTap,
+                color: isBack ? Colors.redAccent : Colors.blue.shade800,
+              ),
             ),
           ),
         ],
@@ -174,10 +176,10 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
   Widget get _footer {
     return MenuFooterTextRow(
       leftText: "Min Cost",
-      rightText: '₹ ${FarmMenuHelper.getPriceForFarmSystem(
+      rightText: FarmMenuHelper.getPriceForFarmSystem(
         farmSystem: widget.farmSystem,
         soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
-      ).formattedValue}',
+      ).formattedValue,
     );
   }
 

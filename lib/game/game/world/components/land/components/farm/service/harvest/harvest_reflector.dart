@@ -71,7 +71,7 @@ class HarvestReflector {
 
       /// TODO: Replace asset & fix text
       model: HoverBoardModel.basic(
-        text: '₹ ${totalMoney.formattedValue}',
+        text: totalMoney.formattedValue,
         image: 'props/coin.png',
         animationPrefix: 'animations/coins',
       ),
