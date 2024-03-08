@@ -6,7 +6,7 @@ import '../base_crop.dart';
 
 class MaizeCropCalculator extends BaseCropCalculator {
   @override
-  double getYieldKgPerSquareM() => 1.50;
+  double getYieldKgPerSquareM() => 0.3;
 
   @override
   List<HarvestPeriod> sowData() {

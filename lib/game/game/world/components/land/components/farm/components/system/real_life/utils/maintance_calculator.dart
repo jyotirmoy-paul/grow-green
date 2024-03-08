@@ -61,16 +61,6 @@ class MaintenanceCalculator {
   }
 }
 
-void main(List<String> args) {
-  final maintenanceQty = MaintenanceCalculator.getMaintenanceQtyPerYear(
-    systemType: AgroforestryType.alley,
-    growableType: GrowableType.crop,
-  );
-
-  final maintenanceCost = MaintenanceCalculator.getMaintenanceCostFromQty(maintenanceQty: maintenanceQty);
-  print(maintenanceCost);
-}
-
 @JsonSerializable(explicitToJson: true, includeIfNull: true)
 class MaintenanceQty {
   final Qty waterQty;

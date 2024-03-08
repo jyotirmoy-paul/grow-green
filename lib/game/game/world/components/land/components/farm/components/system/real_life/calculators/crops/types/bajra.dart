@@ -6,7 +6,7 @@ import '../base_crop.dart';
 
 class BajraCropCalculator extends BaseCropCalculator {
   @override
-  double getYieldKgPerSquareM() => 0.40;
+  double getYieldKgPerSquareM() => 0.15;
 
   @override
   List<HarvestPeriod> sowData() {

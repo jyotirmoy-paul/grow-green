@@ -6,7 +6,7 @@ import '../../../../../../../../../../enums/system_type.dart';
 
 class PlantationLayout {
   final int numberOfTrees;
-  final double leftoverAreaForCrops;
+  final double leftoverAreaForCrops; // in square meters
 
   const PlantationLayout._({
     required this.numberOfTrees,
@@ -48,5 +48,9 @@ class PlantationLayout {
     }
 
     throw Exception('Please specify agroforestry type using AgroforestryType enum!');
+  }
+
+  double get areaFractionForCrops {
+    return leftoverAreaForCrops / 10000;
   }
 }
