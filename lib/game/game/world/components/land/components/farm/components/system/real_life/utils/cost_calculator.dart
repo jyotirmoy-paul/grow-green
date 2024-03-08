@@ -1,4 +1,3 @@
-import '../../../../../../../../../enums/system_type.dart';
 import '../../../../model/content.dart';
 import '../../../../model/fertilizer/fertilizer_type.dart';
 import '../../../crop/enums/crop_type.dart';
@@ -34,13 +33,10 @@ class CostCalculator {
     return saplingQty.value * oneSaplingCost;
   }
 
-  static int fertilizerCostFromContent({
-    required Content fertilizerContent,
-    required FertilizerType type,
-  }) {
+  static int fertilizerCostFromContent({required Content fertilizerContent}) {
     return getFertilizerCost(
       qty: fertilizerContent.qty,
-      type: type,
+      type: fertilizerContent.type as FertilizerType,
     );
   }
 
@@ -52,16 +48,7 @@ class CostCalculator {
     return qty.value * pricePerUnit;
   }
 
-  static double maintenanceCostFromTime({
-    required SystemType systemType,
-    required MaintenanceFor maintenanceFor,
-    required int ageInMonths, // age in months is the time for which maintenance is required
-  }) {
-    final yearFraction = ageInMonths / 12;
-    final maintenancePerYear = MaintenanceCalculator.getMaintenanceCostPerYear(
-      systemType: systemType,
-      maintenanceFor: maintenanceFor,
-    );
-    return yearFraction * maintenancePerYear;
+  static int maintenanceCost(MaintenanceQty maintenanceQty) {
+    return MaintenanceCalculator.getMaintenanceCostFromQty(maintenanceQty: maintenanceQty);
   }
 }

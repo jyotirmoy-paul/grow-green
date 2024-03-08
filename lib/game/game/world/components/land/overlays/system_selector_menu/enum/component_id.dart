@@ -3,4 +3,5 @@ enum ComponentId {
   trees,
   fertilizer,
   agroforestryLayout,
+  maintenance,
 }

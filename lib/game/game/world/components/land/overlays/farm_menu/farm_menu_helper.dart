@@ -13,8 +13,8 @@ import '../../../../../overlays/notification_overlay/service/notification_helper
 import '../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
+import '../../components/farm/components/system/enum/growable.dart';
 import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
-import '../../components/farm/components/system/real_life/utils/maintance_calculator.dart';
 import '../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/enum/farm_state.dart';
@@ -24,6 +24,9 @@ import '../../components/farm/model/content.dart';
 import '../../components/farm/model/farm_content.dart';
 import '../../components/farm/model/fertilizer/fertilizer_type.dart';
 import '../farm_composition_dialog/choose_components_dialog.dart';
+import '../farm_composition_dialog/choose_maintenance/logic/support_config.dart';
+import '../farm_composition_dialog/choose_maintenance/logic/support_config_predictor.dart';
+import '../farm_composition_dialog/choose_maintenance/view/choose_maintenance_dialog.dart';
 import '../farm_composition_dialog/choose_system_dialog.dart';
 import '../farm_history_dialog/farm_history_dialog.dart';
 import '../purchase_farm_dialog/purchase_farm_dialog.dart';
@@ -91,6 +94,7 @@ class FarmMenuHelper {
           _getSoilHealth(farm),
           _getFarmComposition(farm),
           _getFarmHistory(farm),
+          _getFarmMaintenance(farm),
         ];
 
       /// soil health, farm history
@@ -146,6 +150,15 @@ class FarmMenuHelper {
     );
   }
 
+  static _getFarmMaintenance(Farm farm) {
+    return const FarmMenuItemModel(
+      text: 'Maintain',
+      option: FarmMenuOption.maintenance,
+      bgColor: Colors.white,
+      image: "assets/images/icons/maintenance.png",
+    );
+  }
+
   static String getDialogTitleFromFarmState(FarmState farmState) {
     switch (farmState) {
       case FarmState.notFunctioning:
@@ -181,6 +194,9 @@ class FarmMenuHelper {
       case FarmMenuOption.composition:
         return getDialogTitleFromFarmState(farmState);
 
+      case FarmMenuOption.maintenance:
+        return 'Maintenance';
+
       case FarmMenuOption.history:
         return 'History';
     }
@@ -194,6 +210,7 @@ class FarmMenuHelper {
       case FarmMenuOption.soilHealth:
       case FarmMenuOption.composition:
       case FarmMenuOption.history:
+      case FarmMenuOption.maintenance:
         return DialogType.large;
     }
   }
@@ -247,6 +264,25 @@ class FarmMenuHelper {
 
               case FarmMenuOption.history:
                 return FarmHistoryDialog(farm: farm);
+              case FarmMenuOption.maintenance:
+                {
+                  final farmState = farm.farmController.farmState;
+
+                  if (farmState == FarmState.notFunctioning) {
+                    return ChooseSystemDialog(farm: farm);
+                  }
+                  final farmContent = farm.farmController.farmContent;
+                  if (farmContent == null) {
+                    throw Exception(
+                      '$tag: onMenuItemTap() invoked with null farm content in $farmState state',
+                    );
+                  }
+                  return ChooseMaintenanceDialog(
+                    farmContent: farmContent,
+                    farmController: farm.farmController,
+                    startingDebit: MoneyModel.zero(),
+                  );
+                }
             }
           }(),
         );
@@ -302,21 +338,26 @@ class FarmMenuHelper {
     );
   }
 
-  static Content getFertilizerContent({
+  static SupportConfig getFertilizerConfig({
     required FertilizerType fertilizerType,
     required double soilHealthPercentage,
     required SystemType systemType,
-    required CropType cropType,
+    required Growable growable,
   }) {
-    return Content(
-      type: fertilizerType,
-      qty: QtyCalculator.getFertilizerQtyRequiredFor(
-        systemType: systemType,
-        soilHealthPercentage: soilHealthPercentage,
-        cropType: cropType,
-        maintenanceFor: MaintenanceFor.cropAndTree,
-        fertilizerType: fertilizerType,
-      ),
+    final fertilizerConfig = SupportConfigPredictor.predictFertilizerConfigForFarm(
+      systemType: systemType,
+      soilHealthPercentage: soilHealthPercentage,
+      fertilizerType: fertilizerType,
+      growable: growable,
+    );
+    final maintenanceConfig = SupportConfigPredictor.predictMaintenanceConfigForFarm(
+      systemType: systemType,
+      growable: growable,
+    );
+
+    return SupportConfig(
+      fertilizerConfig: fertilizerConfig,
+      maintenanceConfig: maintenanceConfig,
     );
   }
 
@@ -335,8 +376,9 @@ class FarmMenuHelper {
     required double soilHealthPercentage,
   }) {
     Content? crop;
-    List<Content>? trees;
-    Content? fertilizer;
+    Content? tree;
+    SupportConfig? cropSupportConfig;
+    SupportConfig? treeSupportConfig;
     late SystemType systemType;
 
     if (farmSystem.farmSystemType == FarmSystemType.monoculture) {
@@ -345,13 +387,6 @@ class FarmMenuHelper {
       crop = getCropContent(
         cropType: system.crop,
         systemType: FarmSystemType.monoculture,
-      );
-
-      fertilizer = getFertilizerContent(
-        fertilizerType: system.fertilizer,
-        systemType: FarmSystemType.monoculture,
-        soilHealthPercentage: soilHealthPercentage,
-        cropType: system.crop,
       );
 
       systemType = FarmSystemType.monoculture;
@@ -363,28 +398,16 @@ class FarmMenuHelper {
         systemType: system.agroforestryType,
       );
 
-      fertilizer = getFertilizerContent(
-        fertilizerType: system.fertilizer,
-        systemType: system.agroforestryType,
-        soilHealthPercentage: soilHealthPercentage,
-        cropType: system.crop,
-      );
-
-      trees = [];
-
-      for (final tree in system.trees) {
-        trees.add(
-          getTreeContent(treeType: tree, systemType: system.agroforestryType),
-        );
-      }
+      tree = getTreeContent(treeType: system.tree, systemType: system.agroforestryType);
 
       systemType = system.agroforestryType;
     }
 
     return FarmContent(
       crop: crop,
-      trees: trees,
-      fertilizer: fertilizer,
+      tree: tree,
+      cropSupportConfig: cropSupportConfig,
+      treeSupportConfig: treeSupportConfig,
       systemType: systemType,
     );
   }
@@ -443,16 +466,12 @@ class FarmMenuHelper {
       );
 
       /// trees price
-      for (final tree in system.trees) {
-        totalPrice += MoneyModel(
-          value: CostCalculator.saplingCost(
-            saplingQty: QtyCalculator.getNumOfSaplingsFor(system.agroforestryType),
-            treeType: tree,
-          ),
-        );
-      }
-
-      /// TODO: may be fertilizer price
+      totalPrice += MoneyModel(
+        value: CostCalculator.saplingCost(
+          saplingQty: QtyCalculator.getNumOfSaplingsFor(system.agroforestryType),
+          treeType: system.tree,
+        ),
+      );
     }
 
     if (system is MonocultureSystem) {
@@ -476,7 +495,7 @@ class FarmMenuHelper {
             soilHealthPercentage: soilHealthPercentage,
             cropType: cropType,
             fertilizerType: system.fertilizer,
-            maintenanceFor: MaintenanceFor.crop,
+            growableType: GrowableType.crop,
           ),
           type: system.fertilizer,
         ),

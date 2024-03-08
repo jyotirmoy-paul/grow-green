@@ -4,7 +4,7 @@ import '../../../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../../../enums/system_type.dart';
 import '../../../../model/content.dart';
 import '../../../../model/fertilizer/fertilizer_type.dart';
-import 'maintance_calculator.dart';
+import '../../enum/growable.dart';
 import 'qty_calculator.dart';
 
 abstract class SoilHealthCalculator {
@@ -24,7 +24,7 @@ abstract class SoilHealthCalculator {
       soilHealthPercentage: soilHealthPercentage,
       ageInMonths: 12,
       fertilizerType: fertilizerType,
-      maintenanceFor: MaintenanceFor.cropAndTree,
+      growableType: GrowableType.crop,
       systemType: FarmSystemType.monoculture,
     );
     final fertilizerQty = fertilizer.qty.value;

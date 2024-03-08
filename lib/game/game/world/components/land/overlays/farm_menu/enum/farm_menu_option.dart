@@ -3,4 +3,5 @@ enum FarmMenuOption {
   soilHealth,
   composition,
   history,
+  maintenance,
 }

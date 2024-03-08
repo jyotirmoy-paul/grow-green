@@ -23,6 +23,7 @@ class GameButton extends StatelessWidget {
   final String? dataText;
   final String? dataImage;
   final Size? size;
+  final TextStyle? textStyle;
 
   const GameButton._({
     super.key,
@@ -34,6 +35,7 @@ class GameButton extends StatelessWidget {
     this.dataText,
     this.dataImage,
     this.size,
+    this.textStyle,
   });
 
   factory GameButton.menuItem({
@@ -63,6 +65,7 @@ class GameButton extends StatelessWidget {
     required VoidCallback onTap,
     Size? size,
     Color? color,
+    TextStyle? textStyle,
   }) {
     return GameButton._(
       key: key,
@@ -71,6 +74,7 @@ class GameButton extends StatelessWidget {
       text: text,
       size: size,
       color: color,
+      textStyle: textStyle,
     );
   }
 
@@ -242,12 +246,14 @@ class _TextButton extends StatelessWidget {
   final String text;
   final Size? size;
   final Color? bgColor;
+  final TextStyle? textStyle;
 
   const _TextButton({
     super.key,
     required this.text,
     this.size,
     this.bgColor,
+    this.textStyle,
   });
 
   @override
@@ -258,7 +264,7 @@ class _TextButton extends StatelessWidget {
         child: StylizedText(
           text: Text(
             text,
-            style: TextStyles.s24,
+            style: textStyle ?? TextStyles.s24,
             textAlign: TextAlign.center,
           ),
         ),

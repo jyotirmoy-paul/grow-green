@@ -33,14 +33,13 @@ class MonocultureSystem implements FarmSystem {
 
 class AgroforestrySystem implements FarmSystem {
   final AgroforestryType agroforestryType;
-  final List<TreeType> trees;
+  final TreeType tree;
   final CropType crop;
-    final FertilizerType fertilizer;
-
+  final FertilizerType fertilizer;
 
   const AgroforestrySystem({
     required this.agroforestryType,
-    required this.trees,
+    required this.tree,
     required this.crop,
     required this.fertilizer,
   });
@@ -50,13 +49,13 @@ class AgroforestrySystem implements FarmSystem {
 
   AgroforestrySystem copyWith({
     AgroforestryType? agroforestryType,
-    List<TreeType>? trees,
+    TreeType? tree,
     CropType? crop,
     FertilizerType? fertilizer,
   }) {
     return AgroforestrySystem(
       agroforestryType: agroforestryType ?? this.agroforestryType,
-      trees: trees ?? this.trees,
+      tree: tree ?? this.tree,
       crop: crop ?? this.crop,
       fertilizer: fertilizer ?? this.fertilizer,
     );

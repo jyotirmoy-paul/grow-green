@@ -9,9 +9,7 @@ abstract class SystemDatastore {
   /// Alley agroforestry system
   static const _agroforestrySystem1 = AgroforestrySystem(
     agroforestryType: AgroforestryType.alley,
-    trees: [
-      TreeType.coconut,
-    ],
+    tree: TreeType.coconut,
     crop: CropType.bajra,
     fertilizer: FertilizerType.organic,
   );
@@ -19,9 +17,7 @@ abstract class SystemDatastore {
   /// Block agroforestry system
   static const _agroforestrySystem2 = AgroforestrySystem(
     agroforestryType: AgroforestryType.block,
-    trees: [
-      TreeType.coconut,
-    ],
+    tree: TreeType.coconut,
     crop: CropType.maize,
     fertilizer: FertilizerType.organic,
   );
@@ -29,9 +25,7 @@ abstract class SystemDatastore {
   /// Boundary agroforestry system
   static const _agroforestrySystem3 = AgroforestrySystem(
     agroforestryType: AgroforestryType.boundary,
-    trees: [
-      TreeType.mango,
-    ],
+    tree: TreeType.mango,
     crop: CropType.pepper,
     fertilizer: FertilizerType.organic,
   );
