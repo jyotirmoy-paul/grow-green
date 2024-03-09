@@ -14,12 +14,15 @@ import '../../../../../../enums/system_type.dart';
 import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/asset/layout_asset.dart';
 import '../../../components/farm/components/system/enum/growable.dart';
+import '../../../components/farm/components/system/real_life/systems/database/layouts.dart';
 import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
+import '../../../components/farm/components/system/real_life/utils/soil_health_calculator.dart';
 import '../../../components/farm/farm.dart';
 import '../../farm_menu/farm_menu_helper.dart';
 import '../infomatics/layout_info.dart';
 import 'menu_image.dart';
 import 'menu_item_flip_skeleton.dart';
+import 'soil_health_effect.dart';
 
 /// TODO: Language
 class SystemItemWidget extends StatefulWidget {
@@ -114,29 +117,36 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
           Gap(8.s),
           Align(
             alignment: Alignment.centerLeft,
-            child: StylizedText(text: Text("You need", style: TextStyles.s23)),
+            child: StylizedText(text: Text("You get", style: TextStyles.s23)),
           ),
-          Center(
-            child: Column(
-              children: [
-                ShadowedContainer(
-                  padding: EdgeInsets.symmetric(horizontal: 6.s, vertical: 12.s),
-                  shadowOffset: Offset(6.s, 6.s),
-                  decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(12.s),
-                    border: Border.all(
-                      color: Utils.lightenColor(Colors.white24),
-                      width: 2.s,
-                    ),
+          Column(
+            children: [
+              ShadowedContainer(
+                padding: EdgeInsets.symmetric(horizontal: 6.s, vertical: 12.s),
+                shadowOffset: Offset(6.s, 6.s),
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(12.s),
+                  border: Border.all(
+                    color: Utils.lightenColor(Colors.white24),
+                    width: 2.s,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: _getComponents,
-                  ),
-                )
-              ],
-            ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: _getComponents,
+                ),
+              ),
+              Gap(20.s),
+              SoilHealthEffect(
+                changePercentage: SoilHealthCalculator.systemTypeAffect(
+                  systemType: systemType,
+                  treesPresent: true,
+                ),
+                changeDurationType: ChangeDurationType.yearly,
+                isExpanded: true,
+              ),
+            ],
           ),
         ],
       ),
@@ -144,7 +154,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
   }
 
   List<SizedBox> get _getComponents =>
-      buildComponents().map((e) => SizedBox.square(dimension: 120.s, child: e)).toList();
+      buildComponents().map((e) => SizedBox.square(dimension: 100.s, child: e)).toList();
 
   Padding get _backBody {
     return Padding(
@@ -214,30 +224,28 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
   }
 
   List<Widget> buildComponentsFromAgroforestry(AgroforestrySystem system) {
+    final layout = PlantationLayout.fromSytemType(system.agroforestryType);
+
     /// trees
-    final treeQty = QtyCalculator.getNumOfSaplingsFor(system.agroforestryType);
+    final treeQty = layout.numberOfTrees;
 
     final treesData = _SystemComponent(
       key: ValueKey('trees-${system.agroforestryType}'),
-      footer: treeQty.readableFormat,
       componentImage: "assets/images/icons/sapling.png",
       bgColor: widget.secondaryColor,
-      header: "Saplings",
+      footer: "x$treeQty",
+      header: "Trees",
     );
 
     /// crops
-    final cropType = system.crop;
-    final cropQty = QtyCalculator.getSeedQtyRequireFor(
-      systemType: system.agroforestryType,
-      cropType: cropType,
-    );
+    final cropAreaHa = layout.areaFractionForCrops;
 
     final cropsData = _SystemComponent(
       key: ValueKey('crops-${system.agroforestryType}'),
-      footer: cropQty.readableFormat,
       componentImage: "assets/images/icons/seeds.png",
       bgColor: widget.secondaryColor,
-      header: "Crop Seeds",
+      header: "Crop Area",
+      footer: "${cropAreaHa.toStringAsFixed(2)} ha",
     );
 
     return [
@@ -246,50 +254,35 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
     ];
   }
 
-  Widget get systemWidget {
+  SystemType get systemType {
     if (widget.farmSystem is AgroforestrySystem) {
-      return systemImage((widget.farmSystem as AgroforestrySystem).agroforestryType);
+      return (widget.farmSystem as AgroforestrySystem).agroforestryType;
     } else if (widget.farmSystem is MonocultureSystem) {
-      return systemImage((widget.farmSystem as MonocultureSystem).farmSystemType);
+      return (widget.farmSystem as MonocultureSystem).farmSystemType;
     }
 
-    return const SizedBox();
+    return FarmSystemType.monoculture;
+  }
+
+  Widget get systemWidget {
+    return systemImage(systemType);
   }
 
   List<Widget> buildComponentsFromMonoculture(MonocultureSystem system) {
     /// crops
-    final cropType = system.crop;
-    final cropQty = QtyCalculator.getSeedQtyRequireFor(
-      systemType: system.farmSystemType,
-      cropType: cropType,
-    );
 
+    final layout = PlantationLayout.fromSytemType(system.farmSystemType);
+    final cropAreaHa = layout.areaFractionForCrops;
     final cropsData = _SystemComponent(
-      footer: cropQty.readableFormat,
+      key: ValueKey('crops-${system.farmSystemType}'),
       componentImage: "assets/images/icons/seeds.png",
       bgColor: widget.secondaryColor,
-      header: "Crop Seeds",
-    );
-
-    /// fertilizer
-    final fertilizerQty = QtyCalculator.getFertilizerQtyRequiredFor(
-      systemType: system.farmSystemType,
-      soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
-      cropType: cropType,
-      fertilizerType: system.fertilizer,
-      growableType: GrowableType.crop,
-    );
-
-    final fertilierData = _SystemComponent(
-      footer: fertilizerQty.readableFormat,
-      componentImage: "assets/images/icons/fertilizer.png",
-      bgColor: widget.secondaryColor,
-      header: "Fertilizer",
+      header: "Crop Area",
+      footer: "${cropAreaHa.toStringAsFixed(2)} ha",
     );
 
     return [
       cropsData,
-      fertilierData,
     ];
   }
 
@@ -391,13 +384,13 @@ class BackgroundGlow extends StatelessWidget {
 class _SystemComponent extends StatelessWidget {
   final String componentImage;
   final String header;
-  final String footer;
+  final String? footer;
   final Color bgColor;
 
   const _SystemComponent({
     super.key,
     required this.header,
-    required this.footer,
+    this.footer,
     required this.componentImage,
     required this.bgColor,
   });
@@ -411,7 +404,7 @@ class _SystemComponent extends StatelessWidget {
           child: Center(
             child: MenuImage(
               imageAssetPath: componentImage,
-              dimension: 100.s,
+              dimension: 50.s,
               shape: BoxShape.circle,
             ),
           ),
@@ -420,17 +413,18 @@ class _SystemComponent extends StatelessWidget {
         StylizedText(
           text: Text(
             header,
-            style: TextStyles.s18,
+            style: TextStyles.s16,
             textAlign: TextAlign.center,
           ),
         ),
-        StylizedText(
-          text: Text(
-            footer,
-            style: TextStyles.s18,
-            textAlign: TextAlign.center,
-          ),
-        )
+        if (footer != null)
+          StylizedText(
+            text: Text(
+              footer!,
+              style: TextStyles.s16,
+              textAlign: TextAlign.center,
+            ),
+          )
       ],
     );
   }

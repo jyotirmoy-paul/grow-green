@@ -21,6 +21,7 @@ import '../../../../components/farm/components/system/enum/growable.dart';
 import '../../../../components/farm/components/system/real_life/calculators/crops/base_crop.dart';
 import '../../../../components/farm/components/system/real_life/utils/cost_calculator.dart';
 import '../../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
+import '../../../../components/farm/components/system/real_life/utils/soil_health_calculator.dart';
 import '../../../../components/farm/components/tree/enums/tree_type.dart';
 import '../../../../components/farm/farm_controller.dart';
 import '../../../../components/farm/model/content.dart';
@@ -31,6 +32,7 @@ import '../../../system_selector_menu/enum/component_id.dart';
 import '../../choose_component_dialog.dart';
 import '../../widgets/menu_image.dart';
 import '../../widgets/menu_item_flip_skeleton.dart';
+import '../../widgets/soil_health_effect.dart';
 import '../../widgets/system_item_widget.dart';
 import '../logic/support_config.dart';
 
@@ -78,91 +80,88 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       children: [
         /// body
         Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(16.s),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: children.map(
-                (model) {
-                  return Opacity(
-                    opacity: _opacity(model),
-                    child: ButtonAnimator(
-                      onPressed: () {
-                        if (model.isComponentEditable) return onComponentTap(model);
-                      },
-                      child: SizedBox(
-                        height: 400.s,
-                        child: MenuItemFlipSkeleton(
-                          width: 200.s,
-                          bgColor: model.color ?? Colors.red.darken(0.3),
-                          header: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              MenuImage(
-                                imageAssetPath: model.upperImage,
-                                dimension: 40.s,
-                                shape: BoxShape.circle,
-                              ),
-                              StylizedText(
-                                text: Text(
-                                  model.headerText,
-                                  style: TextStyles.s18,
-                                  textAlign: TextAlign.center,
-                                ),
-                              )
-                            ],
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Gap(0.s),
+            scrollDirection: Axis.horizontal,
+            itemCount: children.length,
+            itemBuilder: (context, index) {
+              final model = children[index];
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.s, vertical: 40.s),
+                child: Opacity(
+                  opacity: _opacity(model),
+                  child: ButtonAnimator(
+                    onPressed: () {
+                      if (model.isComponentEditable) return onComponentTap(model);
+                    },
+                    child: MenuItemFlipSkeleton(
+                      width: 300.s,
+                      bgColor: model.color ?? Colors.red.darken(0.3),
+                      header: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          MenuImage(
+                            imageAssetPath: model.upperImage,
+                            dimension: 40.s,
+                            shape: BoxShape.circle,
                           ),
-                          body: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                /// image
-                                MenuImage(
-                                  imageAssetPath: model.image,
-                                  dimension: 100.s,
-                                ),
-
-                                /// description
-                                if (model.descriptionText != null)
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
-                                    child: StylizedText(
-                                      text: Text(
-                                        model.descriptionText!,
-                                        style: TextStyles.s18,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                              ],
+                          StylizedText(
+                            text: Text(
+                              model.headerText,
+                              style: TextStyles.s18,
+                              textAlign: TextAlign.center,
                             ),
-                          ),
-                          footer: model.footerWidget ??
+                          )
+                        ],
+                      ),
+                      body: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            /// image
+                            MenuImage(
+                              imageAssetPath: model.image,
+                              dimension: 100.s,
+                            ),
+
+                            /// description
+                            if (model.descriptionText != null)
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 8.s),
-                                child: Center(
-                                  /// button
-                                  child: GameButton.text(
-                                    color: Colors.white12,
-                                    text: "CHANGE",
-                                    textStyle: TextStyles.s14,
-                                    onTap: () {
-                                      onComponentTap(model);
-                                    },
+                                padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
+                                child: StylizedText(
+                                  text: Text(
+                                    model.descriptionText!,
+                                    style: TextStyles.s18,
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
+                            if (model.descriptionWidget != null) model.descriptionWidget!,
+                          ],
                         ),
                       ),
+                      footer: model.footerWidget ??
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 8.s),
+                            child: Center(
+                              /// button
+                              child: GameButton.text(
+                                color: Colors.white12,
+                                text: "CHANGE",
+                                textStyle: TextStyles.s14,
+                                onTap: () {
+                                  onComponentTap(model);
+                                },
+                              ),
+                            ),
+                          ),
                     ),
-                  );
-                },
-              ).toList(),
-            ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
 
@@ -281,7 +280,15 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
     );
 
     final isEditable = isCrop ? !widget.isCropSupportPresent : !widget.isTreeSupportPresent;
-
+    final supportConfig = isCrop ? _currentFarmContent.cropSupportConfig! : _currentFarmContent.treeSupportConfig!;
+    final changePercentage = SoilHealthCalculator.fertilizerEffect(
+      fertilizer: supportConfig.fertilizerConfig,
+      soilHealthPercentage: widget.farmController.soilHealthPercentage,
+    );
+    final soilHealthEffect = SoilHealthEffect(
+      changePercentage: changePercentage,
+      changeDurationType: ChangeDurationType.perUse,
+    );
     return _ComponentsModel(
       headerText: "Fertilizer",
       upperImage: upperImageAsset,
@@ -292,6 +299,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       color: AppColors.kFertilizerMenuCardBg,
       footerWidget: isEditable ? null : const SizedBox.shrink(),
       growableType: isCrop ? GrowableType.crop : GrowableType.tree,
+      descriptionWidget: soilHealthEffect,
     );
   }
 
@@ -350,6 +358,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       systemType: farmContent.systemType,
       growableType: GrowableType.crop,
       ageInMonths: cropAge,
+      soilHealthPercentage: widget.soilHealthPercentage,
     );
     final fertilizerContent = QtyCalculator.getFertilizerQtyRequiredFromTime(
       soilHealthPercentage: widget.soilHealthPercentage,
@@ -376,6 +385,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       systemType: farmContent.systemType,
       growableType: GrowableType.tree,
       ageInMonths: treeAge,
+      soilHealthPercentage: widget.soilHealthPercentage,
     );
     final fertilizerContent = QtyCalculator.getFertilizerQtyRequiredFromTime(
       soilHealthPercentage: widget.soilHealthPercentage,
@@ -466,6 +476,7 @@ class _ComponentsModel {
   final bool isComponentEditable;
   final Color? color;
   final Widget? footerWidget;
+  final Widget? descriptionWidget;
 
   _ComponentsModel({
     required this.headerText,
@@ -477,5 +488,6 @@ class _ComponentsModel {
     this.descriptionText,
     this.color,
     this.footerWidget,
+    this.descriptionWidget,
   });
 }
