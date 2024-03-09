@@ -16,4 +16,6 @@ abstract class GameIcons {
   static const minus = '$_base/minus_circle.png';
   static const plus = '$_base/plus_circle.png';
   static const stripedBg = '$_base/striped_bg.png';
+  static const positiveTriangle = '$_base/positive_triangle.png';
+  static const negativeTriangle = '$_base/negative_triangle.png';
 }

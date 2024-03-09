@@ -47,6 +47,7 @@ class SupportConfigPredictor {
   static MaintenanceQty predictMaintenanceConfigForFarm({
     required SystemType systemType,
     required Growable growable,
+    required double soilHealthPercentage,
   }) {
     final isCrop = growable.getGrowableType() == GrowableType.crop;
     final ageInMonths = isCrop ? BaseCropCalculator.fromCropType(growable as CropType).maxAgeInMonths : 12;
@@ -54,6 +55,7 @@ class SupportConfigPredictor {
       systemType: systemType,
       growableType: growable.getGrowableType(),
       ageInMonths: ageInMonths,
+      soilHealthPercentage: soilHealthPercentage,
     );
 
     return maintenanceQty;
