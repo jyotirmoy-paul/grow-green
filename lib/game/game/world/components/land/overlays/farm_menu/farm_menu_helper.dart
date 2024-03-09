@@ -200,7 +200,7 @@ class FarmMenuHelper {
         return getDialogTitleFromFarmState(farmState);
 
       case FarmMenuOption.maintenance:
-        return 'Maintenance';
+        return 'Farm Maintenance';
 
       case FarmMenuOption.history:
         return 'Farm History';

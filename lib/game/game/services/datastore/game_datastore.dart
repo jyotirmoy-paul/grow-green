@@ -34,7 +34,7 @@ class GameDatastore {
   Future<ServiceAction> initialize(User user) async {
     return _dbManagerService.configure(
       user: user,
-      syncInterval: kDebugMode ? const Duration(seconds: 5) : const Duration(seconds: 20),
+      syncInterval: const Duration(seconds: 20),
     );
   }
 
@@ -118,7 +118,7 @@ class GameDatastore {
       throw Exception('$tag: getSoilHealthModelFor($farmId) failed');
     }
 
-  return data.map<SoilHealthModel>((d) => SoilHealthModel.fromJson(d)).toList();
+    return data.map<SoilHealthModel>((d) => SoilHealthModel.fromJson(d)).toList();
   }
 
   Future<List<HarvestModel>> getHarvestModelsFor(String farmId) async {
