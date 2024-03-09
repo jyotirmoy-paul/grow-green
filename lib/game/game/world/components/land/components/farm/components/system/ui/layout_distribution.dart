@@ -8,6 +8,7 @@ import '../enum/growable.dart';
 typedef LayoutData = List<GrowablePosition>;
 
 class LayoutDistribution {
+  static const padding = 30.0;
   static const tag = 'LayoutDistribution';
 
   final SystemType systemType;
@@ -15,43 +16,62 @@ class LayoutDistribution {
   final double treeSize;
   final double cropSize;
 
-  Vector2 get treeSizeVector2 => Vector2(treeSize * 1.6, treeSize);
-  Vector2 get cropSizeVector2 => Vector2(cropSize * 1.6, cropSize);
+  final Vector2 treeSizeVector2;
+  final Vector2 cropSizeVector2;
 
   LayoutDistribution({
+    required double size,
     required this.systemType,
-    required this.size,
     required this.treeSize,
     required this.cropSize,
-  });
+  })  : size = size - padding * 2,
+        treeSizeVector2 = Vector2(treeSize * 1.6, treeSize),
+        cropSizeVector2 = Vector2(cropSize * 1.6, cropSize);
+
+  LayoutData _processDistribution(LayoutData data) {
+    for (final d in data) {
+      d.pos.translate(padding, padding);
+    }
+    return data;
+  }
 
   LayoutData getDistribution() {
     switch (systemType) {
       case AgroforestryType.alley:
-        return _getAlleyDistribution();
+        return _processDistribution(_getAlleyDistribution());
 
       case AgroforestryType.block:
-        return _getBlockDistribution();
+        return _processDistribution(_getBlockDistribution());
 
       case AgroforestryType.boundary:
-        return _getBoundaryDistribution();
+        return _processDistribution(_getBoundaryDistribution());
 
       case FarmSystemType.monoculture:
-        return _getMonocropDistribution();
+        return _processDistribution(_getBoundaryDistribution());
     }
 
     throw Exception('Please specify agroforestry type using AgroforestryType enum!');
   }
 
   LayoutData _getAlleyDistribution() {
+    const treeRows = 3;
+    const treeCols = 8;
+
     LayoutData result = List.empty(growable: true);
 
     final smallestSize = 4 * treeSize + 4 * 3 * cropSize;
     if (smallestSize > size) {
-      throw Exception('$tag: The given tree and crop size is not possible to be shown within $size area!');
+      throw Exception(
+        '$tag: _getAlleyDistribution(): The given tree and crop size is not possible to be shown within $size area!',
+      );
     }
 
-    LayoutData firstColumnTrees = _fillColumn(growable: GrowableType.tree, size: size, column: 0, numOfGrowables: 4);
+    LayoutData firstColumnTrees = _fillColumn(
+      growable: GrowableType.tree,
+      size: size,
+      column: 0,
+      numOfGrowables: treeRows,
+    );
     LayoutData firstColumnCrops = LayoutData.empty(growable: true);
     for (int i = 0; i < firstColumnTrees.length - 1; i++) {
       final startTree = firstColumnTrees[i];
@@ -73,19 +93,26 @@ class LayoutDistribution {
     final firstColumn = firstColumnTrees + firstColumnCrops;
 
     for (final gp in firstColumn) {
-      final row = _fillRow(growable: gp.growable, size: size, row: gp.pos.y);
+      final row = _fillRow(growable: gp.growable, size: size, row: gp.pos.y, numOfGrowables: treeCols);
       result.addAll(row);
     }
     return result;
   }
 
   LayoutData _getBlockDistribution() {
+    const treeRows = 5;
+    const treeCols = 8;
+
     LayoutData result = List.empty(growable: true);
-    const treeRows = 7;
+
     const cropRowsPerGap = 1;
     const cropRows = (treeRows - 1) * cropRowsPerGap;
     final smallestSize = treeRows * treeSize + cropRows * cropSize;
-    if (smallestSize > size) return List.empty();
+    if (smallestSize > size) {
+      throw Exception(
+        '$tag: _getBlockDistribution(): The given tree and crop size is not possible to be shown within $size area!',
+      );
+    }
 
     LayoutData firstColumnTrees = _fillColumn(
       growable: GrowableType.tree,
@@ -121,7 +148,7 @@ class LayoutDistribution {
     final firstColumn = firstColumnTrees + firstColumnCrops;
 
     for (final gp in firstColumn) {
-      var row = _fillRow(growable: gp.growable, size: size, row: gp.pos.y);
+      var row = _fillRow(growable: gp.growable, size: size, row: gp.pos.y, numOfGrowables: treeCols);
       if (gp.pos.x != 0) {
         final translation = Vector2(gp.pos.x, 0);
         row = row.translateBy(translation);
@@ -133,16 +160,19 @@ class LayoutDistribution {
   }
 
   LayoutData _getBoundaryDistribution() {
+    const treeNos = 8;
+
     LayoutData result = List.empty(growable: true);
 
     final numOfGrowables = size ~/ treeSize;
 
     if (numOfGrowables == 0) return List.empty();
 
-    final topRow = _fillRow(growable: GrowableType.tree, row: 0, size: size);
-    final bottomRow = _fillRow(growable: GrowableType.tree, row: size - treeSize, size: size);
-    final leftColumn = _fillColumn(growable: GrowableType.tree, column: 0, size: size);
-    final rightColumn = _fillColumn(growable: GrowableType.tree, column: size - treeSize, size: size);
+    const gtree = GrowableType.tree;
+    final topRow = _fillRow(growable: gtree, row: 0, size: size, numOfGrowables: treeNos);
+    final bottomRow = _fillRow(growable: gtree, row: size - treeSize, size: size, numOfGrowables: treeNos);
+    final leftColumn = _fillColumn(growable: gtree, column: 0, size: size, numOfGrowables: treeNos);
+    final rightColumn = _fillColumn(growable: gtree, column: size - treeSize, size: size, numOfGrowables: treeNos);
 
     result.addAll([...topRow, ...bottomRow, ...leftColumn, ...rightColumn]);
 
