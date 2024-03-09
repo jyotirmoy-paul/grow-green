@@ -23,6 +23,11 @@ abstract class BaseTreeCalculator {
   AgePriceLinearData recurringHarvestData();
   Month? getRecurringHarvestMonth();
 
+  bool isHarvestReady(int treeAgeInDays) {
+    int ageInYears = treeAgeInDays ~/ 365;
+    return ageInYears >= harvestReadyAge();
+  }
+
   bool canHarvest({
     required int treeAgeInDays,
     required Month currentMonth,

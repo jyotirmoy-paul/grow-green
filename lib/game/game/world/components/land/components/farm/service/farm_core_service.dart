@@ -62,6 +62,7 @@ class FarmCoreService {
   final _farmStateModelStreamController = StreamController<FarmStateModel>.broadcast();
 
   bool _initPhase = true;
+  bool _isExistingTreeHarvestReady = false;
   int _soilHealthRecorderCurrentTick = 0;
 
   late FarmStateModel _farmStateModelValue;
@@ -99,6 +100,7 @@ class FarmCoreService {
       agroforestryType: farmContent.systemType as AgroforestryType,
       treeType: trees.treeType,
       lifeStartedAt: trees.lifeStartedAt,
+      isHarvestReady: _isExistingTreeHarvestReady,
     );
   }
 
@@ -154,6 +156,7 @@ class FarmCoreService {
       }
 
       if (_trees == null) {
+        _isExistingTreeHarvestReady = false;
         newFarmStateModel.treesLastMaintenanceRefillOn = null;
         newFarmStateModel.treeLastHarvestedOn = null;
         newFarmStateModel.treesLifeStartedAt = null;
@@ -340,10 +343,6 @@ class FarmCoreService {
       throw Exception('$tag: removeTreeSupport() invoked at null farm content, how can this be?');
     }
 
-    if (farmContent.treeSupportConfig == null) {
-      throw Exception('$tag: removeTreeSupport() invoked with null treeSupportConfig, how can this be?');
-    }
-
     /// remove tree support from farm content
     farmStateModel.farmContent = farmContent.removeTreeSupport();
 
@@ -419,6 +418,8 @@ class FarmCoreService {
 
     farmStateModel.treesLastMaintenanceRefillOn = _dateTime;
     farmStateModel.farmContent = newFarmContent;
+
+    /// TODO: Let user know tree maintanence is added successfully via a cue
   }
 
   void _handleTreesOnlyFarm({
@@ -574,6 +575,9 @@ class FarmCoreService {
     /// check for harvest each month (recurring)
     final currentMonth = _dateTime.gameMonth;
     final canHarvestTree = treesCalculator.canHarvest(treeAgeInDays: treeAge, currentMonth: currentMonth);
+
+    /// update if existing tree is harvest ready
+    _isExistingTreeHarvestReady = treesCalculator.isHarvestReady(treeAge);
 
     bool canHarvesAgain = true;
     if (_treeLastHarvestedOn != null) {

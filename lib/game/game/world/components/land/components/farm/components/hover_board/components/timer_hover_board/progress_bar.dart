@@ -4,11 +4,15 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 class ProgressBar extends PositionComponent {
+  static const leftEndColor = Colors.red;
+  static const rightEndColor = Colors.green;
+
   final double progressWidth;
   final double progressHeight;
   final double strokeWidth;
   final Color minColor;
   final Color maxColor;
+  final bool swapMinMaxColor;
   final Radius borderRadius;
 
   ProgressBar({
@@ -16,10 +20,10 @@ class ProgressBar extends PositionComponent {
     this.progressWidth = 100.0,
     this.progressHeight = 16.0,
     this.strokeWidth = 2.0,
-    this.minColor = Colors.red,
-    this.maxColor = Colors.green,
     this.borderRadius = const Radius.circular(2.0),
-  });
+    this.swapMinMaxColor = false,
+  })  : minColor = swapMinMaxColor ? rightEndColor : leftEndColor,
+        maxColor = swapMinMaxColor ? leftEndColor : rightEndColor;
 
   double progressFactor;
 

@@ -14,6 +14,8 @@ import 'progress_bar.dart';
 import 'rounded_rectangle_component.dart';
 
 class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, TimeAware {
+  static const imageScaleFactor = 1.28;
+
   final TimerHoverBoardModel model;
   final Farm farm;
   final Vector2 farmCenter;
@@ -52,7 +54,7 @@ class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, Tim
       text: _formattedDaysLeft,
       textRenderer: _getPaint(),
       anchor: Anchor.bottomCenter,
-      position: farmCenter.translated(0, 0.0),
+      position: farmCenter.translated(0, 0),
     );
 
     final imageComponent = SpriteComponent(
@@ -72,12 +74,19 @@ class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, Tim
       size: imageComponent.size,
     )
       ..anchor = Anchor.center
-      ..scale = Vector2.all(1.28);
+      ..scale = Vector2.all(imageScaleFactor);
 
     /// create progress bar
-    _progressBar = ProgressBar(progressFactor: progressFactor)
+    _progressBar = ProgressBar(progressFactor: progressFactor, swapMinMaxColor: model.swapMinMaxColor)
       ..anchor = Anchor.center
       ..position = farmCenter;
+
+    final extraText = TextComponent(
+      text: model.text,
+      textRenderer: _getPaint(),
+      anchor: Anchor.bottomCenter,
+      position: farmCenter.translated(0, imageComponent.height * imageScaleFactor),
+    );
 
     /// add all components
     addAll([
@@ -85,6 +94,7 @@ class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, Tim
       imageComponent,
       _progressBar!,
       _textComponent!,
+      extraText,
     ]);
 
     return super.onLoad();
