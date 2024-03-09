@@ -81,10 +81,10 @@ class MonetaryService {
     try {
       switch (transactionType) {
         case TransactionType.debit:
-          return _transactDebit(value).timeout(const Duration(milliseconds: 1000));
+          return _transactDebit(value).timeout(const Duration(milliseconds: 5000));
 
         case TransactionType.credit:
-          return _transactCredit(value).timeout(const Duration(milliseconds: 1000));
+          return _transactCredit(value).timeout(const Duration(milliseconds: 5000));
       }
     } on TimeoutException catch (_) {
       Log.e('$tag: transaction timed out');

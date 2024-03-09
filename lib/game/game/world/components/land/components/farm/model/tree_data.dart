@@ -5,10 +5,12 @@ class TreeData {
   final AgroforestryType agroforestryType;
   final DateTime lifeStartedAt;
   final TreeType treeType;
+  final bool isHarvestReady;
 
   TreeData({
     required this.agroforestryType,
     required this.treeType,
     required this.lifeStartedAt,
+    required this.isHarvestReady,
   });
 }

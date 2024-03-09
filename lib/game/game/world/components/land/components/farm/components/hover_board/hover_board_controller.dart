@@ -38,6 +38,26 @@ class HoverBoardController {
     return const [];
   }
 
+  Vector2 getHoverBoardPosition(HoverBoardType type) {
+    return switch (type) {
+      HoverBoardType.cropsWaiting => farmCenter.translated(0, 50),
+      HoverBoardType.harvestOutcome => farmCenter.translated(0, -50),
+      HoverBoardType.treeMaintanenceWaiting => farmCenter,
+    };
+  }
+
+  void removeHoverBoard(HoverBoardType type) {
+    Log.i('$tag: removeHoverBoard(type: $type) invoked');
+
+    if (_hoverBoards.containsKey(type)) {
+      final hoverBoard = _hoverBoards[type]!;
+
+      /// remove hoverboard from map & component tree
+      _hoverBoards.remove(type);
+      remove(hoverBoard);
+    }
+  }
+
   void addHoverBoard({
     required HoverBoardType type,
     required HoverBoardModel model,
@@ -66,7 +86,7 @@ class HoverBoardController {
       /// basic hover board
       hoverBoardItem = BasicHoverBoard(
         model: hoverBoardModel,
-        farmCenter: farmCenter.translated(0, -30),
+        farmCenter: getHoverBoardPosition(type),
         onTap: onTap,
         farm: farm,
       );
@@ -75,7 +95,7 @@ class HoverBoardController {
       hoverBoardItem = TimerHoverBoard(
         model: hoverBoardModel,
         farm: farm,
-        farmCenter: farmCenter.translated(0, 30),
+        farmCenter: getHoverBoardPosition(type),
       );
     }
 
