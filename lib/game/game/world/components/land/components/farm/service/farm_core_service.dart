@@ -108,6 +108,8 @@ class FarmCoreService {
       );
 
   Stream<List<HarvestModelNonAckData>> get harvestNotAckDataStream => _harvestRecorder.harvestNotAckDataStream;
+  Stream<DateTime?> get lastTreeMaintenanceRefillOnStream =>
+      _farmStateModelStreamController.stream.map<DateTime?>((e) => e.treesLastMaintenanceRefillOn);
 
   FarmContent? _getFarmContentAsPerFarmState(FarmStateModel newFarmStateModel) {
     switch (newFarmStateModel.farmState) {
@@ -152,6 +154,7 @@ class FarmCoreService {
       }
 
       if (_trees == null) {
+        newFarmStateModel.treesLastMaintenanceRefillOn = null;
         newFarmStateModel.treeLastHarvestedOn = null;
         newFarmStateModel.treesLifeStartedAt = null;
       }
@@ -326,10 +329,40 @@ class FarmCoreService {
     return MoneyModel(value: value);
   }
 
-  void sellTree() async {
+  /// this method is called from tree maintanence checker service to remove tree support after expiry
+  void removeTreeSupport() {
+    Log.i('$tag: removeTreeSupport() invoked, removing tree support!');
+
+    final farmStateModel = _farmStateModelValue;
+    final farmContent = farmStateModel.farmContent;
+
+    if (farmContent == null) {
+      throw Exception('$tag: removeTreeSupport() invoked at null farm content, how can this be?');
+    }
+
+    if (farmContent.treeSupportConfig == null) {
+      throw Exception('$tag: removeTreeSupport() invoked with null treeSupportConfig, how can this be?');
+    }
+
+    /// remove tree support from farm content
+    farmStateModel.farmContent = farmContent.removeTreeSupport();
+
+    updateFarmStateModel(farmStateModel);
+  }
+
+  /// the method is called from tree maintanence checker service, when sufficient maintanence is not available
+  /// the trees are prematurely removed from the system
+  void expireTreeDueToMaintanenceMiss() {
+    /// invoke same sell tree result, without recording any harvest
+    return sellTree(recordHarvest: false);
+  }
+
+  void sellTree({bool recordHarvest = true}) async {
     final trees = _trees;
     if (trees == null) {
-      throw Exception('$tag: sellTree invoked with null trees. How to sell tree without any tree?');
+      throw Exception(
+        '$tag: sellTree(recordHarvest: $recordHarvest) invoked with null trees. How to sell tree without any tree?',
+      );
     }
 
     final farmStateModel = _farmStateModelValue;
@@ -357,19 +390,60 @@ class FarmCoreService {
     /// update farm content
     farmStateModel.farmContent = farmContent?.removeTree();
 
-    final treeAge = _dateTime.difference(trees.lifeStartedAt).inDays;
+    /// record harvest only if needed (for tree sell case)
+    if (recordHarvest) {
+      final treeAge = _dateTime.difference(trees.lifeStartedAt).inDays;
 
-    final treeHarvestService = HarvestCoreService.forTree(
-      treeType: trees.treeType,
-      treeAgeInDays: treeAge,
-      currentDateTime: _dateTime,
-    );
+      final treeHarvestService = HarvestCoreService.forTree(
+        treeType: trees.treeType,
+        treeAgeInDays: treeAge,
+        currentDateTime: _dateTime,
+      );
 
-    final harvestModel = treeHarvestService.sell();
-    _harvestRecorder.recordHarvest(harvestModel);
+      final harvestModel = treeHarvestService.sell();
+      _harvestRecorder.recordHarvest(harvestModel);
+    }
 
     /// write to server
     updateFarmStateModel(farmStateModel);
+  }
+
+  /// method adds tree maintenance to farm content, also resets tree maitenance warning timer
+  void _handleExternalTreeSupportAddition(FarmContent farmContent, FarmStateModel farmStateModel) {
+    Log.i('$tag: _handleExternalTreeSupportAddition($farmContent) getting added');
+
+    /// add tree support config
+    final newFarmContent = farmStateModel.farmContent?.copyWith(
+      treeSupportConfig: farmContent.treeSupportConfig,
+    );
+
+    farmStateModel.treesLastMaintenanceRefillOn = _dateTime;
+    farmStateModel.farmContent = newFarmContent;
+  }
+
+  void _handleTreesOnlyFarm({
+    required FarmContent farmContent,
+    required bool isTreeSupportConfigAdded,
+  }) {
+    final farmStateModel = _farmStateModelValue;
+
+    /// tree support can be added along with crops, handle both
+    if (isTreeSupportConfigAdded) {
+      _handleExternalTreeSupportAddition(farmContent, farmStateModel);
+    }
+
+    final isCropAdded = farmContent.crop != null;
+
+    if (isCropAdded) {
+      /// this method internally updates the farm state model
+      /// the farm state updation is delegated to the `_addCropsToFarm` method for efficiency
+      return _addCropsToFarm(farmContent, farmStateModel);
+    } else if (isTreeSupportConfigAdded) {
+      /// if only tree support was added, update the farm state model here
+      return updateFarmStateModel(farmStateModel);
+    }
+
+    throw Exception('$tag: updateFarmContent($farmContent) invoked in $farmState without proper farm content');
   }
 
   /// update farm composition, this method is responsible for following:
@@ -377,13 +451,19 @@ class FarmCoreService {
   /// 2. Instantiate - CropsController, FarmerController & TreeController (if not already)
   /// 3. Update - CropSupporter (Trees / Fertilizers)
   void updateFarmContent(FarmContent farmContent) {
+    final isTreeSupportConfigAdded = farmContent.treeSupportConfig != null;
+
     switch (farmState) {
       case FarmState.notBought:
-      case FarmState.functioning:
       case FarmState.barren:
       case FarmState.onlyCropsWaiting:
       case FarmState.treesAndCropsButCropsWaiting:
-        throw Exception('$tag updateFarmComposition invoked in wrong farm state: $farmState');
+        throw Exception('$tag updateFarmContent invoked in wrong farm state: $farmState');
+
+      case FarmState.functioning:
+        // in a functional farm tree support can get added
+        if (isTreeSupportConfigAdded) return _handleExternalTreeSupportAddition(farmContent, _farmStateModelValue);
+        throw Exception('$tag updateFarmContent invoked in $farmState without any tree support addition');
 
       /// nothing is available in the farm, need to setup from scratch
       case FarmState.notFunctioning:
@@ -391,7 +471,10 @@ class FarmCoreService {
 
       /// only trees are functioning, crops can be updated
       case FarmState.functioningOnlyTrees:
-        return _addCropsToFarm(farmContent);
+        return _handleTreesOnlyFarm(
+          farmContent: farmContent,
+          isTreeSupportConfigAdded: isTreeSupportConfigAdded,
+        );
 
       /// only crops are functioning, tree spaces are available, trees can be updated
       case FarmState.functioningOnlyCrops:
@@ -529,10 +612,7 @@ class FarmCoreService {
 
     final newSoilHealth = SoilHealthCalculator.getNewSoilHealth(
       currentSoilHealth: soilHealthPercentage,
-
-      /// we don't care about fertilizer used, until there's crop in the farm
-      currentFertilizerInUse:
-          _crops == null ? null : farmContent!.cropSupportConfig?.fertilizerConfig,
+      currentFertilizerInUse: _crops == null ? null : farmContent!.cropSupportConfig?.fertilizerConfig,
       currentSystemType: farmContent!.systemType,
       areTreesPresent: farmContent!.hasTrees,
     );
@@ -554,9 +634,7 @@ class FarmCoreService {
       systemType: farmContent!.systemType,
 
       /// we don't care about fertilizer used, until there's crop in the farm
-      fertilizerType: _crops == null
-          ? null
-          : farmContent!.cropSupportConfig?.fertilizerConfig.type as FertilizerType?,
+      fertilizerType: _crops == null ? null : farmContent!.cropSupportConfig?.fertilizerConfig.type as FertilizerType?,
       areTreesPresent: farmContent!.hasTrees,
     );
 
@@ -697,6 +775,7 @@ class FarmCoreService {
       );
 
       farmStateModel.treesLifeStartedAt = treeLifeStartedAt;
+      farmStateModel.treesLastMaintenanceRefillOn = farmStateModel.treesLastMaintenanceRefillOn ?? _dateTime;
     }
 
     final crops = Crops(
@@ -719,12 +798,10 @@ class FarmCoreService {
     );
   }
 
-  void _addCropsToFarm(FarmContent farmContent) {
+  void _addCropsToFarm(FarmContent farmContent, FarmStateModel farmStateModel) {
     if (this.farmContent == null) {
       throw Exception('$tag: Can not invoke _addCropsToFarm on a farm which is not initialized. _farmContent is null.');
     }
-
-    final farmStateModel = _farmStateModelValue;
 
     farmStateModel.farmContent = this.farmContent!.copyWith(
           crop: farmContent.crop,
@@ -756,7 +833,9 @@ class FarmCoreService {
 
     farmStateModel.farmContent = this.farmContent!.copyWith(
           tree: farmContent.tree,
+          treeSupportConfig: farmContent.treeSupportConfig,
         );
+
     final (treeData, _) = _getTreesAndCropsPositionAndSizeFor(farmContent);
 
     _trees = Trees(
@@ -766,6 +845,10 @@ class FarmCoreService {
       treeSize: treeData.$2,
       farmSize: farm.size,
     );
+
+    /// setup initial time
+    farmStateModel.treesLifeStartedAt = _dateTime;
+    farmStateModel.treesLastMaintenanceRefillOn = _dateTime;
 
     /// add tree
     final state = _putTreesAndGetFarmState(trees: _trees!);

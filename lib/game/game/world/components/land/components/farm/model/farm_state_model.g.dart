@@ -26,6 +26,9 @@ FarmStateModel _$FarmStateModelFromJson(Map<String, dynamic> json) =>
       cropsLifeStartedAt: json['cropsLifeStartedAt'] == null
           ? null
           : DateTime.parse(json['cropsLifeStartedAt'] as String),
+      treesLastMaintenanceRefillOn: json['treesLastMaintenanceRefillOn'] == null
+          ? null
+          : DateTime.parse(json['treesLastMaintenanceRefillOn'] as String),
     );
 
 Map<String, dynamic> _$FarmStateModelToJson(FarmStateModel instance) =>
@@ -38,6 +41,8 @@ Map<String, dynamic> _$FarmStateModelToJson(FarmStateModel instance) =>
       'treesLifeStartedAt': instance.treesLifeStartedAt?.toIso8601String(),
       'cropSowRequestedAt': instance.cropSowRequestedAt?.toIso8601String(),
       'cropsLifeStartedAt': instance.cropsLifeStartedAt?.toIso8601String(),
+      'treesLastMaintenanceRefillOn':
+          instance.treesLastMaintenanceRefillOn?.toIso8601String(),
     };
 
 const _$FarmStateEnumMap = {

@@ -54,6 +54,15 @@ abstract class NotificationHelper {
     );
   }
 
+  static void treeMaintenanceMiss() {
+    NotificationService().notify(
+      NotificationModel(
+        text: 'Trees were not able to survice due to lack of maintanence!',
+        textColor: Colors.red,
+      ),
+    );
+  }
+
   /// success
   static void farmPurchaseSuccess() {
     NotificationService().notify(

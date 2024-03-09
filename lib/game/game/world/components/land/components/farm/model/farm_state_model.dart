@@ -15,6 +15,7 @@ class FarmStateModel {
   DateTime? treesLifeStartedAt;
   DateTime? cropSowRequestedAt;
   DateTime? cropsLifeStartedAt;
+  DateTime? treesLastMaintenanceRefillOn;
 
   FarmStateModel({
     required this.farmId,
@@ -25,6 +26,7 @@ class FarmStateModel {
     this.treesLifeStartedAt,
     this.cropSowRequestedAt,
     this.cropsLifeStartedAt,
+    this.treesLastMaintenanceRefillOn,
   });
 
   FarmStateModel copyWith({
@@ -36,6 +38,7 @@ class FarmStateModel {
     DateTime? treesLifeStartedAt,
     DateTime? cropSowRequestedAt,
     DateTime? cropsLifeStartedAt,
+    DateTime? treesLastMaintenanceRefillOn,
   }) {
     return FarmStateModel(
       farmId: farmId ?? this.farmId,
@@ -46,6 +49,7 @@ class FarmStateModel {
       treesLifeStartedAt: treesLifeStartedAt ?? this.treesLifeStartedAt,
       cropsLifeStartedAt: cropsLifeStartedAt ?? this.cropsLifeStartedAt,
       cropSowRequestedAt: cropSowRequestedAt ?? this.cropSowRequestedAt,
+      treesLastMaintenanceRefillOn: treesLastMaintenanceRefillOn ?? this.treesLastMaintenanceRefillOn,
     );
   }
 

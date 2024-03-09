@@ -20,6 +20,7 @@ import 'model/tree_data.dart';
 import 'service/crop_timer/crop_timer.dart';
 import 'service/farm_core_service.dart';
 import 'service/harvest/harvest_reflector.dart';
+import 'service/tree_maintanence/tree_maintanence_checker_service.dart';
 
 class FarmController {
   static const tag = 'FarmController';
@@ -30,6 +31,7 @@ class FarmController {
   late final HoverBoard hoverBoard;
   late final FarmCoreService _farmCoreService;
   late final HarvestReflector _harvestReflector;
+  late final TreeMaintanenceCheckerService _treeMaintanenceCheckerService;
   late final CropTimer _cropTimer;
   late final bool debugMode;
 
@@ -51,6 +53,7 @@ class FarmController {
 
   List<HarvestModel> get harvestModels => _farmCoreService.harvestModels;
   List<SoilHealthModel> get soilHealthModels => _farmCoreService.soilHealthModels;
+  Stream<DateTime?> get lastTreeMaintenanceRefillOnStream => _farmCoreService.lastTreeMaintenanceRefillOnStream;
 
   VoidCallback? onFarmTap;
 
@@ -119,6 +122,10 @@ class FarmController {
     _cropTimer = CropTimer(farmCoreService: _farmCoreService);
     _cropTimer.boot();
 
+    /// tree maintanence checker service
+    _treeMaintanenceCheckerService = TreeMaintanenceCheckerService(farmCoreService: _farmCoreService);
+    _treeMaintanenceCheckerService.boot();
+
     /// prepare farm service
     /// a call to `initialize` returns back initial components that needs to be shown
     await _farmCoreService.initialize();
@@ -163,6 +170,7 @@ class FarmController {
   }
 
   void onTimeChange(DateTime dateTime) {
+    _treeMaintanenceCheckerService.onTimeChange(dateTime);
     _farmCoreService.onTimeChange(dateTime);
   }
 
@@ -177,6 +185,7 @@ class FarmController {
   void remove() {
     _harvestReflector.shutdown();
     _cropTimer.shutdown();
+    _treeMaintanenceCheckerService.shutdown();
   }
 
   void update(dt) {
