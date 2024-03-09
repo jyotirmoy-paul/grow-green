@@ -10,7 +10,12 @@ abstract class Growable implements Enum {
   GrowableType getGrowableType();
 }
 
-enum GrowableType { tree, crop }
+enum GrowableType {
+  tree,
+  crop;
+
+  bool get isTree => this == tree;
+}
 
 extension GrowableExtension on Growable {
   String get growableName {

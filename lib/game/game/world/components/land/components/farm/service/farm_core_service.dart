@@ -34,8 +34,8 @@ class FarmCoreService {
   static const treeSize = 50.0;
   static const cropSize = 25.0;
 
-  /// record soil health every 26 ticks (26 game days)
-  static const soilHealthRecordIntervalTick = 26;
+  /// record soil health every 35 ticks (35 game days)
+  static const soilHealthRecordIntervalTick = 35;
 
   final String tag;
   final Rectangle farmRect;
@@ -187,6 +187,7 @@ class FarmCoreService {
       size: farmRect.width,
       treeSize: treeSize,
       cropSize: cropSize,
+      cropType: farmContent.crop?.type as CropType?,
     );
 
     final farmDistribution = layoutDistributor.getDistribution();

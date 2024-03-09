@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 
 import '../../../../../../../grow_green_game.dart';
+import '../../../../../../../services/priority/priority_engine.dart';
 import 'crops_controller.dart';
 import 'enums/crop_stage.dart';
 import 'enums/crop_type.dart';
@@ -33,6 +34,9 @@ class Crops extends PositionComponent with HasGameRef<GrowGreenGame> {
   @override
   FutureOr<void> onLoad() async {
     final components = await cropsController.initialize(game: game);
+
+    priority = PriorityEngine.cropsPriority;
+
     addAll(components);
 
     return super.onLoad();

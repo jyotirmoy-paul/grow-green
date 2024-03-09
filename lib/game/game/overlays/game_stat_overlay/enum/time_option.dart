@@ -18,11 +18,9 @@ enum TimeOption {
     required this.iconData,
   });
 
-  static List<TimeOption> get options => kDebugMode
-      ? TimeOption.values
-      : [
-          TimeOption.pause,
-          TimeOption.t1x,
-          TimeOption.t10x,
-        ];
+  static List<TimeOption> get options => [
+        TimeOption.pause,
+        TimeOption.t1x,
+        kDebugMode ? t50x : TimeOption.t10x,
+      ];
 }
