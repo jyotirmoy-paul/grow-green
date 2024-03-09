@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../grow_green_game.dart';
+import '../../../../../../../services/priority/priority_engine.dart';
 import 'enums/tree_stage.dart';
 import 'enums/tree_type.dart';
 import 'trees_controller.dart';
@@ -34,7 +35,7 @@ class Trees extends PositionComponent with HasGameRef<GrowGreenGame> {
     final components = await treesController.initialize(game: game);
 
     size = farmSize;
-    priority = -1;
+    priority = PriorityEngine.treesPriority;
 
     addAll(components);
 

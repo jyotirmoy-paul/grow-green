@@ -5,6 +5,9 @@ import 'package:flame/components.dart';
 abstract class PriorityEngine {
   static final hoverBoardPriority = double.maxFinite.toInt();
 
+  static const cropsPriority = 0;
+  static const treesPriority = 1;
+
   static generatePriorityFrom(Vector2 position) {
     return (position.x + position.y).toInt();
   }

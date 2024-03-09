@@ -16,11 +16,29 @@ import 'enums/crop_type.dart';
 class CropsController {
   static const tag = 'CropsController';
 
+  /// constants
+  /// this scale crops to adjust the tree scale based on surrounding
+
+  static const scaleMin = 0.9;
+  static const scaleMax = 1.10;
+
   final CropType cropType;
   final Vector2 cropSize;
   final List<Vector2> cropPositions;
   final Vector2 farmSize;
   final math.Random _random;
+  late final double constScale;
+
+  double get _individualCropScaleFactor {
+    return switch (cropType) {
+      CropType.maize => 1.0,
+      CropType.bajra => 1.0,
+      CropType.wheat => 1.0,
+      CropType.groundnut => 1.2,
+      CropType.pepper => 1.0,
+      CropType.banana => 2.0,
+    };
+  }
 
   CropsController({
     required this.cropType,
@@ -32,6 +50,9 @@ class CropsController {
     cropPositions.sort((a, b) {
       return (a.x + a.y).compareTo((b.x + b.y));
     });
+
+    /// find out crop scale
+    constScale = _individualCropScaleFactor;
   }
 
   late final GrowGreenGame game;
@@ -69,7 +90,7 @@ class CropsController {
     cropSpriteBatch?.clear();
 
     final bounceAnimationScaleFactor = bounceAnimation?.value ?? 1.0;
-    final finalScale = scale * bounceAnimationScaleFactor;
+    final finalScale = scale * bounceAnimationScaleFactor * constScale;
 
     for (int i = 0; i < cropPositions.length; i++) {
       final position = cropPositions[i];
@@ -78,7 +99,7 @@ class CropsController {
 
       cropSpriteBatch?.add(
         source: cropSource,
-        offset: Vector2(cartPosition.x, cartPosition.y + ((originCropSize.y / 4) * scale)),
+        offset: Vector2(cartPosition.x, cartPosition.y + ((originCropSize.y / 2) * scale)),
         anchor: Vector2(originCropSize.x / 2, originCropSize.y),
         scale: finalScale * _cropScaleList[i],
         flip: isAssetFlipped,
@@ -87,7 +108,7 @@ class CropsController {
   }
 
   Future<void> _populateSpriteBatch() async {
-    cropAsset = await game.images.load(CropAsset.of(cropType).at(cropStage));
+    cropAsset = await game.images.load(CropAsset.of(cropType).at(CropStage.ripe));
     cropSpriteBatch = SpriteBatch(cropAsset!);
   }
 
@@ -97,7 +118,7 @@ class CropsController {
       _isCropAssetFlippedList.add(_random.nextBool());
 
       /// randomize tree scale
-      _cropScaleList.add(GameUtils().getRandomNumberBetween(min: 1.7, max: 2.2));
+      _cropScaleList.add(GameUtils().getRandomNumberBetween(min: scaleMin, max: scaleMax));
     }
   }
 

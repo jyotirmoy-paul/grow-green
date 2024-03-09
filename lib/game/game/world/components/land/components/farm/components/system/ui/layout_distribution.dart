@@ -3,6 +3,7 @@ import 'package:flame/game.dart';
 import '../../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../../enums/system_type.dart';
+import '../../crop/enums/crop_type.dart';
 import '../enum/growable.dart';
 
 typedef LayoutData = List<GrowablePosition>;
@@ -16,6 +17,9 @@ class LayoutDistribution {
   final double treeSize;
   final double cropSize;
 
+  /// it's such a bad idea to have cropType here, but limited by assets!
+  final CropType? cropType;
+
   final Vector2 treeSizeVector2;
   final Vector2 cropSizeVector2;
 
@@ -24,7 +28,8 @@ class LayoutDistribution {
     required this.systemType,
     required this.treeSize,
     required this.cropSize,
-  })  : size = size - padding * 2,
+    this.cropType,
+  })  : size = systemType == FarmSystemType.monoculture ? size : size - padding * 2,
         treeSizeVector2 = Vector2(treeSize * 1.6, treeSize),
         cropSizeVector2 = Vector2(cropSize * 1.6, cropSize);
 
@@ -47,17 +52,49 @@ class LayoutDistribution {
         return _processDistribution(_getBoundaryDistribution());
 
       case FarmSystemType.monoculture:
-        return _processDistribution(_getBoundaryDistribution());
+        return _processDistribution(_getMonocropDistribution());
     }
 
     throw Exception('Please specify agroforestry type using AgroforestryType enum!');
   }
 
   LayoutData _getAlleyDistribution() {
+    /// tree values
     const treeRows = 3;
     const treeCols = 8;
 
-    LayoutData result = List.empty(growable: true);
+    /// crop values
+    final cropOnEachLine = switch (cropType) {
+      CropType.maize => 50,
+      CropType.bajra => 50,
+      CropType.wheat => 50,
+      CropType.groundnut => 30,
+      CropType.pepper => 30,
+      CropType.banana => 10,
+      null => 0,
+    };
+
+    final cropFiles = switch (cropType) {
+      CropType.maize => 8,
+      CropType.bajra => 8,
+      CropType.wheat => 8,
+      CropType.groundnut => 6,
+      CropType.pepper => 6,
+      CropType.banana => 5,
+      null => 0,
+    };
+
+    final double gapBetweenCropFiles = switch (cropType) {
+      CropType.maize => 2,
+      CropType.bajra => 2,
+      CropType.wheat => -1,
+      CropType.groundnut => 13,
+      CropType.pepper => 13,
+      CropType.banana => 5,
+      null => 0,
+    };
+
+    final result = <GrowablePosition>[];
 
     final smallestSize = 4 * treeSize + 4 * 3 * cropSize;
     if (smallestSize > size) {
@@ -72,6 +109,7 @@ class LayoutDistribution {
       column: 0,
       numOfGrowables: treeRows,
     );
+
     LayoutData firstColumnCrops = LayoutData.empty(growable: true);
     for (int i = 0; i < firstColumnTrees.length - 1; i++) {
       final startTree = firstColumnTrees[i];
@@ -82,8 +120,9 @@ class LayoutDistribution {
         growable: GrowableType.crop,
         size: sizeAvailable,
         column: 0,
-        numOfGrowables: 4,
+        numOfGrowables: cropFiles,
         spacingOutside: true,
+        gap: gapBetweenCropFiles,
       );
 
       final cropsStartPosition = startTree.pos + Vector2(0, treeSize);
@@ -93,26 +132,55 @@ class LayoutDistribution {
     final firstColumn = firstColumnTrees + firstColumnCrops;
 
     for (final gp in firstColumn) {
-      final row = _fillRow(growable: gp.growable, size: size, row: gp.pos.y, numOfGrowables: treeCols);
+      final row = _fillRow(
+        growable: gp.growable,
+        size: size,
+        row: gp.pos.y,
+        numOfGrowables: gp.growable.isTree ? treeCols : cropOnEachLine,
+      );
       result.addAll(row);
     }
+
     return result;
   }
 
   LayoutData _getBlockDistribution() {
+    /// tree values
     const treeRows = 5;
     const treeCols = 8;
 
-    LayoutData result = List.empty(growable: true);
+    /// crop values
+    final cropOnEachLine = switch (cropType) {
+      CropType.maize => 50,
+      CropType.bajra => 50,
+      CropType.wheat => 50,
+      CropType.groundnut => 30,
+      CropType.pepper => 30,
+      CropType.banana => 12,
+      null => 0,
+    };
 
-    const cropRowsPerGap = 1;
-    const cropRows = (treeRows - 1) * cropRowsPerGap;
-    final smallestSize = treeRows * treeSize + cropRows * cropSize;
-    if (smallestSize > size) {
-      throw Exception(
-        '$tag: _getBlockDistribution(): The given tree and crop size is not possible to be shown within $size area!',
-      );
-    }
+    final cropFiles = switch (cropType) {
+      CropType.maize => 3,
+      CropType.bajra => 3,
+      CropType.wheat => 3,
+      CropType.groundnut => 2,
+      CropType.pepper => 2,
+      CropType.banana => 1,
+      null => 0,
+    };
+
+    final double gapBetweenCropFiles = switch (cropType) {
+      CropType.maize => 2,
+      CropType.bajra => 2,
+      CropType.wheat => -2,
+      CropType.groundnut => 4,
+      CropType.pepper => 6,
+      CropType.banana => 0,
+      null => 0,
+    };
+
+    final result = <GrowablePosition>[];
 
     LayoutData firstColumnTrees = _fillColumn(
       growable: GrowableType.tree,
@@ -137,8 +205,9 @@ class LayoutDistribution {
         growable: GrowableType.crop,
         size: sizeAvailable,
         column: 0,
-        numOfGrowables: cropRowsPerGap,
+        numOfGrowables: cropFiles,
         spacingOutside: true,
+        gap: gapBetweenCropFiles,
       );
 
       final cropsStartPosition = Vector2(0, startTree.pos.y) + Vector2(0, treeSize);
@@ -148,7 +217,13 @@ class LayoutDistribution {
     final firstColumn = firstColumnTrees + firstColumnCrops;
 
     for (final gp in firstColumn) {
-      var row = _fillRow(growable: gp.growable, size: size, row: gp.pos.y, numOfGrowables: treeCols);
+      var row = _fillRow(
+        growable: gp.growable,
+        size: size,
+        row: gp.pos.y,
+        numOfGrowables: gp.growable.isTree ? treeCols : cropOnEachLine,
+      );
+
       if (gp.pos.x != 0) {
         final translation = Vector2(gp.pos.x, 0);
         row = row.translateBy(translation);
@@ -162,11 +237,11 @@ class LayoutDistribution {
   LayoutData _getBoundaryDistribution() {
     const treeNos = 8;
 
-    LayoutData result = List.empty(growable: true);
-
+    final result = <GrowablePosition>[];
     final numOfGrowables = size ~/ treeSize;
-
-    if (numOfGrowables == 0) return List.empty();
+    if (numOfGrowables == 0) {
+      throw Exception('$tag: _getBoundaryDistribution() invoked with impossible combination of tree size!');
+    }
 
     const gtree = GrowableType.tree;
     final topRow = _fillRow(growable: gtree, row: 0, size: size, numOfGrowables: treeNos);
@@ -185,14 +260,76 @@ class LayoutDistribution {
     final cropArea = size - 2 * treeTotalSize;
     final startPosition = Vector2(treeTotalSize, treeTotalSize);
 
-    var cropResult = _fillArea(growable: GrowableType.crop, layoutSize: cropArea).translateBy(startPosition);
+    final cropOnEachLine = switch (cropType) {
+      CropType.maize => 45,
+      CropType.bajra => 40,
+      CropType.wheat => 40,
+      CropType.groundnut => 25,
+      CropType.pepper => 28,
+      CropType.banana => 13,
+      null => 0,
+    };
+
+    final cropFiles = switch (cropType) {
+      CropType.maize => 12,
+      CropType.bajra => 11,
+      CropType.wheat => 10,
+      CropType.groundnut => 10,
+      CropType.pepper => 11,
+      CropType.banana => 6,
+      null => 0,
+    };
+
+    final actualAreaForCrop = switch (cropType) {
+      CropType.banana => cropArea - 3 * cropSize,
+      CropType.groundnut => cropArea - 2 * cropSize,
+      CropType.wheat => cropArea - 2 * cropSize,
+      _ => cropArea,
+    };
+
+    final remainingArea = cropArea - actualAreaForCrop;
+
+    var cropResult = _fillArea(
+      growable: GrowableType.crop,
+      layoutSize: actualAreaForCrop,
+      columnNumOfGrowables: cropOnEachLine,
+      rowNumOfGrowables: cropFiles,
+    ).translateBy(startPosition + Vector2.all(remainingArea / 4));
+
     result.addAll(cropResult);
 
     return result;
   }
 
   LayoutData _getMonocropDistribution() {
-    return _fillArea(growable: GrowableType.crop, layoutSize: size);
+    final cropOnEachLine = switch (cropType) {
+      CropType.maize => 60,
+      CropType.bajra => 50,
+      CropType.wheat => 60,
+      CropType.groundnut => 35,
+      CropType.pepper => 38,
+      CropType.banana => 17,
+      null => 0,
+    };
+
+    final cropFiles = switch (cropType) {
+      CropType.maize => 13,
+      CropType.bajra => 11,
+      CropType.wheat => 11,
+      CropType.groundnut => 11,
+      CropType.pepper => 12,
+      CropType.banana => 8,
+      null => 0,
+    };
+
+    final actualAreaForCrop = size - 2 * cropSize;
+
+    return _fillArea(
+      growable: GrowableType.crop,
+      layoutSize: actualAreaForCrop,
+      columnNumOfGrowables: cropOnEachLine,
+      rowNumOfGrowables: cropFiles,
+    );
   }
 
   LayoutData _fillRow({
@@ -201,6 +338,7 @@ class LayoutDistribution {
     required double row, // Assuming this is the constant X-coordinate for all positions in the column
     int? numOfGrowables,
     bool spacingOutside = false,
+    double? gap,
   }) {
     return _fillLayout(
       growable: growable,
@@ -209,6 +347,7 @@ class LayoutDistribution {
       position: row,
       numOfGrowablesInput: numOfGrowables,
       spacingOutside: spacingOutside,
+      gap: gap,
     );
   }
 
@@ -218,6 +357,7 @@ class LayoutDistribution {
     required double column, // Assuming this is the constant X-coordinate for all positions in the column
     int? numOfGrowables,
     bool spacingOutside = false,
+    double? gap,
   }) {
     return _fillLayout(
       growable: growable,
@@ -226,17 +366,41 @@ class LayoutDistribution {
       position: column,
       numOfGrowablesInput: numOfGrowables,
       spacingOutside: spacingOutside,
+      gap: gap,
     );
   }
 
   LayoutData _fillArea({
     required GrowableType growable,
     required double layoutSize,
+    int? columnNumOfGrowables,
+    bool columnSpacingOutside = false,
+    double? columnGap,
+    int? rowNumOfGrowables,
+    bool rowSpacingOutside = false,
+    double? rowGap,
   }) {
-    List<GrowablePosition> result = List.empty(growable: true);
-    final firstColumn = _fillColumn(growable: growable, size: layoutSize, column: 0);
+    final result = <GrowablePosition>[];
+
+    final firstColumn = _fillColumn(
+      growable: growable,
+      size: layoutSize,
+      column: 0,
+      numOfGrowables: columnNumOfGrowables,
+      spacingOutside: columnSpacingOutside,
+      gap: columnGap,
+    );
+
     for (final gp in firstColumn) {
-      final row = _fillRow(growable: growable, size: layoutSize, row: gp.pos.y);
+      final row = _fillRow(
+        growable: growable,
+        size: layoutSize,
+        row: gp.pos.y,
+        numOfGrowables: rowNumOfGrowables,
+        spacingOutside: rowSpacingOutside,
+        gap: rowGap,
+      );
+
       result.addAll(row);
     }
 
@@ -248,6 +412,7 @@ class LayoutDistribution {
     required double position,
     required _AxisDirection direction,
     required double size,
+    double? gap,
     int? numOfGrowablesInput,
     bool spacingOutside = false,
   }) {
@@ -259,7 +424,7 @@ class LayoutDistribution {
     final spacing = size - numOfGrowables * growableSize;
 
     final insideSpacing = numOfGrowables > 1 ? spacing / (numOfGrowables - 1) : 0;
-    final growableInsideSpacing = spacingOutside ? 0 : insideSpacing;
+    final growableInsideSpacing = spacingOutside ? (gap ?? 0) : insideSpacing;
     final growableTotalSize = growableInsideSpacing + growableSize;
 
     // Adjust getX and getY functions to include the start offset.
@@ -273,12 +438,15 @@ class LayoutDistribution {
 
     // If spacing is outside, shift the positions by half the spacing.
     if (spacingOutside) {
-      double spacingShiftX() => direction == _AxisDirection.horizontal ? spacing / 2 : 0;
-      double spacingShiftY() => direction == _AxisDirection.vertical ? spacing / 2 : 0;
+      final s = gap ?? 0;
+
+      double spacingShiftX() => direction == _AxisDirection.horizontal ? (spacing / 2) - 2 * s : 0;
+      double spacingShiftY() => direction == _AxisDirection.vertical ? (spacing / 2) - 2 * s : 0;
+
       return positions.translateBy(Vector2(spacingShiftX(), spacingShiftY()));
-    } else {
-      return positions;
     }
+
+    return positions;
   }
 
   double getGrowableSize(GrowableType growable) => growable == GrowableType.tree ? treeSize : cropSize;
