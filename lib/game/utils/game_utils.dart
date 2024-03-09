@@ -40,6 +40,10 @@ class GameUtils {
     return _instance = GameUtils._(gameWorldSize);
   }
 
+  bool getRandomBool() {
+    return _random.nextBool();
+  }
+
   /// generates random double between `min` & `max` values
   double getRandomNumberBetween({required double min, required double max}) {
     double rnd = _random.nextDouble();

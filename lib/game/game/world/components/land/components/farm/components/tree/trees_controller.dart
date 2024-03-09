@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
@@ -16,18 +14,25 @@ import 'enums/tree_type.dart';
 class TreesController {
   static const tag = 'TreesController';
 
+  /// constants
+  /// this scale tries to adjust the tree scale based on surrounding
+  static const constScale = 1.6;
+  static const scaleMin = 0.9;
+  static const scaleMax = 1.10;
+  static const rotationMin = -0.07;
+  static const rotationMax = 0.07;
+
   final TreeType treeType;
   final Vector2 farmSize;
   final Vector2 treeSize;
   final List<Vector2> treePositions;
-  final math.Random _random;
 
   TreesController({
     required this.treeType,
     required this.farmSize,
     required this.treeSize,
     required this.treePositions,
-  }) : _random = math.Random() {
+  }) {
     /// sort the tree positions for better z-index rendering
     treePositions.sort((a, b) {
       return (a.x + a.y).compareTo((b.x + b.y));
@@ -45,6 +50,7 @@ class TreesController {
 
   final List<bool> _isTreeAssetFlippedList = [];
   final List<double> _treeScaleList = [];
+  final List<double> _treeRotatedByAngle = [];
 
   void _populateSpriteBatchWithAnimation() {
     if (bounceAnimation != null) return;
@@ -69,7 +75,7 @@ class TreesController {
     final scale = (treeSize.length / originalTreeSize.length);
 
     final bounceAnimationScaleFactor = bounceAnimation?.value ?? 1.0;
-    final finalScale = scale * bounceAnimationScaleFactor;
+    final finalScale = scale * bounceAnimationScaleFactor * constScale;
 
     for (int i = 0; i < treePositions.length; i++) {
       final position = treePositions[i];
@@ -79,9 +85,10 @@ class TreesController {
 
       treeSpriteBatch?.add(
         source: treeSource,
-        offset: Vector2(cartPosition.x, cartPosition.y + ((originalTreeSize.y / 4) * scale)),
+        offset: Vector2(cartPosition.x, cartPosition.y + ((originalTreeSize.y / 2) * scale)),
         anchor: Vector2(originalTreeSize.x / 2, originalTreeSize.y),
         scale: finalScale * _treeScaleList[i],
+        rotation: _treeRotatedByAngle[i],
         flip: isAssetFlipped,
       );
     }
@@ -89,17 +96,20 @@ class TreesController {
 
   Future<void> _populateSpriteBatch() async {
     /// load the new asset and set to the sprite batch
-    treeAsset = await game.images.load(TreeAsset.of(treeType).at(treeStage));
+    treeAsset = await game.images.load(TreeAsset.of(treeType).at(TreeStage.elder));
     treeSpriteBatch = SpriteBatch(treeAsset!);
   }
 
   void _randomizeTreeCharacter() {
     for (final _ in treePositions) {
       /// randomize tree flip
-      _isTreeAssetFlippedList.add(_random.nextBool());
+      _isTreeAssetFlippedList.add(GameUtils().getRandomBool());
 
       /// randomize tree scale
-      _treeScaleList.add(GameUtils().getRandomNumberBetween(min: 1.8, max: 2.4));
+      _treeScaleList.add(GameUtils().getRandomNumberBetween(min: scaleMin, max: scaleMax));
+
+      /// randomize tree rotations
+      _treeRotatedByAngle.add(GameUtils().getRandomNumberBetween(min: rotationMin, max: rotationMax));
     }
   }
 
