@@ -379,6 +379,7 @@ class FarmMenuHelper {
     final maintenanceConfig = SupportConfigPredictor.predictMaintenanceConfigForFarm(
       systemType: systemType,
       growable: growable,
+      soilHealthPercentage: soilHealthPercentage,
     );
 
     return SupportConfig(

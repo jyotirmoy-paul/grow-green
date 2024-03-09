@@ -5,6 +5,7 @@ import '../../../../../../../../../enums/system_type.dart';
 import '../../enum/growable.dart';
 import '../../model/qty.dart';
 import '../systems/database/layouts.dart';
+import 'soil_health_calculator.dart';
 
 part 'maintance_calculator.g.dart';
 
@@ -13,8 +14,8 @@ class MaintenanceCalculator {
   static const _waterMaintenceQtyPerHactarePerYear = Qty(value: 300, scale: Scale.units);
   static const _waterPricePerUnit = 100;
 
-  static const _laborMaintenceQtyPerHactarePerYear = Qty(value: 2, scale: Scale.units);
-  static const _laborPricePerUnit = 20000;
+  static const _laborMaintenceQtyPerHactarePerYear = Qty(value: 4, scale: Scale.units);
+  static const _laborPricePerUnit = 10000;
   static const _miscMaintenceQtyPerHactarePerYear = Qty(value: 100, scale: Scale.units);
   static const _miscPricePerUnit = 100;
 
@@ -36,20 +37,19 @@ class MaintenanceCalculator {
   static MaintenanceQty getMaintenanceQtyPerYear({
     required SystemType systemType,
     required GrowableType growableType,
+    required double soilHealthPercentage,
   }) {
     final maintenanceArea = getMaintenanceArea(systemType: systemType, growableType: growableType);
 
     final areaRatio = maintenanceArea / _oneHactare;
+    final soilHealthRatio = SoilHealthCalculator.calculateSoilHealthFactor(soilHealthPercentage);
 
-    final waterQty = (_waterMaintenceQtyPerHactarePerYear * areaRatio).round();
-    final laborQty = (_laborMaintenceQtyPerHactarePerYear * areaRatio).round();
-    final miscQty = (_miscMaintenceQtyPerHactarePerYear * areaRatio).round();
-
-    return MaintenanceQty(
-      waterQty: waterQty,
-      laborQty: laborQty,
-      miscQty: miscQty,
+    final qty = MaintenanceQty(
+      waterQty: _waterMaintenceQtyPerHactarePerYear,
+      laborQty: _laborMaintenceQtyPerHactarePerYear,
+      miscQty: _miscMaintenceQtyPerHactarePerYear,
     );
+    return qty * areaRatio * soilHealthRatio;
   }
 
   static int getMaintenanceCostFromQty({required MaintenanceQty maintenanceQty}) {

@@ -10,7 +10,7 @@ import 'qty_calculator.dart';
 abstract class SoilHealthCalculator {
   static const tag = 'SoilHealthCalculator';
 
-  static double _fertilizerEffect({
+  static double fertilizerEffect({
     required Content fertilizer,
     required double soilHealthPercentage,
   }) {
@@ -39,7 +39,7 @@ abstract class SoilHealthCalculator {
     return fertilizerEffectWithFullQty * fertilizerUsedRatio;
   }
 
-  static double _systemTypeAffect({
+  static double systemTypeAffect({
     required SystemType systemType,
     required bool treesPresent,
   }) {
@@ -76,5 +76,18 @@ abstract class SoilHealthCalculator {
     // return soilHealthPercentage + fertilzerEffect + systemTypeEffectValue;
     // return currentSoilHealth + GameUtils().getRandomNumberBetween(min: -1.1, max: -1.9);
     return GameUtils().getRandomNumberBetween(min: 0.5, max: 1.6);
+  }
+
+  static double calculateSoilHealthFactor(double soilHealthPercentage) {
+    if (soilHealthPercentage <= 0.2) {
+      return 1; // No reduction for very very poor soil
+    } else if (soilHealthPercentage <= 1) {
+      return -0.2 * soilHealthPercentage + 1; // Reduction for poor soil
+    } else if (soilHealthPercentage <= 5) {
+      return -0.1 * soilHealthPercentage + 0.9; // Reduction for good soil health
+    } else {
+      // soilHealthPercentage > 5
+      return 0.4; // Reduction for excellent soil health
+    }
   }
 }

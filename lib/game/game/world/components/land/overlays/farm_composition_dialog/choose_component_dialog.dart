@@ -250,7 +250,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
           CropRevenueWidget(
             cropType: cropType!,
             bgColor: bgColor,
-          )
+          ),
       ],
     );
   }

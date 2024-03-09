@@ -8,6 +8,7 @@ import '../../model/qty.dart';
 import '../calculators/crops/base_crop.dart';
 import '../systems/system.dart';
 import 'maintance_calculator.dart';
+import 'soil_health_calculator.dart';
 
 abstract class QtyCalculator {
   static Qty getNumOfSaplingsFor(SystemType systemType) {
@@ -65,35 +66,25 @@ abstract class QtyCalculator {
     final ageRatio = ageInMonths / 12;
 
     // soil health factor
-    final soilHealthFactor = calculateSoilHealthFactor(soilHealthPercentage);
+    final soilHealthFactor = SoilHealthCalculator.calculateSoilHealthFactor(soilHealthPercentage);
 
     final fertilizerRequired = fetilizerPerHacterPerYear.value * areaRatio * ageRatio * soilHealthFactor;
 
     return Qty(value: fertilizerRequired.toInt(), scale: Scale.kg);
   }
 
-  static double calculateSoilHealthFactor(double soilHealthPercentage) {
-    if (soilHealthPercentage <= 0.2) {
-      return 1; // No reduction for very very poor soil
-    } else if (soilHealthPercentage <= 1) {
-      return -0.2 * soilHealthPercentage + 1; // Reduction for poor soil
-    } else if (soilHealthPercentage <= 5) {
-      return -0.1 * soilHealthPercentage + 0.9; // Reduction for good soil health
-    } else {
-      // soilHealthPercentage > 5
-      return 0.4; // Reduction for excellent soil health
-    }
-  }
-
+  
   static MaintenanceQty maintenanceQtyFromTime({
     required SystemType systemType,
     required GrowableType growableType,
     required int ageInMonths, // age in months is the time for which maintenance is required
+    required double soilHealthPercentage,
   }) {
     final yearFraction = ageInMonths / 12;
     final maintenancePerYear = MaintenanceCalculator.getMaintenanceQtyPerYear(
       systemType: systemType,
       growableType: growableType,
+      soilHealthPercentage: soilHealthPercentage,
     );
     return (maintenancePerYear * yearFraction);
   }
