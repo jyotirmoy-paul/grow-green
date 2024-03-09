@@ -20,8 +20,9 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
 
   static const animationDuration = 2.0;
   static const maxScale = 1.15;
+  static const coinImagesTotal = 32;
 
-  static const endAnimationDuration = 2.5;
+  static double get endAnimationDuration => 2.5;
 
   final VoidCallback onTap;
   final Vector2 farmCenter;
@@ -50,14 +51,14 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
   Future<void> _prepareAssetCollectionAnimation() async {
     final sprites = <Sprite>[];
 
-    for (int i = 1; i <= 10; i++) {
+    for (int i = 1; i <= coinImagesTotal; i++) {
       Sprite sprite = await Sprite.load('${model.animationPrefix}/$i.png');
       sprites.add(sprite);
     }
 
     _spriteAnimation = SpriteAnimation.spriteList(
       sprites,
-      stepTime: endAnimationDuration / sprites.length,
+      stepTime: (endAnimationDuration / sprites.length) * 0.9,
       loop: false,
     );
   }
@@ -68,14 +69,11 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
         fontFamily: kFontFamily,
         fontSize: textSize,
         color: Colors.white.withOpacity(withOpacity),
-        backgroundColor: Colors.black.withOpacity(withOpacity),
       ),
     );
   }
 
   void _update(BasicHoverBoardModel model) {
-    /// TODO: If needed, other components can be updated here as well
-
     /// update text
     _textComponent?.text = model.text;
   }
@@ -103,6 +101,13 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
     );
 
     const yTranslationOfText = imageSize * maxScale * 1.10;
+
+    _textComponent = TextComponent(
+      text: model.text,
+      textRenderer: _getPaint(),
+      position: farmCenter.translated(0, -yTranslationOfText),
+      anchor: Anchor.bottomCenter,
+    );
 
     _textComponent = TextComponent(
       text: model.text,

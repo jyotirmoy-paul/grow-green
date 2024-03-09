@@ -51,6 +51,10 @@ class _GameNotificationWidgetState extends State<GameNotificationWidget> {
   /// purge older models only if all notifications in the current model is shown
   void _onRoutineCheckUp() {
     final notifications = _notifications.value;
+
+    /// no notifications, nothing to cleanup
+    if (notifications.isEmpty) return;
+
     bool isAllShown = true;
 
     for (final n in notifications) {

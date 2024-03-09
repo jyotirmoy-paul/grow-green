@@ -47,7 +47,7 @@ class MonetaryService {
       return false;
     }
 
-    Log.d('$tag: A debit transaction of value $value was successful. Balance amount: $_balance');
+    Log.d('$tag: A debit transaction of $value was successful. Balance amount: $_balance');
 
     _balance = balance;
 
@@ -67,7 +67,7 @@ class MonetaryService {
       return false;
     }
 
-    Log.d('$tag: A credit transaction of value $value was successful. Balance amount: $_balance');
+    Log.d('$tag: A credit transaction of $value was successful. Balance amount: $_balance');
 
     _balance = balance;
 

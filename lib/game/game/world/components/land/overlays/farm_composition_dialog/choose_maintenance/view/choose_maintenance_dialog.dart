@@ -178,7 +178,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               /// show breakup of cost only if a total cost is available
-              if (totalCost.value != 0)
+              if (totalCost.value != 0 && widget.startingDebit.value != 0)
                 Row(
                   children: [
                     Icon(

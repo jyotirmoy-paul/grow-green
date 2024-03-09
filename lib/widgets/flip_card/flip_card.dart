@@ -116,7 +116,7 @@ class FlipCard extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return FlipCardState(this.side == CardSide.FRONT);
+    return FlipCardState();
   }
 }
 
@@ -125,15 +125,15 @@ class FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin 
   Animation<double>? _frontRotation;
   Animation<double>? _backRotation;
 
-  bool isFront;
-
-  FlipCardState(this.isFront);
+  late bool isFront;
 
   bool _hideBackChild = true;
 
   @override
   void initState() {
     super.initState();
+
+    isFront = widget.side == CardSide.FRONT;
 
     controller = AnimationController(
       value: isFront ? 0.0 : 1.0,
