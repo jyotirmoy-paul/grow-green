@@ -35,6 +35,16 @@ class FarmContent {
     );
   }
 
+  FarmContent removeTreeSupport() {
+    return FarmContent(
+      crop: crop,
+      cropSupportConfig: cropSupportConfig,
+      tree: tree,
+      treeSupportConfig: null,
+      systemType: systemType,
+    );
+  }
+
   FarmContent removeTree() {
     return FarmContent(
       crop: crop,

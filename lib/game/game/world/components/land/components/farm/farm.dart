@@ -67,7 +67,7 @@ class Farm extends PolygonComponent with HasGameRef<GrowGreenGame>, TimeAware {
 
   @override
   void onRemove() {
-    super.onRemove();
     farmController.remove();
+    super.onRemove();
   }
 }
