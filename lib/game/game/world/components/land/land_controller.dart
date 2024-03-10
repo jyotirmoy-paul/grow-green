@@ -126,7 +126,7 @@ class LandController {
       );
 
       nonFarms.add(SpriteComponent.fromImage(
-        await game.images.load('tiles/${nonFarmObj.name}.png'),
+        await game.images.load(GameAssets.nonFarmAssetOfName(nonFarmObj.name)),
         position: rectangle.bottomRight.toCart(),
         anchor: Anchor.bottomCenter,
         priority: PriorityEngine.generatePriorityFrom(rectangle.center),

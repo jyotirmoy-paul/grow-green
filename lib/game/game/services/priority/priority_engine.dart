@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 abstract class PriorityEngine {
   static final hoverBoardPriority = double.maxFinite.toInt();
 
+  static const farmBaseLandPriority = -1;
   static const cropsPriority = 0;
   static const treesPriority = 1;
 

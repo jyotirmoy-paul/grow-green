@@ -18,6 +18,7 @@ import 'model/harvest_model.dart';
 import 'model/soil_health_model.dart';
 import 'model/tree_data.dart';
 import 'service/crop_timer/crop_timer.dart';
+import 'service/farm_asset_service/farm_asset_service.dart';
 import 'service/farm_core_service.dart';
 import 'service/harvest/harvest_reflector.dart';
 import 'service/tree_maintanence/tree_maintanence_checker_service.dart';
@@ -31,6 +32,7 @@ class FarmController {
   late final HoverBoard hoverBoard;
   late final FarmCoreService _farmCoreService;
   late final HarvestReflector _harvestReflector;
+  late final FarmAssetService _farmAssetService;
   late final TreeMaintanenceCheckerService _treeMaintanenceCheckerService;
   late final CropTimer _cropTimer;
   late final bool debugMode;
@@ -42,6 +44,10 @@ class FarmController {
 
     _selectionAnimation.reset();
     _isFarmSelected = value;
+
+    if (value == false) {
+      _farmAssetService.onDeselect();
+    }
   }
 
   bool get isFarmSelected => _isFarmSelected;
@@ -61,7 +67,7 @@ class FarmController {
   final _selectionAnimation = GameAnimation(
     totalDuration: 1.2,
     minValue: 0.0,
-    maxValue: 0.3,
+    maxValue: 0.2,
     repeat: true,
     type: GameAnimationType.breathing,
   );
@@ -119,16 +125,22 @@ class FarmController {
     _harvestReflector.boot();
 
     /// create crop timer
-    _cropTimer = CropTimer(farmCoreService: _farmCoreService);
-    _cropTimer.boot();
+    _cropTimer = CropTimer(farmCoreService: _farmCoreService)..boot();
 
     /// tree maintanence checker service
-    _treeMaintanenceCheckerService = TreeMaintanenceCheckerService(farmCoreService: _farmCoreService);
-    _treeMaintanenceCheckerService.boot();
+    _treeMaintanenceCheckerService = TreeMaintanenceCheckerService(farmCoreService: _farmCoreService)..boot();
 
     /// prepare farm service
     /// a call to `initialize` returns back initial components that needs to be shown
     await _farmCoreService.initialize();
+
+    /// farm asset service shows the correct farm asset as per farm state value
+    _farmAssetService = FarmAssetService(
+      game: game,
+      farmCoreService: _farmCoreService,
+      add: add,
+      remove: remove,
+    )..boot();
 
     /// once hoverboard is loaded, let's notify the harvest model data
     hoverBoard.loaded.then((_) {
@@ -186,24 +198,18 @@ class FarmController {
     _harvestReflector.shutdown();
     _cropTimer.shutdown();
     _treeMaintanenceCheckerService.shutdown();
+    _farmAssetService.shutdown();
   }
 
   void update(dt) {
     _selectionAnimation.update(dt);
+
+    if (isFarmSelected) {
+      _farmAssetService.onSelected(_selectionAnimation.value);
+    }
   }
 
-  final _farmSelectionPaint = Paint()..style = PaintingStyle.fill;
-
   void render(Canvas canvas) {
-    if (isFarmSelected) {
-      _farmSelectionPaint.color = Colors.green.withOpacity(_selectionAnimation.value);
-
-      canvas.drawPath(
-        _polygonPath,
-        _farmSelectionPaint,
-      );
-    }
-
     if (debugMode) {
       textPainter.paint(canvas, Offset.zero);
     }
