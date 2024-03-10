@@ -42,7 +42,10 @@ class GameStatOverlay extends StatelessWidget {
                 Gap(10.s),
 
                 /// temperature
-                const TemperatureStat(),
+                TemperatureStat(
+                  villageTemperatureService:
+                      game.gameController.world.worldController.land.landController.villageTemperatureService,
+                ),
               ],
             ),
 

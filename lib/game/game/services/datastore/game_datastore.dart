@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import '../../../../models/auth/user.dart';
 import '../../../../services/database/database_service_factory.dart';
 import '../../../../services/database/interface/db_manager_service.dart';

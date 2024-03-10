@@ -85,6 +85,16 @@ class FarmCoreService {
   double get soilHealthPercentage => _farmStateModelValue.soilHealthPercentage;
   DateTime? get cropSowRequestedAt => _farmStateModelValue.cropSowRequestedAt;
   DateTime? get _treeLastHarvestedOn => _farmStateModelValue.treeLastHarvestedOn;
+
+  /// tree data exposed for outside usage
+  bool get isTreeDataAvailable {
+    final farmContent = this.farmContent;
+    if (farmContent == null) return false;
+    if (_trees == null) return false;
+
+    return true;
+  }
+
   TreeData get treeData {
     final farmContent = this.farmContent;
     if (farmContent == null) {
@@ -96,11 +106,17 @@ class FarmCoreService {
       throw Exception('$tag: treeData getter invoked at null trees, how can this happen?');
     }
 
+    final treeContent = farmContent.tree;
+    if (treeContent == null) {
+      throw Exception('$tag: farmContent.tree cannot be null if tree is present in the system!');
+    }
+
     return TreeData(
       agroforestryType: farmContent.systemType as AgroforestryType,
       treeType: trees.treeType,
       lifeStartedAt: trees.lifeStartedAt,
       isHarvestReady: _isExistingTreeHarvestReady,
+      noOfTrees: treeContent.qty.value,
     );
   }
 

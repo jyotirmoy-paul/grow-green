@@ -55,6 +55,7 @@ class FarmController {
   FarmState get farmState => _farmCoreService.farmState;
   FarmContent? get farmContent => _farmCoreService.farmContent;
   double get soilHealthPercentage => _farmCoreService.soilHealthPercentage;
+  bool get isTreeDataAvailable => _farmCoreService.isTreeDataAvailable;
   TreeData get treeData => _farmCoreService.treeData;
 
   List<HarvestModel> get harvestModels => _farmCoreService.harvestModels;
