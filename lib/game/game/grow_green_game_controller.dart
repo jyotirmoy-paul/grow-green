@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flame/experimental.dart';
 
 import '../../services/log/log.dart';
 import '../utils/game_extensions.dart';
@@ -33,7 +33,7 @@ class GrowGreenGameController {
   late final double _minZoom;
   late final Vector2 worldCenter;
 
-  static const _maxZoomStable = kDebugMode ? 10 : GameUtils.maxZoom;
+  static const _maxZoomStable = GameUtils.maxZoom;
   static const _maxZoom = _maxZoomStable * 1.6;
 
   /// called from `grow_green_land_controller` after the world is loaded
@@ -42,12 +42,12 @@ class GrowGreenGameController {
     this.worldCenter = worldCenter;
     final worldSize = GameUtils().gameWorldSize;
 
-    _minZoom = camera.viewport.size.length / worldSize.half().length;
+    _minZoom = camera.viewport.size.length / worldSize.length;
 
     camera.viewfinder
       ..anchor = Anchor.center
       ..position = worldCenter
-      ..zoom = 0.9;
+      ..zoom = _minZoom; // start with _minZoom
   }
 
   /// initialize components of the game
@@ -73,30 +73,44 @@ class GrowGreenGameController {
   bool get _hasInertia => _hasTranslationInertia || _hasScaleInertia;
 
   double get _zoom => camera.viewfinder.zoom;
-  set _zoom(double v) => camera.viewfinder.zoom = kDebugMode ? v : v.clamp(_minZoom, _maxZoom);
+  set _zoom(double v) => camera.viewfinder.zoom = v.clamp(_minZoom, _maxZoom);
 
   Vector2 get _position => camera.viewfinder.position;
   set _position(Vector2 v) => camera.viewfinder.position = v;
 
-  /// TODO: Refactor this
   Vector2 _getClampedPosition(Vector2 position) {
-    final halfViewPortSize = camera.viewport.size.scaled(1 / _zoom).half().toSize();
-    final halfWorldSize = GameUtils().gameWorldSize.half().half().toSize();
+    final zoomLevel = camera.viewfinder.zoom;
 
-    final leftBoundary = worldCenter.x - halfWorldSize.width;
-    final rightBoundary = worldCenter.x + halfWorldSize.width;
-    final topBoundary = worldCenter.y - halfWorldSize.height;
-    final bottomBoundary = worldCenter.y + halfWorldSize.height;
+    final visibleWorldSize = camera.viewport.size / zoomLevel;
+    final diffWorldSize = GameUtils().gameBackgroundSize - visibleWorldSize;
 
-    final l = leftBoundary + halfViewPortSize.width;
-    final r = rightBoundary - halfViewPortSize.width;
-    final t = topBoundary + halfViewPortSize.height;
-    final b = bottomBoundary - halfViewPortSize.height;
+    /// image a rectangle in the center, which determines how much the camera's position can move
+    /// and the idea is whenever the game world is zoomed in, the rectangle size grows
+    /// (and that's exactly the value of diffWorldSize)
+    final rectangle = Rectangle.fromCenter(center: worldCenter, size: diffWorldSize);
 
-    final clampedX = position.x.clamp(l < r ? l : r, l > r ? l : r);
-    final clampedY = position.y.clamp(t < b ? t : b, t > b ? t : b);
+    final clampedX = position.x.clamp(rectangle.left, rectangle.right);
+    final clampedY = position.y.clamp(rectangle.top, rectangle.bottom);
 
     return Vector2(clampedX, clampedY);
+    // return clampedPosition;
+    // final halfViewPortSize = camera.viewport.size.scaled(1 / _zoom).half().toSize();
+    // final halfWorldSize = GameUtils().gameWorldSize.half().half().toSize();
+
+    // final leftBoundary = worldCenter.x - halfWorldSize.width;
+    // final rightBoundary = worldCenter.x + halfWorldSize.width;
+    // final topBoundary = worldCenter.y - halfWorldSize.height;
+    // final bottomBoundary = worldCenter.y + halfWorldSize.height;
+
+    // final l = leftBoundary + halfViewPortSize.width;
+    // final r = rightBoundary - halfViewPortSize.width;
+    // final t = topBoundary + halfViewPortSize.height;
+    // final b = bottomBoundary - halfViewPortSize.height;
+
+    // final clampedX = position.x.clamp(l < r ? l : r, l > r ? l : r);
+    // final clampedY = position.y.clamp(t < b ? t : b, t > b ? t : b);
+
+    // return Vector2(clampedX, clampedY);
   }
 
   void onScaleStart(ScaleStartInfo info) {
@@ -114,9 +128,11 @@ class GrowGreenGameController {
 
     /// handle movements
     final delta = info.delta.global.scaled(1 / _zoom);
-    _position = _position.translated(
-      -delta.x,
-      -delta.y,
+    _position = _getClampedPosition(
+      _position.translated(
+        -delta.x,
+        -delta.y,
+      ),
     );
   }
 
@@ -133,9 +149,11 @@ class GrowGreenGameController {
   /// inertia to continue translating even after user input is stopped
   void _updateInertialTranslation(double dt) {
     final adjustedVelocity = _stopScaleTranslationVelocity.scaled(dt * -1); // -1 for opposite direction
-    _position = _position.translated(
-      adjustedVelocity.x,
-      adjustedVelocity.y,
+    _position = _getClampedPosition(
+      _position.translated(
+        adjustedVelocity.x,
+        adjustedVelocity.y,
+      ),
     );
 
     /// deceleration: at every update cycle lower the vector 95%

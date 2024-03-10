@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame/extensions.dart';
+import 'package:flame/sprite.dart';
 import 'package:flame_tiled/flame_tiled.dart' hide Text;
 
 import '../../../../../services/log/log.dart';
@@ -23,6 +27,8 @@ class LandController {
   late final TiledComponent map;
   late final List<Farm> farms;
   late final VillageTemperatureService villageTemperatureService;
+  late final SpriteBatch _leftBaseGroundSpriteBatch;
+  late final SpriteBatch _bottomBaseGroundSpriteBatch;
 
   static const _farmsLayerName = 'farms';
   static const _riverLayerName = 'river';
@@ -157,6 +163,41 @@ class LandController {
     }
   }
 
+  /// Two assets are drawn on sides of the world map to give it a 3d look
+  Future<void> _prepareBaseLayerAssets() async {
+    final leftBaseImage = await game.images.load(GameAssets.baseLeft);
+    final bottomBaseImage = await game.images.load(GameAssets.baseBottom);
+    _leftBaseGroundSpriteBatch = SpriteBatch(leftBaseImage);
+    _bottomBaseGroundSpriteBatch = SpriteBatch(bottomBaseImage);
+
+    final leftBaseRect = leftBaseImage.size.toRect();
+    final bottomBaseRect = bottomBaseImage.size.toRect();
+
+    final tileSize = GameUtils.tileSize;
+    final leftBaseStartY = GameUtils().gameWorldSize.y / 2;
+
+    /// left bases
+    for (int i = 0; i < 2; i++) {
+      _leftBaseGroundSpriteBatch.add(
+        source: leftBaseRect,
+        offset: Vector2(tileSize.x * i, leftBaseStartY + (tileSize.y * i)),
+        scale: 2.0,
+      );
+    }
+
+    final bottomBaseStartX = GameUtils().gameWorldSize.x * 3 / 4;
+    final bottomBaseStartY = GameUtils().gameWorldSize.y / 2;
+
+    /// bottom bases
+    for (int i = 0; i < 2; i++) {
+      _bottomBaseGroundSpriteBatch.add(
+        source: bottomBaseRect,
+        offset: Vector2(bottomBaseStartX - i * tileSize.x, bottomBaseStartY + i * tileSize.y),
+        scale: 2.0,
+      );
+    }
+  }
+
   Future<List<Component>> initialize(GrowGreenGame game) async {
     this.game = game;
 
@@ -187,6 +228,8 @@ class LandController {
       },
     );
 
+    await _prepareBaseLayerAssets();
+
     _initTemperatureService();
 
     return [
@@ -195,6 +238,11 @@ class LandController {
       ...nonFarms,
       ...farms,
     ];
+  }
+
+  void render(Canvas canvas) {
+    _leftBaseGroundSpriteBatch.render(canvas);
+    _bottomBaseGroundSpriteBatch.render(canvas);
   }
 
   void _initTemperatureService() async {
