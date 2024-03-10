@@ -26,7 +26,7 @@ class GrowGreenGame extends FlameGame with ScaleDetector {
     debugMode = false;
     final components = await gameController.initialize(game: this);
     addAll(components);
-    
+
     return super.onLoad();
   }
 
