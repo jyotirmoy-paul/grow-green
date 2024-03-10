@@ -5,7 +5,6 @@ import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 
 import '../../services/log/log.dart';
-import '../utils/game_extensions.dart';
 import '../utils/game_utils.dart';
 import 'grow_green_game.dart';
 import 'models/overlay_data.dart';
