@@ -1,6 +1,7 @@
 library flip_card;
 
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'flip_card_controller.dart';
