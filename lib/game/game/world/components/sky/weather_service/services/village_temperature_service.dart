@@ -12,6 +12,8 @@ part 'temperature_calculator_service.dart';
 
 class VillageTemperatureService {
   static const tag = 'VillageTemperatureService';
+
+  /// check interval day is close to 1 year (~365 days) because every game tick is a day passing!
   static const checkIntervalInDays = 365;
 
   final List<Farm> farms;
@@ -31,6 +33,7 @@ class VillageTemperatureService {
 
   StreamSubscription? _streamSubscription;
   bool _inited = false;
+  int _lastTotalCo2Absorbed = 0;
 
   Co2AbsorptionCalculator getCalculatorFor(TreeType treeType) {
     if (_calculatorsCache.containsKey(treeType)) {
@@ -41,7 +44,7 @@ class VillageTemperatureService {
   }
 
   void _onTimeTick(DateTime dateTime) {
-    double totalAbsorbedCo2 = 0.0;
+    int totalAbsorbedCo2 = 0;
 
     for (final farm in farms) {
       if (farm.farmController.isTreeDataAvailable) {
@@ -55,7 +58,11 @@ class VillageTemperatureService {
       }
     }
 
+    /// if co2 absorbed has not changed, meaning no temperature change will be observed, return!
+    if (_lastTotalCo2Absorbed == totalAbsorbedCo2) return;
+
     /// let's find out new temperature
+    _lastTotalCo2Absorbed = totalAbsorbedCo2;
     final co2Absorption = totalAbsorbedCo2 / checkIntervalInDays;
     final newTemperature = _temperatureCalculatorService.calculateTemperature(co2Absorption);
 
