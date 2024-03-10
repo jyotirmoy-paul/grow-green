@@ -14,6 +14,8 @@ class GameUtils {
   static const cutOffSoilHealthInPercentage = 1.0;
   static const maxSoilHealthInPercentage = 5.0;
   static const minSoilHealthInPercentage = 0.03;
+  static const maxVillageTemperature = 35.0;
+  static const minVillageTemperature = 17.0;
 
   static final farmInitialPrice = MoneyModel(value: 3000000);
 

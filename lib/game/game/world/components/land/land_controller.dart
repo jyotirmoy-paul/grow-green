@@ -10,6 +10,7 @@ import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
 import '../../../services/game_services/time/time_service.dart';
 import '../../../services/priority/priority_engine.dart';
+import '../sky/weather_service/services/village_temperature_service.dart';
 import 'components/farm/farm.dart';
 import 'overlays/farm_menu/farm_menu.dart';
 import 'overlays/system_selector_menu/model/farm_notifier.dart';
@@ -21,6 +22,7 @@ class LandController {
   late final GrowGreenGame game;
   late final TiledComponent map;
   late final List<Farm> farms;
+  late final VillageTemperatureService villageTemperatureService;
 
   static const _farmsLayerName = 'farms';
   static const _riverLayerName = 'river';
@@ -185,12 +187,26 @@ class LandController {
       },
     );
 
+    _initTemperatureService();
+
     return [
       map,
       ...river,
       ...nonFarms,
       ...farms,
     ];
+  }
+
+  void _initTemperatureService() async {
+    villageTemperatureService = VillageTemperatureService(farms: farms);
+
+    /// wait for all farms to be mounted
+    for (final farm in farms) {
+      await farm.mounted;
+    }
+
+    /// init village temperature service to start calculating temperature of village
+    villageTemperatureService.init();
   }
 
   FarmNotifier get _farmNotifier => game.gameController.overlayData.farmNotifier;

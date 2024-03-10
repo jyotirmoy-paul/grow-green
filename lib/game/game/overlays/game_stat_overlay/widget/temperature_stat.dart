@@ -4,10 +4,16 @@ import '../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../utils/text_styles.dart';
 import '../../../../../widgets/stylized_text.dart';
 import '../../../../utils/game_icons.dart';
+import '../../../world/components/sky/weather_service/services/village_temperature_service.dart';
 import 'stat_skeleton_widget.dart';
 
 class TemperatureStat extends StatelessWidget {
-  const TemperatureStat({super.key});
+  final VillageTemperatureService villageTemperatureService;
+
+  const TemperatureStat({
+    super.key,
+    required this.villageTemperatureService,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +21,19 @@ class TemperatureStat extends StatelessWidget {
       imageAlignment: StatSkeletonImageAlignment.left,
       width: 180.s,
       iconAsset: GameIcons.temperature,
-      child: StylizedText(
-        text: Text(
-          '30.87° C',
-          style: TextStyles.s28,
-        ),
+      child: StreamBuilder(
+        stream: villageTemperatureService.temperatureStream,
+        builder: (_, snapshot) {
+          final temperature = snapshot.data;
+          if (temperature == null) return const SizedBox.shrink();
+
+          return StylizedText(
+            text: Text(
+              '${temperature.toStringAsFixed(2)}° C',
+              style: TextStyles.s28,
+            ),
+          );
+        },
       ),
     );
   }
