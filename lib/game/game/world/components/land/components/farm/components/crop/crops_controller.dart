@@ -108,7 +108,7 @@ class CropsController {
   }
 
   Future<void> _populateSpriteBatch() async {
-    cropAsset = await game.images.load(CropAsset.of(cropType).at(CropStage.ripe));
+    cropAsset = await game.images.load(CropAsset.of(cropType).at(cropStage));
     cropSpriteBatch = SpriteBatch(cropAsset!);
   }
 
