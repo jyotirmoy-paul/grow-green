@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -14,6 +15,12 @@ class Land extends PositionComponent with HasGameRef<GrowGreenGame>, TapCallback
     final components = await landController.initialize(game);
     addAll(components);
     return super.onLoad();
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    landController.render(canvas);
   }
 
   @override

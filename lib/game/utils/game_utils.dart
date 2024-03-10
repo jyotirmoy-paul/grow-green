@@ -8,7 +8,7 @@ import 'game_extensions.dart';
 class GameUtils {
   /// constants
   static final tileSize = Vector2(1024, 640);
-  static const maxZoom = 0.8;
+  static const maxZoom = 1.4;
   static const maxCloudVelocity = 20.0;
   static const startingSoilHealthInPercentage = 1.0;
   static const cutOffSoilHealthInPercentage = 1.0;
@@ -20,6 +20,7 @@ class GameUtils {
   static final farmInitialPrice = MoneyModel(value: 3000000);
 
   final Vector2 gameWorldSize;
+  final Vector2 gameBackgroundSize;
   final double isoAngle;
   final double isoScaleFactor;
 
@@ -27,7 +28,8 @@ class GameUtils {
 
   static GameUtils? _instance;
   GameUtils._(this.gameWorldSize)
-      : isoAngle = math.atan(gameWorldSize.y / gameWorldSize.x),
+      : gameBackgroundSize = gameWorldSize * 1.1,
+        isoAngle = math.atan(gameWorldSize.y / gameWorldSize.x),
         isoScaleFactor = tileSize.y / tileSize.half().length;
 
   factory GameUtils() {

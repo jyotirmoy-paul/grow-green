@@ -33,7 +33,7 @@ class VillageTemperatureService {
 
   StreamSubscription? _streamSubscription;
   bool _inited = false;
-  int _lastTotalCo2Absorbed = 0;
+  int _lastTotalCo2Absorbed = -1;
 
   Co2AbsorptionCalculator getCalculatorFor(TreeType treeType) {
     if (_calculatorsCache.containsKey(treeType)) {
@@ -66,7 +66,7 @@ class VillageTemperatureService {
     final co2Absorption = totalAbsorbedCo2 / checkIntervalInDays;
     final newTemperature = _temperatureCalculatorService.calculateTemperature(co2Absorption);
 
-    Log.i('$tag: village temperature is updated to :$newTemperature for co2Absorption: $co2Absorption');
+    Log.i('$tag: village temperature is updated to $newTemperature for co2Absorption: $co2Absorption');
 
     /// notify listeners
     _temperatureStreamController.add(newTemperature);

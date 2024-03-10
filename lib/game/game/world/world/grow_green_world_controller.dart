@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 
 import '../../grow_green_game.dart';
+import '../components/background/gradient_background.dart';
 import '../components/land/land.dart';
 import '../components/sky/sky.dart';
 
@@ -26,6 +27,9 @@ class GrowGreenWorldController {
 
     /// once land is loaded, load the skyc
     land.loaded.then((_) {
+      /// add gradient background
+      add(GradientBackground());
+
       /// FIXME: allow sky back!
       // sky = Sky();
       // add(sky);
