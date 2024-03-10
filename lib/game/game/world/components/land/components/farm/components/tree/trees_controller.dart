@@ -96,7 +96,7 @@ class TreesController {
 
   Future<void> _populateSpriteBatch() async {
     /// load the new asset and set to the sprite batch
-    treeAsset = await game.images.load(TreeAsset.of(treeType).at(TreeStage.elder));
+    treeAsset = await game.images.load(TreeAsset.of(treeType).at(treeStage));
     treeSpriteBatch = SpriteBatch(treeAsset!);
   }
 
