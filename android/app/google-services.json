@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1008482153863-7a6j5fgiq5k3708g3qkkkthm4lkpq3mc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "art.brainstorm.growgreen",
+            "certificate_hash": "6a4b79f4549eb9e084bb99950901fa532916c0d6"
+          }
+        },
+        {
+          "client_id": "1008482153863-df8gmmqe8f7erj92vuge7m3i716ppcg2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "art.brainstorm.growgreen",
+            "certificate_hash": "aa52101394fa36abcbebf373c196dee6a229d8c5"
+          }
+        },
+        {
           "client_id": "1008482153863-6b0ahjvsm3qtqtrjdlio4t70j76korb7.apps.googleusercontent.com",
           "client_type": 3
         }

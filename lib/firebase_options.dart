@@ -67,17 +67,19 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1008482153863',
     projectId: 'growgreen-8468f',
     storageBucket: 'growgreen-8468f.appspot.com',
+    androidClientId: '1008482153863-7a6j5fgiq5k3708g3qkkkthm4lkpq3mc.apps.googleusercontent.com',
     iosClientId: '1008482153863-rilf6gdm3gu0ppdlijm8d0do7l02f91k.apps.googleusercontent.com',
     iosBundleId: 'art.brainstorm.growgreen',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDeNeYLwCSkx1syyAE4Q0w8r3uSf7UkSw8',
-    appId: '1:1008482153863:ios:9b4cff0b3c5cac59c6cf22',
+    appId: '1:1008482153863:ios:212e60c85431c6f5c6cf22',
     messagingSenderId: '1008482153863',
     projectId: 'growgreen-8468f',
     storageBucket: 'growgreen-8468f.appspot.com',
-    iosClientId: '1008482153863-nn9d76u2fh50rv067pohmhpitthjtad0.apps.googleusercontent.com',
-    iosBundleId: 'art.brainstorm.growgreen.RunnerTests',
+    androidClientId: '1008482153863-7a6j5fgiq5k3708g3qkkkthm4lkpq3mc.apps.googleusercontent.com',
+    iosClientId: '1008482153863-rilf6gdm3gu0ppdlijm8d0do7l02f91k.apps.googleusercontent.com',
+    iosBundleId: 'art.brainstorm.growgreen',
   );
 }

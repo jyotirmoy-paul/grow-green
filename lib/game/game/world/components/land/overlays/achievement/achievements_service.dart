@@ -13,21 +13,21 @@ import 'current_data_fetcher.dart';
 import 'offer.dart';
 
 class AchievementsService {
+  static const tag = 'AchievementsService';
+
   final GrowGreenGame game;
   AchievementsModel achievementsModel = AchievementsModel.defaultAchievements;
 
-  AchievementsService({required this.game}) {
-    TimeService().dateTimeStream.listen((dateTime) {
-      onTick(dateTime);
-    });
-  }
+  AchievementsService({required this.game});
+
   final StreamController<int> _unclaimedAchievementsStream = StreamController.broadcast();
   Stream<int> get unclaimedAchievementsStream => _unclaimedAchievementsStream.stream;
   Future<void> initialize() async {
     try {
       achievementsModel = await game.gameController.gameDatastore.getAchievements();
+      TimeService().dateTimeStream.listen(onTick);
     } catch (e) {
-      Log.e("message: $e");
+      Log.e('$tag: $e');
     }
   }
 

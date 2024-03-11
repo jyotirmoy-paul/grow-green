@@ -254,6 +254,8 @@ class LandController {
   }
 
   void _initMaintanenceServices() async {
+    villageTemperatureService = VillageTemperatureService(farms: farms);
+
     /// wait for all farms to be mounted
     await _waitForFarmInitialization();
 
@@ -262,8 +264,6 @@ class LandController {
   }
 
   void _initTemperatureService() {
-    villageTemperatureService = VillageTemperatureService(farms: farms);
-
     /// init village temperature service to start calculating temperature of village
     villageTemperatureService.init();
   }

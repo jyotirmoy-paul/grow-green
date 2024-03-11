@@ -61,7 +61,7 @@ class CropHarvestCoreService implements HarvestCoreService {
     final revenueValue = RevenueCalculator.getCropRevenue(cropType: cropType, systemType: systemType);
     return HarvestModel(
       harvestType: HarvestType.oneTime,
-      yield: 1.0, // FIXME probably need Qty calculator
+      yield: 1.0,
       revenue: MoneyModel(value: revenueValue),
       growable: cropType,
       dateOfHarvest: currentDateTime,
@@ -106,7 +106,7 @@ class TreeHarvestCoreService implements HarvestCoreService {
     return HarvestModel(
       harvestType: HarvestType.oneTime,
       yield: 1.0,
-      revenue: MoneyModel(value: totalPotentialRevenue), // FIXME: probably no of trees needs to be considered
+      revenue: MoneyModel(value: totalPotentialRevenue),
       growable: treeType,
       dateOfHarvest: currentDateTime,
       ageInDaysAtHarvest: treeAgeInDays,
