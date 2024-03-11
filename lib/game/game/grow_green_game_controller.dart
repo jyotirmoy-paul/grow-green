@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flame/components.dart';
+import 'package:flame/components.dart' hide Timer;
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
+import 'package:flutter/material.dart';
 
 import '../../services/log/log.dart';
 import '../utils/game_utils.dart';
@@ -150,6 +152,23 @@ class GrowGreenGameController {
       _hasTranslationInertia = true;
       _hasScaleInertia = true;
     }
+  }
+
+  static const zoomPerScrollUnit = 0.04;
+  Timer? _timer;
+
+  void onScroll(PointerScrollInfo info) {
+    _zoom = _zoom + info.scrollDelta.global.y.sign * zoomPerScrollUnit;
+    _timer?.cancel();
+
+    _timer = Timer(
+      const Duration(milliseconds: 100),
+      () {
+        onScaleEnd(
+          ScaleEndInfo.fromDetails(ScaleEndDetails()),
+        );
+      },
+    );
   }
 
   /// inertia to continue translating even after user input is stopped

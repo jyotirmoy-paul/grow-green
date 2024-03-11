@@ -7,7 +7,7 @@ import 'grow_green_game_controller.dart';
 import 'services/datastore/game_datastore.dart';
 import 'services/game_services/monetary/monetary_service.dart';
 
-class GrowGreenGame extends FlameGame with ScaleDetector {
+class GrowGreenGame extends FlameGame with ScaleDetector, ScrollDetector {
   final GrowGreenGameController gameController;
 
   final GameDatastore gameDatastore;
@@ -49,5 +49,10 @@ class GrowGreenGame extends FlameGame with ScaleDetector {
   @override
   void onScaleEnd(ScaleEndInfo info) {
     gameController.onScaleEnd(info);
+  }
+
+  @override
+  void onScroll(PointerScrollInfo info) {
+    gameController.onScroll(info);
   }
 }
