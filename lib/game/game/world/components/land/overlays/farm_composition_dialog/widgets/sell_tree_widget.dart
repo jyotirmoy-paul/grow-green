@@ -277,7 +277,7 @@ class SellTreeWidget extends StatelessWidget {
 
           /// button
           GameButton.textImage(
-            bgColor: Colors.red,
+            bgColor: Colors.black.withOpacity(0.2),
             text: 'Emh, sell anyway',
             image: GameAssets.cutTree,
             onTap: _sellTree,

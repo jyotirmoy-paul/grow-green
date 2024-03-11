@@ -13,7 +13,6 @@ import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../enums/farm_system_type.dart';
 import '../../../../../../enums/system_type.dart';
 import '../../../../../../models/farm_system.dart';
-import '../../../components/farm/asset/layout_asset.dart';
 import '../../../components/farm/components/system/real_life/systems/database/layouts.dart';
 import '../../../components/farm/components/system/real_life/utils/soil_health_calculator.dart';
 import '../../../components/farm/farm.dart';
@@ -196,7 +195,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
     return BackgroundGlow(
       dimension: 34.s,
       child: Image.asset(
-        LayoutAsset.representativeOf(systemType),
+        GameAssets.getLayoutRepresentationFor(systemType),
         width: 200.s,
         height: 200.s,
       ),

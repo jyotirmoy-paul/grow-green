@@ -94,9 +94,11 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
 
     /// prepare components
 
+    final image = await game.images.load(model.image);
+    final aspectRatio = image.width / image.height;
     _imageComponent = SpriteComponent(
-      sprite: Sprite(await game.images.load(model.image)),
-      size: Vector2.all(imageSize),
+      sprite: Sprite(image),
+      size: Vector2(imageSize * aspectRatio, imageSize),
       anchor: Anchor.bottomCenter,
       position: farmCenter,
     );
