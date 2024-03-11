@@ -40,20 +40,4 @@ abstract class Utils {
     final hslLight = hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
     return hslLight.toColor();
   }
-
-  static List<BoxShadow> get tappableOutlineShadows => [
-        BoxShadow(
-          color: Colors.black,
-          spreadRadius: 2.s,
-          offset: Offset(3.s, 3.s),
-        ),
-      ];
-
-  static List<BoxShadow> generalOutlineShadows = [
-    BoxShadow(
-      color: Colors.black,
-      spreadRadius: 4.s,
-      offset: Offset(0.0, 1.s),
-    ),
-  ];
 }

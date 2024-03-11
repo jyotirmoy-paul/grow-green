@@ -9,12 +9,10 @@ import '../../../../../../../../../utils/utils.dart';
 import '../../../../../../../../../widgets/button_animator.dart';
 import '../../../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../../../../widgets/game_button.dart';
-import '../../../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../../../utils/game_assets.dart';
 import '../../../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../../components/farm/asset/crop_asset.dart';
-import '../../../../components/farm/asset/fertilizer_asset.dart';
 import '../../../../components/farm/asset/tree_asset.dart';
 import '../../../../components/farm/components/crop/enums/crop_type.dart';
 import '../../../../components/farm/components/system/enum/growable.dart';
@@ -79,7 +77,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
         /// body
         Expanded(
           child: ListView.separated(
-            padding: EdgeInsets.all(32.s),
+            padding: EdgeInsets.all(20.s),
             scrollDirection: Axis.horizontal,
             itemCount: children.length,
             separatorBuilder: (_, index) {
@@ -92,7 +90,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
                 );
               }
 
-              return Gap(32.s);
+              return Gap(20.s);
             },
             itemBuilder: (context, index) {
               final model = children[index];
@@ -100,7 +98,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
               final child = Opacity(
                 opacity: _opacity(model),
                 child: MenuItemFlipSkeleton(
-                  width: 300.s,
+                  width: 360.s,
                   bgColor: model.color ?? Colors.red.darken(0.3),
                   header: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -108,44 +106,38 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
                     children: [
                       MenuImage(
                         imageAssetPath: model.upperImage,
-                        dimension: 40.s,
+                        dimension: 50.s,
                         shape: BoxShape.circle,
                       ),
-                      StylizedText(
-                        text: Text(
-                          model.headerText,
-                          style: TextStyles.s18,
-                          textAlign: TextAlign.center,
-                        ),
-                      )
+                      Text(
+                        model.headerText,
+                        style: TextStyles.s28,
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ),
-                  body: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        /// image
-                        MenuImage(
-                          imageAssetPath: model.image,
-                          dimension: 100.s,
-                        ),
+                  body: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      /// image
+                      MenuImage(
+                        imageAssetPath: model.image,
+                        dimension: 160.s,
+                      ),
 
-                        /// description
-                        if (model.descriptionText != null)
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
-                            child: StylizedText(
-                              text: Text(
-                                model.descriptionText!,
-                                style: TextStyles.s18,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
+                      /// description
+                      if (model.descriptionText != null)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
+                          child: Text(
+                            model.descriptionText!,
+                            style: TextStyles.s28,
+                            textAlign: TextAlign.center,
                           ),
-                        if (model.descriptionWidget != null) model.descriptionWidget!,
-                      ],
-                    ),
+                        ),
+                      if (model.descriptionWidget != null) model.descriptionWidget!,
+                    ],
                   ),
                   footer: model.footerWidget ??
                       Padding(
@@ -155,7 +147,6 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
                           child: GameButton.text(
                             color: Colors.white12,
                             text: "CHANGE",
-                            textStyle: TextStyles.s14,
                             onTap: () {
                               onComponentTap(model);
                             },
@@ -204,7 +195,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
                     /// price sum
                     Text(
                       '${widget.startingDebit.formattedValue} (Crops/Trees) + ${_calculateTotalSupportCost.formattedValue} (Maintainance)',
-                      style: TextStyles.s28.copyWith(
+                      style: TextStyles.s30.copyWith(
                         color: Colors.black,
                       ),
                     ),
@@ -283,7 +274,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
         ? _currentFarmContent.cropSupportConfig!.fertilizerConfig.qty
         : _currentFarmContent.treeSupportConfig!.fertilizerConfig.qty;
 
-    final fertilizerAsset = FertilizerAsset.fromType(fertilizerType);
+    final fertilizerAsset = GameAssets.getFertilizerAssetFor(fertilizerType);
 
     final fertilizerCost = CostCalculator.getFertilizerCost(
       qty: fertilizerQty,
@@ -304,7 +295,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       headerText: "Fertilizer",
       upperImage: upperImageAsset,
       image: fertilizerAsset,
-      descriptionText: "$fertilizerCost ₹ | ${fertilizerQty.readableFormat} ",
+      descriptionText: "${MoneyModel(value: fertilizerCost).formattedValue} | ${fertilizerQty.readableFormat} ",
       componentId: ComponentId.fertilizer,
       isComponentEditable: isEditable,
       color: AppColors.kFertilizerMenuCardBg,
@@ -327,8 +318,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
 
     final footerWidget = MenuFooterTextRow(
       leftText: "Total",
-      rightText: "₹ $maintenanceCost",
-      textStyle: TextStyles.s18,
+      rightText: MoneyModel(value: maintenanceCost).formattedValue,
     );
 
     return _ComponentsModel(

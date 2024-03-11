@@ -2,7 +2,6 @@ import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/flip_card/flip_card_controller.dart';
 import '../../../../../../../widgets/game_button.dart';
-import '../../../../../../../widgets/shadowed_container.dart';
 import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_assets.dart';
 import '../farm_composition_dialog/widgets/menu_item_flip_skeleton.dart';
@@ -69,21 +68,18 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        ShadowedContainer(
-          width: 300.s,
-          height: 250.s,
-          padding: EdgeInsets.symmetric(horizontal: 26.s, vertical: 24.s),
-          child: MenuItemFlipSkeleton(
-            flipCardController: _flipCardController,
-            bgColor: widget.bgColor,
-            body: _front,
-            backBody: _unlockedClaimedBody,
-          ),
+    return SizedBox(
+      width: 300.s,
+      height: 250.s,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 26.s, vertical: 24.s),
+        child: MenuItemFlipSkeleton(
+          flipCardController: _flipCardController,
+          bgColor: widget.bgColor,
+          body: _front,
+          backBody: _unlockedClaimedBody,
         ),
-      ],
+      ),
     );
   }
 

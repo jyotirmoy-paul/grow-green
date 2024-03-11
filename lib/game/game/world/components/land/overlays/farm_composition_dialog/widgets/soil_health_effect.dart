@@ -3,8 +3,6 @@ import 'package:gap/gap.dart';
 
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
-import '../../../../../../../../utils/utils.dart';
-import '../../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../../utils/game_assets.dart';
 
 enum ChangeDurationType { perUse, yearly }
@@ -27,28 +25,17 @@ class SoilHealthEffect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.s, vertical: 8.s),
-      decoration: BoxDecoration(
-        color: Colors.white24,
-        borderRadius: BorderRadius.circular(12.s),
-        border: Border.all(
-          color: Utils.lightenColor(Colors.white24),
-          width: 2.s,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: rowMainAxisAlignment,
-        mainAxisSize: rowMainAxisSize,
-        children: [
-          StylizedText(text: Text('Soil Health ', style: TextStyles.s16)),
-          if (!isExpanded) Gap(10.s),
-          _ChangeInfo(
-            changePercentage: changePercentage,
-            changeDurationType: changeDurationType,
-          )
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: rowMainAxisAlignment,
+      mainAxisSize: rowMainAxisSize,
+      children: [
+        Text('Soil Health ', style: TextStyles.s28),
+        if (!isExpanded) Gap(10.s),
+        _ChangeInfo(
+          changePercentage: changePercentage,
+          changeDurationType: changeDurationType,
+        )
+      ],
     );
   }
 }
@@ -69,23 +56,15 @@ class _ChangeInfo extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset(
-          changeAssetPath,
-          width: 14.s,
-          height: 14.s,
-        ),
+        Image.asset(changeAssetPath, width: 14.s, height: 14.s),
         Gap(6.s),
-        StylizedText(
-          text: Text(
-            '${changePercentage.toStringAsFixed(2)}% ',
-            style: TextStyles.s14,
-          ),
+        Text(
+          '${changePercentage.toStringAsFixed(2)}% ',
+          style: TextStyles.s28,
         ),
-        StylizedText(
-          text: Text(
-            changeDurationType == ChangeDurationType.perUse ? ' per use' : ' yearly',
-            style: TextStyles.s14,
-          ),
+        Text(
+          changeDurationType == ChangeDurationType.perUse ? ' per use' : ' yearly',
+          style: TextStyles.s28,
         ),
       ],
     );

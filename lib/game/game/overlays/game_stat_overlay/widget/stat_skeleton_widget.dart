@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../../utils/app_colors.dart';
 import '../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../widgets/stylized_container.dart';
 

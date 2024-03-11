@@ -4,7 +4,6 @@ import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/flip_card/flip_card.dart';
 import '../../../../../../../../widgets/flip_card/flip_card_controller.dart';
-import '../../../../../../../../widgets/shadowed_container.dart';
 
 class MenuItemFlipSkeleton extends StatelessWidget {
   final Color bgColor;
@@ -69,21 +68,12 @@ class MenuItemSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShadowedContainer(
+    return Container(
       width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.s),
         color: bgColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            spreadRadius: 10.s,
-            blurRadius: 10.s,
-            blurStyle: BlurStyle.outer,
-          ),
-        ],
       ),
-      shadowOffset: Offset(10.s, 10.s),
       child: Column(
         children: [
           /// header
@@ -93,8 +83,8 @@ class MenuItemSkeleton extends StatelessWidget {
                 padding: EdgeInsets.all(12.s),
                 decoration: BoxDecoration(
                   color: Utils.darkenColor(bgColor, 0.2),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12.0),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20.s),
                   ),
                   // border: Border(
                 ),
@@ -120,17 +110,14 @@ class MenuItemSkeleton extends StatelessWidget {
               height: 6.s,
               decoration: BoxDecoration(
                 border: Border(
-                  top: BorderSide(width: 2.s, color: Colors.black.withOpacity(0.7)),
+                  top: BorderSide(width: 2.s, color: const Color(0xb3000000)),
                   bottom: BorderSide(width: 2.s, color: Utils.lightenColor(bgColor, 0.4)),
                 ),
               ),
             ),
 
           /// footer
-          if (footer != null)
-            Expanded(
-              child: footer!,
-            ),
+          if (footer != null) Expanded(child: footer!),
         ],
       ),
     );

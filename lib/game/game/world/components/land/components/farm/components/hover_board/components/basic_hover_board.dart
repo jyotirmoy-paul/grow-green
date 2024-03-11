@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../../../../services/log/log.dart';
-import '../../../../../../../../../../utils/constants.dart';
 import '../../../../../../../../../utils/game_world_assets.dart';
 import '../../../../../../../../grow_green_game.dart';
 import '../../../animations/enums/game_animation_type.dart';

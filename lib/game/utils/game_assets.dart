@@ -1,6 +1,7 @@
 import '../game/enums/agroforestry_type.dart';
 import '../game/enums/farm_system_type.dart';
 import '../game/enums/system_type.dart';
+import '../game/world/components/land/components/farm/model/fertilizer/fertilizer_type.dart';
 
 abstract class GameAssets {
   static const _base = 'assets/game_assets';
@@ -13,6 +14,13 @@ abstract class GameAssets {
   static const negativeTriangle = '$_base/negative_triangle.png';
 
   /// fertilizers
+  static String getFertilizerAssetFor(FertilizerType fertilizerType) {
+    return switch (fertilizerType) {
+      FertilizerType.organic => organicFertilizer,
+      FertilizerType.chemical => chemicalFertilizer,
+    };
+  }
+
   static const chemicalFertilizer = '$_base/chemical_fertilizer.png';
   static const addChemicalFertilizer = '$_base/add_chemical_fertilizer.png';
 

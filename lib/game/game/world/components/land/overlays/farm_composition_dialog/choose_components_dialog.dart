@@ -10,7 +10,6 @@ import '../../../../../../../utils/utils.dart';
 import '../../../../../../../widgets/button_animator.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../../widgets/game_button.dart';
-import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_assets.dart';
 import '../../../../../enums/agroforestry_type.dart';
 import '../../../../../enums/farm_system_type.dart';
@@ -129,7 +128,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
       footerButtonText: countTreeIn ? kChange : kRemove,
       buttonColor: countTreeIn ? null : Colors.red,
       descriptionText: "${treeType.name.toUpperCase()}\n$qtyDescription",
-      color: AppColors.kTreeMenuCardBg,
+      color: AppColors.treeMenuCardBg,
     );
   }
 
@@ -358,7 +357,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
         /// body
         Expanded(
           child: ListView.separated(
-            padding: EdgeInsets.all(32.s),
+            padding: EdgeInsets.all(20.s),
             scrollDirection: Axis.horizontal,
             itemBuilder: (_, index) {
               final model = children[index];
@@ -369,15 +368,13 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                   nonEditableComponentTap(model.componentId);
                 },
                 child: MenuItemFlipSkeleton(
-                  width: 300.s,
+                  width: 320.s,
                   bgColor: model.color ?? Colors.red.darken(0.3),
                   header: Center(
-                    child: StylizedText(
-                      text: Text(
-                        model.headerText,
-                        style: TextStyles.s35,
-                        textAlign: TextAlign.center,
-                      ),
+                    child: Text(
+                      model.headerText,
+                      style: TextStyles.s35,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   body: Center(
@@ -388,19 +385,17 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                         /// image
                         MenuImage(
                           imageAssetPath: model.image,
-                          dimension: 130.s,
+                          dimension: 200.s,
                         ),
 
                         /// description
                         if (model.descriptionText != null)
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
-                            child: StylizedText(
-                              text: Text(
-                                model.descriptionText!,
-                                style: TextStyles.s24,
-                                textAlign: TextAlign.center,
-                              ),
+                            child: Text(
+                              model.descriptionText!,
+                              style: TextStyles.s28,
+                              textAlign: TextAlign.center,
                             ),
                           ),
                       ],
@@ -423,18 +418,14 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                 ),
               );
             },
-            separatorBuilder: (_, __) => Gap(32.s),
+            separatorBuilder: (_, __) => Gap(20.s),
             itemCount: children.length,
           ),
         ),
 
         /// button
         Padding(
-          padding: EdgeInsets.only(
-            right: 16.s,
-            bottom: 16.s,
-            top: 8.s,
-          ),
+          padding: EdgeInsets.only(right: 16.s, bottom: 16.s),
           child: GameButton.textImage(
             key: ValueKey(_totalCost.formattedValue),
             text: 'Continue for ${_totalCost.formattedValue}',
