@@ -12,4 +12,5 @@ abstract class GameAssets {
   static const baseBottom = '$_landAssetPrefix/base_bottom.png';
   static const baseLeft = '$_landAssetPrefix/base_left.png';
   static String nonFarmAssetOfName(String name) => '$_landAssetPrefix/$name.png';
+  static const clouds = 'clouds/clouds.png';
 }

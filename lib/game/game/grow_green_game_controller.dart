@@ -32,6 +32,8 @@ class GrowGreenGameController {
   late final GrowGreenWorld world;
 
   late final double _minZoom;
+  double get minZoom => _minZoom;
+
   late final Vector2 worldCenter;
 
   static const _maxZoomStable = GameUtils.maxZoom;

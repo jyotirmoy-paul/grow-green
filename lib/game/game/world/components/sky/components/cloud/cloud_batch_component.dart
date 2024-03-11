@@ -13,7 +13,13 @@ class CloudBatchComponent extends PositionComponent with HasGameRef<GrowGreenGam
 
   @override
   FutureOr<void> onLoad() async {
-    final components = await cloudController.initialize(game: game);
+    final components = await cloudController.initialize(
+      game: game,
+      cloudBatchComponent: this,
+    );
+
+    anchor = Anchor.center;
+
     addAll(components);
 
     return super.onLoad();
