@@ -9,11 +9,8 @@ class Co2AbsorptionCalculator {
     required this.treeType,
   }) : data = Co2AbsorptionData.of(treeType);
 
-  int getTotalCo2SequestratedBy({
-    required final TreeType treeType,
-    required final int treeAgeInDays,
-  }) {
-    final age = treeAgeInDays ~/ 365;
+  double getTotalCo2SequestratedBy({required final int treeAgeInDays}) {
+    final age = treeAgeInDays / 365;
 
     if (age <= Co2AbsorptionData.youngThresholdAge) {
       return data.youngSequestrationRate * age;

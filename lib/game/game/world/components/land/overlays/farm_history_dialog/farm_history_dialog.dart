@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../utils/app_colors.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/stylized_text.dart';
@@ -24,7 +25,7 @@ class FarmHistoryDialog extends StatelessWidget {
   FarmHistoryDialog({
     super.key,
     required this.farm,
-    this.bgColor = const Color(0xff474F7A),
+    this.bgColor = AppColors.farmHistoryThemeColor,
   })  : chartRendererKey = GlobalKey(),
         harvestModels = farm.farmController.harvestModels,
         mergedHarvestModels = MergedHarvestModel.generateMergedHarvestModelFrom(farm.farmController.harvestModels),

@@ -22,7 +22,7 @@ class SoilHealthSummary extends StatelessWidget {
     super.key,
     required this.chartRendererKey,
     required this.mergedSoilHealthModels,
-    this.bgColor = const Color(0xff503C3C),
+    this.bgColor = AppColors.brown,
     required this.minSoilHealth,
     required this.maxSoilHealth,
   })  : yearsInterval = (mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year) / 6,

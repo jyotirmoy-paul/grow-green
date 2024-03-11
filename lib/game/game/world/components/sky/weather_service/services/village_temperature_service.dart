@@ -33,7 +33,7 @@ class VillageTemperatureService {
 
   StreamSubscription? _streamSubscription;
   bool _inited = false;
-  int _lastTotalCo2Absorbed = -1;
+  double _lastTotalCo2Absorbed = -1;
 
   Co2AbsorptionCalculator getCalculatorFor(TreeType treeType) {
     if (_calculatorsCache.containsKey(treeType)) {
@@ -44,13 +44,12 @@ class VillageTemperatureService {
   }
 
   void _onTimeTick(DateTime dateTime) {
-    int totalAbsorbedCo2 = 0;
+    double totalAbsorbedCo2 = 0;
 
     for (final farm in farms) {
       if (farm.farmController.isTreeDataAvailable) {
         final treeData = farm.farmController.treeData;
         final co2AbsorptionByOneTree = getCalculatorFor(treeData.treeType).getTotalCo2SequestratedBy(
-          treeType: treeData.treeType,
           treeAgeInDays: dateTime.difference(treeData.lifeStartedAt).inDays,
         );
 

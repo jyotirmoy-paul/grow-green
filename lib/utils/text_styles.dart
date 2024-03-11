@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'app_colors.dart';
 import 'extensions/num_extensions.dart';
 
 abstract class TextStyles {
@@ -35,7 +36,7 @@ abstract class TextStyles {
       );
 
   static TextStyle get s28brown => TextStyle(
-        color: const Color(0xff3E3232),
+        color: AppColors.brown,
         fontSize: 28.s,
         letterSpacing: 1.1,
         height: 1.2,
