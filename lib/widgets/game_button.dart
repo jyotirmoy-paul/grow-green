@@ -19,6 +19,7 @@ class GameButton extends StatelessWidget {
   final Color? color;
   final VoidCallback? onTap;
   final String? text;
+  final TextStyle? textStyle;
   final String? image;
   final String? dataText;
   final String? dataImage;
@@ -29,6 +30,7 @@ class GameButton extends StatelessWidget {
     this.color,
     this.onTap,
     this.text,
+    this.textStyle,
     this.image,
     this.dataText,
     this.dataImage,
@@ -36,12 +38,13 @@ class GameButton extends StatelessWidget {
 
   factory GameButton.menuItem({
     Key? key,
-    required String text,
+    String? text,
     required String image,
     required VoidCallback onTap,
     Color? color,
     String? dataText,
     String? dataImage,
+    TextStyle? textStyle,
   }) {
     return GameButton._(
       key: key,
@@ -52,6 +55,7 @@ class GameButton extends StatelessWidget {
       image: image,
       dataText: dataText,
       dataImage: dataImage,
+      textStyle: textStyle,
     );
   }
 
@@ -140,7 +144,8 @@ class GameButton extends StatelessWidget {
           switch (type) {
             case GameButtonType.menuItem:
               return _MenuItemButton(
-                text: text!,
+                text: text,
+                textStyle: textStyle,
                 image: image!,
                 dataImage: dataImage,
                 dataText: dataText,
@@ -262,14 +267,16 @@ class _TextButton extends StatelessWidget {
 }
 
 class _MenuItemButton extends StatelessWidget {
-  final String text;
+  final String? text;
+  final TextStyle? textStyle;
   final String image;
   final String? dataText;
   final String? dataImage;
 
   const _MenuItemButton({
     super.key,
-    required this.text,
+    this.text,
+    this.textStyle,
     required this.image,
     this.dataText,
     this.dataImage,
@@ -338,13 +345,14 @@ class _MenuItemButton extends StatelessWidget {
               const Spacer(),
 
               /// text
-              StylizedText(
-                text: Text(
-                  text,
-                  style: TextStyles.s23,
-                  textAlign: TextAlign.center,
+              if (text != null)
+                StylizedText(
+                  text: Text(
+                    text!,
+                    style: textStyle ?? TextStyles.s23,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
             ],
           ),
         ],

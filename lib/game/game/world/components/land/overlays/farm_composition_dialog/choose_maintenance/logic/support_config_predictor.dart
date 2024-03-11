@@ -32,7 +32,7 @@ class SupportConfigPredictor {
   }) {
     final isCrop = growable.getGrowableType() == GrowableType.crop;
     final ageInMonths = isCrop ? BaseCropCalculator.fromCropType(growable as CropType).maxAgeInMonths : 12;
-    final fertilzerQty = QtyCalculator.getFertilizerQtyRequiredFromTime(
+    final fertilzerQty = QtyCalculator.getFertilizerUsedForGrowingGrowableForTime(
       soilHealthPercentage: soilHealthPercentage,
       growableType: growable.getGrowableType(),
       systemType: systemType,

@@ -5,6 +5,7 @@ import '../../../../services/utils/service_action.dart';
 import '../../world/components/land/components/farm/model/farm_state_model.dart';
 import '../../world/components/land/components/farm/model/harvest_model.dart';
 import '../../world/components/land/components/farm/model/soil_health_model.dart';
+import '../../world/components/land/overlays/achievement/achievements_model.dart';
 import '../game_services/monetary/models/money_model.dart';
 
 class GameDatastore {
@@ -15,6 +16,7 @@ class GameDatastore {
   /// Ids used in database
   static const _harvestModelsListId = 'harvestModels';
   static const _soilHealthModelsListId = 'soilHealthModels';
+  static const _achievementsId = 'achievements';
 
   static const _dateId = 'date';
   static const _dateTime = 'dateTime';
@@ -109,6 +111,30 @@ class GameDatastore {
     return FarmStateModel.fromJson(data);
   }
 
+  Future<AchievementsModel> getAchievements() async {
+    final (serviceAction, data) = await _dbManagerService.get(
+      id: _achievementsId,
+    );
+
+    if (serviceAction == ServiceAction.failure) {
+      throw Exception('$tag: getAchievements() failed');
+    }
+
+    return AchievementsModel.fromJson(data);
+  }
+
+  Future<ServiceAction> updateAchievements(AchievementsModel achievements) async {
+    final status = await _dbManagerService.update(
+      id: _achievementsId,
+      data: achievements.toJson(),
+    );
+
+    if (status == ServiceAction.failure) return status;
+
+    /// updating achievements is an important action, we must immediately sync
+    return _dbManagerService.sync();
+  }
+
   Future<List<SoilHealthModel>> getSoilHealthModelFor(String farmId) async {
     final (serviceAction, data) = await _dbManagerService.getList(id: _farmId(farmId), listId: _soilHealthModelsListId);
 
@@ -184,6 +210,5 @@ class GameDatastore {
     return _dbManagerService.sync();
   }
 
-  /// TODO: Other db requirements!
-  /// 1. Achievements
+
 }

@@ -2,9 +2,15 @@ import '../../../../../../../../../../utils/game_utils.dart';
 import '../../../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../../../enums/system_type.dart';
+import '../../../../../../../../../services/game_services/time/time_service.dart';
+import '../../../../../../overlays/farm_composition_dialog/choose_maintenance/logic/support_config.dart';
 import '../../../../model/content.dart';
+import '../../../../model/farm_content.dart';
 import '../../../../model/fertilizer/fertilizer_type.dart';
+import '../../../crop/enums/crop_type.dart';
+import '../../../tree/enums/tree_type.dart';
 import '../../enum/growable.dart';
+import '../calculators/crops/base_crop.dart';
 import 'qty_calculator.dart';
 
 abstract class SoilHealthCalculator {
@@ -20,7 +26,7 @@ abstract class SoilHealthCalculator {
 
     final fertilizerType = fertilizer.type as FertilizerType;
 
-    final fertilizerPerYearPerHectar = QtyCalculator.getFertilizerQtyRequiredFromTime(
+    final fertilizerPerYearPerHectar = QtyCalculator.getFertilizerUsedForGrowingGrowableForTime(
       soilHealthPercentage: soilHealthPercentage,
       ageInMonths: 12,
       fertilizerType: fertilizerType,
@@ -60,22 +66,40 @@ abstract class SoilHealthCalculator {
 
   /// this method is build on the assumption that, it will be invoked at every tick!
   static double getNewSoilHealth({
+    required FarmContent farmContent,
     required double currentSoilHealth,
-    required Content? currentFertilizerInUse,
-    required SystemType currentSystemType,
-    required bool areTreesPresent,
   }) {
-    /// TODO: following changes were discussed for chagne
     /// 1. usage of crop age to understand the duration of farming
     /// 2. capping the soil health growth at some percentage (may be 20%)
     /// 3. using a logarithmic function to lessen the growth everytime
+    double totalFertilizerEffect = 0;
 
-    // final fertilzerEffect = _fertilizerEffect(fertilizer: fertilzerQty, soilHealthPercentage: soilHealthPercentage);
-    // final systemTypeEffectValue = _systemTypeAffect(systemType: systemType, treesPresent: treesPresent);
+    if (farmContent.hasCrop && farmContent.hasCropSupport) {
+      final cropFertilizerEffectForMaxAge = fertilizerEffect(
+        fertilizer: farmContent.cropSupportConfig!.fertilizerConfig,
+        soilHealthPercentage: currentSoilHealth,
+      );
+      final cropAgeInMonths = BaseCropCalculator.fromCropType(farmContent.crop!.type as CropType).maxAgeInMonths;
+      final cropAgeInDays = cropAgeInMonths * 30;
 
-    // return soilHealthPercentage + fertilzerEffect + systemTypeEffectValue;
-    // return currentSoilHealth + GameUtils().getRandomNumberBetween(min: -1.1, max: -1.9);
-    return GameUtils().getRandomNumberBetween(min: 0.5, max: 1.6);
+      totalFertilizerEffect += cropFertilizerEffectForMaxAge / cropAgeInDays;
+    }
+    if (farmContent.hasTrees && farmContent.hasTreeSupport) {
+      final treeFertilizerEffect = fertilizerEffect(
+        fertilizer: farmContent.treeSupportConfig!.fertilizerConfig,
+        soilHealthPercentage: currentSoilHealth,
+      );
+      const treeFertilizerUsageInDays = 365;
+      totalFertilizerEffect += treeFertilizerEffect / treeFertilizerUsageInDays;
+    }
+
+    final systemTypeEffectValue = systemTypeAffect(
+      systemType: farmContent.systemType,
+      treesPresent: farmContent.hasTrees,
+    );
+    final systemTypeEffectPerDay = systemTypeEffectValue / 365;
+
+    return currentSoilHealth + totalFertilizerEffect + systemTypeEffectPerDay;
   }
 
   static double calculateSoilHealthFactor(double soilHealthPercentage) {

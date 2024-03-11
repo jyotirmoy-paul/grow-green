@@ -360,7 +360,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       ageInMonths: cropAge,
       soilHealthPercentage: widget.soilHealthPercentage,
     );
-    final fertilizerContent = QtyCalculator.getFertilizerQtyRequiredFromTime(
+    final fertilizerContent = QtyCalculator.getFertilizerUsedForGrowingGrowableForTime(
       soilHealthPercentage: widget.soilHealthPercentage,
       growableType: GrowableType.crop,
       systemType: farmContent.systemType,
@@ -387,7 +387,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       ageInMonths: treeAge,
       soilHealthPercentage: widget.soilHealthPercentage,
     );
-    final fertilizerContent = QtyCalculator.getFertilizerQtyRequiredFromTime(
+    final fertilizerContent = QtyCalculator.getFertilizerUsedForGrowingGrowableForTime(
       soilHealthPercentage: widget.soilHealthPercentage,
       growableType: GrowableType.tree,
       systemType: farmContent.systemType,

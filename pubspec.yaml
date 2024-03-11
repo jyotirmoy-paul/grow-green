@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  lottie: ^3.1.0
   cupertino_icons: ^1.0.2
   firebase_core: ^2.25.5
   bloc: ^8.1.2
@@ -78,6 +79,10 @@ flutter:
     - assets/images/tiles/
     - assets/images/clouds/
     - assets/exp/
+
+    # videos and animations
+    - assets/videos/
+    - assets/lottie/
 
   # Dentisity  Flutter pixel ratio
   # ldpi        0.75x
