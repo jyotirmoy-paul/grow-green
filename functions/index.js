@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 
@@ -28,16 +29,16 @@ const AchievementType = {
 };
 
 
-function moneyModal(value) {
+function moneyModel(value) {
   return {
-    value: value
-  }
+    value: value,
+  };
 }
 
 function moneyOffer(value) {
   return {
-    money: moneyModal(value)
-  }
+    money: moneyModel(value),
+  };
 }
 
 function checkPointModel(achievementType, isClaimed, isAchieved, value, offer) {
@@ -46,32 +47,53 @@ function checkPointModel(achievementType, isClaimed, isAchieved, value, offer) {
     isClaimed: isClaimed,
     isAchieved: isAchieved,
     value: value,
-    offer: offer
-  }
+    offer: offer,
+  };
 }
 
-
-
-
-
-
 function getInitalSoilHealthCheckpoints() {
-  let soilHealthCheckPoints = [];
+  const soilHealthCheckPoints = [];
 
-  soilHealthCheckPoints.push(checkPointModel(AchievementType.soilHealth, false, false, 1.5, moneyOffer(1.5 * 100000)));
+  const firstCheckPoint = checkPointModel(
+      AchievementType.soilHealth,
+      false,
+      false,
+      1.5,
+      moneyOffer(1.5 * 100000),
+  );
+
+  soilHealthCheckPoints.push(firstCheckPoint);
 
   for (let i = 2; i <= 10; i++) {
-    soilHealthCheckPoints.push(checkPointModel(AchievementType.soilHealth, false, false, i, moneyOffer(i * 100000)));
+    const checkPoint = checkPointModel(
+        AchievementType.soilHealth,
+        false,
+        false,
+        i,
+        moneyOffer(i * 100000),
+    );
+
+    soilHealthCheckPoints.push(checkPointModel(checkPoint));
   }
   return soilHealthCheckPoints;
 }
 
 
 function getInitalLandCheckpoints() {
-  let landCheckPoints = [];
+  const landCheckPoints = [];
+
   for (let i = 1; i <= 6; i++) {
-    landCheckPoints.push(checkPointModel(AchievementType.lands, false, false, i, moneyOffer(i * 100000)));
+    const checkPoint = checkPointModel(
+        AchievementType.lands,
+        false,
+        false,
+        i,
+        moneyOffer(i * 100000),
+    );
+
+    landCheckPoints.push(checkPoint);
   }
+
   return landCheckPoints;
 }
 
