@@ -73,7 +73,7 @@ function getInitalSoilHealthCheckpoints() {
         moneyOffer(i * 100000),
     );
 
-    soilHealthCheckPoints.push(checkPointModel(checkPoint));
+    soilHealthCheckPoints.push(checkPoint);
   }
   return soilHealthCheckPoints;
 }
@@ -96,15 +96,6 @@ function getInitalLandCheckpoints() {
 
   return landCheckPoints;
 }
-
-
-const soilHealthCheckPoints = getInitalSoilHealthCheckpoints();
-const landCheckPoints = getInitalLandCheckpoints();
-
-const initialAchievements = {
-  lands: landCheckPoints,
-  soilHealth: soilHealthCheckPoints,
-};
 
 exports.onUserCreation = functions.auth.user().onCreate(async (user) => {
   const uid = user.uid;
@@ -136,6 +127,17 @@ exports.onUserCreation = functions.auth.user().onCreate(async (user) => {
 
   // write achievements
   const achievementsDocRef = collectionRef.doc(achievementsDocId);
+  const soilHealthCheckPoints = getInitalSoilHealthCheckpoints();
+  const landCheckPoints = getInitalLandCheckpoints();
+
+  console.log(soilHealthCheckPoints);
+  console.log(landCheckPoints);
+
+  const initialAchievements = {
+    lands: landCheckPoints,
+    soilHealth: soilHealthCheckPoints,
+  };
+
   batch.set(achievementsDocRef, initialAchievements);
 
   // write
