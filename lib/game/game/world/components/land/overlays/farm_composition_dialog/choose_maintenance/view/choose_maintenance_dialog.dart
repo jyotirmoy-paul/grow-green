@@ -64,8 +64,6 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
   final children = <_ComponentsModel>[];
   bool isHidden = false;
 
-  get _anyOneisEditable => children.any((element) => element.isComponentEditable);
-
   @override
   void initState() {
     super.initState();
@@ -81,149 +79,162 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
         /// body
         Expanded(
           child: ListView.separated(
-            separatorBuilder: (context, index) => Gap(0.s),
+            padding: EdgeInsets.all(32.s),
             scrollDirection: Axis.horizontal,
             itemCount: children.length,
+            separatorBuilder: (_, index) {
+              if (index == 1) {
+                return VerticalDivider(
+                  thickness: 2.s,
+                  width: 60.s,
+                  indent: 100.s,
+                  endIndent: 100.s,
+                );
+              }
+
+              return Gap(32.s);
+            },
             itemBuilder: (context, index) {
               final model = children[index];
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.s, vertical: 40.s),
-                child: Opacity(
-                  opacity: _opacity(model),
-                  child: ButtonAnimator(
-                    onPressed: () {
-                      if (model.isComponentEditable) return onComponentTap(model);
-                    },
-                    child: MenuItemFlipSkeleton(
-                      width: 300.s,
-                      bgColor: model.color ?? Colors.red.darken(0.3),
-                      header: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          MenuImage(
-                            imageAssetPath: model.upperImage,
-                            dimension: 40.s,
-                            shape: BoxShape.circle,
-                          ),
-                          StylizedText(
-                            text: Text(
-                              model.headerText,
-                              style: TextStyles.s18,
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        ],
-                      ),
-                      body: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            /// image
-                            MenuImage(
-                              imageAssetPath: model.image,
-                              dimension: 100.s,
-                            ),
 
-                            /// description
-                            if (model.descriptionText != null)
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
-                                child: StylizedText(
-                                  text: Text(
-                                    model.descriptionText!,
-                                    style: TextStyles.s18,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            if (model.descriptionWidget != null) model.descriptionWidget!,
-                          ],
-                        ),
+              final child = Opacity(
+                opacity: _opacity(model),
+                child: MenuItemFlipSkeleton(
+                  width: 300.s,
+                  bgColor: model.color ?? Colors.red.darken(0.3),
+                  header: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MenuImage(
+                        imageAssetPath: model.upperImage,
+                        dimension: 40.s,
+                        shape: BoxShape.circle,
                       ),
-                      footer: model.footerWidget ??
+                      StylizedText(
+                        text: Text(
+                          model.headerText,
+                          style: TextStyles.s18,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                  body: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        /// image
+                        MenuImage(
+                          imageAssetPath: model.image,
+                          dimension: 100.s,
+                        ),
+
+                        /// description
+                        if (model.descriptionText != null)
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 8.s),
-                            child: Center(
-                              /// button
-                              child: GameButton.text(
-                                color: Colors.white12,
-                                text: "CHANGE",
-                                textStyle: TextStyles.s14,
-                                onTap: () {
-                                  onComponentTap(model);
-                                },
+                            padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
+                            child: StylizedText(
+                              text: Text(
+                                model.descriptionText!,
+                                style: TextStyles.s18,
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),
+                        if (model.descriptionWidget != null) model.descriptionWidget!,
+                      ],
                     ),
                   ),
+                  footer: model.footerWidget ??
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 8.s),
+                        child: Center(
+                          /// button
+                          child: GameButton.text(
+                            color: Colors.white12,
+                            text: "CHANGE",
+                            textStyle: TextStyles.s14,
+                            onTap: () {
+                              onComponentTap(model);
+                            },
+                          ),
+                        ),
+                      ),
                 ),
               );
+
+              if (model.isComponentEditable) {
+                return ButtonAnimator(
+                  child: child,
+                  onPressed: () {
+                    onComponentTap(model);
+                  },
+                );
+              }
+
+              return child;
             },
           ),
         ),
 
         /// button
-        if (totalCost.value != 0)
-          Padding(
-            padding: EdgeInsets.only(
-              right: 16.s,
-              bottom: 16.s,
-              top: 8.s,
-            ),
-            child: GameButton.textImage(
-              key: ValueKey(totalCost.formattedValue),
-              text: 'Total ₹ ${totalCost.formattedValue}',
-              image: GameIcons.coin,
-              bgColor: totalCost.isZero() ? Colors.grey : Colors.green,
-              onTap: _onPurchaseTap,
-            ),
+        Padding(
+          padding: EdgeInsets.only(
+            left: 16.s,
+            right: 16.s,
+            bottom: 16.s,
           ),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            /// show breakup of cost only if a total cost is available
-            if (totalCost.value != 0 && widget.startingDebit.value != 0)
-              Row(
-                children: [
-                  Icon(
-                    Icons.info_rounded,
-                    size: 40.s,
-                    color: Colors.orange,
-                  ),
-
-                  Gap(6.s),
-
-                  /// price sum
-                  Text(
-                    '${widget.startingDebit.formattedValue} (Crops/Trees) + ${_calculateTotalSupportCost.formattedValue} (Maintainance)',
-                    style: TextStyles.s28.copyWith(
-                      color: Colors.black,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              /// show breakup of cost only if a total cost is available
+              if (totalCost.value != 0 && widget.startingDebit.value != 0)
+                Row(
+                  children: [
+                    Icon(
+                      Icons.info_rounded,
+                      size: 40.s,
+                      color: Colors.orange,
                     ),
-                  ),
-                ],
+
+                    Gap(6.s),
+
+                    /// price sum
+                    Text(
+                      '${widget.startingDebit.formattedValue} (Crops/Trees) + ${_calculateTotalSupportCost.formattedValue} (Maintainance)',
+                      style: TextStyles.s28.copyWith(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+
+              const Spacer(),
+
+              /// button
+              GameButton.textImage(
+                key: ValueKey(totalCost.formattedValue),
+                text: 'Buy for ${totalCost.formattedValue}',
+                image: GameIcons.coin,
+                bgColor: totalCost.isZero() ? Colors.grey : Colors.green,
+                onTap: _onPurchaseTap,
               ),
-
-            const Spacer(),
-
-            /// button
-            GameButton.textImage(
-              key: ValueKey(totalCost.formattedValue),
-              text: 'Buy for ${totalCost.formattedValue}',
-              image: GameIcons.coin,
-              bgColor: totalCost.isZero() ? Colors.grey : Colors.green,
-              onTap: _onPurchaseTap,
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
   }
 
-  double _opacity(_ComponentsModel model) => _anyOneisEditable ? (model.isComponentEditable ? 1 : 0.5) : 1;
+  bool get _anyOneisEditable => children.any((element) => element.isComponentEditable);
+
+  double _opacity(_ComponentsModel model) {
+    if (model.componentId == ComponentId.maintenance) return 1.0;
+    if (_anyOneisEditable) return model.isComponentEditable ? 1 : 0.6;
+    return 1.0;
+  }
 
   MoneyModel get totalCost => widget.startingDebit + _calculateTotalSupportCost;
   void _onPurchaseTap() async {
@@ -319,7 +330,6 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       rightText: "₹ $maintenanceCost",
       textStyle: TextStyles.s18,
     );
-    final isEditable = isCrop ? !widget.isCropSupportPresent : !widget.isTreeSupportPresent;
 
     return _ComponentsModel(
       headerText: "Maintenance",
@@ -327,7 +337,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
       image: 'assets/images/icons/maintenance.png',
       descriptionText: '',
       componentId: ComponentId.maintenance,
-      isComponentEditable: isEditable,
+      isComponentEditable: false,
       color: Colors.green,
       footerWidget: footerWidget,
       growableType: isCrop ? GrowableType.crop : GrowableType.tree,
