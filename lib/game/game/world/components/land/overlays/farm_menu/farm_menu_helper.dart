@@ -52,7 +52,7 @@ class FarmMenuHelper {
   static String _getTitle(Farm farm) {
     switch (farm.farmController.farmState) {
       case FarmState.notBought:
-        return 'Purchase the Farm?';
+        return 'Purchase Farm?';
 
       case FarmState.functioningOnlyTrees:
       case FarmState.functioningOnlyCrops:
