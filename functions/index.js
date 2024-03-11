@@ -20,6 +20,69 @@ const initialFarmSoilHealthPercentage = 1.0;
 // farm state
 const initialFarmState = "notBought";
 
+// achievements
+const achievementsDocId = "achievements";
+const AchievementType = {
+  lands: "lands",
+  soilHealth: "soilHealth",
+};
+
+
+function moneyModal(value) {
+  return {
+    value: value
+  }
+}
+
+function moneyOffer(value) {
+  return {
+    money: moneyModal(value)
+  }
+}
+
+function checkPointModel(achievementType, isClaimed, isAchieved, value, offer) {
+  return {
+    achievementType: achievementType,
+    isClaimed: isClaimed,
+    isAchieved: isAchieved,
+    value: value,
+    offer: offer
+  }
+}
+
+
+
+
+
+
+function getInitalSoilHealthCheckpoints() {
+  let soilHealthCheckPoints = [];
+
+  soilHealthCheckPoints.push(checkPointModel(AchievementType.soilHealth, false, false, 1.5, moneyOffer(1.5 * 100000)));
+
+  for (let i = 2; i <= 10; i++) {
+    soilHealthCheckPoints.push(checkPointModel(AchievementType.soilHealth, false, false, i, moneyOffer(i * 100000)));
+  }
+  return soilHealthCheckPoints;
+}
+
+
+function getInitalLandCheckpoints() {
+  let landCheckPoints = [];
+  for (let i = 1; i <= 6; i++) {
+    landCheckPoints.push(checkPointModel(AchievementType.lands, false, false, i, moneyOffer(i * 100000)));
+  }
+  return landCheckPoints;
+}
+
+
+const soilHealthCheckPoints = getInitalSoilHealthCheckpoints();
+const landCheckPoints = getInitalLandCheckpoints();
+
+const initialAchievements = {
+  lands: landCheckPoints,
+  soilHealth: soilHealthCheckPoints,
+};
 
 exports.onUserCreation = functions.auth.user().onCreate(async (user) => {
   const uid = user.uid;
@@ -48,6 +111,10 @@ exports.onUserCreation = functions.auth.user().onCreate(async (user) => {
   batch.set(moneyDocRef, {
     value: initialMoney,
   });
+
+  // write achievements
+  const achievementsDocRef = collectionRef.doc(achievementsDocId);
+  batch.set(achievementsDocRef, initialAchievements);
 
   // write
   return batch.commit();

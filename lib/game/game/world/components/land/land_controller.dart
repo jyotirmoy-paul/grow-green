@@ -228,7 +228,7 @@ class LandController {
 
     await _prepareBaseLayerAssets();
 
-    _initTemperatureService();
+    _initMaintanenceServices();
 
     return [
       map,
@@ -243,16 +243,33 @@ class LandController {
     _bottomBaseGroundSpriteBatch.render(canvas);
   }
 
-  void _initTemperatureService() async {
-    villageTemperatureService = VillageTemperatureService(farms: farms);
+  Future<void> _waitForFarmInitialization() async {
+    final futures = <Future>[];
 
-    /// wait for all farms to be mounted
     for (final farm in farms) {
-      await farm.mounted;
+      futures.add(farm.mounted);
     }
+
+    await Future.wait(futures);
+  }
+
+  void _initMaintanenceServices() async {
+    /// wait for all farms to be mounted
+    await _waitForFarmInitialization();
+
+    _initAchievementService();
+    _initTemperatureService();
+  }
+
+  void _initTemperatureService() {
+    villageTemperatureService = VillageTemperatureService(farms: farms);
 
     /// init village temperature service to start calculating temperature of village
     villageTemperatureService.init();
+  }
+
+  void _initAchievementService() {
+    game.gameController.achievementsService.initialize();
   }
 
   FarmNotifier get _farmNotifier => game.gameController.overlayData.farmNotifier;

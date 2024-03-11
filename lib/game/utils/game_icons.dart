@@ -18,4 +18,8 @@ abstract class GameIcons {
   static const stripedBg = '$_base/striped_bg.png';
   static const positiveTriangle = '$_base/positive_triangle.png';
   static const negativeTriangle = '$_base/negative_triangle.png';
+  static const trophy = '$_base/trophy.png';
+  static const trophy1 = '$_base/trophy1.png';
+  static const coinsPile = '$_base/coins_pile.png';
+  static const confettiLottie = "assets/lottie/confetti.json";
 }

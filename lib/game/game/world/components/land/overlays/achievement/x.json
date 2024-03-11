@@ -1,0 +1,11 @@
+{
+    "achievementType": "lands",
+    "isClaimed": false,
+    "isAchieved": false,
+    "value": 0,
+    "offer": {
+        "money": {
+            "value": 0
+        }
+    }
+}

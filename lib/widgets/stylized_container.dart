@@ -8,6 +8,7 @@ class StylizedContainer extends StatefulWidget {
   final EdgeInsets? margin;
   final Color color;
   final bool applyColorOpacity;
+  final bool isReflectionEnabled;
 
   const StylizedContainer({
     Key? key,
@@ -16,6 +17,7 @@ class StylizedContainer extends StatefulWidget {
     this.margin,
     this.applyColorOpacity = false,
     Color? color,
+    this.isReflectionEnabled = true,
   })  : padding = padding ?? const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
         color = color ?? Colors.white,
         super(key: key);
@@ -27,26 +29,7 @@ class StylizedContainer extends StatefulWidget {
 class _StylizedContainerState extends State<StylizedContainer> {
   final globalKey = GlobalKey();
 
-  Widget? sideReflectionWidget;
   Widget? topReflectionWidget;
-
-  Widget _buildSideReflectionWidget() {
-    final size = globalKey.currentContext?.size;
-    if (size == null) return const SizedBox.shrink();
-
-    return Container(
-      height: size.height,
-      width: size.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.s),
-        border: Border.all(
-          color: Colors.white,
-          width: 2.s,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-      ),
-    );
-  }
 
   Widget _buildTopReflectionWidget() {
     final size = globalKey.currentContext?.size;
@@ -56,8 +39,8 @@ class _StylizedContainerState extends State<StylizedContainer> {
 
     return Container(
       margin: EdgeInsets.all(marginValue),
-      height: size.height * 0.50 - marginValue * 2,
-      width: size.width - marginValue * 2,
+      height: size.height * 0.50,
+      width: size.width,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.5),
         borderRadius: BorderRadius.circular(8.s),
@@ -69,10 +52,9 @@ class _StylizedContainerState extends State<StylizedContainer> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
+      if (mounted && widget.isReflectionEnabled) {
         setState(() {
           topReflectionWidget = _buildTopReflectionWidget();
-          sideReflectionWidget = _buildSideReflectionWidget();
         });
       }
     });
@@ -103,23 +85,30 @@ class _StylizedContainerState extends State<StylizedContainer> {
           strokeAlign: BorderSide.strokeAlignOutside,
         ),
       ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.topCenter,
-        children: [
-          // reflection widget
-          topReflectionWidget ?? const SizedBox.shrink(),
-
-          /// side relfection widget
-          sideReflectionWidget ?? const SizedBox.shrink(),
-
-          // child widget
-          Padding(
-            key: globalKey,
-            padding: widget.padding,
-            child: widget.child,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.s),
+          border: Border.all(
+            color: Colors.white,
+            width: 2.s,
+            strokeAlign: BorderSide.strokeAlignInside,
           ),
-        ],
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.topCenter,
+          children: [
+            // reflection widget
+            topReflectionWidget ?? const SizedBox.shrink(),
+
+            // child widget
+            Padding(
+              key: globalKey,
+              padding: widget.padding,
+              child: widget.child,
+            ),
+          ],
+        ),
       ),
     );
   }

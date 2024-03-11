@@ -26,6 +26,7 @@ import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm_controller.dart';
 import '../../components/farm/model/content.dart';
 import '../../components/farm/model/farm_content.dart';
+import '../achievement/offer.dart';
 import '../farm_menu/farm_menu_helper.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import 'choose_component_dialog.dart';

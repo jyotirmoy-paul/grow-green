@@ -12,11 +12,11 @@ class MenuItemFlipSkeleton extends StatelessWidget {
 
   final Widget? header;
   final Widget body;
-  final Widget footer;
+  final Widget? footer;
 
   final Widget? backHeader;
   final Widget backBody;
-  final Widget backFooter;
+  final Widget? backFooter;
 
   final FlipCardController? flipCardController;
   const MenuItemFlipSkeleton({
@@ -25,10 +25,10 @@ class MenuItemFlipSkeleton extends StatelessWidget {
     this.width = 380.0,
     this.header,
     this.body = const SizedBox.shrink(),
-    this.footer = const SizedBox.shrink(),
-    this.backHeader = const SizedBox.shrink(),
+    this.footer,
+    this.backHeader,
     this.backBody = const SizedBox.shrink(),
-    this.backFooter = const SizedBox.shrink(),
+    this.backFooter,
     this.flipCardController,
   });
 
@@ -65,7 +65,7 @@ class MenuItemSkeleton extends StatelessWidget {
   final Color bgColor;
   final Widget? header;
   final Widget body;
-  final Widget footer;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -87,24 +87,26 @@ class MenuItemSkeleton extends StatelessWidget {
       child: Column(
         children: [
           /// header
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(12.s),
-              decoration: BoxDecoration(
-                color: Utils.darkenColor(bgColor, 0.2),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(12.0),
+          if (header != null)
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(12.s),
+                decoration: BoxDecoration(
+                  color: Utils.darkenColor(bgColor, 0.2),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12.0),
+                  ),
+                  // border: Border(
                 ),
-                // border: Border(
+                child: header,
               ),
-              child: header,
             ),
-          ),
 
-          Container(
-            height: 3.s,
-            color: Utils.lightenColor(bgColor, 0.4),
-          ),
+          if (header != null)
+            Container(
+              height: 3.s,
+              color: Utils.lightenColor(bgColor, 0.4),
+            ),
 
           /// body
           Expanded(
@@ -113,20 +115,22 @@ class MenuItemSkeleton extends StatelessWidget {
           ),
 
           /// gap
-          Container(
-            height: 6.s,
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(width: 2.s, color: Colors.black.withOpacity(0.7)),
-                bottom: BorderSide(width: 2.s, color: Utils.lightenColor(bgColor, 0.4)),
+          if (footer != null)
+            Container(
+              height: 6.s,
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 2.s, color: Colors.black.withOpacity(0.7)),
+                  bottom: BorderSide(width: 2.s, color: Utils.lightenColor(bgColor, 0.4)),
+                ),
               ),
             ),
-          ),
 
           /// footer
-          Expanded(
-            child: footer,
-          ),
+          if (footer != null)
+            Expanded(
+              child: footer!,
+            ),
         ],
       ),
     );

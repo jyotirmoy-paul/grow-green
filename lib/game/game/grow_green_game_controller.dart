@@ -10,6 +10,7 @@ import 'grow_green_game.dart';
 import 'models/overlay_data.dart';
 import 'services/datastore/game_datastore.dart';
 import 'services/game_services/monetary/monetary_service.dart';
+import 'world/components/land/overlays/achievement/achievements_service.dart';
 import 'world/world/grow_green_world.dart';
 
 class GrowGreenGameController {
@@ -27,6 +28,7 @@ class GrowGreenGameController {
 
   late final GrowGreenGame game;
   late final CameraComponent camera;
+  late final AchievementsService achievementsService;
   late final GrowGreenWorld world;
 
   late final double _minZoom;
@@ -55,6 +57,9 @@ class GrowGreenGameController {
 
     world = GrowGreenWorld();
     camera = CameraComponent(world: world);
+
+    // initialize achievements service
+    achievementsService = AchievementsService(game: game);
 
     return [
       world,
