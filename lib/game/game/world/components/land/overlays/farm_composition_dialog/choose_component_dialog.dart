@@ -7,7 +7,6 @@ import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/button_animator.dart';
 import '../../../../../../../widgets/flip_card/flip_card_controller.dart';
 import '../../../../../../../widgets/game_button.dart';
-import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_assets.dart';
 import '../../../../../enums/agroforestry_type.dart';
 import '../../components/farm/asset/crop_asset.dart';
@@ -148,8 +147,8 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
 
   double get _width {
     return switch (widget.componentId) {
-      ComponentId.trees => 340.s,
-      _ => 300.s,
+      ComponentId.trees => 500.s,
+      _ => 450.s,
     };
   }
 
@@ -157,7 +156,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
   Widget build(BuildContext context) {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.symmetric(horizontal: 30.s, vertical: 40.s),
+      padding: EdgeInsets.all(20.s),
       itemBuilder: (context, index) {
         final model = models[index];
         final flipCardController = FlipCardController();
@@ -184,7 +183,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
         );
       },
       separatorBuilder: (context, index) {
-        return Gap(32.s);
+        return Gap(20.s);
       },
       itemCount: models.length,
     );
@@ -204,11 +203,9 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
           /// price
           Align(
             alignment: Alignment.centerLeft,
-            child: StylizedText(
-              text: Text(
-                model.name,
-                style: TextStyles.s25,
-              ),
+            child: Text(
+              model.name,
+              style: TextStyles.s25,
             ),
           ),
 
@@ -233,25 +230,43 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
     final model = models[index];
     final treeType = TreeType.values.elementAtOrNull(index);
     final cropType = CropType.values.elementAtOrNull(index);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Gap(10.s),
-        MenuImage(
-          imageAssetPath: model.image,
-          dimension: 130.s,
-        ),
-        if (widget.componentId == ComponentId.trees)
-          AgeRevenueChart.fromAgeRevenueModels(
-            ageRevenueModels: AgeRevenueFetcher(treeType: treeType!).fetch(),
-            size: Size(300.s, 200.s),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.s),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Center(
+              child: MenuImage(
+                imageAssetPath: model.image,
+                dimension: 150.s,
+              ),
+            ),
           ),
-        if (widget.componentId == ComponentId.crop)
-          CropRevenueWidget(
-            cropType: cropType!,
-            bgColor: bgColor,
+          Expanded(
+            flex: widget.componentId == ComponentId.trees ? 2 : 1,
+            child: () {
+              /// tree specific widget
+              if (widget.componentId == ComponentId.trees) {
+                return AgeRevenueChart.fromAgeRevenueModels(
+                  ageRevenueModels: AgeRevenueFetcher(treeType: treeType!).fetch(),
+                  size: Size(450.s, 350.s),
+                );
+              }
+
+              /// crop specific widget
+              if (widget.componentId == ComponentId.crop) {
+                return CropRevenueWidget(
+                  cropType: cropType!,
+                  bgColor: bgColor,
+                );
+              }
+
+              return const SizedBox.shrink();
+            }(),
           ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -294,7 +309,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
           Gap(10.s),
           Text(
             info,
-            style: TextStyles.s18,
+            style: TextStyles.s28,
             textAlign: TextAlign.center,
           ),
         ],

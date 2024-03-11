@@ -118,7 +118,7 @@ class _ChooseSystemDialogState extends State<ChooseSystemDialog> {
     return Center(
       child: ListView.separated(
         controller: ChooseSystemDialog.offsetRestoration.scrollController,
-        padding: EdgeInsets.symmetric(horizontal: 30.s, vertical: 40.s),
+        padding: EdgeInsets.all(20.s),
         scrollDirection: Axis.horizontal,
         itemCount: widget.farmSystems.length,
         itemBuilder: (_, int index) {
@@ -134,7 +134,7 @@ class _ChooseSystemDialogState extends State<ChooseSystemDialog> {
             ),
           );
         },
-        separatorBuilder: (_, __) => Gap(40.s),
+        separatorBuilder: (_, __) => Gap(20.s),
       ),
     );
   }

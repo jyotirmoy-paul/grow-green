@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../../../../utils/app_colors.dart';
+import '../../../../../../../../../../../utils/text_styles.dart';
 import 'age_revenue_tree.dart';
 
 class AgeTag extends StatelessWidget {
@@ -30,7 +32,7 @@ class AgeTag extends StatelessWidget {
       width: circleSize.width,
       height: circleSize.height,
       decoration: const BoxDecoration(
-        color: Colors.brown,
+        color: Colors.white,
         shape: BoxShape.circle,
       ),
     );
@@ -47,11 +49,9 @@ class AgeTag extends StatelessWidget {
 
   Widget get _buildTitle {
     return Text(
-      title ?? "·",
-      maxLines: 1,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: size.height * 0.5,
+      title ?? '·',
+      style: TextStyles.s28.copyWith(
+        color: AppColors.brown,
       ),
     );
   }
@@ -75,7 +75,7 @@ class _RhombusPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.brown
+      ..color = Colors.white
       ..style = PaintingStyle.fill;
 
     final path = Path()

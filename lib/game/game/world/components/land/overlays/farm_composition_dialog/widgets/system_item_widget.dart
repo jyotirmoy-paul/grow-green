@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
-import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/flip_card/flip_card_controller.dart';
 import '../../../../../../../../widgets/game_button.dart';
-import '../../../../../../../../widgets/shadowed_container.dart';
-import '../../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../../utils/game_assets.dart';
 import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../enums/farm_system_type.dart';
@@ -33,7 +31,7 @@ class SystemItemWidget extends StatefulWidget {
     super.key,
     required this.farm,
     required this.farmSystem,
-    this.bgColor = Colors.green,
+    this.bgColor = AppColors.systemMenuCardBg,
     this.secondaryColor = Colors.white38,
   });
 
@@ -57,7 +55,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
   @override
   Widget build(BuildContext context) {
     return MenuItemFlipSkeleton(
-      width: 300.s,
+      width: 420.s,
       bgColor: widget.bgColor,
       flipCardController: flipCardController,
       header: _header(isBack: false),
@@ -79,11 +77,9 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
           /// price
           Align(
             alignment: Alignment.centerLeft,
-            child: StylizedText(
-              text: Text(
-                _getTitle(),
-                style: TextStyles.s18,
-              ),
+            child: Text(
+              _getTitle(),
+              style: TextStyles.s26,
             ),
           ),
 
@@ -106,35 +102,25 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
 
   Widget get _body {
     return Padding(
-      padding: EdgeInsets.all(20.0.s),
+      padding: EdgeInsets.symmetric(
+        horizontal: 20.s,
+        vertical: 8.s,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(child: systemWidget),
-          Gap(8.s),
+          Gap(4.s),
           Align(
             alignment: Alignment.centerLeft,
-            child: StylizedText(text: Text("You get", style: TextStyles.s23)),
+            child: Text("You get", style: TextStyles.s23),
           ),
+          Gap(1.s),
           Column(
             children: [
-              ShadowedContainer(
-                padding: EdgeInsets.symmetric(horizontal: 6.s, vertical: 12.s),
-                shadowOffset: Offset(6.s, 6.s),
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(12.s),
-                  border: Border.all(
-                    color: Utils.lightenColor(Colors.white24),
-                    width: 2.s,
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: _getComponents,
-                ),
-              ),
+              Gap(12.s),
+              Row(children: _components),
               Gap(20.s),
               SoilHealthEffect(
                 changePercentage: SoilHealthCalculator.systemTypeAffect(
@@ -151,9 +137,6 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
     );
   }
 
-  List<SizedBox> get _getComponents =>
-      buildComponents().map((e) => SizedBox.square(dimension: 100.s, child: e)).toList();
-
   Padding get _backBody {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.s),
@@ -163,16 +146,12 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
         children: [
           Flexible(child: systemWidget),
           Expanded(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.s),
-                child: StylizedText(
-                  text: Text(
-                    LayoutInfo.fromSystemType(widget.farmSystem).info,
-                    style: TextStyles.s14,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.s),
+              child: Text(
+                LayoutInfo.fromSystemType(widget.farmSystem).info,
+                style: TextStyles.s23,
+                textAlign: TextAlign.center,
               ),
             ),
           )
@@ -284,7 +263,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
     ];
   }
 
-  List<Widget> buildComponents() {
+  List<Widget> get _components {
     final system = widget.farmSystem;
 
     if (system is AgroforestrySystem) {
@@ -300,41 +279,32 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
 class MenuFooterTextRow extends StatelessWidget {
   final String leftText;
   final String rightText;
-  final TextStyle? textStyle;
+
   const MenuFooterTextRow({
     super.key,
     required this.leftText,
     required this.rightText,
-    this.textStyle,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.s),
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
+      child: Row(
         children: [
-          /// price
-          Align(
-            alignment: Alignment.centerLeft,
-            child: StylizedText(
-              text: Text(
-                leftText,
-                style: textStyle ?? TextStyles.s28,
-              ),
-            ),
+          Text(
+            leftText,
+            style: TextStyles.s28,
           ),
-
-          Align(
-            alignment: Alignment.centerRight,
-            child: StylizedText(
-              text: Text(
-                rightText,
-                style: textStyle ?? TextStyles.s28,
-              ),
-            ),
+          const Spacer(),
+          Text(
+            rightText,
+            style: TextStyles.s28,
+          ),
+          Gap(8.s),
+          Image.asset(
+            GameAssets.coin,
+            width: 35.s,
           ),
         ],
       ),
@@ -357,9 +327,11 @@ class BackgroundGlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return child;
     return Stack(
       alignment: Alignment.center,
       children: [
+        /// FIXME: We can replace this with an image, instead of expensive shadow!
         Container(
           width: _dimension,
           height: _dimension,
@@ -395,35 +367,33 @@ class _SystemComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          child: Center(
-            child: MenuImage(
-              imageAssetPath: componentImage,
-              dimension: 50.s,
-              shape: BoxShape.circle,
-            ),
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          MenuImage(
+            imageAssetPath: componentImage,
+            dimension: 70.s,
           ),
-        ),
-        Gap(10.s),
-        StylizedText(
-          text: Text(
-            header,
-            style: TextStyles.s16,
-            textAlign: TextAlign.center,
+          Gap(10.s),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                header,
+                style: TextStyles.s20,
+                textAlign: TextAlign.center,
+              ),
+              if (footer != null)
+                Text(
+                  footer!,
+                  style: TextStyles.s16,
+                  textAlign: TextAlign.center,
+                ),
+            ],
           ),
-        ),
-        if (footer != null)
-          StylizedText(
-            text: Text(
-              footer!,
-              style: TextStyles.s16,
-              textAlign: TextAlign.center,
-            ),
-          )
-      ],
+        ],
+      ),
     );
   }
 }

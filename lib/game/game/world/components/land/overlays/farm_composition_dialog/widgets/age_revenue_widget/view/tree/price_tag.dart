@@ -1,5 +1,7 @@
-import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../../../../../../../../utils/extensions/num_extensions.dart';
+import '../../../../../../../../../../../utils/text_styles.dart';
 
 class PriceTag extends StatelessWidget {
   final String text;
@@ -26,30 +28,14 @@ class PriceTag extends StatelessWidget {
       height: size.height,
       decoration: BoxDecoration(
         color: _backgroundColor,
-        shape: BoxShape.rectangle,
-        border: Border.all(color: borderColor, width: size.width * 0.03),
+        border: Border.all(color: borderColor, width: 1.s),
         borderRadius: BorderRadius.circular(size.height * 0.3),
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          border: Border.all(
-            color: _backgroundColor.darken(0.5),
-            width: size.width * 0.06,
-          ),
-          borderRadius: BorderRadius.circular(size.height * 0.3),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            maxLines: 1,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: size.height * 0.25, // Adjust font size according to your size
-              color: textColor,
-            ),
-          ),
-        ),
+      alignment: Alignment.center,
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyles.s26,
       ),
     );
   }

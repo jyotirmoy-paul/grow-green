@@ -21,11 +21,16 @@ class AgeRevenueChart extends StatelessWidget {
     final treeSize = Size(widthPerTree, size.height);
 
     final headerTree = AgeRevenueTree(
-      rootTitles: const ["Sold At", "Yearly", "Total"],
+      rootTitles: const [
+        'Net Worth',
+        'Recurring',
+        'Total',
+      ],
       size: treeSize,
       rootTitleColor: Colors.black26,
       topImageFooterShape: TopImageFooterShape.circle,
     );
+
     final revenueTrees = ageRevenueModels.map((ageRevenueModel) {
       final treeType = ageRevenueModel.treeType;
       final ageInYears = ageRevenueModel.ageInYears;
@@ -44,13 +49,15 @@ class AgeRevenueChart extends StatelessWidget {
     }).toList();
 
     final ageRevenueTrees = [headerTree, ...revenueTrees];
-    return AgeRevenueChart(ageRevenueTrees: ageRevenueTrees, size: size);
+    return AgeRevenueChart(
+      ageRevenueTrees: ageRevenueTrees,
+      size: size,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.fromSize(
-      size: size,
+    return SingleChildScrollView(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,

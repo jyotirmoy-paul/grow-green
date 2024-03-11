@@ -4,7 +4,8 @@ import '../../../../../../../../../../../utils/extensions/num_extensions.dart';
 import '../tree/age_tag.dart';
 import 'price_tag.dart';
 
-enum TopImageFooterShape{rhombus,circle}
+enum TopImageFooterShape { rhombus, circle }
+
 class AgeRevenueTree extends StatelessWidget {
   final String? topImagePath;
   final String? topImageFooter;
@@ -12,7 +13,6 @@ class AgeRevenueTree extends StatelessWidget {
   final List<String> rootTitles;
   final Color? rootTitleColor;
   final Size size;
-  
 
   const AgeRevenueTree({
     super.key,
@@ -59,14 +59,14 @@ class AgeRevenueTree extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Container(
-            color: Colors.brown,
+            color: Colors.white,
             width: size.width,
-            height: 2.s,
+            height: 6.s,
           ),
           AgeTag(
             title: topImageFooter,
             size: footerSize,
-            shape : topImageFooterShape,
+            shape: topImageFooterShape,
           )
         ],
       ),
@@ -92,14 +92,16 @@ class AgeRevenueTree extends StatelessWidget {
   List<Widget> _buildRootTitle({required String title, required Size size}) {
     final line = Container(
       height: size.height * 0.2,
-      width: 2,
-      color: Colors.brown,
+      width: 6.s,
+      color: Colors.white,
     );
+
     final priceTag = PriceTag(
       text: title,
       size: Size(size.width, size.height * 0.8),
       backgroundColor: rootTitleColor,
     );
+
     return [line, priceTag];
   }
 }

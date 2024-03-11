@@ -6,7 +6,6 @@ import 'package:gap/gap.dart';
 import '../../../../services/log/log.dart';
 import '../../../../utils/extensions/num_extensions.dart';
 import '../../../../utils/text_styles.dart';
-import '../../../../widgets/shadowed_container.dart';
 import '../../../../widgets/stylized_text.dart';
 import 'model/notification_model.dart';
 import 'service/notification_service.dart';
@@ -125,12 +124,11 @@ class _GameNotificationWidgetState extends State<GameNotificationWidget> {
                     child: FadingWidget(
                       id: notification.id,
                       onFinish: (notificationId) => _expiredNotificationIds.add(notificationId),
-                      child: ShadowedContainer(
+                      child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.s),
                           color: Colors.white70,
                         ),
-                        shadowOffset: Offset(10.s, 10.s),
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 10.s),
                           child: StylizedText(
