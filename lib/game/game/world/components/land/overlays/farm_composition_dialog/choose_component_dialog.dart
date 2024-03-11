@@ -8,7 +8,7 @@ import '../../../../../../../widgets/button_animator.dart';
 import '../../../../../../../widgets/flip_card/flip_card_controller.dart';
 import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../utils/game_images.dart';
+import '../../../../../../utils/game_assets.dart';
 import '../../../../../enums/agroforestry_type.dart';
 import '../../components/farm/asset/crop_asset.dart';
 import '../../components/farm/asset/tree_asset.dart';
@@ -73,7 +73,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
     for (final fertilizer in FertilizerType.values) {
       models.add(
         _ComponentModel(
-          image: fertilizer == FertilizerType.chemical ? GameImages.chemicalFertilizer : GameImages.organicFertilizer,
+          image: fertilizer == FertilizerType.chemical ? GameAssets.chemicalFertilizer : GameAssets.organicFertilizer,
           name: fertilizer.name.toUpperCase(),
           info: const [],
         ),
@@ -88,11 +88,11 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
           image: () {
             switch (agroforestryType) {
               case AgroforestryType.alley:
-                return GameImages.alleyPlanation;
+                return GameAssets.alleyPlanation;
               case AgroforestryType.boundary:
-                return GameImages.boundaryPlantation;
+                return GameAssets.boundaryPlantation;
               case AgroforestryType.block:
-                return GameImages.blockPlantation;
+                return GameAssets.blockPlantation;
             }
           }(),
           name: agroforestryType.name.toUpperCase(),

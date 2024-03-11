@@ -5,7 +5,7 @@ import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../../utils/game_assets.dart';
+import '../../../../../../utils/game_world_assets.dart';
 import '../../../../../../utils/game_extensions.dart';
 import '../../../../../../utils/game_utils.dart';
 import '../../../../../grow_green_game.dart';
@@ -146,7 +146,7 @@ class CloudBatchComponentController {
     _determineCloudZoomLimits();
 
     /// normal cloud asset
-    final normalCloudAsset = await game.images.load(GameAssets.clouds);
+    final normalCloudAsset = await game.images.load(GameWorldAssets.cloudsSpriteSheet);
     normalCloudSpriteSheetSize = normalCloudAsset.size;
     normalCloudSpriteBatch = SpriteBatch(normalCloudAsset);
 

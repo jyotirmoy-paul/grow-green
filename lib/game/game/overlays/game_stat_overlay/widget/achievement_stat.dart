@@ -6,7 +6,7 @@ import '../../../../../utils/text_styles.dart';
 import '../../../../../utils/utils.dart';
 import '../../../../../widgets/button_animator.dart';
 import '../../../../../widgets/stylized_text.dart';
-import '../../../../utils/game_icons.dart';
+import '../../../../utils/game_assets.dart';
 import '../../../world/components/land/overlays/achievement/achievements_dialog.dart';
 import '../../../world/components/land/overlays/achievement/achievements_service.dart';
 import 'stat_skeleton_widget.dart';
@@ -23,7 +23,7 @@ class AchievementsStat extends StatelessWidget {
     return ButtonAnimator(
       onPressed: () {
         Utils.showNonAnimatedDialog(
-          barrierLabel: "Achievements",
+          barrierLabel: 'Achievements',
           context: Navigation.navigationKey.currentContext!,
           builder: (context) {
             return AchievementsDialog(achievementsService: achievementsService);
@@ -35,11 +35,11 @@ class AchievementsStat extends StatelessWidget {
           StatSkeletonWidget(
             width: 250.s,
             imageAlignment: StatSkeletonImageAlignment.left,
-            iconAsset: GameIcons.trophy1,
+            iconAsset: GameAssets.trophy1,
             child: Center(
               child: StylizedText(
                 text: Text(
-                  "Achievements",
+                  'Achievements',
                   style: TextStyles.s28,
                 ),
               ),

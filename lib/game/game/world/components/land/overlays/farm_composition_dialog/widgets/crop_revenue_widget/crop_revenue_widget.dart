@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import '../../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../../../utils/game_icons.dart';
+import '../../../../../../../../utils/game_assets.dart';
 import '../../../../components/farm/components/crop/enums/crop_type.dart';
 import 'crop_revenue_data_fetcher.dart';
 
@@ -59,12 +59,12 @@ class CropRevenueWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          revenueWidget(label: dataFetcher.costPerUnitSeed.toString(), assetPath: GameIcons.minus),
+          revenueWidget(label: dataFetcher.costPerUnitSeed.toString(), assetPath: GameAssets.minus),
           SizedBox(
             width: intervalHangerWidth * (1 + 4 * hBarSpaceRatio),
             child: Container(height: 2, color: Colors.white),
           ),
-          revenueWidget(label: dataFetcher.revenuePerKgSeedSown.toString(), assetPath: GameIcons.plus),
+          revenueWidget(label: dataFetcher.revenuePerKgSeedSown.toString(), assetPath: GameAssets.plus),
         ],
       ),
     );
@@ -85,7 +85,6 @@ class CropRevenueWidget extends StatelessWidget {
   }
 
   Widget get cropHanger {
-    const prefix = "assets/images/";
     return SizedBox(
       width: intervalHangerWidth + cropAssetWidth,
       height: cropAssetHeight,
@@ -93,8 +92,8 @@ class CropRevenueWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         children: [
-          cropAsset(prefix + dataFetcher.germinationAssetPath),
-          cropAsset(prefix + dataFetcher.ripeAssetPath),
+          cropAsset(dataFetcher.germinationAssetPath),
+          cropAsset(dataFetcher.ripeAssetPath),
         ],
       ),
     );

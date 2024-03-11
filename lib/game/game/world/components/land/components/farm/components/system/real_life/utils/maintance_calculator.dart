@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../../../enums/system_type.dart';
 import '../../enum/growable.dart';
 import '../../model/qty.dart';

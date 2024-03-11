@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../utils/game_images.dart';
+import '../../../../../../utils/game_assets.dart';
 import '../../components/farm/farm.dart';
 import 'models/merged_soil_health_model.dart';
 import 'widgets/soil_health_item.dart';
@@ -30,7 +30,7 @@ class SoilHealthDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Image.asset(
-            GameImages.itSeemsEmptyHere,
+            GameAssets.itSeemsEmptyHere,
             height: 200.s,
           ),
           Gap(20.s),

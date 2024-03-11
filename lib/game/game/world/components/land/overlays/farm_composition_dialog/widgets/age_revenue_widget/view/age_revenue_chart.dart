@@ -30,7 +30,7 @@ class AgeRevenueChart extends StatelessWidget {
       final treeType = ageRevenueModel.treeType;
       final ageInYears = ageRevenueModel.ageInYears;
       final treeStage = BaseTreeCalculator.fromTreeType(treeType).getTreeStage(ageInYears * 365);
-      final treeAssetPath = "assets/images/${TreeAsset.of(treeType).at(treeStage)}";
+      final treeAssetPath = TreeAsset.raw(treeType).at(treeStage);
       return AgeRevenueTree(
         size: treeSize,
         topImagePath: treeAssetPath,

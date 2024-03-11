@@ -5,7 +5,6 @@ import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../../widgets/stylized_text.dart';
-import '../farm_composition_dialog/widgets/system_item_widget.dart';
 import 'achievement_card.dart';
 import 'achievements_model.dart';
 import 'achievements_service.dart';

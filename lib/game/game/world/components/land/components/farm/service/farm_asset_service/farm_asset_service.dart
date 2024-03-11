@@ -4,7 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../../../services/log/log.dart';
-import '../../../../../../../../utils/game_assets.dart';
+import '../../../../../../../../utils/game_world_assets.dart';
 import '../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../grow_green_game.dart';
@@ -34,17 +34,17 @@ class FarmAssetService {
 
   String _farmBaseAssetFor(FarmState farmState) {
     return switch (farmState) {
-      FarmState.notBought => GameAssets.notBoughtLand,
-      FarmState.barren => GameAssets.barrenLand,
-      FarmState.notFunctioning => GameAssets.normalLand,
+      FarmState.notBought => GameWorldAssets.notBoughtLand,
+      FarmState.barren => GameWorldAssets.barrenLand,
+      FarmState.notFunctioning => GameWorldAssets.normalLand,
       _ => () {
           final systemType = farmCoreService.farmContent?.systemType;
-          if (systemType == null) return GameAssets.normalLand;
+          if (systemType == null) return GameWorldAssets.normalLand;
           if (systemType == FarmSystemType.monoculture || systemType == AgroforestryType.boundary) {
-            return GameAssets.soilHorizontalLand;
+            return GameWorldAssets.soilHorizontalLand;
           }
 
-          return GameAssets.soilVerticalLand;
+          return GameWorldAssets.soilVerticalLand;
         }(),
     };
   }

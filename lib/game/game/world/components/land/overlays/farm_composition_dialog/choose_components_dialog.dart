@@ -11,8 +11,7 @@ import '../../../../../../../widgets/button_animator.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../utils/game_icons.dart';
-import '../../../../../../utils/game_images.dart';
+import '../../../../../../utils/game_assets.dart';
 import '../../../../../enums/agroforestry_type.dart';
 import '../../../../../enums/farm_system_type.dart';
 import '../../../../../overlays/notification_overlay/service/notification_helper.dart';
@@ -26,7 +25,6 @@ import '../../components/farm/enum/farm_state.dart';
 import '../../components/farm/farm_controller.dart';
 import '../../components/farm/model/content.dart';
 import '../../components/farm/model/farm_content.dart';
-import '../achievement/offer.dart';
 import '../farm_menu/farm_menu_helper.dart';
 import '../system_selector_menu/enum/component_id.dart';
 import 'choose_component_dialog.dart';
@@ -96,7 +94,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   _ComponentsModel noCrop() {
     return _ComponentsModel(
       headerText: 'No Crop',
-      image: GameImages.noCrop,
+      image: GameAssets.noCrop,
       footerText: '',
       componentId: ComponentId.crop,
       isComponentEditable: widget.editableComponents.contains(ComponentId.crop),
@@ -138,7 +136,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   _ComponentsModel noTree() {
     return _ComponentsModel(
       headerText: 'No Tree',
-      image: GameImages.noTree,
+      image: GameAssets.noTree,
       footerText: '',
       componentId: ComponentId.trees,
       isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
@@ -440,7 +438,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
           child: GameButton.textImage(
             key: ValueKey(_totalCost.formattedValue),
             text: 'Continue for ${_totalCost.formattedValue}',
-            image: GameIcons.coin,
+            image: GameAssets.coin,
             bgColor: _totalCost.isZero() ? Colors.grey : Colors.green,
             onTap: _onSelectTap,
           ),

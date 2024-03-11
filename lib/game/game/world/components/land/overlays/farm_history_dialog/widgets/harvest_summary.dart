@@ -102,7 +102,7 @@ class HarvestSummary extends StatelessWidget {
                                 ),
                               );
                             },
-                            reservedSize: 100.s,
+                            reservedSize: 150.s,
                           ),
                         ),
                       ),

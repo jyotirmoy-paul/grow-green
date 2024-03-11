@@ -1,14 +1,10 @@
-import '../../../../../../../../../../utils/game_utils.dart';
 import '../../../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../../../enums/system_type.dart';
-import '../../../../../../../../../services/game_services/time/time_service.dart';
-import '../../../../../../overlays/farm_composition_dialog/choose_maintenance/logic/support_config.dart';
 import '../../../../model/content.dart';
 import '../../../../model/farm_content.dart';
 import '../../../../model/fertilizer/fertilizer_type.dart';
 import '../../../crop/enums/crop_type.dart';
-import '../../../tree/enums/tree_type.dart';
 import '../../enum/growable.dart';
 import '../calculators/crops/base_crop.dart';
 import 'qty_calculator.dart';

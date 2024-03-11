@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/game_button.dart';
-import '../../../../../../utils/game_icons.dart';
+import '../../../../../../utils/game_assets.dart';
 import '../../../../../../utils/game_utils.dart';
 import '../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../components/farm/farm.dart';
@@ -47,7 +47,7 @@ class PurchaseFarmDialog extends StatelessWidget {
             /// buy button
             GameButton.textImage(
               text: GameUtils.farmInitialPrice.formattedValue,
-              image: GameIcons.coin,
+              image: GameAssets.coin,
               onTap: () => _purchaseFarm(context),
               bgColor: Colors.lightGreen,
             ),

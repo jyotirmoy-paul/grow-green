@@ -5,7 +5,7 @@ import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../../utils/game_icons.dart';
+import '../../../../../../../utils/game_assets.dart';
 import '../../../components/farm/components/system/enum/growable.dart';
 import '../../../components/farm/model/harvest_model.dart';
 import '../models/merged_harvest_model.dart';
@@ -145,7 +145,7 @@ class MergedHarvestItem extends StatelessWidget {
                           ),
                           Gap(6.s),
                           Image.asset(
-                            GameIcons.coin,
+                            GameAssets.coin,
                             height: 30.s,
                           ),
                         ],
