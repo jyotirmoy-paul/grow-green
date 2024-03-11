@@ -80,8 +80,7 @@ flutter:
     - assets/images/clouds/
     - assets/exp/
 
-    # videos and animations
-    - assets/videos/
+    # lottie animations
     - assets/lottie/
 
   # Dentisity  Flutter pixel ratio
