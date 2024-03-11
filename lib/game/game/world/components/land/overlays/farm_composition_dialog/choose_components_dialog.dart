@@ -94,7 +94,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   _ComponentsModel noCrop() {
     return _ComponentsModel(
       headerText: 'No Crop',
-      image: GameAssets.noCrop,
+      image: GameAssets.addSeeds,
       footerText: '',
       componentId: ComponentId.crop,
       isComponentEditable: widget.editableComponents.contains(ComponentId.crop),
@@ -136,7 +136,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   _ComponentsModel noTree() {
     return _ComponentsModel(
       headerText: 'No Tree',
-      image: GameAssets.noTree,
+      image: GameAssets.addSapling,
       footerText: '',
       componentId: ComponentId.trees,
       isComponentEditable: widget.editableComponents.contains(ComponentId.trees),

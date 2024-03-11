@@ -115,7 +115,7 @@ class FarmMenuHelper {
     return FarmMenuItemModel(
       text: 'Purchase',
       option: FarmMenuOption.buyFarm,
-      bgColor: Colors.greenAccent,
+      bgColor: Colors.white,
       image: GameAssets.buyFarm,
       data: FarmMenuItemData(
         data: GameUtils.farmInitialPrice.formattedValue,
@@ -140,7 +140,7 @@ class FarmMenuHelper {
       text: 'Content',
       option: FarmMenuOption.composition,
       bgColor: Colors.white,
-      image: GameAssets.farmComposition,
+      image: GameAssets.farmContent,
     );
   }
 
@@ -150,7 +150,7 @@ class FarmMenuHelper {
       text: 'History',
       option: FarmMenuOption.history,
       bgColor: Colors.white,
-      image: GameAssets.clock,
+      image: GameAssets.farmHistory,
     );
   }
 
@@ -159,7 +159,7 @@ class FarmMenuHelper {
       text: 'Maintain',
       option: FarmMenuOption.maintenance,
       bgColor: Colors.white,
-      image: GameAssets.maintanence,
+      image: GameAssets.farmMaintanence,
     );
   }
 

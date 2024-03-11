@@ -14,7 +14,6 @@ class StatSkeletonWidget extends StatelessWidget {
   final Widget child;
   final String iconAsset;
   final StatSkeletonImageAlignment imageAlignment;
-  
 
   const StatSkeletonWidget({
     super.key,
@@ -26,7 +25,7 @@ class StatSkeletonWidget extends StatelessWidget {
 
   Widget get image {
     return Transform.scale(
-      scale: 1.4,
+      scale: 1.6,
       alignment: () {
         switch (imageAlignment) {
           case StatSkeletonImageAlignment.left:

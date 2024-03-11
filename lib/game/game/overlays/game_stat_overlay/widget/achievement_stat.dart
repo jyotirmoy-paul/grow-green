@@ -35,7 +35,7 @@ class AchievementsStat extends StatelessWidget {
           StatSkeletonWidget(
             width: 250.s,
             imageAlignment: StatSkeletonImageAlignment.left,
-            iconAsset: GameAssets.trophy1,
+            iconAsset: GameAssets.achievements,
             child: Center(
               child: StylizedText(
                 text: Text(

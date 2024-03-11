@@ -334,7 +334,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
     return _ComponentsModel(
       headerText: "Maintanence",
       upperImage: upperImageAsset,
-      image: GameAssets.maintanence,
+      image: GameAssets.farmMaintanence,
       descriptionText: '',
       componentId: ComponentId.maintenance,
       isComponentEditable: false,
