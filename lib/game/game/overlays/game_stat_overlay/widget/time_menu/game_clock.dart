@@ -24,7 +24,7 @@ class _GameClockState extends State<GameClock> with SingleTickerProviderStateMix
   StreamSubscription? _timePaceListener;
 
   Duration _getClockAnimationDurationFromTimePace(int timePace) {
-    return Duration(milliseconds: 1000 ~/ timePace);
+    return Duration(milliseconds: 3000 ~/ timePace);
   }
 
   void init() {

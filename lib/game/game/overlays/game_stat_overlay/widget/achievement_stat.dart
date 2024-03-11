@@ -33,7 +33,7 @@ class AchievementsStat extends StatelessWidget {
       child: Stack(
         children: [
           StatSkeletonWidget(
-            width: 250.s,
+            width: 280.s,
             imageAlignment: StatSkeletonImageAlignment.left,
             iconAsset: GameAssets.achievements,
             child: Center(
