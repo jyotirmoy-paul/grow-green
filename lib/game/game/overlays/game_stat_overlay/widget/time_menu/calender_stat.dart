@@ -15,7 +15,7 @@ class CalenderStat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StatSkeletonWidget(
-      width: 280.s,
+      width: 310.s,
       iconAsset: GameAssets.calender,
       child: BlocBuilder<CalenderCubit, CalenderState>(
         builder: (context, state) {

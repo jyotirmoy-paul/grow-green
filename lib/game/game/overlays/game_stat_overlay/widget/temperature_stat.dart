@@ -19,7 +19,7 @@ class TemperatureStat extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatSkeletonWidget(
       imageAlignment: StatSkeletonImageAlignment.left,
-      width: 180.s,
+      width: 230.s,
       iconAsset: GameAssets.temperature,
       child: StreamBuilder(
         stream: villageTemperatureService.temperatureStream,

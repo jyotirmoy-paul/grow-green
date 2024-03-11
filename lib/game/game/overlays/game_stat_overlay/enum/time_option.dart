@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 enum TimeOption {
@@ -21,6 +20,6 @@ enum TimeOption {
   static List<TimeOption> get options => [
         TimeOption.pause,
         TimeOption.t1x,
-        kDebugMode ? t50x : TimeOption.t10x,
+        TimeOption.t10x,
       ];
 }

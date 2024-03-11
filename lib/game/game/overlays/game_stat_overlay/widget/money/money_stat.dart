@@ -21,7 +21,7 @@ class MoneyStat extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatSkeletonWidget(
       imageAlignment: StatSkeletonImageAlignment.left,
-      width: 220.s,
+      width: 280.s,
       iconAsset: GameAssets.coin,
       child: StreamBuilder(
         stream: monetaryService.balanceStream,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../utils/app_colors.dart';
 import '../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../widgets/stylized_container.dart';
 
@@ -25,7 +26,7 @@ class StatSkeletonWidget extends StatelessWidget {
 
   Widget get image {
     return Transform.scale(
-      scale: 1.6,
+      scale: 1.25,
       alignment: () {
         switch (imageAlignment) {
           case StatSkeletonImageAlignment.left:
@@ -35,7 +36,16 @@ class StatSkeletonWidget extends StatelessWidget {
             return Alignment.centerLeft;
         }
       }(),
-      child: Image.asset(iconAsset),
+      child: StylizedContainer(
+        color: Colors.black,
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.all(7.s),
+        child: Image.asset(
+          iconAsset,
+          width: 40.s,
+          height: 40.s,
+        ),
+      ),
     );
   }
 
