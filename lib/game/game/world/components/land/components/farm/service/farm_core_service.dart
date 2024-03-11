@@ -20,6 +20,7 @@ import '../components/tree/enums/tree_type.dart';
 import '../components/tree/trees.dart';
 import '../enum/farm_state.dart';
 import '../farm.dart';
+import '../model/content.dart';
 import '../model/farm_content.dart';
 import '../model/farm_state_model.dart';
 import '../model/fertilizer/fertilizer_type.dart';
@@ -633,15 +634,13 @@ class FarmCoreService {
   /// this is done on every tick
   void _updateSoilHealth() {
     if (!isSoilHealthAffected()) return;
+    Log.d("before updating $soilHealthPercentage");
 
     final newSoilHealth = SoilHealthCalculator.getNewSoilHealth(
-      currentSoilHealth: soilHealthPercentage,
-
-      /// we don't care about fertilizer used, until there's crop in the farm
-      currentFertilizerInUse: _crops == null ? null : farmContent!.cropSupportConfig?.fertilizerConfig,
-      currentSystemType: farmContent!.systemType,
-      areTreesPresent: farmContent!.hasTrees,
+      farmContent: farmContent!,
+      currentSoilHealth: _updatedSoilhealthPercentage ?? soilHealthPercentage,
     );
+    Log.d("soil health updated $newSoilHealth");
 
     /// we store the updated soil health locally and DO NOT sync the data immediately
     /// so whenever a sync happens, the soil health gets updated

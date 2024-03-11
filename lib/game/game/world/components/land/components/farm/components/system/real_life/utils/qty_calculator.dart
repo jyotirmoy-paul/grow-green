@@ -30,7 +30,7 @@ abstract class QtyCalculator {
     required GrowableType growableType,
   }) {
     final cropMaxAgeInMonths = BaseCropCalculator.fromCropType(cropType).maxAgeInMonths;
-    return getFertilizerQtyRequiredFromTime(
+    return getFertilizerUsedForGrowingGrowableForTime(
       soilHealthPercentage: soilHealthPercentage,
       ageInMonths: cropMaxAgeInMonths,
       fertilizerType: fertilizerType,
@@ -39,8 +39,7 @@ abstract class QtyCalculator {
     );
   }
 
-  // TODO : area is required and should not be assumed to be full one hacter
-  static Qty getFertilizerQtyRequiredFromTime({
+  static Qty getFertilizerUsedForGrowingGrowableForTime({
     required double soilHealthPercentage,
     required GrowableType growableType,
     required SystemType systemType,
@@ -73,7 +72,6 @@ abstract class QtyCalculator {
     return Qty(value: fertilizerRequired.toInt(), scale: Scale.kg);
   }
 
-  
   static MaintenanceQty maintenanceQtyFromTime({
     required SystemType systemType,
     required GrowableType growableType,

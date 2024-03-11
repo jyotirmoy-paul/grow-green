@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 
 import '../../../../utils/extensions/num_extensions.dart';
 import '../../grow_green_game.dart';
+import 'widget/achievement_stat.dart';
 import 'widget/money/money_stat.dart';
 import 'widget/temperature_stat.dart';
 import 'widget/time_menu/calender_stat.dart';
@@ -42,9 +43,17 @@ class GameStatOverlay extends StatelessWidget {
                 Gap(10.s),
 
                 /// temperature
+
                 TemperatureStat(
                   villageTemperatureService:
                       game.gameController.world.worldController.land.landController.villageTemperatureService,
+                ),
+
+                Gap(20.s),
+
+                /// achievements
+                AchievementsStat(
+                  achievementsService: game.gameController.achievementsService,
                 ),
               ],
             ),

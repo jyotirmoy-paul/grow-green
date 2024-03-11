@@ -14,6 +14,7 @@ class StatSkeletonWidget extends StatelessWidget {
   final Widget child;
   final String iconAsset;
   final StatSkeletonImageAlignment imageAlignment;
+  
 
   const StatSkeletonWidget({
     super.key,
