@@ -66,6 +66,14 @@ abstract class BaseTreeCalculator {
     }
   }
 
+  int getMaxPotentialPrice() {
+    return getPotentialPrice(maturityAge());
+  }
+
+  int getMaxRecurringHarvestValue() {
+    return getRecurringHarvest(maturityAge());
+  }
+
   int getPotentialPrice(int age) {
     assert(harvestReadyAge() <= maturityAge(), "Harvest ready age should be less than or equal to maturity age");
 

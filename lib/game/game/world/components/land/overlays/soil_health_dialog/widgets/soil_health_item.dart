@@ -20,8 +20,8 @@ class SoilHealthItem extends StatelessWidget {
     super.key,
     required this.mergedSoilHealthModel,
     required this.itemNo,
-    this.positiveBgColor = AppColors.soilHealthPositiveColor,
-    this.negativeBgColor = AppColors.soilHealthNegativeColor,
+    this.positiveBgColor = AppColors.positive,
+    this.negativeBgColor = AppColors.negative,
   });
 
   Color get color {
