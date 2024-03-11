@@ -27,7 +27,7 @@ class DialogContainer extends StatelessWidget {
         return Size(500.s, 300.s);
 
       case DialogType.medium:
-        return Size(780.s, 500.s);
+        return Size(850.s, 600.s);
 
       case DialogType.large:
         return Size(1060.s, 700.s);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../utils/app_colors.dart';
 import '../utils/extensions/num_extensions.dart';
 
 class StylizedText extends StatelessWidget {
@@ -71,7 +72,7 @@ class _ShadowedText extends StatelessWidget {
           ..strokeCap = StrokeCap.round
           ..strokeJoin = StrokeJoin.round
           ..strokeWidth = strokeWidth
-          ..color = const Color(0xff402B3A),
+          ..color = AppColors.textBackgroundColor,
       ),
       textAlign: textAlign,
     );

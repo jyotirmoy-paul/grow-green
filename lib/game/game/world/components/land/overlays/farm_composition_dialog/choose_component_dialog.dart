@@ -146,6 +146,13 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
     }
   }
 
+  double get _width {
+    return switch (widget.componentId) {
+      ComponentId.trees => 340.s,
+      _ => 300.s,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -166,7 +173,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
           child: MenuItemFlipSkeleton(
             flipCardController: flipCardController,
             bgColor: bgColor,
-            width: 300.s,
+            width: _width,
             header: _header(model: model, onTap: onTap, isBack: false),
             backHeader: _header(model: model, onTap: onTap, isBack: true),
             body: _body(index),
@@ -236,12 +243,12 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
         ),
         if (widget.componentId == ComponentId.trees)
           AgeRevenueChart.fromAgeRevenueModels(
-            ageRevenueModels: AgeRevenueFetcher(treeType: treeType ?? TreeType.coconut).fetch(),
-            size: Size(200.s, 140.s),
+            ageRevenueModels: AgeRevenueFetcher(treeType: treeType!).fetch(),
+            size: Size(300.s, 200.s),
           ),
         if (widget.componentId == ComponentId.crop)
           CropRevenueWidget(
-            cropType: cropType ?? CropType.wheat,
+            cropType: cropType!,
             bgColor: bgColor,
           )
       ],

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 
+import '../../../../../utils/app_colors.dart';
 import '../../../../utils/game_extensions.dart';
 import '../../../../utils/game_utils.dart';
 import '../../../services/priority/priority_engine.dart';
@@ -23,19 +24,7 @@ class GradientBackground extends PositionComponent {
     final gradient = Gradient.linear(
       Offset(size.x / 2, 0),
       Offset(size.x / 2, size.y),
-      const [
-        /// gradient 1
-        Color(0xff1a2a6c),
-        Color(0xfffdbb2d),
-
-        /// gradient 2
-        // Color(0xff0575E6),
-        // Color(0xff00F260),
-
-        /// gradient 3
-        // Color(0xff283c86),
-        // Color(0xff45a247),
-      ],
+      AppColors.gameBackgroundGradientColors,
     );
 
     backgroundPainter = Paint()..shader = gradient;
