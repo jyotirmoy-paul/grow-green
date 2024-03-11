@@ -65,7 +65,8 @@ class SellTreeWidget extends StatelessWidget {
     );
 
     final totalCo2SequestratedInKgs = co2SequestrationByOneTreeOverTheAge * treeData.noOfTrees;
-    final totalCo2SequestratedAsPerPredictionInKgs = co2SequestrationPrediction * treeData.noOfTrees;
+    final totalCo2SequestratedAsPerPredictionInKgs =
+        co2SequestrationPrediction * treeData.noOfTrees - totalCo2SequestratedInKgs;
 
     final co2Sequestrated = totalCo2SequestratedInKgs > 1000
         ? '${(totalCo2SequestratedInKgs / 1000).toStringAsFixed(2)} metric tons'
@@ -88,8 +89,8 @@ class SellTreeWidget extends StatelessWidget {
 
       final treePotentialPrice = treeCalculator.getPotentialPrice(i);
       final treeRecurringPrice = treeCalculator.getRecurringHarvest(i);
-      final numberOfTrees = PlantationLayout.fromSytemType(treeData.agroforestryType).numberOfTrees;
-      final totalPotentialRevenue = treePotentialPrice * numberOfTrees + treeRecurringPrice * numberOfTrees;
+
+      final totalPotentialRevenue = (treePotentialPrice + treeRecurringPrice) * treeData.noOfTrees;
 
       if (realData) {
         realSpots.add(FlSpot(i.toDouble(), totalPotentialRevenue.toDouble()));
@@ -129,7 +130,8 @@ class SellTreeWidget extends StatelessWidget {
   /// maximum value tree can generate
   double get maxYValue {
     return (treeCalculator.getMaxPotentialPrice().toDouble() + treeCalculator.getMaxRecurringHarvestValue()) *
-        treeData.noOfTrees;
+        treeData.noOfTrees *
+        1.10;
   }
 
   @override
