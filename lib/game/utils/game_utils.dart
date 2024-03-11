@@ -8,6 +8,7 @@ import 'game_extensions.dart';
 class GameUtils {
   /// constants
   static final tileSize = Vector2(1024, 640);
+  static final cloudTileSize = Vector2(500, 250);
   static const maxZoom = 1.4;
   static const maxCloudVelocity = 20.0;
   static const startingSoilHealthInPercentage = 1.0;
@@ -40,7 +41,9 @@ class GameUtils {
     return _instance!;
   }
 
-  factory GameUtils.initializeWithWorldSize(Vector2 gameWorldSize) {
+  factory GameUtils.initializeWithWorldSize({
+    required Vector2 gameWorldSize,
+  }) {
     return _instance = GameUtils._(gameWorldSize);
   }
 
@@ -49,6 +52,10 @@ class GameUtils {
   }
 
   /// generates random double between `min` & `max` values
+  double getPureRandomNumberBetween({required double min, required double max}) {
+    return _random.nextDouble() * (max - min) + min;
+  }
+
   double getRandomNumberBetween({required double min, required double max}) {
     double rnd = _random.nextDouble();
     double bias = math.sin(rnd * math.pi - (math.pi / 2)) / 2 + 0.5;

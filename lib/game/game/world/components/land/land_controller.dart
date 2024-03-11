@@ -208,7 +208,7 @@ class LandController {
       ..anchor = Anchor.topLeft;
 
     /// initialize game world size
-    GameUtils.initializeWithWorldSize(map.size);
+    GameUtils.initializeWithWorldSize(gameWorldSize: map.size);
 
     /// callback to notify map loaded
     game.gameController.onWorldLoad(map.absoluteCenter);

@@ -2,7 +2,6 @@ import 'package:flame/experimental.dart';
 import 'package:flame/extensions.dart';
 
 import '../../../../../../../../services/log/log.dart';
-import '../../../../../../../utils/game_extensions.dart';
 import '../../../../../../../utils/game_utils.dart';
 
 class CloudDistributionService {
@@ -11,17 +10,17 @@ class CloudDistributionService {
   final Vector2 worldSize;
   final Vector2 cloudSize;
   final Vector2 adjustedWorldSize;
-  final Vector2 adjustedWorldPosition;
+  final Vector2 worldPosition;
 
   CloudDistributionService({
     required this.worldSize,
     required this.cloudSize,
-  })  : adjustedWorldSize = worldSize - cloudSize,
-        adjustedWorldPosition = cloudSize.half();
+    required this.worldPosition,
+  }) : adjustedWorldSize = worldSize - cloudSize;
 
   Vector2 generateCloudSpawnPoint() {
-    final y = GameUtils().getRandomNumberBetween(min: adjustedWorldPosition.y, max: adjustedWorldSize.y);
-    return Vector2(0, y);
+    final y = GameUtils().getPureRandomNumberBetween(min: worldPosition.y, max: adjustedWorldSize.y);
+    return Vector2(worldPosition.x, y);
   }
 
   List<Vector2> generateCloudPoints({required int numberOfPoints}) {
@@ -29,8 +28,8 @@ class CloudDistributionService {
 
     int attempts = 0;
     while (points.length < numberOfPoints) {
-      final x = GameUtils().getRandomNumberBetween(min: adjustedWorldPosition.x, max: adjustedWorldSize.x);
-      final y = GameUtils().getRandomNumberBetween(min: adjustedWorldPosition.y, max: adjustedWorldSize.y);
+      final x = GameUtils().getPureRandomNumberBetween(min: worldPosition.x, max: adjustedWorldSize.x);
+      final y = GameUtils().getPureRandomNumberBetween(min: worldPosition.y, max: adjustedWorldSize.y);
 
       final newPoint = Vector2(x, y);
 

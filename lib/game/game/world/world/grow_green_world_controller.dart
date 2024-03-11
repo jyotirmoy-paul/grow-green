@@ -30,9 +30,9 @@ class GrowGreenWorldController {
       /// add gradient background
       add(GradientBackground());
 
-      /// FIXME: allow sky back!
-      // sky = Sky();
-      // add(sky);
+      /// add sky
+      sky = Sky();
+      add(sky);
     });
 
     return [
