@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'constants.dart';
 import 'extensions/num_extensions.dart';
 
 abstract class TextStyles {
@@ -96,7 +97,15 @@ abstract class TextStyles {
 
   /// non scaled text styles
   static TextStyle get n20 => TextStyle(
+        fontFamily: kFontFamily,
         color: Colors.white,
         fontSize: 20,
+      );
+
+  static TextStyle get n26 => TextStyle(
+        fontFamily: kFontFamily,
+        color: Colors.white,
+        fontSize: 26,
+        letterSpacing: 1.2,
       );
 }

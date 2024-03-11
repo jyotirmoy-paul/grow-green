@@ -14,6 +14,7 @@ import '../../../animations/game_animation.dart';
 import '../../../farm.dart';
 import '../models/hover_board_model.dart';
 import 'hover_board_item.dart';
+import 'stylized_text_component/stylized_text_component.dart';
 
 class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
   static const imageSize = 70.0;
@@ -40,7 +41,7 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
 
   /// components
   SpriteComponent? _imageComponent;
-  TextComponent? _textComponent;
+  StylizedTextComponent? _textComponent;
 
   /// utils
   GameAnimation? _imageOpacityAnimation;
@@ -64,19 +65,9 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
     );
   }
 
-  TextPaint _getPaint({double withOpacity = 0.0}) {
-    return TextPaint(
-      style: TextStyle(
-        fontFamily: kFontFamily,
-        fontSize: textSize,
-        color: Colors.white.withOpacity(withOpacity),
-      ),
-    );
-  }
-
   void _update(BasicHoverBoardModel model) {
     /// update text
-    _textComponent?.text = model.text;
+    _textComponent?.updateText(model.text);
   }
 
   Future<List<Component>> _prepare() async {
@@ -105,19 +96,12 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
 
     const yTranslationOfText = imageSize * maxScale * 1.10;
 
-    _textComponent = TextComponent(
+    _textComponent = StylizedTextComponent(
       text: model.text,
-      textRenderer: _getPaint(),
-      position: farmCenter.translated(0, -yTranslationOfText),
-      anchor: Anchor.bottomCenter,
-    );
-
-    _textComponent = TextComponent(
-      text: model.text,
-      textRenderer: _getPaint(),
-      position: farmCenter.translated(0, -yTranslationOfText),
-      anchor: Anchor.bottomCenter,
-    );
+      initialOpacity: 0.0,
+    )
+      ..position = farmCenter.translated(0, -yTranslationOfText)
+      ..anchor = Anchor.bottomCenter;
 
     _tappableRectangle = Rectangle.fromCenter(
       center: _imageComponent!.center,
@@ -194,7 +178,7 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
         _textComponent?.position = textComponentPosition.translated(0, -30 * dt);
       }
 
-      _textComponent?.textRenderer = _getPaint(withOpacity: txtOpacityAnim.value);
+      _textComponent?.setTextOpacity(txtOpacityAnim.value);
     }
   }
 
