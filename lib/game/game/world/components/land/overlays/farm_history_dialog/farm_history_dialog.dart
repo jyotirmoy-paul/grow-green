@@ -6,7 +6,7 @@ import '../../../../../../../utils/app_colors.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../utils/game_images.dart';
+import '../../../../../../utils/game_assets.dart';
 import '../../components/farm/farm.dart';
 import '../../components/farm/model/harvest_model.dart';
 import 'models/harvest_revenue_data_point.dart';
@@ -39,7 +39,7 @@ class FarmHistoryDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Image.asset(
-            GameImages.itSeemsEmptyHere,
+            GameAssets.itSeemsEmptyHere,
             height: 200.s,
           ),
           Gap(20.s),

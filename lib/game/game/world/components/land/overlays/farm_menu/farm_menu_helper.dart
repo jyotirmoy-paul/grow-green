@@ -8,8 +8,7 @@ import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../utils/utils.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../utils/game_icons.dart';
-import '../../../../../../utils/game_images.dart';
+import '../../../../../../utils/game_assets.dart';
 import '../../../../../../utils/game_utils.dart';
 import '../../../../../enums/farm_system_type.dart';
 import '../../../../../enums/system_type.dart';
@@ -117,10 +116,10 @@ class FarmMenuHelper {
       text: 'Purchase',
       option: FarmMenuOption.buyFarm,
       bgColor: Colors.greenAccent,
-      image: GameIcons.buyFarm,
+      image: GameAssets.buyFarm,
       data: FarmMenuItemData(
         data: GameUtils.farmInitialPrice.formattedValue,
-        image: GameIcons.coin,
+        image: GameAssets.coin,
       ),
     );
   }
@@ -131,7 +130,7 @@ class FarmMenuHelper {
       text: 'Health',
       option: FarmMenuOption.soilHealth,
       bgColor: Colors.white,
-      image: GameIcons.soilHealth,
+      image: GameAssets.soilHealth,
     );
   }
 
@@ -141,7 +140,7 @@ class FarmMenuHelper {
       text: 'Content',
       option: FarmMenuOption.composition,
       bgColor: Colors.white,
-      image: "assets/images/icons/farm_view.png",
+      image: GameAssets.farmComposition,
     );
   }
 
@@ -151,7 +150,7 @@ class FarmMenuHelper {
       text: 'History',
       option: FarmMenuOption.history,
       bgColor: Colors.white,
-      image: "assets/images/icons/clock.png",
+      image: GameAssets.clock,
     );
   }
 
@@ -160,7 +159,7 @@ class FarmMenuHelper {
       text: 'Maintain',
       option: FarmMenuOption.maintenance,
       bgColor: Colors.white,
-      image: "assets/images/icons/maintenance.png",
+      image: GameAssets.maintanence,
     );
   }
 
@@ -282,7 +281,7 @@ class FarmMenuHelper {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Image.asset(
-                        GameImages.itSeemsEmptyHere,
+                        GameAssets.itSeemsEmptyHere,
                         height: 200.s,
                       ),
                       Gap(20.s),

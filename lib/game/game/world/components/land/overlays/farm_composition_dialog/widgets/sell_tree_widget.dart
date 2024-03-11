@@ -7,13 +7,12 @@ import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../widgets/game_button.dart';
-import '../../../../../../../utils/game_icons.dart';
+import '../../../../../../../utils/game_assets.dart';
 import '../../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../../../../services/game_services/time/time_service.dart';
 import '../../../../sky/weather_service/services/co2_absorption_calculator.dart';
 import '../../../components/farm/components/system/real_life/calculators/trees/base_tree.dart';
-import '../../../components/farm/components/system/real_life/systems/database/layouts.dart';
 import '../../../components/farm/farm_controller.dart';
 import '../../../components/farm/model/tree_data.dart';
 
@@ -280,7 +279,7 @@ class SellTreeWidget extends StatelessWidget {
           GameButton.textImage(
             bgColor: Colors.red,
             text: 'Emh, sell anyway',
-            image: GameIcons.cutTree,
+            image: GameAssets.cutTree,
             onTap: _sellTree,
           ),
 

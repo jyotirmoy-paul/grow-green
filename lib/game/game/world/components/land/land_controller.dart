@@ -6,7 +6,7 @@ import 'package:flame/sprite.dart';
 import 'package:flame_tiled/flame_tiled.dart' hide Text;
 
 import '../../../../../services/log/log.dart';
-import '../../../../utils/game_assets.dart';
+import '../../../../utils/game_world_assets.dart';
 import '../../../../utils/game_extensions.dart';
 import '../../../../utils/game_utils.dart';
 import '../../../grow_green_game.dart';
@@ -67,11 +67,8 @@ class LandController {
     this.farms = farms;
   }
 
-  String _getAssetFor({
-    required String riverId,
-    required int frameId,
-  }) {
-    return 'river/$riverId/$frameId.png';
+  String _getAssetFor({required String riverId, required int frameId}) {
+    return GameWorldAssets.riverAssetFor(riverId: riverId, frameId: frameId);
   }
 
   Future<List<SpriteAnimationComponent>> getRivers() async {
@@ -132,7 +129,7 @@ class LandController {
       );
 
       nonFarms.add(SpriteComponent.fromImage(
-        await game.images.load(GameAssets.nonFarmAssetOfName(nonFarmObj.name)),
+        await game.images.load(GameWorldAssets.nonFarmAssetOfName(nonFarmObj.name)),
         position: rectangle.bottomRight.toCart(),
         anchor: Anchor.bottomCenter,
         priority: PriorityEngine.generatePriorityFrom(rectangle.center),
@@ -163,8 +160,8 @@ class LandController {
 
   /// Two assets are drawn on sides of the world map to give it a 3d look
   Future<void> _prepareBaseLayerAssets() async {
-    final leftBaseImage = await game.images.load(GameAssets.baseLeft);
-    final bottomBaseImage = await game.images.load(GameAssets.baseBottom);
+    final leftBaseImage = await game.images.load(GameWorldAssets.baseLeft);
+    final bottomBaseImage = await game.images.load(GameWorldAssets.baseBottom);
     _leftBaseGroundSpriteBatch = SpriteBatch(leftBaseImage);
     _bottomBaseGroundSpriteBatch = SpriteBatch(bottomBaseImage);
 
@@ -201,9 +198,9 @@ class LandController {
 
     /// load map
     map = await TiledComponent.load(
-      GameAssets.worldMap,
+      GameWorldAssets.worldMap,
       GameUtils.tileSize,
-      prefix: GameAssets.worldMapPrefix,
+      prefix: GameWorldAssets.worldMapPrefix,
     )
       ..anchor = Anchor.topLeft;
 

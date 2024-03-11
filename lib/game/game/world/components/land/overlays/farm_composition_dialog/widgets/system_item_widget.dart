@@ -8,14 +8,13 @@ import '../../../../../../../../widgets/flip_card/flip_card_controller.dart';
 import '../../../../../../../../widgets/game_button.dart';
 import '../../../../../../../../widgets/shadowed_container.dart';
 import '../../../../../../../../widgets/stylized_text.dart';
+import '../../../../../../../utils/game_assets.dart';
 import '../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../enums/farm_system_type.dart';
 import '../../../../../../enums/system_type.dart';
 import '../../../../../../models/farm_system.dart';
 import '../../../components/farm/asset/layout_asset.dart';
-import '../../../components/farm/components/system/enum/growable.dart';
 import '../../../components/farm/components/system/real_life/systems/database/layouts.dart';
-import '../../../components/farm/components/system/real_life/utils/qty_calculator.dart';
 import '../../../components/farm/components/system/real_life/utils/soil_health_calculator.dart';
 import '../../../components/farm/farm.dart';
 import '../../farm_menu/farm_menu_helper.dart';
@@ -231,7 +230,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
 
     final treesData = _SystemComponent(
       key: ValueKey('trees-${system.agroforestryType}'),
-      componentImage: "assets/images/icons/sapling.png",
+      componentImage: GameAssets.sapling,
       bgColor: widget.secondaryColor,
       footer: "x$treeQty",
       header: "Trees",
@@ -242,7 +241,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
 
     final cropsData = _SystemComponent(
       key: ValueKey('crops-${system.agroforestryType}'),
-      componentImage: "assets/images/icons/seeds.png",
+      componentImage: GameAssets.seeds,
       bgColor: widget.secondaryColor,
       header: "Crop Area",
       footer: "${cropAreaHa.toStringAsFixed(2)} ha",
@@ -275,7 +274,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
     final cropAreaHa = layout.areaFractionForCrops;
     final cropsData = _SystemComponent(
       key: ValueKey('crops-${system.farmSystemType}'),
-      componentImage: "assets/images/icons/seeds.png",
+      componentImage: GameAssets.seeds,
       bgColor: widget.secondaryColor,
       header: "Crop Area",
       footer: "${cropAreaHa.toStringAsFixed(2)} ha",

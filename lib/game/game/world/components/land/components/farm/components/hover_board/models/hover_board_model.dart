@@ -1,15 +1,7 @@
 abstract interface class HoverBoardModel {
   /// basic hover board factory
-  factory HoverBoardModel.basic({
-    required String text,
-    required String image,
-    required String animationPrefix,
-  }) {
-    return BasicHoverBoardModel(
-      text: text,
-      image: image,
-      animationPrefix: animationPrefix,
-    );
+  factory HoverBoardModel.basic({required String text, required String image}) {
+    return BasicHoverBoardModel(text: text, image: image);
   }
 
   /// timer hover board factory
@@ -33,12 +25,10 @@ abstract interface class HoverBoardModel {
 class BasicHoverBoardModel implements HoverBoardModel {
   final String text;
   final String image;
-  final String animationPrefix;
 
   BasicHoverBoardModel({
     required this.text,
     required this.image,
-    required this.animationPrefix,
   });
 
   @override

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../../../utils/constants.dart';
+import '../../../../../../../../../utils/game_world_assets.dart';
 import '../../../../../../../../grow_green_game.dart';
 import '../../../animations/enums/game_animation_type.dart';
 import '../../../animations/game_animation.dart';
@@ -52,7 +53,7 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
     final sprites = <Sprite>[];
 
     for (int i = 1; i <= coinImagesTotal; i++) {
-      Sprite sprite = await Sprite.load('${model.animationPrefix}/$i.png');
+      Sprite sprite = await Sprite.load(GameWorldAssets.coinAssetFor(frameId: i));
       sprites.add(sprite);
     }
 

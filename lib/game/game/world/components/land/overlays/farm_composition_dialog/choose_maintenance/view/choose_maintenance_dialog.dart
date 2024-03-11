@@ -10,7 +10,7 @@ import '../../../../../../../../../widgets/button_animator.dart';
 import '../../../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../../../../widgets/game_button.dart';
 import '../../../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../../../utils/game_icons.dart';
+import '../../../../../../../../utils/game_assets.dart';
 import '../../../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../../components/farm/asset/crop_asset.dart';
@@ -217,7 +217,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
               GameButton.textImage(
                 key: ValueKey(totalCost.formattedValue),
                 text: 'Buy for ${totalCost.formattedValue}',
-                image: GameIcons.coin,
+                image: GameAssets.coin,
                 bgColor: totalCost.isZero() ? Colors.grey : Colors.green,
                 onTap: _onPurchaseTap,
               ),
@@ -332,9 +332,9 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
     );
 
     return _ComponentsModel(
-      headerText: "Maintenance",
+      headerText: "Maintanence",
       upperImage: upperImageAsset,
-      image: 'assets/images/icons/maintenance.png',
+      image: GameAssets.maintanence,
       descriptionText: '',
       componentId: ComponentId.maintenance,
       isComponentEditable: false,

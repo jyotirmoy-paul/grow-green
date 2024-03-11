@@ -37,6 +37,13 @@ class GameStatOverlay extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                /// achievements
+                AchievementsStat(
+                  achievementsService: game.gameController.achievementsService,
+                ),
+
+                Gap(10.s),
+
                 /// money
                 MoneyStat(monetaryService: game.monetaryService),
 
@@ -47,13 +54,6 @@ class GameStatOverlay extends StatelessWidget {
                 TemperatureStat(
                   villageTemperatureService:
                       game.gameController.world.worldController.land.landController.villageTemperatureService,
-                ),
-
-                Gap(20.s),
-
-                /// achievements
-                AchievementsStat(
-                  achievementsService: game.gameController.achievementsService,
                 ),
               ],
             ),

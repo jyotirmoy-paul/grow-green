@@ -49,8 +49,8 @@ class CropRevenueDataFetcher {
     return CostCalculator.seedCost(seedsRequired: unitQty, cropType: cropType);
   }
 
-  String get germinationAssetPath => CropAsset.of(cropType).at(CropStage.germination);
-  String get ripeAssetPath => CropAsset.of(cropType).at(CropStage.ripe);
+  String get germinationAssetPath => CropAsset.raw(cropType).at(CropStage.germination);
+  String get ripeAssetPath => CropAsset.raw(cropType).at(CropStage.ripe);
 
   String get qtyType => crop.getSeedsRequiredPerHacter().scale.name;
 }

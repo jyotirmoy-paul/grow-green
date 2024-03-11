@@ -20,7 +20,6 @@ import '../components/tree/enums/tree_type.dart';
 import '../components/tree/trees.dart';
 import '../enum/farm_state.dart';
 import '../farm.dart';
-import '../model/content.dart';
 import '../model/farm_content.dart';
 import '../model/farm_state_model.dart';
 import '../model/fertilizer/fertilizer_type.dart';
@@ -411,12 +410,12 @@ class FarmCoreService {
     if (recordHarvest) {
       final treeAge = _dateTime.difference(trees.lifeStartedAt).inDays;
 
-    final treeHarvestService = HarvestCoreService.forTree(
-      treeType: trees.treeType,
-      treeAgeInDays: treeAge,
-      currentDateTime: _dateTime,
-      systemType: farmContent!.systemType,
-    );
+      final treeHarvestService = HarvestCoreService.forTree(
+        treeType: trees.treeType,
+        treeAgeInDays: treeAge,
+        currentDateTime: _dateTime,
+        systemType: farmContent!.systemType,
+      );
 
       final harvestModel = treeHarvestService.sell();
       _harvestRecorder.recordHarvest(harvestModel);

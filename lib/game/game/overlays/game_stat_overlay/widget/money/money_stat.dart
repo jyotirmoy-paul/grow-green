@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../utils/text_styles.dart';
 import '../../../../../../widgets/stylized_text.dart';
-import '../../../../../utils/game_icons.dart';
+import '../../../../../utils/game_assets.dart';
 import '../../../../services/game_services/monetary/models/money_model.dart';
 import '../../../../services/game_services/monetary/monetary_service.dart';
 import '../stat_skeleton_widget.dart';
@@ -22,7 +22,7 @@ class MoneyStat extends StatelessWidget {
     return StatSkeletonWidget(
       imageAlignment: StatSkeletonImageAlignment.left,
       width: 220.s,
-      iconAsset: GameIcons.coin,
+      iconAsset: GameAssets.coin,
       child: StreamBuilder(
         stream: monetaryService.balanceStream,
         initialData: monetaryService.balance,

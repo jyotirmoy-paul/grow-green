@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../utils/text_styles.dart';
 import '../../../../../widgets/stylized_text.dart';
-import '../../../../utils/game_icons.dart';
+import '../../../../utils/game_assets.dart';
 import '../../../world/components/sky/weather_service/services/village_temperature_service.dart';
 import 'stat_skeleton_widget.dart';
 
@@ -20,7 +20,7 @@ class TemperatureStat extends StatelessWidget {
     return StatSkeletonWidget(
       imageAlignment: StatSkeletonImageAlignment.left,
       width: 180.s,
-      iconAsset: GameIcons.temperature,
+      iconAsset: GameAssets.temperature,
       child: StreamBuilder(
         stream: villageTemperatureService.temperatureStream,
         builder: (_, snapshot) {

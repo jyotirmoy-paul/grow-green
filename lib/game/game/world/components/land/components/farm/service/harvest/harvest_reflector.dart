@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../../../../../../../../../services/log/log.dart';
+import '../../../../../../../../utils/game_world_assets.dart';
 import '../../../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../components/hover_board/enum/hover_board_type.dart';
@@ -65,15 +66,14 @@ class HarvestReflector {
 
     Log.d('$tag: total money accumulated in the farm: ${totalMoney.formattedValue}');
 
+    if (totalMoney.isZero()) return;
+
     /// show a component
     _hoverBoardController.addHoverBoard(
       type: HoverBoardType.harvestOutcome,
-
-      /// TODO: Replace asset & fix text
       model: HoverBoardModel.basic(
         text: totalMoney.formattedValue,
-        image: 'props/coin.png',
-        animationPrefix: 'animations/coins',
+        image: GameWorldAssets.coinProp,
       ),
       onTap: () {
         _onHoverBoardTap(totalMoney: totalMoney, ids: nonAckHarvestModelIds);

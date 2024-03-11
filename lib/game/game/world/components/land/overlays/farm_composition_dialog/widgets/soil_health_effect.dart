@@ -5,7 +5,7 @@ import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../../utils/game_icons.dart';
+import '../../../../../../../utils/game_assets.dart';
 
 enum ChangeDurationType { perUse, yearly }
 
@@ -63,7 +63,7 @@ class _ChangeInfo extends StatelessWidget {
     required this.changeDurationType,
   });
   bool get isChangePositive => changePercentage >= 0;
-  String get changeAssetPath => isChangePositive ? GameIcons.positiveTriangle : GameIcons.negativeTriangle;
+  String get changeAssetPath => isChangePositive ? GameAssets.positiveTriangle : GameAssets.negativeTriangle;
   @override
   Widget build(BuildContext context) {
     return Row(

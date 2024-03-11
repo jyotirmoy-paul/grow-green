@@ -43,15 +43,33 @@ flutter:
   uses-material-design: true
 
   assets:
-    # maps & tiles
+    # map
     - assets/images/
-    - assets/images/layouts/
+
+    # animations (coin, river)
+    - assets/images/animations/coins/
+    - assets/images/animations/river/1/
+    - assets/images/animations/river/2/
+    - assets/images/animations/river/3/
+    - assets/images/animations/river/4/
+    - assets/images/animations/river/5/
+
+    # clouds
+    - assets/images/clouds/  
+
+    # crop assets
+    - assets/images/crops/bajra/
+    - assets/images/crops/banana/
+    - assets/images/crops/groundnut/
+    - assets/images/crops/maize/
+    - assets/images/crops/pepper/
+    - assets/images/crops/wheat/
+
+    # props
+    - assets/images/props/
+
+    # tiles
     - assets/images/tiles/
-    - assets/images/river/1/
-    - assets/images/river/2/
-    - assets/images/river/3/
-    - assets/images/river/4/
-    - assets/images/river/5/
 
     # tree assets
     - assets/images/trees/coconut/
@@ -62,26 +80,8 @@ flutter:
     - assets/images/trees/rosewood/
     - assets/images/trees/teakwood/
 
-    # crop assets
-    - assets/images/crops/bajra/
-    - assets/images/crops/banana/
-    - assets/images/crops/groundnut/
-    - assets/images/crops/maize/
-    - assets/images/crops/pepper/
-    - assets/images/crops/wheat/
-
-    # game props
-    - assets/images/icons/
-    - assets/images/images/
-    - assets/images/props/
-    - assets/images/animations/
-    - assets/images/animations/coins/
-    - assets/images/tiles/
-    - assets/images/clouds/
-    - assets/exp/
-
-    # lottie animations
-    - assets/lottie/
+    # game UI support assets
+    - assets/game_assets/
 
   # Dentisity  Flutter pixel ratio
   # ldpi        0.75x

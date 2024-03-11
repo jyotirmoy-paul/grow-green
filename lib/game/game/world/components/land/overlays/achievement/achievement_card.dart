@@ -1,12 +1,10 @@
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
-import '../../../../../../../widgets/flip_card/flip_card.dart';
 import '../../../../../../../widgets/flip_card/flip_card_controller.dart';
 import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../../widgets/shadowed_container.dart';
 import '../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../utils/game_icons.dart';
-import '../farm_composition_dialog/widgets/menu_image.dart';
+import '../../../../../../utils/game_assets.dart';
 import '../farm_composition_dialog/widgets/menu_item_flip_skeleton.dart';
 import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
@@ -189,7 +187,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
         ),
         if (showAnimation)
           LottieBuilder.asset(
-            GameIcons.confettiLottie,
+            GameAssets.confettiLottie,
             fit: BoxFit.contain,
             repeat: false,
           ),
@@ -231,7 +229,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
         BackgroundGlow(
           dimension: 15.s,
           child: Image.asset(
-            GameIcons.coinsPile,
+            GameAssets.coinsPile,
             fit: BoxFit.contain,
             height: 30.s,
           ),
