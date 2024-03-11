@@ -209,6 +209,4 @@ class GameDatastore {
     /// updating soil health is an important action, we must immediately sync
     return _dbManagerService.sync();
   }
-
-
 }
