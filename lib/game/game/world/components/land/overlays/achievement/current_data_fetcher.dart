@@ -25,10 +25,6 @@ class CurrentDataFetcher {
     final farms = game.gameController.world.worldController.land.landController.farms;
     final purchasedFarms = farms.where((farm) => farm.farmController.farmState != FarmState.notBought).toList();
     if (purchasedFarms.isEmpty) return 0;
-
-    for (final farm in purchasedFarms) {
-      Log.d("message: farm: ${farm.farmId} ${farm.farmController.soilHealthPercentage}");
-    }
     final soilHealths = purchasedFarms.map((farm) => farm.farmController.soilHealthPercentage).toList();
     return soilHealths.average;
   }
@@ -37,6 +33,7 @@ class CurrentDataFetcher {
     switch (achievementType) {
       case AchievementType.soilHealth:
         return avgSoilHealth;
+
       case AchievementType.lands:
         return landsBought;
     }

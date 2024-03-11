@@ -51,12 +51,6 @@ class AchievementsService {
         .map((checkpoint) => checkpoint.copyWith(isAchieved: checkpoint.value <= currentDataValue))
         .toList();
 
-    for (final checkpoint in checkpoints) {
-      if (checkpoint.isAchieved) {
-        Log.i("message: ${checkpoint.achievementType.name} Achievement Unlocked $checkpoint");
-      }
-    }
-
     achievementsModel.updateCheckpoints(achievementType, checkpoints);
   }
 

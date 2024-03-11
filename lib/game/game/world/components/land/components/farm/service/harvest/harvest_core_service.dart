@@ -86,7 +86,7 @@ class TreeHarvestCoreService implements HarvestCoreService {
 
   @override
   HarvestModel harvest() {
-    final treeRecurringValue = treeCalculator.getRecurringHarvest(treeAgeInDays);
+    final treeRecurringValue = treeCalculator.getRecurringHarvest(treeAgeInDays ~/ 365);
     final numberOfTrees = PlantationLayout.fromSytemType(systemType).numberOfTrees;
     final totalRecurringRevenue = treeRecurringValue * numberOfTrees;
     return HarvestModel(
@@ -100,7 +100,7 @@ class TreeHarvestCoreService implements HarvestCoreService {
   }
 
   HarvestModel sell() {
-    final treePotentialPrice = treeCalculator.getPotentialPrice(treeAgeInDays);
+    final treePotentialPrice = treeCalculator.getPotentialPrice(treeAgeInDays ~/ 365);
     final numberOfTrees = PlantationLayout.fromSytemType(systemType).numberOfTrees;
     final totalPotentialRevenue = treePotentialPrice * numberOfTrees;
     return HarvestModel(

@@ -16,13 +16,13 @@ abstract class AppColors {
   static const farmHistoryThemeColor = Color(0xff474F7A);
 
   static const brown = Color(0xff503C3C);
-  static const soilHealthPositiveColor = Color(0xff508D69);
-  static const soilHealthNegativeColor = Color(0xffD04848);
+  static const positive = Color(0xff508D69);
+  static const negative = Color(0xffD04848);
   static const soilHealthPositiveGraphGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
-      soilHealthPositiveColor,
+      positive,
       Color(0x44508D69),
     ],
   );
@@ -30,7 +30,7 @@ abstract class AppColors {
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter,
     colors: [
-      soilHealthNegativeColor,
+      negative,
       Color(0x44D04848),
     ],
   );
