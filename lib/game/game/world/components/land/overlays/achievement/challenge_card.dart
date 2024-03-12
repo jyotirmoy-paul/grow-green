@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
@@ -8,9 +7,8 @@ import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/flip_card/flip_card_controller.dart';
 import '../../../../../../../widgets/game_button.dart';
-import '../../../../../../../widgets/shadowed_container.dart';
 import '../../../../../../../widgets/stylized_text.dart';
-import '../../../../../../utils/game_icons.dart';
+import '../../../../../../utils/game_assets.dart';
 import '../farm_composition_dialog/widgets/menu_item_flip_skeleton.dart';
 import '../farm_composition_dialog/widgets/system_item_widget.dart';
 import 'achievement_card.dart';
@@ -79,17 +77,19 @@ class _ChallengeCardState extends State<ChallengeCard> {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-        ShadowedContainer(
+        SizedBox(
           width: 300.s,
           height: 400.s,
-          padding: EdgeInsets.symmetric(horizontal: 26.s, vertical: 24.s),
-          child: MenuItemFlipSkeleton(
-            flipCardController: _flipCardController,
-            bgColor: widget.bgColor,
-            header: _header,
-            backHeader: _header,
-            body: _front,
-            backBody: _unlockedClaimedBody,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 26.s, vertical: 24.s),
+            child: MenuItemFlipSkeleton(
+              flipCardController: _flipCardController,
+              bgColor: widget.bgColor,
+              header: _header,
+              backHeader: _header,
+              body: _front,
+              backBody: _unlockedClaimedBody,
+            ),
           ),
         ),
       ],
@@ -142,7 +142,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
         BackgroundGlow(
           dimension: 15.s,
           child: Image.asset(
-            GameIcons.coinsPile,
+            GameAssets.coinsPile,
             fit: BoxFit.contain,
             height: 30.s,
           ),
@@ -205,7 +205,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
         ),
         if (showAnimation)
           LottieBuilder.asset(
-            GameIcons.confettiLottie,
+            GameAssets.confettiLottie,
             fit: BoxFit.contain,
             repeat: false,
           ),

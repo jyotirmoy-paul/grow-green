@@ -11,9 +11,8 @@ import '../logic/landing_screen_view_only_cubit.dart';
 
 class ViewOnlyLandingScreen extends StatefulWidget {
   final Uri uri;
-  static const tag = 'LandingScreen';
 
-  ViewOnlyLandingScreen({
+  const ViewOnlyLandingScreen({
     super.key,
     required this.uri,
   });
@@ -24,7 +23,6 @@ class ViewOnlyLandingScreen extends StatefulWidget {
 
 class _ViewOnlyLandingScreenState extends State<ViewOnlyLandingScreen> {
   String? get _id => widget.uri.queryParameters['id'];
-  static const tag = '_ViewOnlyLandingScreenState';
 
   @override
   void initState() {
