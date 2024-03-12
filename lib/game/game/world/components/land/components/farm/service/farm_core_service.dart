@@ -474,7 +474,7 @@ class FarmCoreService {
     final isTreeSupportConfigAdded = farmContent.treeSupportConfig != null;
 
     /// play something is added to the farm audio
-    AudioService.sowedInFarm();
+    AudioService().sowedInFarm();
 
     switch (farmState) {
       case FarmState.notBought:

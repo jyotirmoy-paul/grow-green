@@ -72,6 +72,7 @@ class GameButton extends StatelessWidget {
       onTap: onTap,
       text: text,
       color: color,
+      textStyle: textStyle,
     );
   }
 
@@ -156,6 +157,7 @@ class GameButton extends StatelessWidget {
                 key: const ValueKey('text-button'),
                 text: text!,
                 bgColor: color,
+                textStyle: textStyle,
               );
 
             case GameButtonType.image:
@@ -245,11 +247,13 @@ class _ImageButton extends StatelessWidget {
 class _TextButton extends StatelessWidget {
   final String text;
   final Color? bgColor;
+  final TextStyle? textStyle;
 
   const _TextButton({
     super.key,
     required this.text,
     this.bgColor,
+    this.textStyle,
   });
 
   @override
@@ -258,7 +262,7 @@ class _TextButton extends StatelessWidget {
       child: StylizedText(
         text: Text(
           text,
-          style: TextStyles.s24,
+          style: textStyle ?? TextStyles.s24,
           textAlign: TextAlign.center,
         ),
       ),

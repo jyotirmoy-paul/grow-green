@@ -1,7 +1,8 @@
-import '../../../../../grow_green_game.dart';
-import '../../components/farm/enum/farm_state.dart';
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
+
+import '../../../../../grow_green_game.dart';
+import '../../components/farm/enum/farm_state.dart';
 import 'achievements_model.dart';
 
 class CurrentDataFetcher {

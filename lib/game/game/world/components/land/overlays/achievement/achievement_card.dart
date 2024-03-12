@@ -60,7 +60,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
   }
 
   Future<void> claim() async {
-    AudioService.congratsAchievement();
+    AudioService().congratsAchievement();
 
     await widget.onClaim(widget.checkpoint.offer);
 

@@ -6,6 +6,12 @@ import 'extensions/num_extensions.dart';
 
 abstract class TextStyles {
   /// scaled text styles
+  static TextStyle get s80 => TextStyle(
+        color: Colors.white,
+        fontSize: 80.s,
+        letterSpacing: 1.6.s,
+      );
+
   static TextStyle get s42 => TextStyle(
         color: Colors.white,
         fontSize: 42.s,

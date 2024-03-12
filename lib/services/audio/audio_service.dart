@@ -3,73 +3,136 @@ import 'package:flame_audio/flame_audio.dart';
 import '../../game/game/overlays/game_stat_overlay/enum/time_option.dart';
 import '../../game/game/services/game_services/time/time_service.dart';
 import '../../game/utils/game_audio_assets.dart';
+import '../database/local/local_db.dart';
 
-abstract class AudioService {
-  static void init() {
-    FlameAudio.bgm.initialize();
+/// MVP1: Refactor this service
+class AudioService {
+  static const tag = 'AudioService';
+  static const _bgmVolumeKey = 'bgm-volume';
+  static const _sfxVolumeKey = 'sfx-volume';
 
-    bool isPaused = false;
+  static AudioService? _instance;
 
-    TimeService().timePaceStream.listen((timePaceFactor) {
-      final paused = timePaceFactor == TimeOption.pause.timePaceFactor;
-      if (isPaused == paused) return;
+  final LocalDb _db;
+  AudioService._() : _db = LocalDb();
 
-      playBgm(isTimePaused: paused);
-      isPaused = paused;
-    });
-
-    playBgm();
+  factory AudioService() {
+    return _instance ??= AudioService._();
   }
 
-  /// BGM
-  static void playBgm({bool isTimePaused = false}) {
+  double _sfxVolume = 1.0;
+  double get sfxVolume => _sfxVolume;
+
+  double _bgmVolume = 1.0;
+  double get bgmVolume => _bgmVolume;
+
+  bool _isPausedBgmPlaying = false;
+
+  void updateSfxVolumne(double newVolumn) {
+    assert(0 <= newVolumn && newVolumn <= 1.0, '$tag: invalid volume: $newVolumn');
+
+    _sfxVolume = newVolumn;
+    _db.setDouble(_sfxVolumeKey, newVolumn);
+  }
+
+  void updateBgmVolume(double newVolumn) {
+    assert(0 <= newVolumn && newVolumn <= 1.0, '$tag: invalid volume: $newVolumn');
+
+    _bgmVolume = newVolumn;
+    _db.setDouble(_bgmVolumeKey, newVolumn);
+
+    FlameAudio.bgm.audioPlayer.setVolume(newVolumn);
+  }
+
+  Future<void> init() async {
+    /// read user set value from db
+    _bgmVolume = _db.getDouble(_bgmVolumeKey) ?? _bgmVolume;
+    _sfxVolume = _db.getDouble(_sfxVolumeKey) ?? _sfxVolume;
+
+    /// fetch all assets!
+    await FlameAudio.audioCache.loadAll(GameAudioAssets.audios);
+
+    /// initialize BGM
+    FlameAudio.bgm.initialize();
+
+    /// listen for when to change bgm
+    TimeService().timePaceStream.listen((timePaceFactor) {
+      final paused = timePaceFactor == TimeOption.pause.timePaceFactor;
+      if (_isPausedBgmPlaying == paused) return;
+
+      _playBgm(isTimePaused: paused, volume: _bgmVolume);
+      _isPausedBgmPlaying = paused;
+    });
+
+    /// finally, play bgm
+    _playBgm(volume: _bgmVolume);
+  }
+
+  /// play bgm is a private method, it's managed internally
+  void _playBgm({
+    bool isTimePaused = false,
+    double volume = 1.0,
+  }) {
     FlameAudio.bgm.play(
       isTimePaused ? GameAudioAssets.timePaused : GameAudioAssets.backgroundScore,
+      volume: volume,
     );
   }
 
-  static void pauseBgm() {
+  void pauseBgm() {
     FlameAudio.bgm.pause();
   }
 
+  bool get isSfxTurnedOff => _sfxVolume == 0.0;
+
   /// SFX
-  static void tap() {
-    FlameAudio.play(GameAudioAssets.tap);
+  void tap() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.tap, volume: _sfxVolume);
   }
 
-  static void coinCollect() {
-    FlameAudio.play(GameAudioAssets.coinCollect);
+  void coinCollect() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.coinCollect, volume: _sfxVolume);
   }
 
-  static void congratsAchievement() {
-    FlameAudio.play(GameAudioAssets.congratsAchievements);
+  void congratsAchievement() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.congratsAchievements, volume: _sfxVolume);
   }
 
-  static void cropHarvest() {
-    FlameAudio.play(GameAudioAssets.cropHarvest);
+  void cropHarvest() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.cropHarvest, volume: _sfxVolume);
   }
 
-  static void treeDied() {
-    FlameAudio.play(GameAudioAssets.treeDied);
+  void treeDied() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.treeDied, volume: _sfxVolume);
   }
 
-  static void treeSold() {
-    FlameAudio.play(GameAudioAssets.treeSold);
+  void treeSold() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.treeSold, volume: _sfxVolume);
   }
 
-  static void sowedInFarm() {
-    FlameAudio.play(GameAudioAssets.farmSowed);
+  void sowedInFarm() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.farmSowed, volume: _sfxVolume);
   }
 
-  static void farmTap() {
-    FlameAudio.play(GameAudioAssets.farmTap);
+  void farmTap() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.farmTap, volume: _sfxVolume);
   }
 
-  static void farmPurchased() {
-    FlameAudio.play(GameAudioAssets.farmPurchased);
+  void farmPurchased() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.farmPurchased, volume: _sfxVolume);
   }
 
-  static void gameWorldIntro() {
-    FlameAudio.play(GameAudioAssets.gameWorldIntro);
+  void gameWorldIntro() {
+    if (isSfxTurnedOff) return;
+    FlameAudio.play(GameAudioAssets.gameWorldIntro, volume: _sfxVolume);
   }
 }

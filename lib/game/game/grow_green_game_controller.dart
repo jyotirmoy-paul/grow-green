@@ -71,9 +71,6 @@ class GrowGreenGameController {
     // initialize achievements service
     achievementsService = AchievementsService(game: game);
 
-    /// initialize audio
-    AudioService.init();
-
     return [
       world,
       camera,

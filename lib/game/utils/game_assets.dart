@@ -69,4 +69,6 @@ abstract class GameAssets {
   static const temperature = '$_base/temperature.png';
 
   static const confettiLottie = '$_base/confetti.json';
+
+  static const background = '$_base/background.jpg';
 }

@@ -1,13 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../widgets/stylized_container.dart';
 import '../../../../utils/game_assets.dart';
-import '../../../../utils/game_audio_assets.dart';
-import '../../../../utils/game_world_assets.dart';
 
 enum StatSkeletonImageAlignment {
   left,
