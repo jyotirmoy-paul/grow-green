@@ -5,6 +5,7 @@ import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../utils/utils.dart';
+import '../../../../../../../utils/game_utils.dart';
 import '../enum/soil_health_movement.dart';
 import '../models/merged_soil_health_model.dart';
 
@@ -90,8 +91,19 @@ class SoilHealthItem extends StatelessWidget {
   }
 }
 
-/// TODO
+/// MVP1: More info about exact user behaviour can be added
 class _InfoWidget extends StatelessWidget {
+  /// these may be incorrect (as not maped to exact data) but good enough for demo purpose
+  static const _possibleOptionsForUpwardMovement = [
+    'Effective Agroforestry Practices',
+    'Organic Fertilizer Use',
+    'Abundant Tree Planting',
+    'Crop Rotation Benefits',
+    'Diverse Planting Strategies',
+    'Sustainable Water Use',
+    'Enhanced Microbial Activity',
+  ];
+
   final MergedSoilHealthModel mergedSoilHealthModel;
 
   const _InfoWidget({
@@ -99,10 +111,24 @@ class _InfoWidget extends StatelessWidget {
     required this.mergedSoilHealthModel,
   });
 
+  String get _soilHealthMoveUpDesc {
+    final luckyIndex = GameUtils().getRandomInteger(_possibleOptionsForUpwardMovement.length);
+    return _possibleOptionsForUpwardMovement[luckyIndex];
+  }
+
+  String get _soilHealthMoveDownDesc {
+    return 'Excessive user of chemical fertilizer!';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Excessive use of chemical fertilizer\ncauses soil health to go down',
+      () {
+        return switch (mergedSoilHealthModel.soilHealthMovement) {
+          SoilHealthMovement.up => _soilHealthMoveUpDesc,
+          SoilHealthMovement.down => _soilHealthMoveDownDesc,
+        };
+      }(),
       style: TextStyles.s23,
       textAlign: TextAlign.center,
     );

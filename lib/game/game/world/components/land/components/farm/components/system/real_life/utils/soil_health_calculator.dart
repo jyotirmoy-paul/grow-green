@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import '../../../../../../../../../enums/agroforestry_type.dart';
 import '../../../../../../../../../enums/farm_system_type.dart';
 import '../../../../../../../../../enums/system_type.dart';
@@ -10,6 +12,7 @@ import '../calculators/crops/base_crop.dart';
 import 'qty_calculator.dart';
 
 abstract class SoilHealthCalculator {
+  static const maxSoilHealth = 30.0;
   static const tag = 'SoilHealthCalculator';
 
   static double fertilizerEffect({
@@ -46,18 +49,15 @@ abstract class SoilHealthCalculator {
     required bool treesPresent,
   }) {
     if (!treesPresent) return 0;
+
     if (systemType is AgroforestryType) {
-      switch (systemType) {
-        case AgroforestryType.boundary:
-          return 0.2;
-        case AgroforestryType.alley:
-          return 0.4;
-        case AgroforestryType.block:
-          return 0.6;
-      }
-    } else {
-      return 0;
+      return switch (systemType) {
+        AgroforestryType.boundary => 0.2,
+        AgroforestryType.alley => 0.4,
+        AgroforestryType.block => 0.6,
+      };
     }
+    return 0;
   }
 
   /// this method is build on the assumption that, it will be invoked at every tick!
@@ -65,9 +65,6 @@ abstract class SoilHealthCalculator {
     required FarmContent farmContent,
     required double currentSoilHealth,
   }) {
-    /// 1. usage of crop age to understand the duration of farming
-    /// 2. capping the soil health growth at some percentage (may be 20%)
-    /// 3. using a logarithmic function to lessen the growth everytime
     double totalFertilizerEffect = 0;
 
     if (farmContent.hasCrop && farmContent.hasCropSupport) {
@@ -80,6 +77,7 @@ abstract class SoilHealthCalculator {
 
       totalFertilizerEffect += cropFertilizerEffectForMaxAge / cropAgeInDays;
     }
+
     if (farmContent.hasTrees && farmContent.hasTreeSupport) {
       final treeFertilizerEffect = fertilizerEffect(
         fertilizer: farmContent.treeSupportConfig!.fertilizerConfig,
@@ -93,9 +91,16 @@ abstract class SoilHealthCalculator {
       systemType: farmContent.systemType,
       treesPresent: farmContent.hasTrees,
     );
+
     final systemTypeEffectPerDay = systemTypeEffectValue / 365;
 
-    return currentSoilHealth + totalFertilizerEffect + systemTypeEffectPerDay;
+    final newSoilHealth = currentSoilHealth + totalFertilizerEffect + systemTypeEffectPerDay;
+
+    return _diminishingReturns(newSoilHealth);
+  }
+
+  static double _diminishingReturns(double value) {
+    return maxSoilHealth * (1 - math.exp(-value / maxSoilHealth));
   }
 
   static double calculateSoilHealthFactor(double soilHealthPercentage) {

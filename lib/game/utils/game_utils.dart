@@ -51,6 +51,10 @@ class GameUtils {
     return _random.nextBool();
   }
 
+  int getRandomInteger(int max) {
+    return _random.nextInt(max);
+  }
+
   /// generates random double between `min` & `max` values
   double getPureRandomNumberBetween({required double min, required double max}) {
     return _random.nextDouble() * (max - min) + min;
