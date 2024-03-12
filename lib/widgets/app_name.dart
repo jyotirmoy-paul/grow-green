@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../utils/extensions/num_extensions.dart';
 import '../utils/text_styles.dart';
 import 'stylized_text.dart';
 
@@ -14,10 +15,14 @@ class AppName extends StatelessWidget {
       tag: 'app-name',
       child: Material(
         type: MaterialType.transparency,
-        child: StylizedText(
-          text: Text(
-            appName,
-            style: TextStyles.s80,
+        borderOnForeground: false,
+        child: Padding(
+          padding: EdgeInsets.all(10.s),
+          child: StylizedText(
+            text: Text(
+              appName,
+              style: TextStyles.s80,
+            ),
           ),
         ),
       ),
