@@ -6,7 +6,7 @@ admin.initializeApp();
 
 // time
 const timeDocId = "date";
-const startTimeId = "startDate"
+const startTimeId = "startDate";
 
 // money
 const moneyDocId = "money";
@@ -29,7 +29,7 @@ const AchievementType = {
   soilHealth: "soilHealth",
 };
 
-// challenges 
+// challenges
 const challengesDocId = "challenges";
 const _redeemCodesId = "redeemCodes";
 
@@ -47,8 +47,8 @@ function moneyOffer(value) {
 }
 
 function generateRandomCode() {
-  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let result = '';
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let result = "";
   for (let i = 0; i < 6; i++) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
@@ -59,10 +59,17 @@ function gwalletOffer(value) {
   return {
     code: generateRandomCode(),
     value: moneyModel(value),
-  }
+  };
 }
 
-function challengeModel(avgSoilHealth, bankBalance, landsBought, timePassedInYears, offerMoney, label) {
+function challengeModel(
+    avgSoilHealth,
+    bankBalance,
+    landsBought,
+    timePassedInYears,
+    offerMoney,
+    label,
+) {
   return {
     avgSoilHealth: avgSoilHealth,
     bankBalance: bankBalance,
@@ -72,13 +79,13 @@ function challengeModel(avgSoilHealth, bankBalance, landsBought, timePassedInYea
     isClaimed: false,
     offer: gwalletOffer(offerMoney),
     label: label,
-  }
+  };
 }
 
 function challengesModel(challengeList) {
   return {
-    challenges: challengeList
-  }
+    challenges: challengeList,
+  };
 }
 
 function generateInitialChallenges() {
@@ -88,11 +95,12 @@ function generateInitialChallenges() {
   const pro = challengeModel(5, 2 * oneCr, 3, 5, 3 * oneMillion, "Pro");
   const max = challengeModel(5, 3 * oneCr, 4, 10, 5 * oneMillion, "Max");
   const legend = challengeModel(7, 5 * oneCr, 5, 15, 10 * oneMillion, "Legend");
-  const overPowered = challengeModel(8, 10 * oneCr, 6, 20, 20 * oneMillion, "OverPowered");
+  const overPowered = challengeModel(
+      8, 10 * oneCr, 6, 20, 20 * oneMillion, "OverPowered",
+  );
 
   return challengesModel([ultra, pro, max, legend, overPowered]);
 }
-
 
 
 function checkPointModel(achievementType, isClaimed, isAchieved, value, offer) {
@@ -109,22 +117,22 @@ function getInitalSoilHealthCheckpoints() {
   const soilHealthCheckPoints = [];
 
   const firstCheckPoint = checkPointModel(
-    AchievementType.soilHealth,
-    false,
-    false,
-    1.5,
-    moneyOffer(1.5 * 100000),
+      AchievementType.soilHealth,
+      false,
+      false,
+      1.5,
+      moneyOffer(1.5 * 100000),
   );
 
   soilHealthCheckPoints.push(firstCheckPoint);
 
   for (let i = 2; i <= 10; i++) {
     const checkPoint = checkPointModel(
-      AchievementType.soilHealth,
-      false,
-      false,
-      i,
-      moneyOffer(i * 100000),
+        AchievementType.soilHealth,
+        false,
+        false,
+        i,
+        moneyOffer(i * 100000),
     );
 
     soilHealthCheckPoints.push(checkPoint);
@@ -138,11 +146,11 @@ function getInitalLandCheckpoints() {
 
   for (let i = 1; i <= 6; i++) {
     const checkPoint = checkPointModel(
-      AchievementType.lands,
-      false,
-      false,
-      i,
-      moneyOffer(i * 100000),
+        AchievementType.lands,
+        false,
+        false,
+        i,
+        moneyOffer(i * 100000),
     );
 
     landCheckPoints.push(checkPoint);
@@ -203,7 +211,9 @@ exports.onUserCreation = functions.auth.user().onCreate(async (user) => {
 
   // add all redeem codes in reedemCodes collection
   const redeemCodesCollectionRef = admin.firestore().collection(_redeemCodesId);
-  const redeemOffers = initialChallenges.challenges.map((challenge) => challenge.offer);
+  const redeemOffers = initialChallenges.challenges
+      .map((challenge) => challenge.offer);
+
   redeemOffers.forEach((offer) => {
     const redeemCodeDocRef = redeemCodesCollectionRef.doc(offer.code);
     batch.set(redeemCodeDocRef, offer);
