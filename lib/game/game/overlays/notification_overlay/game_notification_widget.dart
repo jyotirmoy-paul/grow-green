@@ -126,11 +126,11 @@ class _GameNotificationWidgetState extends State<GameNotificationWidget> {
                       onFinish: (notificationId) => _expiredNotificationIds.add(notificationId),
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.s),
+                          borderRadius: BorderRadius.circular(12.s),
                           color: Colors.white70,
                         ),
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 10.s),
+                          padding: EdgeInsets.symmetric(horizontal: 16.s, vertical: 8.s),
                           child: StylizedText(
                             strokeWidth: 4.s,
                             text: Text(
