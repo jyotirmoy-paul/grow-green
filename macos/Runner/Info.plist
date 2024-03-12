@@ -26,6 +26,14 @@
 				<string>com.googleusercontent.apps.1008482153863-nn9d76u2fh50rv067pohmhpitthjtad0</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>grow.green</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>

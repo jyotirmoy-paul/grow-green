@@ -11,8 +11,11 @@ import 'game_loading_screen.dart';
 
 class GameScreen extends StatelessWidget {
   static const tag = 'GameScreen';
-
-  const GameScreen({super.key});
+  final bool isViewOnly;
+  const GameScreen({
+    super.key,
+    required this.isViewOnly,
+  });
 
   /// list down all overlays
   static const overlayBuilderMap = <String, Widget Function(BuildContext, GrowGreenGame)>{

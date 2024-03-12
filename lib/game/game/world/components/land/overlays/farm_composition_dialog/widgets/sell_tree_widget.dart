@@ -45,7 +45,7 @@ class SellTreeWidget extends StatelessWidget {
     NotificationHelper.treesSold();
 
     /// close everything!
-    Navigation.popToFirst();
+    Navigation.popUntil(RouteName.gameScreen);
   }
 
   String get description {

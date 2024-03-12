@@ -299,6 +299,7 @@ class LandController {
     /// open farm menu
     _farmNotifier.farm = farm;
 
+    // Add the farm menu overlay
     if (!game.overlays.isActive(FarmMenu.overlayName)) {
       game.overlays.add(FarmMenu.overlayName);
     }

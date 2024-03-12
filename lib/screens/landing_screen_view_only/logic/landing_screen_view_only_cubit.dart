@@ -1,36 +1,31 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 
 import '../../../game/game/services/datastore/game_datastore.dart';
 import '../../../game/game/services/game_services/monetary/monetary_service.dart';
 import '../../../game/game/services/game_services/time/time_service.dart';
-import '../../../services/auth/auth.dart';
+import '../../../models/auth/user.dart';
 import '../../../services/database/database_service_factory.dart';
 import '../../game_screen/bloc/game_bloc.dart';
+import 'landing_screen_view_only_state.dart';
 
-part 'landing_screen_state.dart';
-
-class LandingScreenCubit extends Cubit<LandingScreenState> {
-  static const tag = 'LandingScreenCubit';
+class LandingScreenViewOnlyCubit extends Cubit<LandingScreenViewOnlyState> {
+  static const tag = 'LandingScreenViewOnlyCubit';
 
   final GameBloc gameBloc;
-  final AuthBloc authBloc;
-
-  LandingScreenCubit({
+  final String? id;
+  LandingScreenViewOnlyCubit({
     required this.gameBloc,
-    required this.authBloc,
-  }) : super(const LandingScreenInitial());
+    this.id,
+  }) : super(const LandingScreenViewOnlyInitial());
 
-  /// method responsible for initializing all sservices needed by the game
   Future<void> _initializeServices() async {
-    if (authBloc.state is! AuthLoggedIn) {
-      throw Exception('$tag: _initializeServices() invoked has no logged in user. How did we get so far?');
+    if (id == null) {
+      throw Exception('No user id found in the uri');
     }
-    final authLoggedInState = authBloc.state as AuthLoggedIn;
 
     /// initialize gameDatastore
-    final gameDatastore = GameDatastore(dmManagerServiceType: SupportedDbManagerService.intervalSync);
-    await gameDatastore.initialize(authLoggedInState.user);
+    final gameDatastore = GameDatastore(dmManagerServiceType: SupportedDbManagerService.neverSync);
+    await gameDatastore.initialize(User(id: id!));
 
     /// initialize monetary service
     final monetaryService = MonetaryService(gameDatastore: gameDatastore);
@@ -43,21 +38,22 @@ class LandingScreenCubit extends Cubit<LandingScreenState> {
       LoadGameEvent(
         monetaryService: monetaryService,
         gameDatastore: gameDatastore,
-        isViewOnly: false,
+        isViewOnly: true,
       ),
     );
   }
 
   Future<void> _prepareGame() async {
-    /// initialize services needed for game to function
     await _initializeServices();
   }
 
   Future<void> onStartGame() async {
-    emit(const LandingScreenPreparingGame());
+    emit(const LandingScreenViewOnlyPreparingGame());
 
     await _prepareGame();
 
-    emit(const LandingScreenGameReady());
+    emit(const LandingScreenViewOnlyGameReady());
   }
+
+  
 }

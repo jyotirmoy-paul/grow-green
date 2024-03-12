@@ -14,9 +14,11 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }
 
   void _onLoadGameEvent(LoadGameEvent event, Emitter<GameState> emit) {
+    // TODO Add isViewOnly to the game
     final growGreenGame = GrowGreenGame(
       gameDatastore: event.gameDatastore,
       monetaryService: event.monetaryService,
+      isViewOnly: event.isViewOnly,
     );
 
     emit(GameLoaded(game: growGreenGame));

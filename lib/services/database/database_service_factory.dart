@@ -13,6 +13,7 @@ import 'interface/db_manager_service.dart';
 part 'impl/firebase_cloud_db_service.dart';
 part 'impl/firebase_db_batch_write.dart';
 part 'impl/interval_sync_db_manager_service.dart';
+part 'impl/never_sync_db_manager_service.dart';
 
 enum SupportedCloudDatabaseService {
   firebase,
@@ -20,6 +21,7 @@ enum SupportedCloudDatabaseService {
 
 enum SupportedDbManagerService {
   intervalSync,
+  neverSync,
 }
 
 abstract class CloudDatabaseServiceFactory {
@@ -36,6 +38,8 @@ abstract class DbManagerServiceFactory {
     switch (supportedDbManagerService) {
       case SupportedDbManagerService.intervalSync:
         return _IntervalSyncDbManagerService();
+      case SupportedDbManagerService.neverSync:
+        return _NeverSyncDbManagerService();
     }
   }
 }

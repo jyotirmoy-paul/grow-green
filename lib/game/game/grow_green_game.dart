@@ -12,10 +12,11 @@ class GrowGreenGame extends FlameGame with ScaleDetector, ScrollDetector {
 
   final GameDatastore gameDatastore;
   final MonetaryService monetaryService;
-
+  final bool isViewOnly;
   GrowGreenGame({
     required this.gameDatastore,
     required this.monetaryService,
+    this.isViewOnly = false,
   }) : gameController = GrowGreenGameController(gameDatastore: gameDatastore, monetaryService: monetaryService);
 
   @override

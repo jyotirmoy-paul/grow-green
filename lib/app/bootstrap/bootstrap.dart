@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_links/app_links.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:macos_window_utils/window_manipulator.dart';
 
 import '../../firebase_options.dart';
+import '../../routes/routes.dart';
+import '../../screens/landing_screen_view_only/view/landing_screen_view_only.dart';
 import '../../services/log/log.dart';
 import 'app_bloc_observer.dart';
 
@@ -56,6 +59,15 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       if (useFirebaseEmulator) {
         await _setupFirebaseEmulator();
       }
+
+      final appLinks = AppLinks();
+
+      appLinks.allUriLinkStream.listen((uri) {
+        Log.d('Received uri: $uri');
+
+        // pop until landing screen and push the new screen
+        Navigation.pushScreen(ViewOnlyLandingScreen(uri: uri));
+      });
 
       runApp(await builder());
     },
