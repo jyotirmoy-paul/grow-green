@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../../../../../services/log/log.dart';
@@ -12,7 +11,7 @@ enum GwalletClaimStatus {
 
 class GwalletService {
   static const tag = 'GwalletService';
-  static const _baseUrl = 'http://52.172.30.83:3000';
+  static const _baseUrl = 'https://us-central1-growgreen-8468f.cloudfunctions.net';
   static Future<void> launchUrl(String urlString) async {
     Log.d("url to launch: $urlString");
     try {
@@ -56,7 +55,6 @@ class GwalletService {
   static Future<String?> getFarmViewToken(String farmLink) async {
     final dio = Dio();
 
-    final url = '$_baseUrl/viewFarmToken/?farmlink=$farmLink';
     const bodyUrl = '$_baseUrl/viewFarmToken/';
     final body = {
       'farmlink': farmLink,

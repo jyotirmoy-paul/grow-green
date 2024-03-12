@@ -1,6 +1,7 @@
 /* eslint-disable require-jsdoc */
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const cors = require("cors")({origin: true});
 
 admin.initializeApp();
 
@@ -221,4 +222,126 @@ exports.onUserCreation = functions.auth.user().onCreate(async (user) => {
 
   // write
   return batch.commit();
+});
+
+// social functionalities
+// const {GoogleAuth} = require("google-auth-library");
+const jwt = require("jsonwebtoken");
+
+const {
+  // geRedeemMoneyClassId,
+  // reedemMoneyOfferclass,
+  redeemMoneyOfferObject,
+} = require("./pass_classes/redeem_offer.js");
+
+const {
+  // getViewFarmClassId,
+  // viewFarmOfferClass,
+  viewFarmOfferObject,
+} = require("./pass_classes/view_farm.js");
+
+
+const issuerId = "3388000000022317399";
+
+// const classId = `${issuerId}.codelab_class`;
+
+// const baseUrl = "https://walletobjects.googleapis.com/walletobjects/v1";
+
+const credentials = require("./key.json");
+
+// const httpClient = new GoogleAuth({
+//   credentials: credentials,
+//   scopes: "https://www.googleapis.com/auth/wallet_object.issuer",
+// });
+
+// async function createRedeemMoneyClass(req, res) {
+//   const genericClass = reedemMoneyOfferclass(issuerId);
+//   const classId = geRedeemMoneyClassId(issuerId);
+//   await createClass(req, res, genericClass, classId);
+// }
+
+// async function createViewFarmClass(req, res) {
+//   const genericClass = viewFarmOfferClass(issuerId);
+//   const classId = getViewFarmClassId(issuerId);
+//   await createClass(req, res, genericClass, classId);
+// }
+
+// async function createClass(req, res, genericClass, classId) {
+//   let response;
+//   try {
+//     // Check if the class exists already
+//     response = await httpClient.request({
+//       url: `${baseUrl}/genericClass/${classId}`,
+//       method: "GET",
+//     });
+
+//     console.log("Class already exists");
+//     console.log(response);
+//   } catch (err) {
+//     if (err.response && err.response.status === 404) {
+//       // Class does not exist
+//       // Create it now
+//       response = await httpClient.request({
+//         url: `${baseUrl}/genericClass`,
+//         method: "POST",
+//         data: genericClass,
+//       });
+
+//       console.log("Class insert response");
+//       console.log(response);
+//     } else {
+//       // Something else went wrong
+//       console.log(err);
+//       res.send("Something went wrong...check the console logs!");
+//     }
+//   }
+// }
+
+async function createRedeemMoneyObject(req, res) {
+  const amount = req.query.amount;
+  const code = req.query.code;
+  // TODO: Create a new Generic pass for the user
+  const genericObject = redeemMoneyOfferObject(issuerId, amount, code);
+  await createObject(req, res, genericObject);
+}
+
+async function createViewFarmObject(req, res) {
+  const farmLink = req.body.farmlink;
+  const genericObject = viewFarmOfferObject(issuerId, farmLink);
+  await createObject(req, res, genericObject);
+}
+
+
+async function createObject(req, res, genericObject) {
+  // TODO: Create the signed JWT and link
+  const claims = {
+    iss: credentials.client_email,
+    aud: "google",
+    origins: [],
+    typ: "savetowallet",
+    payload: {
+      genericObjects: [
+        genericObject,
+      ],
+    },
+  };
+
+
+  const token = jwt.sign(claims, credentials.private_key, {algorithm: "RS256"});
+  const saveUrl = `https://pay.google.com/gp/v/save/${token}`;
+
+  res.send(saveUrl);
+}
+
+
+exports.token = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    createRedeemMoneyObject(request, response);
+  });
+});
+
+exports.viewFarmToken = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    createViewFarmObject(request, response);
+  });
 });
