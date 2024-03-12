@@ -36,6 +36,8 @@ dependencies:
   shared_preferences: ^2.2.2
   app_links: ^3.5.1
   share_plus: ^7.2.2
+  dio: ^5.4.1
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   build_runner: ^2.4.8
@@ -59,7 +61,7 @@ flutter:
     - assets/images/animations/river/5/
 
     # clouds
-    - assets/images/clouds/  
+    - assets/images/clouds/
 
     # crop assets
     - assets/images/crops/bajra/

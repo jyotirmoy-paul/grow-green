@@ -5,6 +5,7 @@ import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/dialog_container.dart';
 import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../../widgets/stylized_text.dart';
+import 'GwalletService.dart';
 import 'achievement_card.dart';
 import 'achievements_service.dart';
 import 'package:flutter/material.dart';
@@ -123,8 +124,7 @@ class _AchievementsDialogState extends State<AchievementsDialog> {
           setState(() {});
         },
         onGwalletClaim: (offer) async {
-          // TODO : Gwallet
-          await widget.achievementsService.claimChallenge(challenge);
+          await GwalletService.claimGwalletFromChallenge(challenge);
           setState(() {});
         },
       );

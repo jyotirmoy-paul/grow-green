@@ -103,7 +103,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
   Widget get _front {
     switch (state) {
       case AchievementCardState.locked:
-        return _lockedBody;
+        return _unlockedNotClaimedBody;
       case AchievementCardState.unlockedNotClaimed:
         return _unlockedNotClaimedBody;
       case AchievementCardState.unlockedClaimed:
