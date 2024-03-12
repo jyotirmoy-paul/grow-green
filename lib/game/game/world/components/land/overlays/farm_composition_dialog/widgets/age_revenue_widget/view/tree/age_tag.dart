@@ -50,7 +50,7 @@ class AgeTag extends StatelessWidget {
   Widget get _buildTitle {
     return Text(
       title ?? '·',
-      style: TextStyles.s28.copyWith(
+      style: TextStyles.s23.copyWith(
         color: AppColors.brown,
       ),
     );

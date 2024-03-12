@@ -236,6 +236,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
+            flex: widget.componentId == ComponentId.trees ? 1 : 3,
             child: Center(
               child: MenuImage(
                 imageAssetPath: model.image,
@@ -244,7 +245,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
             ),
           ),
           Expanded(
-            flex: widget.componentId == ComponentId.trees ? 2 : 1,
+            flex: widget.componentId == ComponentId.trees ? 2 : 4,
             child: () {
               /// tree specific widget
               if (widget.componentId == ComponentId.trees) {

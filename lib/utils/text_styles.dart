@@ -49,6 +49,12 @@ abstract class TextStyles {
         height: 1.2,
       );
 
+  static TextStyle get s26normal => TextStyle(
+        color: Colors.white,
+        fontSize: 26.s,
+        letterSpacing: 1.s,
+      );
+
   static TextStyle get s26 => TextStyle(
         color: Colors.white,
         fontSize: 26.s,

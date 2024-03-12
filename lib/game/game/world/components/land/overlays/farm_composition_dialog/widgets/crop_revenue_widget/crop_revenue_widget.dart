@@ -33,9 +33,10 @@ class CropRevenueWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         revenueRow,
-        Gap(10.s),
+        Gap(2.s),
         intervalHanger,
       ],
     );
@@ -61,36 +62,13 @@ class CropRevenueWidget extends StatelessWidget {
     );
   }
 
-  Widget cropAsset(String assetPath) {
-    return SizedBox.fromSize(
-      size: Size(cropAssetWidth, cropAssetHeight),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Image.asset(
-          assetPath,
-          width: cropAssetWidth,
-        ),
-      ),
-    );
-  }
-
-  Widget get cropHanger {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        cropAsset(dataFetcher.germinationAssetPath),
-        cropAsset(dataFetcher.ripeAssetPath),
-      ],
-    );
-  }
-
   Widget get intervalHanger {
     var intervals = CropRevenueDataFetcher(
       cropType: cropType,
-    ).intervals.map((interval) => intervalWidget(interval)).addSeparator(Gap(10.s));
+    ).intervals.map((interval) => intervalWidget(interval)).addSeparator(Gap(4.s));
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: intervals,
     );
@@ -106,7 +84,7 @@ class CropRevenueWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.s, vertical: 8.s),
       child: Text(
         intervalLabel.toUpperCase(),
-        style: TextStyles.s28,
+        style: TextStyles.s24,
       ),
     );
   }
@@ -131,7 +109,7 @@ class CropRevenueWidget extends StatelessWidget {
             Gap(5.s),
             Text(
               label,
-              style: TextStyles.s28,
+              style: TextStyles.s24,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

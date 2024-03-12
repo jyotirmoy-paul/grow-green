@@ -377,29 +377,29 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  body: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        /// image
-                        MenuImage(
-                          imageAssetPath: model.image,
-                          dimension: 200.s,
-                        ),
+                  body: Column(
+                    children: [
+                      Gap(10.s),
 
-                        /// description
-                        if (model.descriptionText != null)
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 2.s, vertical: 10.s),
-                            child: Text(
-                              model.descriptionText!,
-                              style: TextStyles.s28,
-                              textAlign: TextAlign.center,
-                            ),
+                      /// image
+                      MenuImage(
+                        imageAssetPath: model.image,
+                        dimension: 170.s,
+                      ),
+
+                      const Spacer(),
+
+                      /// description
+                      if (model.descriptionText != null)
+                        Padding(
+                          padding: EdgeInsets.only(top: 10.s, left: 2.s, right: 2.s),
+                          child: Text(
+                            model.descriptionText!,
+                            style: TextStyles.s28,
+                            textAlign: TextAlign.center,
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                   footer: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.s, vertical: 12.s),
