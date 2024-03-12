@@ -187,9 +187,9 @@
     "@year": {
         "description": "Year"
     },
-    "soilHealthMoveDownReason": "Excessive user of chemical fertilizer!",
+    "soilHealthMoveDownReason": "Excessive usage of chemical fertilizer!",
     "@soilHealthMoveDownReason": {
-        "description": "Excessive user of chemical fertilizer"
+        "description": "Excessive usage of chemical fertilizer"
     },
     "soilHealthMoveUpReason1": "Effective Agroforestry Practices",
     "@soilHealthMoveUpReason1": {

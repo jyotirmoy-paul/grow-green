@@ -481,7 +481,7 @@ class FarmMenuHelper {
     Navigation.popUntil(RouteName.gameScreen);
 
     /// do the actual transaction
-    final success = await farmController.game.monetaryService.transact(
+    final success = farmController.game.monetaryService.transact(
       transactionType: TransactionType.debit,
       value: totalCost,
     );

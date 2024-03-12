@@ -84,7 +84,7 @@ class AchievementsService {
 
   void processOffer(Offer offer) async {
     if (offer is MoneyOffer) {
-      final success = await game.monetaryService.transact(
+      final success = game.monetaryService.transact(
         transactionType: TransactionType.credit,
         value: offer.money,
       );

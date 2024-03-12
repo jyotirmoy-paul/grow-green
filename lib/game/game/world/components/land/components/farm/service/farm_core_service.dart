@@ -637,13 +637,11 @@ class FarmCoreService {
   /// this is done on every tick
   void _updateSoilHealth() {
     if (!isSoilHealthAffected()) return;
-    Log.d("before updating $soilHealthPercentage");
 
     final newSoilHealth = SoilHealthCalculator.getNewSoilHealth(
       farmContent: farmContent!,
       currentSoilHealth: _updatedSoilhealthPercentage ?? soilHealthPercentage,
     );
-    Log.d("soil health updated $newSoilHealth");
 
     /// we store the updated soil health locally and DO NOT sync the data immediately
     /// so whenever a sync happens, the soil health gets updated

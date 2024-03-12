@@ -41,10 +41,10 @@ class HarvestReflector {
     Log.d('$tag: hoverboard was tap, moneyContents: $totalMoney');
 
     /// add the total money to user's balance
-    unawaited(farmCoreService.farm.game.gameController.monetaryService.transact(
+    farmCoreService.farm.game.gameController.monetaryService.transact(
       transactionType: TransactionType.credit,
       value: totalMoney,
-    ));
+    );
 
     /// notify farm core service to update harvest models to ack state
     farmCoreService.markHarvestsAckFor(ids: ids);
