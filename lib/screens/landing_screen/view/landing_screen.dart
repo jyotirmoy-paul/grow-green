@@ -52,11 +52,19 @@ class LandingScreen extends StatelessWidget {
                   reverseDuration: const Duration(milliseconds: 300),
                   child: () {
                     if (authState is AuthLoginProcessing) {
-                      return const Align(
+                      return Stack(
                         alignment: Alignment.center,
-                        child: CircularProgressIndicator(
-                          key: ValueKey('processing-view'),
-                        ),
+                        children: [
+                          const Align(
+                            alignment: Alignment(0, -0.5),
+                            child: AppName(),
+                          ),
+                          StylizedText(
+                              text: Text(
+                            'Authenticating...',
+                            style: TextStyles.s30,
+                          )),
+                        ],
                       );
                     }
 
@@ -354,55 +362,32 @@ class _NotLoggedInView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return Stack(
       alignment: Alignment.center,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              onSignInTap(context: context, authType: UserAuthType.google);
-            },
-            child: const Text(
-              'Sign in with Google',
-              style: TextStyle(
-                fontSize: 20.0,
-                letterSpacing: 2.0,
-              ),
-            ),
-          ),
-          const Gap(20.0),
-          ElevatedButton(
-            onPressed: () {
-              onSignInTap(context: context, authType: UserAuthType.apple);
-            },
-            child: const Text(
-              'Sign in with Apple',
-              style: TextStyle(
-                fontSize: 20.0,
-                letterSpacing: 2.0,
-              ),
-            ),
-          ),
-          const Gap(40.0),
-          BlocBuilder<AuthBloc, AuthState>(
-            builder: (_, authState) {
-              if (authState is AuthLoggedInFailed) {
-                return const Text(
-                  "Something went wrong!",
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    letterSpacing: 2.0,
-                    color: Colors.red,
-                  ),
-                );
-              }
+      children: [
+        /// title
+        const Align(
+          alignment: Alignment(0, -0.5),
+          child: AppName(),
+        ),
 
-              return const SizedBox.shrink();
-            },
+        /// sign in options
+        Align(
+          alignment: const Alignment(0, 0.5),
+          child: SizedBox(
+            width: 300.s,
+            height: 60.s,
+            child: GameButton.text(
+              color: Colors.green,
+              text: 'Sign in with Google',
+              textStyle: TextStyles.s30,
+              onTap: () {
+                onSignInTap(context: context, authType: UserAuthType.google);
+              },
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
