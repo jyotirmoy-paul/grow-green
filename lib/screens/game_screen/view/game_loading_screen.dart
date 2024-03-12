@@ -56,6 +56,15 @@ class _GameLoadingScreenState extends State<GameLoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return const GameLoadingScreenView();
+  }
+}
+
+class GameLoadingScreenView extends StatelessWidget {
+  const GameLoadingScreenView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(

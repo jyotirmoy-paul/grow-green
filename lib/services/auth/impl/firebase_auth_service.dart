@@ -35,30 +35,35 @@ class _FirebaseAuthService implements AuthService {
 
   @override
   Future<ServiceAction> signInWithGoogle() async {
-    if (kIsWeb) {
-      final googleProvider = fauth.GoogleAuthProvider();
-      for (final scope in scopes) {
-        googleProvider.addScope(scope);
+    try {
+      if (kIsWeb) {
+        final googleProvider = fauth.GoogleAuthProvider();
+        for (final scope in scopes) {
+          googleProvider.addScope(scope);
+        }
+
+        try {
+          await firebaseAuth.signInWithPopup(googleProvider);
+          return ServiceAction.success;
+        } catch (e) {
+          Log.e('$tag: signInWithGoogle web error: $e');
+          return ServiceAction.failure;
+        }
       }
 
-      try {
-        await firebaseAuth.signInWithPopup(googleProvider);
-        return ServiceAction.success;
-      } catch (e) {
-        Log.e('$tag: signInWithGoogle web error: $e');
-        return ServiceAction.failure;
-      }
+      final googleUser = await googleSignIn.signIn();
+      final googleAuth = await googleUser?.authentication;
+
+      final credential = fauth.GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      return _signInWithCredential(credential);
+    } catch (e) {
+      Log.e('$tag: signInWithGoogle() threw error: $e');
+      return ServiceAction.failure;
     }
-
-    final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser?.authentication;
-
-    final credential = fauth.GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    return _signInWithCredential(credential);
   }
 
   @override
