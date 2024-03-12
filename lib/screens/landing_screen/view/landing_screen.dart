@@ -16,6 +16,7 @@ import '../../../widgets/game_button.dart';
 import '../../../widgets/stylized_container.dart';
 import '../../../widgets/stylized_text.dart';
 import '../../game_screen/bloc/game_bloc.dart';
+import '../../game_screen/view/game_loading_screen.dart';
 import '../cubit/landing_screen_cubit.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -38,50 +39,60 @@ class LandingScreen extends StatelessWidget {
           authBloc: context.read<AuthBloc>(),
         ),
         child: Scaffold(
-          body: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(GameAssets.background),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, authState) {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  reverseDuration: const Duration(milliseconds: 300),
-                  child: () {
-                    if (authState is AuthLoginProcessing) {
-                      return Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          const Align(
-                            alignment: Alignment(0, -0.5),
-                            child: AppName(),
-                          ),
-                          StylizedText(
-                              text: Text(
-                            'Authenticating...',
-                            style: TextStyles.s30,
-                          )),
-                        ],
-                      );
-                    }
+          body: BlocBuilder<LandingScreenCubit, LandingScreenState>(
+            builder: (context, _) {
+              final state = context.read<LandingScreenCubit>().state;
 
-                    if (authState is AuthLoggedIn) {
-                      return _LoggedInView(
-                        key: const ValueKey('logged-in-view'),
-                        user: authState.user,
-                      );
-                    }
+              if (state is LandingScreenPreparingGame || state is LandingScreenGameReady) {
+                return const GameLoadingScreenView();
+              }
 
-                    return const _NotLoggedInView(
-                      key: ValueKey('not-logged-in-view'),
+              return Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(GameAssets.background),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, authState) {
+                    return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      reverseDuration: const Duration(milliseconds: 300),
+                      child: () {
+                        if (authState is AuthLoginProcessing) {
+                          return Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              const Align(
+                                alignment: Alignment(0, -0.5),
+                                child: AppName(),
+                              ),
+                              StylizedText(
+                                  text: Text(
+                                'Authenticating...',
+                                style: TextStyles.s30,
+                              )),
+                            ],
+                          );
+                        }
+
+                        if (authState is AuthLoggedIn) {
+                          return _LoggedInView(
+                            key: const ValueKey('logged-in-view'),
+                            user: authState.user,
+                          );
+                        }
+
+                        return const _NotLoggedInView(
+                          key: ValueKey('not-logged-in-view'),
+                        );
+                      }(),
                     );
-                  }(),
-                );
-              },
-            ),
+                  },
+                ),
+              );
+            },
           ),
         ),
       ),
