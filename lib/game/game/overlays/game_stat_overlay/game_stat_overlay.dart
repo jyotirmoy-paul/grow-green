@@ -69,11 +69,16 @@ class GameStatOverlay extends StatelessWidget {
                   Gap(20.s)
                 ],
 
-                /// share button
-                if (!game.isViewOnly) ...[const ShareButton(), Gap(20.s)],
-
-                /// Redeem button
-                if (!game.isViewOnly) ...[RedeemButton(game: game), Gap(20.s)],
+                /// share and redeem button
+                if (!game.isViewOnly)
+                  Row(
+                    children: [
+                      const ShareButton(),
+                      Gap(20.s),
+                      RedeemButton(game: game),
+                      Gap(20.s),
+                    ],
+                  ),
               ],
             ),
             const Spacer(),

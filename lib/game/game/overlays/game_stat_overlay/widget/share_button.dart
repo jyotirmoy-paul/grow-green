@@ -58,7 +58,7 @@ class ShareDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DialogContainer(
-      title: "Show your farm with your friends",
+      title: "Show your farm to world",
       dialogType: DialogType.small,
       child: Center(
         child: Column(
