@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'extensions/num_extensions.dart';
-
 abstract class Utils {
   static final monthYearDateFormat = DateFormat('MMM, yyyy');
   static final monthDateFormat = DateFormat('MMMM');

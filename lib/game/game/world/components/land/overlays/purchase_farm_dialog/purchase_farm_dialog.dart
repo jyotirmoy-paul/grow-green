@@ -23,7 +23,7 @@ class PurchaseFarmDialog extends StatelessWidget {
 
     if (canBuy) {
       /// farm purchased audio
-      AudioService.farmPurchased();
+      AudioService().farmPurchased();
 
       Navigator.pop(context, true);
     } else {

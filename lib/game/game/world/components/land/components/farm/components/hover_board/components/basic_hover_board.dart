@@ -123,7 +123,7 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
     farm.farmController.onFarmTap = null;
 
     /// coin colleciton audio
-    AudioService.coinCollect();
+    AudioService().coinCollect();
 
     final animationSprite = SpriteAnimationComponent(
       animation: _spriteAnimation,

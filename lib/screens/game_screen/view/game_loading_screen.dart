@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../game/game/grow_green_game.dart';
 import '../../../game/game/overlays/game_stat_overlay/game_stat_overlay.dart';
+import '../../../game/utils/game_assets.dart';
 import '../../../services/audio/audio_service.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/text_styles.dart';
+import '../../../widgets/stylized_text.dart';
 
 class GameLoadingScreen extends StatefulWidget {
   static const overlayName = 'game-loading-screen';
@@ -27,10 +30,10 @@ class _GameLoadingScreenState extends State<GameLoadingScreen> {
     if (widget.game.gameController.isGameLoaded.value != true) return;
 
     /// wait a little more to finish animations!
-    await Future.delayed(kMS300);
+    await Future.delayed(kMS400);
 
     /// play intro audio
-    AudioService.gameWorldIntro();
+    AudioService().gameWorldIntro();
 
     /// add game stat overlay
     widget.game.overlays.add(GameStatOverlay.overlayName);
@@ -53,9 +56,25 @@ class _GameLoadingScreenState extends State<GameLoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Doing something!'),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(GameAssets.background),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned.fill(
+            child: StylizedText(
+              text: Text(
+                'Preparing Your Village',
+                style: TextStyles.s42,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

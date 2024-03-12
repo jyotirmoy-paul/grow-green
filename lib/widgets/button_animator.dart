@@ -25,7 +25,7 @@ class ButtonAnimator extends StatelessWidget {
   }
 
   void _onPressConfirm() {
-    AudioService.tap();
+    AudioService().tap();
     onPressed?.call();
   }
 

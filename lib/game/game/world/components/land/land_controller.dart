@@ -294,7 +294,7 @@ class LandController {
     farm.farmController.isFarmSelected = true;
 
     /// play farm selection
-    AudioService.farmTap();
+    AudioService().farmTap();
 
     /// open farm menu
     _farmNotifier.farm = farm;

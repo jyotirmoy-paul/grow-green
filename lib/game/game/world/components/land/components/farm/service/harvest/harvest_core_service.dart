@@ -60,7 +60,7 @@ class CropHarvestCoreService implements HarvestCoreService {
   @override
   HarvestModel harvest() {
     /// audio
-    AudioService.cropHarvest();
+    AudioService().cropHarvest();
 
     final revenueValue = RevenueCalculator.getCropRevenue(cropType: cropType, systemType: systemType);
     return HarvestModel(
@@ -104,7 +104,7 @@ class TreeHarvestCoreService implements HarvestCoreService {
   }
 
   HarvestModel sell() {
-    AudioService.treeSold();
+    AudioService().treeSold();
 
     final treePotentialPrice = treeCalculator.getPotentialPrice(treeAgeInDays ~/ 365);
     final numberOfTrees = PlantationLayout.fromSytemType(systemType).numberOfTrees;

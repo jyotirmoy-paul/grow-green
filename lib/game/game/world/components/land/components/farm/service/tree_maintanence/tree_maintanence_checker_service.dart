@@ -67,7 +67,7 @@ class TreeMaintanenceCheckerService {
     Log.i('$tag: _handleIrrecoverablePhase() invoked, all hopes are lost now, with heavy heart, we have to kill trees');
 
     /// play sorrow audio
-    AudioService.treeDied();
+    AudioService().treeDied();
 
     farmCoreService.expireTreeDueToMaintanenceMiss();
 
