@@ -1,6 +1,6 @@
 import '../../../../../services/game_services/monetary/models/money_model.dart';
-import 'achievements_model.dart';
-import 'offer.dart';
+import 'models/achievements_model.dart';
+import 'models/offer.dart';
 
 class AchievementsCheckpoints {
   static const List<double> soilHealths = [1.5, 2, 3, 4, 5, 6];
@@ -14,6 +14,8 @@ class AchievementsCheckpoints {
         return lands;
       case AchievementType.soilHealth:
         return soilHealths;
+      case AchievementType.challenge:
+        return [];
     }
   }
 

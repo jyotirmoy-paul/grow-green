@@ -29,6 +29,20 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="grow.green"/>
             </intent-filter>
+            <intent-filter  android:autoVerify="true" >
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                /* http URL scheme */
+                <data android:scheme="http" android:host="grow.green" android:pathPrefix="/"/>    
+            </intent-filter>
+            <intent-filter android:autoVerify="true" >
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                /* http URL scheme */
+                <data android:scheme="https" android:host="grow.green"  android:pathPrefix="/"/>    
+            </intent-filter>
          
         </activity>
         <!-- Don't delete the meta-data below.

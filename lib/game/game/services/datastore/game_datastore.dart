@@ -5,7 +5,8 @@ import '../../../../services/utils/service_action.dart';
 import '../../world/components/land/components/farm/model/farm_state_model.dart';
 import '../../world/components/land/components/farm/model/harvest_model.dart';
 import '../../world/components/land/components/farm/model/soil_health_model.dart';
-import '../../world/components/land/overlays/achievement/achievements_model.dart';
+import '../../world/components/land/overlays/achievement/models/achievements_model.dart';
+import '../../world/components/land/overlays/achievement/models/challenges_model.dart';
 import '../game_services/monetary/models/money_model.dart';
 
 class GameDatastore {
@@ -17,8 +18,10 @@ class GameDatastore {
   static const _harvestModelsListId = 'harvestModels';
   static const _soilHealthModelsListId = 'soilHealthModels';
   static const _achievementsId = 'achievements';
+  static const _challengesId = 'challenges';
 
   static const _dateId = 'date';
+  static const _startDateId = 'startDate';
   static const _dateTime = 'dateTime';
 
   static const _moneyId = 'money';
@@ -53,6 +56,21 @@ class GameDatastore {
 
     if (serviceAction == ServiceAction.failure) {
       throw Exception('$tag: getDate() failed');
+    }
+
+    final dateString = date[_dateTime] as String;
+    return DateTime.parse(dateString);
+  }
+
+  /// start date
+  /// This is the date when the game started
+  Future<DateTime> getStartDate() async {
+    final (serviceAction, date) = await _dbManagerService.get(
+      id: _startDateId,
+    );
+
+    if (serviceAction == ServiceAction.failure) {
+      throw Exception('$tag: getStartDate() failed');
     }
 
     final dateString = date[_dateTime] as String;
@@ -130,6 +148,30 @@ class GameDatastore {
     if (status == ServiceAction.failure) return status;
 
     /// updating achievements is an important action, we must immediately sync
+    return _dbManagerService.sync();
+  }
+
+  Future<ChallengesModel> getChallenges() async {
+    final (serviceAction, data) = await _dbManagerService.get(
+      id: _challengesId,
+    );
+
+    if (serviceAction == ServiceAction.failure) {
+      throw Exception('$tag: getChallenges() failed');
+    }
+
+    return ChallengesModel.fromJson(data);
+  }
+
+  Future<ServiceAction> updateChallenges(ChallengesModel challenges) async {
+    final status = await _dbManagerService.update(
+      id: _challengesId,
+      data: challenges.toJson(),
+    );
+
+    if (status == ServiceAction.failure) return status;
+
+    /// updating challenges is an important action, we must immediately sync
     return _dbManagerService.sync();
   }
 

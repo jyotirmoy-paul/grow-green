@@ -3,8 +3,10 @@ import 'package:gap/gap.dart';
 
 import '../../../../utils/extensions/num_extensions.dart';
 import '../../grow_green_game.dart';
+import '../../world/components/land/overlays/redeem/redeem_button.dart';
 import 'widget/achievement_stat.dart';
 import 'widget/money/money_stat.dart';
+import 'widget/share_button.dart';
 import 'widget/temperature_stat.dart';
 import 'widget/time_menu/calender_stat.dart';
 import 'widget/time_menu/time_menu.dart';
@@ -60,10 +62,18 @@ class GameStatOverlay extends StatelessWidget {
                 Gap(20.s),
 
                 /// achievements
-                if (!game.isViewOnly)
+                if (!game.isViewOnly) ...[
                   AchievementsStat(
                     achievementsService: game.gameController.achievementsService,
                   ),
+                  Gap(20.s)
+                ],
+
+                /// share button
+                if (!game.isViewOnly) ...[const ShareButton(), Gap(20.s)],
+
+                /// Redeem button
+                if (!game.isViewOnly) ...[RedeemButton(game: game), Gap(20.s)],
               ],
             ),
             const Spacer(),
