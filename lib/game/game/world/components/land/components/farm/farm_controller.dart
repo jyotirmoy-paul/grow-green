@@ -154,7 +154,7 @@ class FarmController {
   }
 
   void _purchaseFarm() async {
-    final success = await game.monetaryService.transact(
+    final success = game.monetaryService.transact(
       transactionType: TransactionType.debit,
       value: GameUtils.farmInitialPrice,
     );

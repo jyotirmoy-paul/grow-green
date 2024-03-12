@@ -74,23 +74,22 @@ class MonetaryService {
     return true;
   }
 
-  Future<bool> transact({
+  /// we don't wait for the transaction to complete, we immediately notify user a success!
+  bool transact({
     required TransactionType transactionType,
     required MoneyModel value,
-  }) async {
-    try {
-      switch (transactionType) {
-        case TransactionType.debit:
-          return _transactDebit(value).timeout(const Duration(milliseconds: 5000));
+  }) {
+    switch (transactionType) {
+      case TransactionType.debit:
+        unawaited(_transactDebit(value));
+        break;
 
-        case TransactionType.credit:
-          return _transactCredit(value).timeout(const Duration(milliseconds: 5000));
-      }
-    } on TimeoutException catch (_) {
-      Log.e('$tag: transaction timed out');
-      NotificationHelper.transactionFailed();
-      return false;
+      case TransactionType.credit:
+        unawaited(_transactCredit(value));
+        break;
     }
+
+    return true;
   }
 
   bool canAfford(MoneyModel cost) {
