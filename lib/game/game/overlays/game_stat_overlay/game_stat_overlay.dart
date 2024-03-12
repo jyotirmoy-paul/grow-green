@@ -61,14 +61,6 @@ class GameStatOverlay extends StatelessWidget {
 
                 Gap(20.s),
 
-                /// achievements
-                if (!game.isViewOnly) ...[
-                  AchievementsStat(
-                    achievementsService: game.gameController.achievementsService,
-                  ),
-                  Gap(20.s)
-                ],
-
                 /// share and redeem button
                 if (!game.isViewOnly)
                   Row(

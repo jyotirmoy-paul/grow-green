@@ -5,6 +5,7 @@ import '../../../../../grow_green_game.dart';
 import '../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../services/game_services/time/time_service.dart';
 import '../redeem/redeem_service.dart';
+import 'GwalletService.dart';
 import 'models/achievements_model.dart';
 import 'current_data_fetcher.dart';
 import 'models/challenges_model.dart';
@@ -114,4 +115,5 @@ class AchievementsService {
     challengesModel = challengesModel.copyWith(challenges: newCheckpoints);
     await game.gameController.gameDatastore.updateChallenges(challengesModel);
   }
+
 }
