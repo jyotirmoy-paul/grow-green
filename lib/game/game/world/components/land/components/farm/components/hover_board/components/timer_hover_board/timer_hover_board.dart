@@ -73,12 +73,17 @@ class TimerHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame>, Tim
       ..anchor = Anchor.center
       ..position = farmCenter;
 
+    final descriptionTextComponent = StylizedTextComponent(text: model.text)
+      ..anchor = Anchor.topCenter
+      ..position = farmCenter.translated(0, imageComponent.height / 2);
+
     /// add all components
     addAll([
       imageBackground,
       imageComponent,
       _progressBar!,
       _textComponent!,
+      descriptionTextComponent,
     ]);
 
     return super.onLoad();

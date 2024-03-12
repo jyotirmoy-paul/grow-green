@@ -5,6 +5,7 @@ import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame_tiled/flame_tiled.dart' hide Text;
 
+import '../../../../../services/audio/audio_service.dart';
 import '../../../../../services/log/log.dart';
 import '../../../../utils/game_world_assets.dart';
 import '../../../../utils/game_extensions.dart';
@@ -258,6 +259,9 @@ class LandController {
 
     _initAchievementService();
     _initTemperatureService();
+
+    /// after all is done, set isGameLoaded value to be true
+    game.gameController.isGameLoaded.value = true;
   }
 
   void _initTemperatureService() {
@@ -286,7 +290,11 @@ class LandController {
       _farmNotifier.farm = null;
       return;
     }
+
     farm.farmController.isFarmSelected = true;
+
+    /// play farm selection
+    AudioService.farmTap();
 
     /// open farm menu
     _farmNotifier.farm = farm;

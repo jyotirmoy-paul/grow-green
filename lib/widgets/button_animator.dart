@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/audio/audio_service.dart';
 import '../utils/constants.dart';
 
 class ButtonAnimator extends StatelessWidget {
@@ -24,7 +25,7 @@ class ButtonAnimator extends StatelessWidget {
   }
 
   void _onPressConfirm() {
-    /// TODO: Audio
+    AudioService.tap();
     onPressed?.call();
   }
 

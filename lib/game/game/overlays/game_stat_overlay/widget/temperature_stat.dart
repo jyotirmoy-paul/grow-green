@@ -22,6 +22,7 @@ class TemperatureStat extends StatelessWidget {
       width: 230.s,
       iconAsset: GameAssets.temperature,
       child: StreamBuilder(
+        initialData: villageTemperatureService.lastBroadcastedTemperature,
         stream: villageTemperatureService.temperatureStream,
         builder: (_, snapshot) {
           final temperature = snapshot.data;
@@ -29,7 +30,7 @@ class TemperatureStat extends StatelessWidget {
 
           return StylizedText(
             text: Text(
-              '${temperature.toStringAsFixed(2)}° C',
+              '$temperature° C',
               style: TextStyles.s28,
             ),
           );

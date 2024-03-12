@@ -1,3 +1,4 @@
+import '../../../../../../../../../services/audio/audio_service.dart';
 import '../../../../../../../enums/system_type.dart';
 import '../../../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../components/crop/enums/crop_type.dart';
@@ -58,6 +59,9 @@ class CropHarvestCoreService implements HarvestCoreService {
 
   @override
   HarvestModel harvest() {
+    /// audio
+    AudioService.cropHarvest();
+
     final revenueValue = RevenueCalculator.getCropRevenue(cropType: cropType, systemType: systemType);
     return HarvestModel(
       harvestType: HarvestType.oneTime,
@@ -100,6 +104,8 @@ class TreeHarvestCoreService implements HarvestCoreService {
   }
 
   HarvestModel sell() {
+    AudioService.treeSold();
+
     final treePotentialPrice = treeCalculator.getPotentialPrice(treeAgeInDays ~/ 365);
     final numberOfTrees = PlantationLayout.fromSytemType(systemType).numberOfTrees;
     final totalPotentialRevenue = treePotentialPrice * numberOfTrees;

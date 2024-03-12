@@ -1,7 +1,9 @@
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../../../services/audio/audio_service.dart';
 import '../../../../../../utils/game_extensions.dart';
 import '../../../../../../utils/game_utils.dart';
 import '../../../../../grow_green_game.dart';

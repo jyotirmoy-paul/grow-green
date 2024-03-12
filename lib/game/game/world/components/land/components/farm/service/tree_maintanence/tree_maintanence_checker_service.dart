@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../../../../../../../../../services/audio/audio_service.dart';
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../../../../../../services/game_services/time/time_service.dart';
@@ -65,6 +66,9 @@ class TreeMaintanenceCheckerService {
 
     Log.i('$tag: _handleIrrecoverablePhase() invoked, all hopes are lost now, with heavy heart, we have to kill trees');
 
+    /// play sorrow audio
+    AudioService.treeDied();
+
     farmCoreService.expireTreeDueToMaintanenceMiss();
 
     /// notify users why trees were removed
@@ -93,7 +97,7 @@ class TreeMaintanenceCheckerService {
     _hoverBoardController.addHoverBoard(
       type: HoverBoardType.treeMaintanenceWaiting,
       model: HoverBoardModel.timer(
-        text: 'Tree maintanence overdue',
+        text: 'Maintanence overdue',
         image: TreeAsset.of(_treeData.treeType).at(TreeStage.elder),
         startDateTime: dueDate,
         futureDateTime: limitDate,

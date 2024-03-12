@@ -6,6 +6,8 @@ import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
+import '../../screens/game_screen/view/game_loading_screen.dart';
+import '../../services/audio/audio_service.dart';
 import '../../services/log/log.dart';
 import '../utils/game_utils.dart';
 import 'grow_green_game.dart';
@@ -23,6 +25,7 @@ class GrowGreenGameController {
     required this.monetaryService,
   });
 
+  final ValueNotifier<bool> isGameLoaded = ValueNotifier(false);
   final GameDatastore gameDatastore;
   final MonetaryService monetaryService;
 
@@ -59,11 +62,17 @@ class GrowGreenGameController {
   Future<List<Component>> initialize({required GrowGreenGame game}) async {
     this.game = game;
 
+    /// display game loading screen
+    game.overlays.add(GameLoadingScreen.overlayName);
+
     world = GrowGreenWorld();
     camera = CameraComponent(world: world);
 
     // initialize achievements service
     achievementsService = AchievementsService(game: game);
+
+    /// initialize audio
+    AudioService.init();
 
     return [
       world,

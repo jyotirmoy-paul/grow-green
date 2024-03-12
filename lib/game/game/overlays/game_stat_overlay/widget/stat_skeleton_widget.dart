@@ -1,8 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../widgets/stylized_container.dart';
+import '../../../../utils/game_assets.dart';
+import '../../../../utils/game_audio_assets.dart';
+import '../../../../utils/game_world_assets.dart';
 
 enum StatSkeletonImageAlignment {
   left,
@@ -23,9 +28,18 @@ class StatSkeletonWidget extends StatelessWidget {
     this.imageAlignment = StatSkeletonImageAlignment.right,
   });
 
+  /// MVP1: rotation can be an input to the StatSkeletonWidget(...)
+  double get rotation {
+    return switch (iconAsset) {
+      GameAssets.achievements => -0.2,
+      GameAssets.calender => 0.2,
+      _ => 0.0,
+    };
+  }
+
   Widget get image {
     return Transform.scale(
-      scale: 1.25,
+      scale: 1.3,
       alignment: () {
         switch (imageAlignment) {
           case StatSkeletonImageAlignment.left:
@@ -35,14 +49,11 @@ class StatSkeletonWidget extends StatelessWidget {
             return Alignment.centerLeft;
         }
       }(),
-      child: StylizedContainer(
-        color: Colors.black,
-        margin: EdgeInsets.zero,
-        padding: EdgeInsets.all(7.s),
+      child: Transform.rotate(
+        angle: rotation,
         child: Image.asset(
           iconAsset,
-          width: 40.s,
-          height: 40.s,
+          width: 56.s,
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 
+import '../../../../../../../../services/audio/audio_service.dart';
 import '../../../../../../../../services/log/log.dart';
 import '../../../../../../../../utils/extensions/date_time_extensions.dart';
 import '../../../../../../enums/agroforestry_type.dart';
@@ -471,6 +472,9 @@ class FarmCoreService {
   /// 3. Update - CropSupporter (Trees / Fertilizers)
   void updateFarmContent(FarmContent farmContent) {
     final isTreeSupportConfigAdded = farmContent.treeSupportConfig != null;
+
+    /// play something is added to the farm audio
+    AudioService.sowedInFarm();
 
     switch (farmState) {
       case FarmState.notBought:

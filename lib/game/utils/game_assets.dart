@@ -68,5 +68,5 @@ abstract class GameAssets {
   static const calender = '$_base/calender.png';
   static const temperature = '$_base/temperature.png';
 
-  static const confettiLottie = "assets/lottie/confetti.json";
+  static const confettiLottie = '$_base/confetti.json';
 }

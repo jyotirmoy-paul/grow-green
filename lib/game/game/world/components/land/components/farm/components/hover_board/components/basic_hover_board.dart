@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../../../services/audio/audio_service.dart';
 import '../../../../../../../../../../services/log/log.dart';
 import '../../../../../../../../../utils/game_world_assets.dart';
 import '../../../../../../../../grow_green_game.dart';
@@ -19,7 +20,7 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
   static const textSize = 24.0;
 
   static const animationDuration = 2.0;
-  static const maxScale = 1.15;
+  static const maxScale = 1.10;
   static const coinImagesTotal = 32;
 
   static double get endAnimationDuration => 2.5;
@@ -120,6 +121,9 @@ class BasicHoverBoard extends HoverBoardItem with HasGameRef<GrowGreenGame> {
   void _onTap() {
     /// deregister the callback
     farm.farmController.onFarmTap = null;
+
+    /// coin colleciton audio
+    AudioService.coinCollect();
 
     final animationSprite = SpriteAnimationComponent(
       animation: _spriteAnimation,
