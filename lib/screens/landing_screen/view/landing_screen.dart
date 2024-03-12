@@ -20,8 +20,6 @@ class LandingScreen extends StatelessWidget {
     return BlocListener<GameBloc, GameState>(
       listener: (context, state) {
         if (state is GameLoaded) {
-          /// TODO: let's preload the game screen and once all assets are ready we can move to the screen
-          /// This will avoid any abrupt ui changes and everything will be smooth
           Log.d('$tag: Game is loaded, moving to game screen!');
           Navigation.pushReplacement(RouteName.gameScreen);
         }

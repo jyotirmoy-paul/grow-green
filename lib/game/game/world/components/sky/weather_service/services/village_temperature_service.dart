@@ -19,9 +19,12 @@ class VillageTemperatureService {
   final List<Farm> farms;
   final _TemperatureCalculatorService _temperatureCalculatorService;
   final _calculatorsCache = <TreeType, Co2AbsorptionCalculator>{};
-  final _temperatureStreamController = StreamController<double>.broadcast();
+  final _temperatureStreamController = StreamController<String>.broadcast();
 
-  Stream<double> get temperatureStream => _temperatureStreamController.stream;
+  String _lastBroadcastedTemperature = '';
+
+  String get lastBroadcastedTemperature => _lastBroadcastedTemperature;
+  Stream<String> get temperatureStream => _temperatureStreamController.stream;
 
   VillageTemperatureService({
     required this.farms,
@@ -65,10 +68,14 @@ class VillageTemperatureService {
     final co2Absorption = totalAbsorbedCo2 / checkIntervalInDays;
     final newTemperature = _temperatureCalculatorService.calculateTemperature(co2Absorption);
 
-    Log.i('$tag: village temperature is updated to $newTemperature for co2Absorption: $co2Absorption');
+    final newTempString = newTemperature.toStringAsFixed(2);
+    if (newTempString == _lastBroadcastedTemperature) return;
+    _lastBroadcastedTemperature = newTempString;
+
+    Log.i('$tag: village temperature is updated to $newTempString for co2Absorption: $co2Absorption');
 
     /// notify listeners
-    _temperatureStreamController.add(newTemperature);
+    _temperatureStreamController.add(newTempString);
   }
 
   void init() {

@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flame/flame.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 
+import '../../../game/utils/game_audio_assets.dart';
 import '../../../routes/routes.dart';
 import '../../../services/auth/auth.dart';
 
@@ -17,6 +19,7 @@ class SplashScreenCubit extends Cubit<SplashScreenState> {
 
   Future<void> init() async {
     await Flame.images.loadAllImages();
+    await FlameAudio.audioCache.loadAll(GameAudioAssets.audios);
 
     /// Initialize authentication
     authBloc.add(AuthInitializeEvent());

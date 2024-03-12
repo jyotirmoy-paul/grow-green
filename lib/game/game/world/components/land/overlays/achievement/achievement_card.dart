@@ -1,3 +1,4 @@
+import '../../../../../../../services/audio/audio_service.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/flip_card/flip_card_controller.dart';
@@ -16,7 +17,7 @@ import 'offer.dart';
 
 class AchievementCard extends StatefulWidget {
   final CheckPointModel checkpoint;
-  final Function(MoneyOffer offer) onClaim;
+  final Future<void> Function(MoneyOffer offer) onClaim;
   const AchievementCard({
     super.key,
     required this.bgColor,
@@ -59,8 +60,12 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
   }
 
   Future<void> claim() async {
+    AudioService.congratsAchievement();
+
     await widget.onClaim(widget.checkpoint.offer);
+
     _flipCardController.toggleCard();
+
     setState(() {
       showAnimation = true;
     });
@@ -206,9 +211,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
               width: 150.s,
               child: GameButton.text(
                 text: "CLAIM",
-                onTap: () async {
-                  await claim();
-                },
+                onTap: claim,
                 color: Colors.black.withOpacity(0.2),
               ),
             ),

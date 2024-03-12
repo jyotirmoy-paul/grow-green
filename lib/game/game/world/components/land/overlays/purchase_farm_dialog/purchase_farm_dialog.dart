@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../services/audio/audio_service.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/game_button.dart';
@@ -21,6 +22,9 @@ class PurchaseFarmDialog extends StatelessWidget {
     final canBuy = farm.farmController.purchaseFarm();
 
     if (canBuy) {
+      /// farm purchased audio
+      AudioService.farmPurchased();
+
       Navigator.pop(context, true);
     } else {
       NotificationHelper.cannotAffordFarm();
