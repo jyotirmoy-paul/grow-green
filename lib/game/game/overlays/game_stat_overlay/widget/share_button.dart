@@ -51,16 +51,36 @@ class ShareButton extends StatelessWidget {
   }
 }
 
-class ShareDialog extends StatelessWidget {
+class ShareDialog extends StatefulWidget {
   final String id;
   const ShareDialog({
     super.key,
     required this.id,
   });
 
-  String get nativeDeeplink => "grow.green://view?id=$id";
-  Future<String> getWebLink() async {
-    return await FirebaseStorageUploadService.getHostedLinkFor(nativeDeeplink);
+  @override
+  State<ShareDialog> createState() => _ShareDialogState();
+}
+
+class _ShareDialogState extends State<ShareDialog> {
+  String get nativeDeeplink => "grow.green://view?id=${widget.id}";
+
+  Future<String> getWebLink() {
+    return FirebaseStorageUploadService.getHostedLinkFor(nativeDeeplink);
+  }
+
+  String webLink = '';
+
+  void fetch() async {
+    webLink = await getWebLink();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetch();
   }
 
   @override
@@ -69,25 +89,7 @@ class ShareDialog extends StatelessWidget {
       title: context.l10n.shareYourFarm,
       dialogType: DialogType.small,
       child: Center(
-        child: FutureBuilder<String>(
-          future: getWebLink(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasData) {
-                return shareButtons(snapshot.data!);
-              } else {
-                return StylizedText(
-                  text: Text(
-                    "Something went wrong",
-                    style: TextStyles.s23,
-                  ),
-                );
-              }
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
-        ),
+        child: webLink.isEmpty ? const CircularProgressIndicator() : shareButtons(webLink),
       ),
     );
   }
@@ -100,9 +102,9 @@ class ShareDialog extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            /// share
             SizedBox(
-              width: 150.s,
-              height: 60.s,
+              width: 100.s,
               child: GameButton.text(
                 text: "Share",
                 onTap: () {
@@ -113,10 +115,13 @@ class ShareDialog extends StatelessWidget {
                 color: Colors.green,
               ),
             ),
+
+            /// gap
             Gap(40.s),
+
+            /// copy linke
             SizedBox(
               width: 150.s,
-              height: 60.s,
               child: GameButton.text(
                 text: "Copy link",
                 onTap: () {
@@ -128,9 +133,12 @@ class ShareDialog extends StatelessWidget {
             ),
           ],
         ),
+
+        /// gap
         Gap(30.s),
+
         SizedBox(
-          width: 180.s,
+          width: 230.s,
           height: 60.s,
           child: GameButton.text(
             text: "Add to Gwallet",

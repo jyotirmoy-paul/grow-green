@@ -53,9 +53,9 @@
     "@share": {
         "description": "Share menu"
     },
-    "shareYourFarm": "Show your farm to world",
+    "shareYourFarm": "Share your farm!",
     "@redeem": {
-        "description": "Redeem menu"
+        "description": "Share your farm redeem menu"
     },
     "shareFarmMessage": "Hey, checkout my village on Grow Green using this link: {link}",
     "@shareFarmMessage": {

@@ -25,6 +25,7 @@ class RedeemService {
 
   // Redeem code
   Future<bool> _checkIfCodePresent(String code) async {
+    /// FIXME: We don't have to fetch docs everytime!
     final codeDocument = await _getRedeemCodeDoc(code);
     return codeDocument.exists;
   }

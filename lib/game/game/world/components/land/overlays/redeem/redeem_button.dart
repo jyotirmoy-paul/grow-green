@@ -16,7 +16,9 @@ class RedeemButton extends StatelessWidget {
   static const tag = 'RedeemButton';
   final GrowGreenGame game;
 
-  const RedeemButton({super.key, required this.game});
+  final controller = TextEditingController();
+
+  RedeemButton({super.key, required this.game});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,6 @@ class RedeemButton extends StatelessWidget {
   }
 
   Widget inputField(BuildContext context) {
-    final controller = TextEditingController();
     return AlertDialog(
       backgroundColor: Colors.white,
       title: StylizedText(
@@ -56,6 +57,7 @@ class RedeemButton extends StatelessWidget {
   GameButton actions(TextEditingController controller, BuildContext context) {
     return GameButton.text(
       text: context.l10n.redeem,
+      color: Colors.green,
       onTap: () async {
         final code = controller.text;
         if (code.isEmpty) {
@@ -91,8 +93,14 @@ class RedeemButton extends StatelessWidget {
   TextField _input(TextEditingController controller, BuildContext context) {
     return TextField(
       controller: controller,
+      style: TextStyles.s25.copyWith(
+        color: Colors.black,
+      ),
       decoration: InputDecoration(
         hintText: context.l10n.enterRedeemCode,
+        hintStyle: TextStyles.s25.copyWith(
+          color: Colors.grey,
+        ),
       ),
     );
   }

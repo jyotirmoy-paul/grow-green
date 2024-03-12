@@ -76,15 +76,11 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
   Widget build(BuildContext context) {
     return SizedBox(
       width: 300.s,
-      height: 250.s,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 26.s, vertical: 24.s),
-        child: MenuItemFlipSkeleton(
-          flipCardController: _flipCardController,
-          bgColor: widget.bgColor,
-          body: _front,
-          backBody: _unlockedClaimedBody,
-        ),
+      child: MenuItemFlipSkeleton(
+        flipCardController: _flipCardController,
+        bgColor: widget.bgColor,
+        body: _front,
+        backBody: _unlockedClaimedBody,
       ),
     );
   }
@@ -104,12 +100,11 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        StylizedText(
-          text: Text("Required", style: TextStyles.s23),
-        ),
+        Text("Require", style: TextStyles.s35),
         lockedRibbon,
-        StylizedText(
-          text: Text(requiredParameter, style: TextStyles.s23),
+        Text(
+          requiredParameter,
+          style: TextStyles.s35,
         ),
       ],
     );
@@ -123,29 +118,23 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
           height: 16.s,
           width: 248.s,
           decoration: BoxDecoration(
-              color: widget.bgColor.darken(0.2),
-              border: Border.symmetric(
-                horizontal: BorderSide(
-                  color: Colors.white,
-                  width: 1.s,
-                ),
-              )),
+            color: widget.bgColor.darken(0.2),
+            border: Border.symmetric(
+              horizontal: BorderSide(color: Colors.white, width: 1.s),
+            ),
+          ),
         ),
         Container(
-          width: 64.s,
-          height: 64.s,
+          padding: EdgeInsets.all(25.s),
           decoration: BoxDecoration(
             color: widget.bgColor.darken(0.2),
             shape: BoxShape.circle,
-            border: Border.all(
-              color: Colors.white,
-              width: 3.s,
-            ),
+            border: Border.all(color: Colors.white, width: 3.s),
           ),
           child: StylizedText(
             text: Text(
               _lockedValueString,
-              style: TextStyles.s16,
+              style: TextStyles.s35,
             ),
           ),
         ),
@@ -233,7 +222,6 @@ class MoneyOfferWidget extends StatelessWidget {
     super.key,
     required this.money,
   });
-
 
   @override
   Widget build(BuildContext context) {

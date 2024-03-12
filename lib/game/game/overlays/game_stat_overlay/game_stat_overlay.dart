@@ -66,9 +66,8 @@ class GameStatOverlay extends StatelessWidget {
                   Row(
                     children: [
                       const ShareButton(),
-                      Gap(20.s),
+                      Gap(10.s),
                       RedeemButton(game: game),
-                      Gap(20.s),
                     ],
                   ),
               ],

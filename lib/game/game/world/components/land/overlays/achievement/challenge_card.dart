@@ -77,7 +77,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
       alignment: Alignment.topCenter,
       children: [
         SizedBox(
-          width: 300.s,
+          width: 400.s,
           height: 400.s,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 26.s, vertical: 24.s),
@@ -96,7 +96,14 @@ class _ChallengeCardState extends State<ChallengeCard> {
   }
 
   Widget get _header {
-    return Center(child: StylizedText(text: Text(widget.challenge.label, style: TextStyles.s23)));
+    return Center(
+      child: StylizedText(
+        text: Text(
+          widget.challenge.label,
+          style: TextStyles.s35,
+        ),
+      ),
+    );
   }
 
   Widget get _front {

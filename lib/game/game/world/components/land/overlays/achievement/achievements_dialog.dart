@@ -1,5 +1,7 @@
 import 'package:gap/gap.dart';
 
+import '../../../../../../../utils/app_colors.dart';
+import '../../../../../../../utils/extensions/list_extensions.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../widgets/dialog_container.dart';
@@ -49,11 +51,12 @@ class _AchievementsDialogState extends State<AchievementsDialog> {
     return DialogContainer(
       title: "Achievement",
       dialogType: DialogType.medium,
-      child: Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 12.s),
         child: Column(
           children: [
             _headers,
-            cards,
+            Expanded(child: cards),
             _checkpointDescription,
           ],
         ),
@@ -62,43 +65,43 @@ class _AchievementsDialogState extends State<AchievementsDialog> {
   }
 
   Widget get _headers {
-    return Padding(
-      padding: EdgeInsets.only(top: 15.s),
-      child: SizedBox(
-        width: 500.s,
-        height: 50.s,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: GameButton.text(
-                text: "Challenges",
-                onTap: () => setState(() => _selectedAchievementType = AchievementType.challenge),
-                color: _selectedAchievementType == AchievementType.challenge ? _selectedColor : unselectedColor,
-              ),
+    return SizedBox(
+      width: 700.s,
+      height: 60.s,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: GameButton.text(
+              text: "Challenges",
+              onTap: () => setState(() => _selectedAchievementType = AchievementType.challenge),
+              color: _selectedAchievementType == AchievementType.challenge ? _selectedColor : unselectedColor,
+              textStyle: TextStyles.s26,
             ),
-            Gap(20.s),
-            Expanded(
-              child: GameButton.text(
-                text: "Soil health",
-                onTap: () => setState(() => _selectedAchievementType = AchievementType.soilHealth),
-                color: _isSoilHealthSelected ? _selectedColor : unselectedColor,
-              ),
+          ),
+          Gap(20.s),
+          Expanded(
+            child: GameButton.text(
+              text: "Soil health",
+              onTap: () => setState(() => _selectedAchievementType = AchievementType.soilHealth),
+              color: _isSoilHealthSelected ? _selectedColor : unselectedColor,
+              textStyle: TextStyles.s26,
             ),
-            Gap(20.s),
-            Expanded(
-              child: GameButton.text(
-                text: "Lands",
-                onTap: () {
-                  setState(() {
-                    _selectedAchievementType = AchievementType.lands;
-                  });
-                },
-                color: _isLandsSelected ? _selectedColor : unselectedColor,
-              ),
+          ),
+          Gap(20.s),
+          Expanded(
+            child: GameButton.text(
+              text: "Lands",
+              onTap: () {
+                setState(() {
+                  _selectedAchievementType = AchievementType.lands;
+                });
+              },
+              color: _isLandsSelected ? _selectedColor : unselectedColor,
+              textStyle: TextStyles.s26,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -130,14 +133,11 @@ class _AchievementsDialogState extends State<AchievementsDialog> {
       );
     }).toList();
 
-    return SizedBox(
+    return ListView(
       key: ValueKey(_selectedAchievementType),
-      height: 400.s,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        children: challengeCards,
-      ),
+      scrollDirection: Axis.horizontal,
+      shrinkWrap: true,
+      children: challengeCards,
     );
   }
 
@@ -154,17 +154,15 @@ class _AchievementsDialogState extends State<AchievementsDialog> {
       );
     }).toList();
     int firstUnclaimed = _initialScrollOffset(checkpoints);
-    return SizedBox(
+    return ListView(
       key: ValueKey(_selectedAchievementType),
-      height: 300.s,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        controller: ScrollController(
-          initialScrollOffset: 300.s * (firstUnclaimed),
-        ),
-        children: achievementCards,
+      padding: EdgeInsets.all(20.s),
+      scrollDirection: Axis.horizontal,
+      shrinkWrap: true,
+      controller: ScrollController(
+        initialScrollOffset: 300.s * (firstUnclaimed),
       ),
+      children: achievementCards.addSeparator(Gap(20.s)),
     );
   }
 
@@ -179,8 +177,8 @@ class _AchievementsDialogState extends State<AchievementsDialog> {
     final dataFetcher = CurrentDataFetcher(game: widget.achievementsService.game);
     final currentDataValue = dataFetcher.currentCheckpointValue(_selectedAchievementType);
     final currentDataRepresentation = switch (_selectedAchievementType) {
-      AchievementType.lands => "Lands purchased \t:\t ${currentDataValue.toInt()} / ${dataFetcher.totalLandsAvailable}",
-      AchievementType.soilHealth => "Average Soil health \t:\t ${currentDataValue.roundToDouble()}%",
+      AchievementType.lands => "Lands purchased:\t ${currentDataValue.toInt()} / ${dataFetcher.totalLandsAvailable}",
+      AchievementType.soilHealth => "Average Soil health:\t ${currentDataValue.roundToDouble()}%",
       AchievementType.challenge => "",
     };
 
@@ -190,8 +188,13 @@ class _AchievementsDialogState extends State<AchievementsDialog> {
         borderRadius: BorderRadius.circular(10.s),
         border: Border.all(color: _selectedColor, width: 2.s),
       ),
-      padding: EdgeInsets.all(10.s),
-      child: StylizedText(text: Text(currentDataRepresentation, style: TextStyles.s16)),
+      padding: EdgeInsets.symmetric(vertical: 10.s, horizontal: 20.s),
+      child: Text(
+        currentDataRepresentation,
+        style: TextStyles.s30.copyWith(
+          color: AppColors.brown,
+        ),
+      ),
     );
 
     // return MenuFooterTextRow(leftText: currentDataRepresentation, rightText: "");
