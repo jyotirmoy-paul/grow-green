@@ -7,6 +7,7 @@ part 'achievements_model.g.dart';
 enum AchievementType {
   lands,
   soilHealth,
+  challenge,
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -79,6 +80,8 @@ class AchievementsModel {
         return lands;
       case AchievementType.soilHealth:
         return soilHealth;
+      default:
+        return [];
     }
   }
 
@@ -108,6 +111,7 @@ class AchievementsModel {
       case AchievementType.soilHealth:
         soilHealth = checkpoints;
         break;
+      default:
     }
   }
 

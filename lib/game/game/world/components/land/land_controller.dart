@@ -28,6 +28,7 @@ class LandController {
   late final VillageTemperatureService villageTemperatureService;
   late final SpriteBatch _leftBaseGroundSpriteBatch;
   late final SpriteBatch _bottomBaseGroundSpriteBatch;
+  late final DateTime startTime;
 
   static const _farmsLayerName = 'farms';
   static const _riverLayerName = 'river';
@@ -257,6 +258,7 @@ class LandController {
     /// wait for all farms to be mounted
     await _waitForFarmInitialization();
 
+    await _initStartTime();
     _initAchievementService();
     _initTemperatureService();
 
@@ -271,6 +273,10 @@ class LandController {
 
   void _initAchievementService() {
     game.gameController.achievementsService.initialize();
+  }
+
+  Future<void> _initStartTime() async {
+    startTime = await game.gameController.gameDatastore.getDate();
   }
 
   FarmNotifier get _farmNotifier => game.gameController.overlayData.farmNotifier;

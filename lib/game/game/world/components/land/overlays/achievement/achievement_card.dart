@@ -5,6 +5,7 @@ import '../../../../../../../widgets/flip_card/flip_card_controller.dart';
 import '../../../../../../../widgets/game_button.dart';
 import '../../../../../../../widgets/stylized_text.dart';
 import '../../../../../../utils/game_assets.dart';
+import '../../../../../services/game_services/monetary/models/money_model.dart';
 import '../farm_composition_dialog/widgets/menu_item_flip_skeleton.dart';
 import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,8 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
 import '../farm_composition_dialog/widgets/system_item_widget.dart';
-import 'achievements_model.dart';
-import 'offer.dart';
+import 'models/achievements_model.dart';
+import 'models/offer.dart';
 
 class AchievementCard extends StatefulWidget {
   final CheckPointModel checkpoint;
@@ -158,6 +159,8 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
         return widget.checkpoint.value.toString();
       case AchievementType.lands:
         return widget.checkpoint.value.round().toString();
+      case AchievementType.challenge:
+        return "";
     }
   }
 
@@ -165,6 +168,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
     return switch (widget.checkpoint.achievementType) {
       AchievementType.soilHealth => "Soil Health",
       AchievementType.lands => "Land",
+      AchievementType.challenge => "",
     };
   }
 
@@ -172,6 +176,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
     return switch (widget.checkpoint.achievementType) {
       AchievementType.soilHealth => "${widget.checkpoint.value.toStringAsFixed(1)}%",
       AchievementType.lands => "${widget.checkpoint.value.round().ordinalized} Land",
+      AchievementType.challenge => "",
     };
   }
 
@@ -183,7 +188,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             StylizedText(text: Text("Unlocked $unlockHeaderText", style: TextStyles.s23)),
-            _moneyOfferWidget,
+            MoneyOfferWidget(money: widget.checkpoint.offer.money),
           ],
         ),
         if (showAnimation)
@@ -205,7 +210,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
           children: [
             StylizedText(text: Text("Unlocked $unlockHeaderText", style: TextStyles.s23)),
             Gap(16.s),
-            _moneyOfferWidget,
+            MoneyOfferWidget(money: widget.checkpoint.offer.money),
             Gap(16.s),
             SizedBox(
               width: 150.s,
@@ -220,8 +225,18 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
       ],
     );
   }
+}
 
-  Widget get _moneyOfferWidget {
+class MoneyOfferWidget extends StatelessWidget {
+  final MoneyModel money;
+  const MoneyOfferWidget({
+    super.key,
+    required this.money,
+  });
+
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -234,7 +249,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
           ),
         ),
         Gap(8.s),
-        StylizedText(text: Text(widget.checkpoint.offer.money.formattedValue, style: TextStyles.s23)),
+        StylizedText(text: Text(money.formattedValue, style: TextStyles.s23)),
       ],
     );
   }

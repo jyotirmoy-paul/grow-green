@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../../../../services/game_services/monetary/models/money_model.dart';
+import '../../../../../../services/game_services/monetary/models/money_model.dart';
 
 part 'offer.g.dart';
 
@@ -17,15 +17,18 @@ class MoneyOffer extends Offer {
   MoneyOffer({required this.money});
 
   factory MoneyOffer.fromJson(Map<String, dynamic> json) => _$MoneyOfferFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$MoneyOfferToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class GwalletOffer extends Offer {
-  // TODO : Add Gwallet model
-  final String gwallet;
-  GwalletOffer({required this.gwallet});
+  final MoneyModel value;
+  final String code;
+  GwalletOffer({required this.value, required this.code});
 
   factory GwalletOffer.fromJson(Map<String, dynamic> json) => _$GwalletOfferFromJson(json);
+
+  @override
   Map<String, dynamic> toJson() => _$GwalletOfferToJson(this);
 }

@@ -20,10 +20,12 @@ Map<String, dynamic> _$MoneyOfferToJson(MoneyOffer instance) =>
     };
 
 GwalletOffer _$GwalletOfferFromJson(Map<String, dynamic> json) => GwalletOffer(
-      gwallet: json['gwallet'] as String,
+      value: MoneyModel.fromJson(json['value'] as Map<String, dynamic>),
+      code: json['code'] as String,
     );
 
 Map<String, dynamic> _$GwalletOfferToJson(GwalletOffer instance) =>
     <String, dynamic>{
-      'gwallet': instance.gwallet,
+      'value': instance.value.toJson(),
+      'code': instance.code,
     };

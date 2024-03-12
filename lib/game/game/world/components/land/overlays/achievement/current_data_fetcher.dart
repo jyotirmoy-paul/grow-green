@@ -2,8 +2,10 @@
 import 'package:collection/collection.dart';
 
 import '../../../../../grow_green_game.dart';
+import '../../../../../services/game_services/monetary/models/money_model.dart';
+import '../../../../../services/game_services/time/time_service.dart';
 import '../../components/farm/enum/farm_state.dart';
-import 'achievements_model.dart';
+import 'models/achievements_model.dart';
 
 class CurrentDataFetcher {
   final GrowGreenGame game;
@@ -29,18 +31,31 @@ class CurrentDataFetcher {
     return soilHealths.average;
   }
 
-  double currentValue(AchievementType achievementType) {
+  Duration get totalTimePassed {
+    final startDate = game.gameController.world.worldController.land.landController.startTime;
+    final currentDate = TimeService().currentDateTime;
+    return currentDate.difference(startDate);
+  }
+
+  double currentCheckpointValue(AchievementType achievementType) {
     switch (achievementType) {
       case AchievementType.soilHealth:
         return avgSoilHealth;
 
       case AchievementType.lands:
         return landsBought;
+
+      case AchievementType.challenge:
+        return 0;
     }
   }
 
   int get totalLandsAvailable {
     final farms = game.gameController.world.worldController.land.landController.farms;
     return farms.length;
+  }
+
+  MoneyModel get bankBalance {
+    return game.monetaryService.balance;
   }
 }

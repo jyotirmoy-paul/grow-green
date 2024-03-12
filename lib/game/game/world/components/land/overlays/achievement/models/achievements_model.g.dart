@@ -28,6 +28,7 @@ Map<String, dynamic> _$CheckPointModelToJson(CheckPointModel instance) =>
 const _$AchievementTypeEnumMap = {
   AchievementType.lands: 'lands',
   AchievementType.soilHealth: 'soilHealth',
+  AchievementType.challenge: 'challenge',
 };
 
 AchievementsModel _$AchievementsModelFromJson(Map<String, dynamic> json) =>
