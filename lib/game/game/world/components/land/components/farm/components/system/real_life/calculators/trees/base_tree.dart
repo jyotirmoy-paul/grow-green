@@ -2,6 +2,7 @@ import '../../../../../../../../utils/month.dart';
 import '../../../../tree/enums/tree_stage.dart';
 import '../../../../tree/enums/tree_type.dart';
 import 'point_data.dart';
+import 'tree_growth_data.dart';
 import 'types/fruit/coconut.dart';
 import 'types/fruit/jackfruit.dart';
 import 'types/fruit/mango.dart';
@@ -13,9 +14,11 @@ import 'types/hardwood/teakwood.dart';
 abstract class BaseTreeCalculator {
   static const tag = 'BaseTreeCalculator';
 
-  BaseTreeCalculator({required this.treeType});
+  BaseTreeCalculator({required this.treeType}) : _treeGrowthData = TreeGrowthData.of(treeType: treeType);
 
   final TreeType treeType;
+  final TreeGrowthData _treeGrowthData;
+
   int harvestReadyAge();
   int maturityAge();
   int get saplingCost;
@@ -46,24 +49,23 @@ abstract class BaseTreeCalculator {
   }
 
   TreeStage getTreeStage(int treeAgeInDays) {
-    final growthFactor = treeAgeInDays / (maturityAge() * 365);
-
-    switch (growthFactor) {
-      case < .03:
-        return TreeStage.sprout;
-
-      case < .2:
-        return TreeStage.sapling;
-
-      case < .35:
-        return TreeStage.maturing;
-
-      case < .55:
-        return TreeStage.flourishing;
-
-      default:
-        return TreeStage.elder;
+    if (treeAgeInDays < _treeGrowthData.sproutAge) {
+      return TreeStage.sprout;
     }
+
+    if (treeAgeInDays < _treeGrowthData.saplingAge) {
+      return TreeStage.sapling;
+    }
+
+    if (treeAgeInDays < _treeGrowthData.maturingAge) {
+      return TreeStage.maturing;
+    }
+
+    if (treeAgeInDays < _treeGrowthData.flourishingAge) {
+      return TreeStage.flourishing;
+    }
+
+    return TreeStage.elder;
   }
 
   int getMaxPotentialPrice() {
