@@ -10,10 +10,16 @@ class AppName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StylizedText(
-      text: Text(
-        appName,
-        style: TextStyles.s80,
+    return Hero(
+      tag: 'app-name',
+      child: Material(
+        type: MaterialType.transparency,
+        child: StylizedText(
+          text: Text(
+            appName,
+            style: TextStyles.s80,
+          ),
+        ),
       ),
     );
   }

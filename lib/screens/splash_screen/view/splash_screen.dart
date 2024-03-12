@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../game/utils/game_assets.dart';
+import '../../../widgets/app_name.dart';
 import '../cubit/splash_screen_cubit.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,9 +21,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: FlutterLogo(size: 256),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(GameAssets.background),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: const Center(
+        child: AppName(),
       ),
     );
   }

@@ -20,10 +20,7 @@ class _FadePageRouteBuilder<T> extends PageRoute<T> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    return FadeTransition(
-      opacity: animation,
-      child: child,
-    );
+    return child;
   }
 
   @override
