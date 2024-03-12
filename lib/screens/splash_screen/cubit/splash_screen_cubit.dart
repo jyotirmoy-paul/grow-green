@@ -37,10 +37,15 @@ class SplashScreenCubit extends Cubit<SplashScreenState> {
 
     Navigation.pushReplacement(RouteName.landingScreen);
 
-    final initalLink = await AppLinks().getInitialAppLink();
-    if (initalLink != null) {
-      final ViewOnlyLandingScreen viewOnlyLandingScreen = ViewOnlyLandingScreen(uri: initalLink);
-      Navigation.pushScreen(viewOnlyLandingScreen);
-    }
+    checkForDeeplink();
+  }
+
+  void checkForDeeplink() async {
+    final initialLink = await AppLinks().getInitialAppLink();
+    if (initialLink == null) return;
+    if (!initialLink.path.startsWith('grow.green://')) return;
+
+    final ViewOnlyLandingScreen viewOnlyLandingScreen = ViewOnlyLandingScreen(uri: initialLink);
+    Navigation.pushScreen(viewOnlyLandingScreen);
   }
 }
