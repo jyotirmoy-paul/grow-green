@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/flame.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_window_utils/window_manipulator.dart';
 
@@ -42,11 +43,13 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-      // For macos window , hide zoom button and enter fullscreen
-      if (Platform.isMacOS) {
-        await WindowManipulator.initialize();
-        await WindowManipulator.hideZoomButton();
-        await WindowManipulator.enterFullscreen();
+      if (!kIsWeb) {
+        // For macos window , hide zoom button and enter fullscreen
+        if (Platform.isMacOS) {
+          await WindowManipulator.initialize();
+          await WindowManipulator.hideZoomButton();
+          await WindowManipulator.enterFullscreen();
+        }
       }
 
       await Flame.device.fullScreen();
