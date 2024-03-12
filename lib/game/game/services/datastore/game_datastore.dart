@@ -25,10 +25,8 @@ class GameDatastore {
   static const _farmIdPrefix = 'farm-';
   String _farmId(String farmId) => '$_farmIdPrefix$farmId';
 
-  GameDatastore()
-      : _dbManagerService = DbManagerServiceFactory.build(
-          SupportedDbManagerService.intervalSync,
-        );
+  GameDatastore({required SupportedDbManagerService dmManagerServiceType})
+      : _dbManagerService = DbManagerServiceFactory.build(dmManagerServiceType);
 
   /// Initializes the game datastore
   Future<ServiceAction> initialize(User user) async {

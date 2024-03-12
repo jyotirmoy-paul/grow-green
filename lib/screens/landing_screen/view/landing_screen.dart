@@ -30,7 +30,7 @@ class LandingScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is GameLoaded) {
           Log.d('$tag: Game is loaded, moving to game screen!');
-          Navigation.pushReplacement(RouteName.gameScreen);
+          Navigation.push(RouteName.gameScreen);
         }
       },
       child: BlocProvider(

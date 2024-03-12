@@ -49,9 +49,10 @@ class FarmMenuHelper {
   }
 
   static String _getTitle(Farm farm) {
+    final isViewOnly = farm.game.isViewOnly;
     switch (farm.farmController.farmState) {
       case FarmState.notBought:
-        return 'Purchase Farm?';
+        return isViewOnly ? 'Farm Not Purchased' : 'Purchase the Farm?';
 
       case FarmState.functioningOnlyTrees:
       case FarmState.functioningOnlyCrops:
@@ -79,6 +80,26 @@ class FarmMenuHelper {
   }
 
   static List<FarmMenuItemModel> _getItemModels(Farm farm) {
+    if (farm.game.isViewOnly) {
+      return _getItemModelsWhenViewing(farm);
+    } else {
+      return _getItemModelsWhenPlaying(farm);
+    }
+  }
+
+  static List<FarmMenuItemModel> _getItemModelsWhenViewing(Farm farm) {
+    switch (farm.farmController.farmState) {
+      case FarmState.notBought:
+        return [];
+      default:
+        return [
+          _getSoilHealth(farm),
+          _getFarmHistory(farm),
+        ];
+    }
+  }
+
+  static List<FarmMenuItemModel> _getItemModelsWhenPlaying(Farm farm) {
     switch (farm.farmController.farmState) {
       /// buy
       case FarmState.notBought:
@@ -123,6 +144,8 @@ class FarmMenuHelper {
       ),
     );
   }
+
+  /// buy
 
   /// soil health
   static FarmMenuItemModel _getSoilHealth(Farm farm) {
@@ -454,7 +477,7 @@ class FarmMenuHelper {
     }
 
     /// pop all dialogs
-    Navigation.popToFirst();
+    Navigation.popUntil(RouteName.gameScreen);
 
     /// do the actual transaction
     final success = await farmController.game.monetaryService.transact(

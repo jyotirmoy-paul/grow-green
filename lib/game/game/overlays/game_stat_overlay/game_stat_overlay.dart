@@ -8,6 +8,7 @@ import 'widget/money/money_stat.dart';
 import 'widget/temperature_stat.dart';
 import 'widget/time_menu/calender_stat.dart';
 import 'widget/time_menu/time_menu.dart';
+import 'widget/view_only_mode.dart';
 
 class GameStatOverlay extends StatelessWidget {
   static const overlayName = 'game-stats';
@@ -55,8 +56,19 @@ class GameStatOverlay extends StatelessWidget {
                   villageTemperatureService:
                       game.gameController.world.worldController.land.landController.villageTemperatureService,
                 ),
+
+                Gap(20.s),
+
+                /// achievements
+                if (!game.isViewOnly)
+                  AchievementsStat(
+                    achievementsService: game.gameController.achievementsService,
+                  ),
               ],
             ),
+            const Spacer(),
+
+            if (game.isViewOnly) const ViewOnlyMode(),
 
             /// spacer
             const Spacer(),
@@ -71,9 +83,10 @@ class GameStatOverlay extends StatelessWidget {
                 Gap(25.s),
 
                 /// time menu
-                const TimeMenu(),
+                if (!game.isViewOnly) const TimeMenu(),
               ],
             ),
+            Gap(25.s),
           ],
         ),
       ),

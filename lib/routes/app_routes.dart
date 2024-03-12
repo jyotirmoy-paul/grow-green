@@ -15,7 +15,7 @@ abstract class AppRoutes {
 
     return _FadePageRouteBuilder(
       settings: settings,
-      child: _buildScreen(routeName),
+      child : _buildScreen(routeName),
     );
   }
 
@@ -28,7 +28,13 @@ abstract class AppRoutes {
         return const LandingScreen();
 
       case RouteName.gameScreen:
-        return const GameScreen();
+        return const GameScreen(isViewOnly: false);
+
+      case RouteName.viewOnlyGameScreen:
+        return const GameScreen(isViewOnly: true);
+
+      default:
+        return const Placeholder();
     }
   }
 }

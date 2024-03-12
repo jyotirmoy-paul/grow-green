@@ -1,12 +1,9 @@
 import 'dart:async';
 
-import '../../../../../../../routes/routes.dart';
 import '../../../../../../../services/log/log.dart';
-import '../../../../../../../utils/utils.dart';
 import '../../../../../grow_green_game.dart';
 import '../../../../../services/game_services/monetary/enums/transaction_type.dart';
 import '../../../../../services/game_services/time/time_service.dart';
-import 'achievements_dialog.dart';
 import 'achievements_model.dart';
 import 'current_data_fetcher.dart';
 import 'offer.dart';
@@ -51,18 +48,6 @@ class AchievementsService {
         .toList();
 
     achievementsModel.updateCheckpoints(achievementType, checkpoints);
-  }
-
-  void showNewSoilHealthAchievementNotification() {
-    Utils.showNonAnimatedDialog(
-      barrierLabel: "Achievements",
-      context: Navigation.navigationKey.currentContext!,
-      builder: (context) {
-        return AchievementsDialog(
-          achievementsService: this,
-        );
-      },
-    );
   }
 
   void processOffer(Offer offer) async {
