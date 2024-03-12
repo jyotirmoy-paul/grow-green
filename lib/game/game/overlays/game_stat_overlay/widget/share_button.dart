@@ -11,6 +11,10 @@ import '../../../../../widgets/dialog_container.dart';
 import '../../../../../widgets/game_button.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../../widgets/stylized_text.dart';
+import '../../../world/components/land/overlays/achievement/GwalletService.dart';
+import 'firebase_storage_service.dart';
+
 class ShareButton extends StatelessWidget {
   const ShareButton({super.key});
 
@@ -53,7 +57,10 @@ class ShareDialog extends StatelessWidget {
     required this.id,
   });
 
-  String get link => "grow.green://view?id=$id";
+  String get nativeDeeplink => "grow.green://view?id=$id";
+  Future<String> getWebLink() async {
+    return await FirebaseStorageUploadService.getHostedLinkFor(nativeDeeplink);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,58 +68,79 @@ class ShareDialog extends StatelessWidget {
       title: "Show your farm to world",
       dialogType: DialogType.small,
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: FutureBuilder<String>(
+          future: getWebLink(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                return shareButtons(snapshot.data!);
+              } else {
+                return StylizedText(
+                  text: Text(
+                    "Something went wrong",
+                    style: TextStyles.s23,
+                  ),
+                );
+              }
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Column shareButtons(String weblink) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: 150.s,
-                  height: 60.s,
-                  child: GameButton.text(
-                    text: "Share",
-                    onTap: () {
-                      final message = "Hey, check out my village on Grow Green using this link: $link";
-                      Share.share(message);
-                    },
-                    textStyle: TextStyles.s30,
-                    color: Colors.green,
-                  ),
-                ),
-                Gap(40.s),
-                SizedBox(
-                  width: 150.s,
-                  height: 60.s,
-                  child: GameButton.text(
-                    text: "Copy link",
-                    onTap: () {
-                      final link = "grow.green://view?id=$id";
-                      Clipboard.setData(ClipboardData(text: link));
-                    },
-                    textStyle: TextStyles.s30,
-                    color: Colors.red,
-                  ),
-                ),
-              ],
-            ),
-            Gap(30.s),
             SizedBox(
-              width: 180.s,
+              width: 150.s,
               height: 60.s,
               child: GameButton.text(
-                text: "Add to Gwallet",
+                text: "Share",
                 onTap: () {
-                  // TODO: Add to google wallet
+                  final message = "Hey, check out my village on Grow Green using this link: $weblink";
+                  Share.share(message);
                 },
                 textStyle: TextStyles.s30,
-                color: Colors.black,
+                color: Colors.green,
+              ),
+            ),
+            Gap(40.s),
+            SizedBox(
+              width: 150.s,
+              height: 60.s,
+              child: GameButton.text(
+                text: "Copy link",
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: weblink));
+                },
+                textStyle: TextStyles.s30,
+                color: Colors.red,
               ),
             ),
           ],
         ),
-      ),
+        Gap(30.s),
+        SizedBox(
+          width: 180.s,
+          height: 60.s,
+          child: GameButton.text(
+            text: "Add to Gwallet",
+            onTap: () async {
+              await GwalletService.claimGwalletFromFarmView(weblink);
+            },
+            textStyle: TextStyles.s30,
+            color: Colors.black,
+          ),
+        ),
+      ],
     );
   }
 }
