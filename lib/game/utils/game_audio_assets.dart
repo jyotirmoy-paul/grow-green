@@ -12,7 +12,7 @@ abstract class GameAudioAssets {
   static const farmPurchased = '$_baseSfx/farmPurchased.mp3';
   static const gameWorldIntro = '$_baseSfx/gameWorldIntro.wav';
   static const timePaused = '$_baseSfx/time_paused.wav';
-  static const backgroundScore = '$_baseSfx/background_score.mp3';
+  static const backgroundScore = 'background_score.mp3';
 
   static const audios = [
     tap,
