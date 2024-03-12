@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../../l10n/l10n.dart';
 import '../../../../../../../../routes/routes.dart';
 import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
@@ -15,8 +16,6 @@ import '../../../../sky/weather_service/services/co2_absorption_calculator.dart'
 import '../../../components/farm/components/system/real_life/calculators/trees/base_tree.dart';
 import '../../../components/farm/farm_controller.dart';
 import '../../../components/farm/model/tree_data.dart';
-
-/// TODO: Language
 
 class SellTreeWidget extends StatelessWidget {
   static const predictionDurationInYears = 10;
@@ -48,7 +47,7 @@ class SellTreeWidget extends StatelessWidget {
     Navigation.popUntil(RouteName.gameScreen);
   }
 
-  String get description {
+  String getDescription(BuildContext context) {
     final dateTime = TimeService().currentDateTime;
 
     final age = dateTime.difference(treeData.lifeStartedAt).inDays;
@@ -68,15 +67,21 @@ class SellTreeWidget extends StatelessWidget {
         co2SequestrationPrediction * treeData.noOfTrees - totalCo2SequestratedInKgs;
 
     final co2Sequestrated = totalCo2SequestratedInKgs > 1000
-        ? '${(totalCo2SequestratedInKgs / 1000).toStringAsFixed(2)} metric tons'
-        : '$totalCo2SequestratedInKgs kgs';
+        ? context.l10n.xMetricTons((totalCo2SequestratedInKgs / 1000).toStringAsFixed(2))
+        : context.l10n.xKgs(totalCo2SequestratedInKgs.toStringAsFixed(0));
 
     final co2SequestratePrediction =
-        '${(totalCo2SequestratedAsPerPredictionInKgs / 1000).toStringAsFixed(2)} metric tons';
+        context.l10n.xMetricTons((totalCo2SequestratedAsPerPredictionInKgs / 1000).toStringAsFixed(2));
 
-    final treeAge = age > 365 ? '${age ~/ 365} years' : '$age days';
+    final treeAge = age > 365 ? context.l10n.years(age ~/ 365) : context.l10n.days(age);
 
-    return "Quick fact: In $treeAge, your ${treeData.noOfTrees} trees have zapped $co2Sequestrated of CO2 from the air! Imagine, just by letting it grow for $predictionDurationInYears more years, it'll snatch up an extra $co2SequestratePrediction of CO2.\n\nThis isn't just good for us; it's a win for our village's climate too. Do you still wanna sell?";
+    return context.l10n.treeSellFact(
+      treeAge,
+      treeData.noOfTrees,
+      co2Sequestrated,
+      predictionDurationInYears,
+      co2SequestratePrediction,
+    );
   }
 
   List<LineChartBarData> get generateData {
@@ -148,7 +153,7 @@ class SellTreeWidget extends StatelessWidget {
                 children: [
                   /// text
                   Text(
-                    "Selling now? You're overlooking future gains!",
+                    context.l10n.sellTreeTitle,
                     style: TextStyles.s28.copyWith(
                       color: Colors.redAccent,
                       height: 1.2,
@@ -260,7 +265,7 @@ class SellTreeWidget extends StatelessWidget {
                   /// description
                   Expanded(
                     child: Text(
-                      description,
+                      getDescription(context),
                       style: TextStyles.s25.copyWith(
                         color: AppColors.brown,
                         letterSpacing: 0.6,
@@ -278,7 +283,7 @@ class SellTreeWidget extends StatelessWidget {
           /// button
           GameButton.textImage(
             bgColor: Colors.black.withOpacity(0.2),
-            text: 'Emh, sell anyway',
+            text: context.l10n.sellAnyway,
             image: GameAssets.cutTree,
             onTap: _sellTree,
           ),

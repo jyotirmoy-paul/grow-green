@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../l10n/l10n.dart';
 import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
@@ -8,8 +9,6 @@ import '../../../../../../services/game_services/monetary/models/money_model.dar
 import '../../../components/farm/model/harvest_model.dart';
 import '../../widgets/dialog_stats.dart';
 import '../models/harvest_revenue_data_point.dart';
-
-/// TODO: Language
 
 class HarvestSummary extends StatelessWidget {
   final GlobalKey chartRendererKey;
@@ -50,10 +49,8 @@ class HarvestSummary extends StatelessWidget {
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 4.s),
                   child: Text(
-                    'Cummulative Revenue over the years',
-                    style: TextStyles.s28.copyWith(
-                      letterSpacing: 1.4.s,
-                    ),
+                    context.l10n.cummulativeRevenueTitle,
+                    style: TextStyles.s28.copyWith(letterSpacing: 1.4.s),
                   ),
                 ),
               ),

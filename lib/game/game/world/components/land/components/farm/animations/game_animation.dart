@@ -40,6 +40,7 @@ class GameAnimation {
         _value = minValue + adjustedValue * (0.5 * (1 + math.sin(2 * math.pi * t - math.pi / 2)));
         break;
 
+      /// MVP1: We can change this curve for a better bounce animation
       case GameAnimationType.bounce:
         if (t < 0.5) {
           /// quadratic ease out

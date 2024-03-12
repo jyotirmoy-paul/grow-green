@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../../l10n/l10n.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
 import '../../../../../../../../utils/utils.dart';
@@ -10,7 +11,6 @@ import '../../../components/farm/components/system/enum/growable.dart';
 import '../../../components/farm/model/harvest_model.dart';
 import '../models/merged_harvest_model.dart';
 
-/// TODO: Language
 class MergedHarvestItem extends StatelessWidget {
   final MergedHarvestModel model;
   final int itemNo;
@@ -100,10 +100,7 @@ class MergedHarvestItem extends StatelessWidget {
                             style: TextStyles.s25,
                           ),
                           Gap(8.s),
-                          Text(
-                            'x${model.noOfMergedItems}',
-                            style: TextStyles.s23,
-                          ),
+                          Text(context.l10n.timesValue(model.noOfMergedItems), style: TextStyles.s23),
                         ],
                       ),
                     ),
@@ -120,12 +117,12 @@ class MergedHarvestItem extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            'Yield',
+                            context.l10n.yield,
                             style: TextStyles.s18,
                             textAlign: TextAlign.center,
                           ),
                           Text(
-                            '${(model.yield * 100).toStringAsFixed(1)} %',
+                            context.l10n.valuePercentage((model.yield * 100).toStringAsFixed(1)),
                             style: TextStyles.s23,
                             textAlign: TextAlign.center,
                           ),
@@ -209,15 +206,15 @@ class _HarvestType extends StatelessWidget {
     }
   }
 
-  String get text {
+  String getText(BuildContext context) {
     switch (model.harvestType) {
       case HarvestType.recurring:
-        return 'Recurring';
+        return context.l10n.recurring;
 
       case HarvestType.oneTime:
         return switch (model.growable.getGrowableType()) {
-          GrowableType.tree => 'Sold',
-          GrowableType.crop => 'Harvested',
+          GrowableType.tree => context.l10n.sold,
+          GrowableType.crop => context.l10n.harvested,
         };
     }
   }
@@ -232,7 +229,7 @@ class _HarvestType extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.s),
         ),
         child: Text(
-          text,
+          getText(context),
           style: TextStyles.s23,
           textAlign: TextAlign.center,
         ),

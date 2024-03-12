@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../../../game/utils/game_assets.dart';
+import '../../../l10n/l10n.dart';
 import '../../../models/auth/user.dart';
 import '../../../models/auth/user_auth_type.dart';
 import '../../../routes/routes.dart';
@@ -30,7 +31,7 @@ class LandingScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is GameLoaded) {
           Log.d('$tag: Game is loaded, moving to game screen!');
-          Navigation.push(RouteName.gameScreen);
+          Navigation.pushReplacement(RouteName.gameScreen);
         }
       },
       child: BlocProvider(
@@ -69,10 +70,8 @@ class LandingScreen extends StatelessWidget {
                                 child: AppName(),
                               ),
                               StylizedText(
-                                  text: Text(
-                                'Authenticating...',
-                                style: TextStyles.s30,
-                              )),
+                                text: Text(context.l10n.authenticating, style: TextStyles.s30),
+                              ),
                             ],
                           );
                         }
@@ -130,7 +129,7 @@ class _LoggedInView extends StatelessWidget {
               height: 60.s,
               width: 160.s,
               child: GameButton.text(
-                text: 'Sign out',
+                text: context.l10n.signOut,
                 color: Colors.red,
                 textStyle: TextStyles.s30,
                 onTap: () {
@@ -150,7 +149,7 @@ class _LoggedInView extends StatelessWidget {
           Align(
             child: StylizedText(
               text: Text(
-                'Hi ${user.name.split(' ').first}!',
+                context.l10n.greeting(user.firstName),
                 style: TextStyles.s35,
               ),
             ),
@@ -163,7 +162,7 @@ class _LoggedInView extends StatelessWidget {
               width: 300.s,
               height: 60.s,
               child: GameButton.text(
-                text: 'Go to your village',
+                text: context.l10n.goToYourVillage,
                 color: Colors.blueAccent,
                 textStyle: TextStyles.s30,
                 onTap: () {
@@ -196,7 +195,7 @@ class _AudioVolumeSettings extends StatelessWidget {
           /// sfx
           StylizedText(
             text: Text(
-              'Sound Effects',
+              context.l10n.soundEffects,
               style: TextStyles.s30,
             ),
           ),
@@ -218,7 +217,7 @@ class _AudioVolumeSettings extends StatelessWidget {
           /// bgm
           StylizedText(
             text: Text(
-              'Music',
+              context.l10n.music,
               style: TextStyles.s30,
             ),
           ),
@@ -390,7 +389,7 @@ class _NotLoggedInView extends StatelessWidget {
             height: 60.s,
             child: GameButton.text(
               color: Colors.green,
-              text: 'Sign in with Google',
+              text: context.l10n.signInWithGoogle,
               textStyle: TextStyles.s30,
               onTap: () {
                 onSignInTap(context: context, authType: UserAuthType.google);

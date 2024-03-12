@@ -121,8 +121,8 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
   }
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _populateChildren();
   }
 
@@ -148,6 +148,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
   double get _width {
     return switch (widget.componentId) {
       ComponentId.trees => 500.s,
+      ComponentId.fertilizer => 480.s,
       _ => 450.s,
     };
   }
@@ -310,7 +311,7 @@ class _ChooseComponentDialogState extends State<ChooseComponentDialog> {
           Gap(10.s),
           Text(
             info,
-            style: TextStyles.s28,
+            style: TextStyles.s23,
             textAlign: TextAlign.center,
           ),
         ],

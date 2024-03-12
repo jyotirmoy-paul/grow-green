@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../l10n/l10n.dart';
 import '../../../../../../../services/audio/audio_service.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
@@ -9,7 +10,6 @@ import '../../../../../../utils/game_utils.dart';
 import '../../../../../overlays/notification_overlay/service/notification_helper.dart';
 import '../../components/farm/farm.dart';
 
-/// TODO: Language
 class PurchaseFarmDialog extends StatelessWidget {
   final Farm farm;
 
@@ -42,7 +42,7 @@ class PurchaseFarmDialog extends StatelessWidget {
 
             /// confirmation text
             Text(
-              'Are you sure you want to purchase the farm?',
+              context.l10n.confirmFarmPurchase,
               style: TextStyles.s28brown,
             ),
 

@@ -1,17 +1,36 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../l10n/l10n.dart';
+import '../../../../../routes/routes.dart';
 import '../model/notification_model.dart';
 import 'notification_service.dart';
 
-/// TODO: Language
 abstract class NotificationHelper {
+  static BuildContext get _context => Navigation.navigationKey.currentContext!;
+
   /// non user issues
-  static void farmPurchaseFailed() {}
-  static void farmContentsPurchaseFailed() {}
+  static void farmPurchaseFailed() {
+    NotificationService().notify(
+      NotificationModel(
+        text: _context.l10n.farmPurchaseFailed,
+        textColor: Colors.red,
+      ),
+    );
+  }
+
+  static void farmContentsPurchaseFailed() {
+    NotificationService().notify(
+      NotificationModel(
+        text: _context.l10n.contentPurchaseFailed,
+        textColor: Colors.red,
+      ),
+    );
+  }
+
   static void transactionFailed() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Transaction failed, something went wrong',
+        text: _context.l10n.transactionFailed,
         textColor: Colors.red,
       ),
     );
@@ -21,7 +40,7 @@ abstract class NotificationHelper {
   static void cannotAffordFarm() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Insufficient funds to buy the farm',
+        text: _context.l10n.insufficientFundsForFarm,
         textColor: Colors.red,
       ),
     );
@@ -30,16 +49,7 @@ abstract class NotificationHelper {
   static void cannotAffordFarmContents() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Insufficient funds to buy the contents for your farm',
-        textColor: Colors.red,
-      ),
-    );
-  }
-
-  static void agroforestrySystemTapNotAllowed() {
-    NotificationService().notify(
-      NotificationModel(
-        text: 'Can\'t edit with trees present in the system!',
+        text: _context.l10n.insufficientFundsForFarmContent,
         textColor: Colors.red,
       ),
     );
@@ -48,7 +58,7 @@ abstract class NotificationHelper {
   static void nothingToBuy() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Nothing to buy!',
+        text: _context.l10n.nothingToBuy,
         textColor: Colors.red,
       ),
     );
@@ -57,7 +67,7 @@ abstract class NotificationHelper {
   static void treeMaintenanceMiss() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Trees were not able to survice due to lack of maintanence!',
+        text: _context.l10n.treeDiedPrematurely,
         textColor: Colors.red,
       ),
     );
@@ -67,7 +77,7 @@ abstract class NotificationHelper {
   static void farmPurchaseSuccess() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Woohoo! Bought the farm',
+        text: _context.l10n.farmPurchaseSuccess,
         textColor: Colors.green,
       ),
     );
@@ -76,7 +86,7 @@ abstract class NotificationHelper {
   static void treesSold() {
     NotificationService().notify(
       NotificationModel(
-        text: 'Yay! Sold the trees successfully',
+        text: _context.l10n.treeSold,
         textColor: Colors.green,
       ),
     );

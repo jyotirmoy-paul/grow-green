@@ -2,6 +2,7 @@ import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../l10n/l10n.dart';
 import '../../../../../../../services/log/log.dart';
 import '../../../../../../../utils/app_colors.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
@@ -18,6 +19,7 @@ import '../../../../../services/game_services/monetary/models/money_model.dart';
 import '../../components/farm/asset/crop_asset.dart';
 import '../../components/farm/asset/tree_asset.dart';
 import '../../components/farm/components/crop/enums/crop_type.dart';
+import '../../components/farm/components/system/enum/growable.dart';
 import '../../components/farm/components/system/real_life/utils/cost_calculator.dart';
 import '../../components/farm/components/tree/enums/tree_type.dart';
 import '../../components/farm/enum/farm_state.dart';
@@ -32,7 +34,6 @@ import 'widgets/menu_image.dart';
 import 'widgets/menu_item_flip_skeleton.dart';
 import 'widgets/sell_tree_widget.dart';
 
-/// TODO: Language
 class ChooseComponentsDialog extends StatefulWidget {
   final FarmContent farmContent;
   final FarmController farmController;
@@ -62,10 +63,6 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   late FarmContent _currentFarmContent;
   MoneyModel _totalCost = MoneyModel.zero();
 
-  static const kChange = "CHANGE";
-  static const kAdd = "ADD";
-  static const kRemove = "REMOVE";
-
   /// crop
   _ComponentsModel forCrop(Content cropContent) {
     final cropType = cropContent.type as CropType;
@@ -77,14 +74,14 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     }
 
     return _ComponentsModel(
-      headerText: 'Crop',
+      headerText: context.l10n.crop,
       image: CropAsset.menuRepresentativeOf(cropType),
       footerText: '',
       componentId: ComponentId.crop,
       isComponentEditable: isCropEditable,
-      footerButtonText: kChange,
+      footerButtonText: context.l10n.change,
       descriptionText:
-          "${cropType.name.toUpperCase()}\n${cropContent.qty.readableFormat} | ${cropCost.formattedValue} ",
+          "${cropType.growableName.toUpperCase()}\n${cropContent.qty.readableFormat} | ${cropCost.formattedValue} ",
       color: AppColors.cropMenuCardBg,
     );
   }
@@ -92,12 +89,12 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   /// no crop
   _ComponentsModel noCrop() {
     return _ComponentsModel(
-      headerText: 'No Crop',
+      headerText: context.l10n.noCrop,
       image: GameAssets.addSeeds,
       footerText: '',
       componentId: ComponentId.crop,
       isComponentEditable: widget.editableComponents.contains(ComponentId.crop),
-      footerButtonText: kAdd,
+      footerButtonText: context.l10n.add,
       color: AppColors.cropMenuCardBg,
     );
   }
@@ -120,26 +117,26 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     final qtyDescription =
         countTreeIn ? '${treeContent.qty.readableFormat} | ${treeCost.formattedValue}' : treeContent.qty.readableFormat;
     return _ComponentsModel(
-      headerText: 'Tree',
+      headerText: context.l10n.tree,
       image: TreeAsset.menuRepresentativeOf(treeType),
       footerText: "",
       componentId: ComponentId.trees,
       isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
-      footerButtonText: countTreeIn ? kChange : kRemove,
+      footerButtonText: countTreeIn ? context.l10n.change : context.l10n.remove,
       buttonColor: countTreeIn ? null : Colors.red,
-      descriptionText: "${treeType.name.toUpperCase()}\n$qtyDescription",
+      descriptionText: "${treeType.growableName.toUpperCase()}\n$qtyDescription",
       color: AppColors.treeMenuCardBg,
     );
   }
 
   _ComponentsModel noTree() {
     return _ComponentsModel(
-      headerText: 'No Tree',
+      headerText: context.l10n.noTree,
       image: GameAssets.addSapling,
       footerText: '',
       componentId: ComponentId.trees,
       isComponentEditable: widget.editableComponents.contains(ComponentId.trees),
-      footerButtonText: kAdd,
+      footerButtonText: context.l10n.add,
       buttonColor: Colors.green,
     );
   }
@@ -171,8 +168,8 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
   }
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
     /// calculate data for initial farm content
     _calculateDataFor(widget.farmContent);
@@ -239,11 +236,11 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     Log.i('$tag: _sellTree invoked');
 
     Utils.showNonAnimatedDialog(
-      barrierLabel: 'Sell tree dialog',
+      barrierLabel: context.l10n.sellTreeDialog,
       context: context,
       builder: (context) {
         return DialogContainer(
-          title: 'Sell tree?',
+          title: context.l10n.sellTree,
           dialogType: DialogType.medium,
           child: SellTreeWidget(farmController: widget.farmController),
         );
@@ -264,7 +261,6 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
         return;
 
       case ComponentId.agroforestryLayout:
-        return NotificationHelper.agroforestrySystemTapNotAllowed();
       case ComponentId.maintenance:
         return;
     }
@@ -282,7 +278,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     });
 
     final newComponentIndex = await Utils.showNonAnimatedDialog(
-      barrierLabel: 'Choose component dialog',
+      barrierLabel: context.l10n.chooseComponentsDialog,
       context: context,
       builder: (context) {
         return DialogContainer(
@@ -290,16 +286,16 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
           title: () {
             switch (componentId) {
               case ComponentId.crop:
-                return 'Choose Crop';
+                return context.l10n.chooseCrop;
 
               case ComponentId.trees:
-                return 'Choose tree';
+                return context.l10n.chooseTree;
 
               case ComponentId.fertilizer:
-                return 'Choose fertilizer';
+                return context.l10n.chooseFertilizer;
 
               case ComponentId.agroforestryLayout:
-                return 'Choose Agroforestry layout';
+                return context.l10n.chooseAgroforestryLayout;
 
               default:
                 throw Exception('$tag: onComponentTap($componentId) invoked with wrong componentId');
@@ -332,11 +328,11 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
     }
 
     await Utils.showNonAnimatedDialog(
-      barrierLabel: 'Choose component dialog',
+      barrierLabel: context.l10n.chooseComponentsDialog,
       context: context,
       builder: (context) {
         return DialogContainer(
-          title: 'Choose Maintenance',
+          title: context.l10n.chooseMaintenance,
           dialogType: DialogType.large,
           child: ChooseMaintenanceDialog(
             farmContent: _currentFarmContent,
@@ -428,7 +424,7 @@ class _ChooseComponentsDialogState extends State<ChooseComponentsDialog> {
           padding: EdgeInsets.only(right: 16.s, bottom: 16.s),
           child: GameButton.textImage(
             key: ValueKey(_totalCost.formattedValue),
-            text: 'Continue for ${_totalCost.formattedValue}',
+            text: context.l10n.continueFor(_totalCost.formattedValue),
             image: GameAssets.coin,
             bgColor: _totalCost.isZero() ? Colors.grey : Colors.green,
             onTap: _onSelectTap,

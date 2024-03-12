@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../../../../../../l10n/l10n.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/text_styles.dart';
 import '../../../../../../../utils/utils.dart';
@@ -33,21 +34,25 @@ class SoilHealthStats extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           /// heading
-          Text('Stats', style: TextStyles.s28, textAlign: TextAlign.center),
+          Text(
+            context.l10n.stats,
+            style: TextStyles.s28,
+            textAlign: TextAlign.center,
+          ),
 
           Column(
             children: [
               StatItem(
-                textA: 'Min',
+                textA: context.l10n.min,
                 textB: minSoilHealth.toStringAsFixed(3),
               ),
               StatItem(
-                textA: 'Max',
+                textA: context.l10n.max,
                 textB: maxSoilHealth.toStringAsFixed(3),
               ),
               StatItem(
-                textA: 'Farming For',
-                textB: '$farmingForYears years',
+                textA: context.l10n.farmingFor,
+                textB: context.l10n.years(farmingForYears),
               ),
             ],
           ),
@@ -82,16 +87,20 @@ class HarvestStats extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           /// heading
-          Text('Stats', style: TextStyles.s28, textAlign: TextAlign.center),
+          Text(
+            context.l10n.stats,
+            style: TextStyles.s28,
+            textAlign: TextAlign.center,
+          ),
 
           Column(
             children: [
               StatItem(
-                textA: 'Since',
+                textA: context.l10n.since,
                 textB: Utils.monthYearDateFormat.format(harvestModels.last.dateOfHarvest),
               ),
               StatItem(
-                textA: 'Revenue',
+                textA: context.l10n.revenue,
                 textB: totalRevenue.formattedValue,
               ),
             ],

@@ -186,7 +186,7 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
       throw Exception('$tag: _populateNewChildren() invoked with null farm data!');
     }
 
-    final farmModel = FarmMenuHelper.getFarmMenuModel(currentFarm);
+    final farmModel = FarmMenuHelper.getFarmMenuModel(currentFarm, context);
 
     /// set farm data
     _titleText = farmModel.title;
@@ -204,8 +204,8 @@ class _FarmMenuState extends State<FarmMenu> with TickerProviderStateMixin {
   }
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _init();
   }
 

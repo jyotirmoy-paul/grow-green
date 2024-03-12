@@ -10,7 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
   lottie: ^3.1.0
   cupertino_icons: ^1.0.2
   firebase_core: ^2.25.5
@@ -24,7 +25,7 @@ dependencies:
   sign_in_with_apple: ^5.0.0
   flame: ^1.14.0
   flame_tiled: ^1.18.3
-  intl: ^0.19.0
+  intl: 0.18.1
   cloud_firestore: ^4.14.0
   synchronized: ^3.1.0+1
   json_serializable: ^6.7.1
@@ -49,8 +50,8 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 flutter:
+  generate: true
   uses-material-design: true
-
   assets:
     # map
     - assets/images/

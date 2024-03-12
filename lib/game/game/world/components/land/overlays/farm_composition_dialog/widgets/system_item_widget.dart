@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../../l10n/l10n.dart';
 import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
@@ -20,7 +21,6 @@ import 'menu_image.dart';
 import 'menu_item_flip_skeleton.dart';
 import 'soil_health_effect.dart';
 
-/// TODO: Language
 class SystemItemWidget extends StatefulWidget {
   final Farm farm;
   final FarmSystem farmSystem;
@@ -114,7 +114,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
           Gap(4.s),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text("You get", style: TextStyles.s23),
+            child: Text(context.l10n.youGet, style: TextStyles.s23),
           ),
           Gap(1.s),
           Column(
@@ -149,7 +149,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.s),
               child: Text(
-                LayoutInfo.fromSystemType(widget.farmSystem).info,
+                LayoutInfo.fromSystemType(widget.farmSystem, context).info,
                 style: TextStyles.s23,
                 textAlign: TextAlign.center,
               ),
@@ -162,7 +162,7 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
 
   Widget get _footer {
     return MenuFooterTextRow(
-      leftText: "Min Cost",
+      leftText: context.l10n.minCost,
       rightText: FarmMenuHelper.getPriceForFarmSystem(
         farmSystem: widget.farmSystem,
         soilHealthPercentage: widget.farm.farmController.soilHealthPercentage,
@@ -183,20 +183,20 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
 
   String _getTitle() {
     if (widget.farmSystem.farmSystemType == FarmSystemType.monoculture) {
-      return 'Monoculture';
+      return context.l10n.monoculture;
     }
 
     final agroType = (widget.farmSystem as AgroforestrySystem).agroforestryType;
 
     switch (agroType) {
       case AgroforestryType.alley:
-        return 'Alley Cropping';
+        return context.l10n.alleyCropping;
 
       case AgroforestryType.boundary:
-        return 'Boundary Planation';
+        return context.l10n.boundaryPlantation;
 
       case AgroforestryType.block:
-        return 'Block Planation';
+        return context.l10n.blockPlantation;
     }
   }
 
@@ -210,8 +210,8 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
       key: ValueKey('trees-${system.agroforestryType}'),
       componentImage: GameAssets.sapling,
       bgColor: widget.secondaryColor,
-      footer: "x$treeQty",
-      header: "Trees",
+      footer: context.l10n.timesValue(treeQty),
+      header: context.l10n.trees,
     );
 
     /// crops
@@ -221,8 +221,8 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
       key: ValueKey('crops-${system.agroforestryType}'),
       componentImage: GameAssets.seeds,
       bgColor: widget.secondaryColor,
-      header: "Crop Area",
-      footer: "${cropAreaHa.toStringAsFixed(2)} ha",
+      header: context.l10n.cropArea,
+      footer: context.l10n.cropAreaInHa(cropAreaHa.toStringAsFixed(2)),
     );
 
     return [
@@ -254,8 +254,8 @@ class _SystemItemWidgetState extends State<SystemItemWidget> {
       key: ValueKey('crops-${system.farmSystemType}'),
       componentImage: GameAssets.seeds,
       bgColor: widget.secondaryColor,
-      header: "Crop Area",
-      footer: "${cropAreaHa.toStringAsFixed(2)} ha",
+      header: context.l10n.cropArea,
+      footer: context.l10n.cropAreaInHa(cropAreaHa.toStringAsFixed(2)),
     );
 
     return [

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../../../../../../../../l10n/l10n.dart';
+import '../../../../../../../../../routes/routes.dart';
 import '../../../../../../../../../services/audio/audio_service.dart';
 import '../../../../../../../../../services/log/log.dart';
 import '../../../../../../../overlays/notification_overlay/service/notification_helper.dart';
@@ -11,8 +13,6 @@ import '../../components/hover_board/models/hover_board_model.dart';
 import '../../components/tree/enums/tree_stage.dart';
 import '../../model/tree_data.dart';
 import '../farm_core_service.dart';
-
-/// TODO: Language
 
 class TreeMaintanenceCheckerService {
   /// constants
@@ -97,7 +97,7 @@ class TreeMaintanenceCheckerService {
     _hoverBoardController.addHoverBoard(
       type: HoverBoardType.treeMaintanenceWaiting,
       model: HoverBoardModel.timer(
-        text: 'Maintanence overdue',
+        text: Navigation.navigationKey.currentContext!.l10n.maintanenceOverdue,
         image: TreeAsset.of(_treeData.treeType).at(TreeStage.elder),
         startDateTime: dueDate,
         futureDateTime: limitDate,
