@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../l10n/l10n.dart';
 import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
@@ -15,7 +16,7 @@ class SoilHealthSummary extends StatelessWidget {
   final double yearsInterval;
   final double minSoilHealth;
   final double maxSoilHealth;
-  final bool minMaxTooNear;
+  final double diffBetweenMinMax;
   final int farmingForYears;
 
   SoilHealthSummary({
@@ -27,7 +28,7 @@ class SoilHealthSummary extends StatelessWidget {
     required this.maxSoilHealth,
   })  : yearsInterval = (mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year) / 6,
         farmingForYears = mergedSoilHealthModels.first.year - mergedSoilHealthModels.last.year,
-        minMaxTooNear = (maxSoilHealth - minSoilHealth) < 0.001;
+        diffBetweenMinMax = maxSoilHealth - minSoilHealth;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class SoilHealthSummary extends StatelessWidget {
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20.s, vertical: 4.s),
                   child: Text(
-                    'Soil Health over the years',
+                    context.l10n.soilHealthOverTheYears,
                     style: TextStyles.s28.copyWith(
                       letterSpacing: 1.4.s,
                     ),
@@ -83,7 +84,7 @@ class SoilHealthSummary extends StatelessWidget {
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            interval: minMaxTooNear ? 10 : (maxSoilHealth - minSoilHealth) / 6,
+                            interval: diffBetweenMinMax < 1 ? 0.1 : diffBetweenMinMax / 6,
                             getTitlesWidget: (v, meta) {
                               if (v == meta.max || v == meta.min) return const SizedBox.shrink();
                               return Padding(

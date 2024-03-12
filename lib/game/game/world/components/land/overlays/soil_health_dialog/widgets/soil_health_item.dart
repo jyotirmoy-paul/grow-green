@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../../l10n/l10n.dart';
 import '../../../../../../../../utils/app_colors.dart';
 import '../../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../../utils/text_styles.dart';
@@ -8,8 +9,6 @@ import '../../../../../../../../utils/utils.dart';
 import '../../../../../../../utils/game_utils.dart';
 import '../enum/soil_health_movement.dart';
 import '../models/merged_soil_health_model.dart';
-
-/// TODO: Language
 
 class SoilHealthItem extends StatelessWidget {
   final MergedSoilHealthModel mergedSoilHealthModel;
@@ -59,14 +58,8 @@ class SoilHealthItem extends StatelessWidget {
           /// soil health
           Column(
             children: [
-              Text(
-                'Soil Health',
-                style: TextStyles.s15,
-              ),
-              Text(
-                mergedSoilHealthModel.soilHealth.toStringAsFixed(3),
-                style: TextStyles.s28,
-              ),
+              Text(context.l10n.soilHealth, style: TextStyles.s15),
+              Text(mergedSoilHealthModel.soilHealth.toStringAsFixed(3), style: TextStyles.s28),
             ],
           ),
 
@@ -75,14 +68,8 @@ class SoilHealthItem extends StatelessWidget {
           /// year
           Column(
             children: [
-              Text(
-                'Year',
-                style: TextStyles.s15,
-              ),
-              Text(
-                mergedSoilHealthModel.year.toString(),
-                style: TextStyles.s28,
-              ),
+              Text(context.l10n.year, style: TextStyles.s15),
+              Text(mergedSoilHealthModel.year.toString(), style: TextStyles.s28),
             ],
           ),
         ],
@@ -93,17 +80,6 @@ class SoilHealthItem extends StatelessWidget {
 
 /// MVP1: More info about exact user behaviour can be added
 class _InfoWidget extends StatelessWidget {
-  /// these may be incorrect (as not maped to exact data) but good enough for demo purpose
-  static const _possibleOptionsForUpwardMovement = [
-    'Effective Agroforestry Practices',
-    'Organic Fertilizer Use',
-    'Abundant Tree Planting',
-    'Crop Rotation Benefits',
-    'Diverse Planting Strategies',
-    'Sustainable Water Use',
-    'Enhanced Microbial Activity',
-  ];
-
   final MergedSoilHealthModel mergedSoilHealthModel;
 
   const _InfoWidget({
@@ -111,13 +87,24 @@ class _InfoWidget extends StatelessWidget {
     required this.mergedSoilHealthModel,
   });
 
-  String get _soilHealthMoveUpDesc {
-    final luckyIndex = GameUtils().getRandomInteger(_possibleOptionsForUpwardMovement.length);
-    return _possibleOptionsForUpwardMovement[luckyIndex];
+  String _getSoilHealthMoveUpDesc(BuildContext context) {
+    /// these may be incorrect (as not maped to exact data) but good enough for demo purpose
+    final reasons = [
+      context.l10n.soilHealthMoveUpReason1,
+      context.l10n.soilHealthMoveUpReason2,
+      context.l10n.soilHealthMoveUpReason3,
+      context.l10n.soilHealthMoveUpReason4,
+      context.l10n.soilHealthMoveUpReason5,
+      context.l10n.soilHealthMoveUpReason6,
+    ];
+
+    final luckyIndex = GameUtils().getRandomInteger(reasons.length);
+
+    return reasons[luckyIndex];
   }
 
-  String get _soilHealthMoveDownDesc {
-    return 'Excessive user of chemical fertilizer!';
+  String _getSoilHealthMoveDownDesc(BuildContext context) {
+    return context.l10n.soilHealthMoveDownReason;
   }
 
   @override
@@ -125,8 +112,8 @@ class _InfoWidget extends StatelessWidget {
     return Text(
       () {
         return switch (mergedSoilHealthModel.soilHealthMovement) {
-          SoilHealthMovement.up => _soilHealthMoveUpDesc,
-          SoilHealthMovement.down => _soilHealthMoveDownDesc,
+          SoilHealthMovement.up => _getSoilHealthMoveUpDesc(context),
+          SoilHealthMovement.down => _getSoilHealthMoveDownDesc(context),
         };
       }(),
       style: TextStyles.s23,

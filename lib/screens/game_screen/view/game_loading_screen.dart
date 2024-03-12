@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../game/game/grow_green_game.dart';
 import '../../../game/game/overlays/game_stat_overlay/game_stat_overlay.dart';
 import '../../../game/utils/game_assets.dart';
+import '../../../l10n/l10n.dart';
 import '../../../services/audio/audio_service.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/text_styles.dart';
@@ -78,7 +79,7 @@ class GameLoadingScreenView extends StatelessWidget {
           Positioned.fill(
             child: StylizedText(
               text: Text(
-                'Preparing Your Village',
+                context.l10n.loadingGame,
                 style: TextStyles.s42,
               ),
             ),

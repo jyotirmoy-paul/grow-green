@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../../game/game/overlays/notification_overlay/game_notification_widget.dart';
+import '../../l10n/l10n.dart';
 import '../../routes/app_routes.dart';
 import '../../routes/routes.dart';
 import '../../screens/game_screen/bloc/game_bloc.dart';
@@ -33,6 +35,13 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Grow Green',
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
         debugShowCheckedModeBanner: false,
         navigatorKey: Navigation.navigationKey,
         onGenerateRoute: AppRoutes.generateRoutes,

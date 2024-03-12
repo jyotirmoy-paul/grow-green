@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../l10n/l10n.dart';
 import '../../../../../../../routes/routes.dart';
 import '../../../../../../../services/log/log.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
@@ -40,71 +41,72 @@ import 'enum/farm_menu_option.dart';
 import 'farm_menu.dart';
 import 'model/farm_menu_model.dart';
 
-/// TODO: Language
 class FarmMenuHelper {
   static const tag = 'FarmMenuHelper';
 
-  static FarmMenuModel getFarmMenuModel(Farm farm) {
-    return FarmMenuModel(title: _getTitle(farm), models: _getItemModels(farm));
+  static FarmMenuModel getFarmMenuModel(Farm farm, BuildContext context) {
+    return FarmMenuModel(
+      title: _getTitle(farm, context),
+      models: _getItemModels(farm, context),
+    );
   }
 
-  static String _getTitle(Farm farm) {
+  static String _getTitle(Farm farm, BuildContext context) {
     final isViewOnly = farm.game.isViewOnly;
     switch (farm.farmController.farmState) {
       case FarmState.notBought:
-        return isViewOnly ? 'Farm Not Purchased' : 'Purchase the Farm?';
+        return isViewOnly ? context.l10n.farmNotPurchased : context.l10n.purchaseFarm;
 
       case FarmState.functioningOnlyTrees:
       case FarmState.functioningOnlyCrops:
       case FarmState.treesAndCropsButCropsWaiting:
       case FarmState.treesRemovedOnlyCropsWaiting:
-        return 'Agroforestry Farm';
+        return context.l10n.agroforestryFarm;
 
       case FarmState.onlyCropsWaiting:
-        return 'Monoculture Farm';
+        return context.l10n.monocultureFarm;
 
       case FarmState.functioning:
         final hasTrees = (farm.farmController.farmContent?.hasTrees) == true;
         if (hasTrees) {
-          return 'Agroforestry Farm';
+          return context.l10n.agroforestryFarm;
         }
-
-        return 'Monoculture Farm';
+        return context.l10n.monocultureFarm;
 
       case FarmState.notFunctioning:
-        return 'Empty Farm';
+        return context.l10n.emptyFarm;
 
       case FarmState.barren:
-        return 'Wasted Land';
+        return context.l10n.wastedLand;
     }
   }
 
-  static List<FarmMenuItemModel> _getItemModels(Farm farm) {
+  static List<FarmMenuItemModel> _getItemModels(Farm farm, BuildContext context) {
     if (farm.game.isViewOnly) {
-      return _getItemModelsWhenViewing(farm);
+      return _getItemModelsWhenViewing(farm, context);
     } else {
-      return _getItemModelsWhenPlaying(farm);
+      return _getItemModelsWhenPlaying(farm, context);
     }
   }
 
-  static List<FarmMenuItemModel> _getItemModelsWhenViewing(Farm farm) {
+  static List<FarmMenuItemModel> _getItemModelsWhenViewing(Farm farm, BuildContext context) {
     switch (farm.farmController.farmState) {
       case FarmState.notBought:
         return [];
       default:
         return [
-          _getSoilHealth(farm),
-          _getFarmHistory(farm),
+          _getSoilHealth(farm, context),
+          _getFarmHistory(farm, context),
         ];
     }
   }
 
-  static List<FarmMenuItemModel> _getItemModelsWhenPlaying(Farm farm) {
+  static List<FarmMenuItemModel> _getItemModelsWhenPlaying(Farm farm, BuildContext context) {
     switch (farm.farmController.farmState) {
       /// buy
       case FarmState.notBought:
         return [
-          _getBuyModel(farm),
+          _getBuyModel(farm, context),
         ];
 
       /// soil health, farm composition, farm history
@@ -116,25 +118,25 @@ class FarmMenuHelper {
       case FarmState.functioningOnlyCrops:
       case FarmState.notFunctioning:
         return [
-          _getSoilHealth(farm),
-          _getFarmComposition(farm),
-          _getFarmHistory(farm),
-          _getFarmMaintenance(farm),
+          _getSoilHealth(farm, context),
+          _getFarmComposition(farm, context),
+          _getFarmHistory(farm, context),
+          _getFarmMaintenance(farm, context),
         ];
 
       /// soil health, farm history
       case FarmState.barren:
         return [
-          _getSoilHealth(farm),
-          _getFarmHistory(farm),
+          _getSoilHealth(farm, context),
+          _getFarmHistory(farm, context),
         ];
     }
   }
 
   /// buy
-  static FarmMenuItemModel _getBuyModel(Farm farm) {
+  static FarmMenuItemModel _getBuyModel(Farm farm, BuildContext context) {
     return FarmMenuItemModel(
-      text: 'Purchase',
+      text: context.l10n.purchase,
       option: FarmMenuOption.buyFarm,
       bgColor: Colors.white,
       image: GameAssets.buyFarm,
@@ -148,9 +150,9 @@ class FarmMenuHelper {
   /// buy
 
   /// soil health
-  static FarmMenuItemModel _getSoilHealth(Farm farm) {
-    return const FarmMenuItemModel(
-      text: 'Health',
+  static FarmMenuItemModel _getSoilHealth(Farm farm, BuildContext context) {
+    return FarmMenuItemModel(
+      text: context.l10n.health,
       option: FarmMenuOption.soilHealth,
       bgColor: Colors.white,
       image: GameAssets.soilHealth,
@@ -158,9 +160,9 @@ class FarmMenuHelper {
   }
 
   /// farm composition
-  static FarmMenuItemModel _getFarmComposition(Farm farm) {
-    return const FarmMenuItemModel(
-      text: 'Content',
+  static FarmMenuItemModel _getFarmComposition(Farm farm, BuildContext context) {
+    return FarmMenuItemModel(
+      text: context.l10n.content,
       option: FarmMenuOption.composition,
       bgColor: Colors.white,
       image: GameAssets.farmContent,
@@ -168,38 +170,38 @@ class FarmMenuHelper {
   }
 
   /// farm history
-  static FarmMenuItemModel _getFarmHistory(Farm farm) {
-    return const FarmMenuItemModel(
-      text: 'History',
+  static FarmMenuItemModel _getFarmHistory(Farm farm, BuildContext context) {
+    return FarmMenuItemModel(
+      text: context.l10n.history,
       option: FarmMenuOption.history,
       bgColor: Colors.white,
       image: GameAssets.farmHistory,
     );
   }
 
-  static _getFarmMaintenance(Farm farm) {
-    return const FarmMenuItemModel(
-      text: 'Maintain',
+  static _getFarmMaintenance(Farm farm, BuildContext context) {
+    return FarmMenuItemModel(
+      text: context.l10n.maintain,
       option: FarmMenuOption.maintenance,
       bgColor: Colors.white,
       image: GameAssets.farmMaintanence,
     );
   }
 
-  static String getDialogTitleFromFarmState(FarmState farmState) {
+  static String getDialogTitleFromFarmState(FarmState farmState, BuildContext context) {
     switch (farmState) {
       case FarmState.notFunctioning:
-        return 'Choose a system';
+        return context.l10n.chooseASystem;
 
       case FarmState.onlyCropsWaiting:
-        return 'Monoculture Crops';
+        return context.l10n.monocultureCrops;
 
       case FarmState.treesAndCropsButCropsWaiting:
       case FarmState.treesRemovedOnlyCropsWaiting:
       case FarmState.functioning:
       case FarmState.functioningOnlyTrees:
       case FarmState.functioningOnlyCrops:
-        return 'Farm components';
+        return context.l10n.farmComponents;
 
       case FarmState.notBought:
       case FarmState.barren:
@@ -210,22 +212,23 @@ class FarmMenuHelper {
   static String _titleFrom({
     required FarmMenuOption menuOption,
     required FarmState farmState,
+    required BuildContext context,
   }) {
     switch (menuOption) {
       case FarmMenuOption.buyFarm:
-        return 'Buy Farm?';
+        return context.l10n.buyFarm;
 
       case FarmMenuOption.soilHealth:
-        return 'Soil Health';
+        return context.l10n.soilHealth;
 
       case FarmMenuOption.composition:
-        return getDialogTitleFromFarmState(farmState);
+        return getDialogTitleFromFarmState(farmState, context);
 
       case FarmMenuOption.maintenance:
-        return 'Farm Maintenance';
+        return context.l10n.farmMaintenance;
 
       case FarmMenuOption.history:
-        return 'Farm History';
+        return context.l10n.farmHistory;
     }
   }
 
@@ -252,13 +255,14 @@ class FarmMenuHelper {
     farm.farmController.isFarmSelected = false;
 
     final response = await Utils.showNonAnimatedDialog(
-      barrierLabel: 'Dialog for ${menuOption.name}',
+      barrierLabel: context.l10n.dialogFor(menuOption.name),
       context: context,
       builder: (context) {
         return DialogContainer(
           title: _titleFrom(
             menuOption: menuOption,
             farmState: farm.farmController.farmState,
+            context: context,
           ),
           dialogType: _dialogType(menuOption),
           child: () {
@@ -296,9 +300,6 @@ class FarmMenuHelper {
                 final farmState = farm.farmController.farmState;
 
                 if (farmState == FarmState.notFunctioning) {
-                  // return Center(
-                  //   child: Text('Nothing in farm to maintain! Keep Farming!'),
-                  // );
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -310,7 +311,7 @@ class FarmMenuHelper {
                       Gap(20.s),
                       StylizedText(
                         text: Text(
-                          'Nothing for maintenance, keep farming!',
+                          context.l10n.nothingForMaintenance,
                           style: TextStyles.s28,
                         ),
                       ),

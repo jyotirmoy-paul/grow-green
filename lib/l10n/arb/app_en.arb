@@ -1,0 +1,648 @@
+{
+    "language": "English",
+    "@language": {
+        "description": "Default language templates"
+    },
+    "appName": "Grow Green",
+    "@appName": {
+        "description": "App name"
+    },
+    "signInWithGoogle": "Sign in with Google",
+    "@signInWithGoogle": {
+        "description": "Google SSO sign in option"
+    },
+    "authenticating": "Authenticating...",
+    "@authenticating": {
+        "description": "Tells user authentication is in progress"
+    },
+    "signOut": "Sign out",
+    "@signOut": {
+        "description": "Signs out user"
+    },
+    "greeting": "Hi {name}",
+    "@greeting": {
+        "description": "Default language templates",
+        "placeholders": {
+            "name": {
+                "type": "String",
+                "example": "Jyotirmoy"
+            }
+        }
+    },
+    "goToYourVillage": "Go to your village",
+    "@goToYourVillage": {
+        "description": "Start game button"
+    },
+    "soundEffects": "Sound Effects",
+    "@soundEffects": {
+        "description": "SFX"
+    },
+    "music": "Music",
+    "@music": {
+        "description": "BGM"
+    },
+    "loadingGame": "Preparing your Village",
+    "@loadingGame": {
+        "description": "A message while game is being loaded"
+    },
+    "achievements": "Achievements",
+    "@achievements": {
+        "description": "Achievement menu"
+    },
+    "share": "Share",
+    "@share": {
+        "description": "Share menu"
+    },
+    "shareYourFarm": "Show your farm to world",
+    "@redeem": {
+        "description": "Redeem menu"
+    },
+    "shareFarmMessage": "Hey, checkout my village on Grow Green using this link: {link}",
+    "@shareFarmMessage": {
+        "description": "Redeem menu",
+        "placeholders": {
+            "link": {
+                "type": "String",
+                "example": "https://something.com"
+            }
+        }
+    },
+    "copyLink": "Copy link",
+    "@copyLink": {
+        "description": "Copy link"
+    },
+    "addToWallet": "Add to Google wallet",
+    "@addToWallet": {
+        "description": "Add to google wallet button text"
+    },
+    "redeem": "Redeem",
+    "@redeem": {
+        "description": "Redeem menu"
+    },
+    "enterRedeemCode": "Enter Redeem Code",
+    "@enterRedeemCode": {
+        "description": "Enter redeem code"
+    },
+    "redeemSuccessful": "Yay! You have successfully redeemed {money}",
+    "@redeemSuccessful": {
+        "description": "Successful message for redeem",
+        "placeholders": {
+            "money": {
+                "type": "String",
+                "example": "10 000"
+            }
+        }
+    },
+    "invalidRedeemCode": "Oops! Redeem code is not valid",
+    "@invalidRedeemCode": {
+        "description": "Invalid redeem code message"
+    },
+    "farmNotPurchased": "Farm Not Purchased",
+    "@farmNotPurchased": {
+        "description": "Farm not purchased"
+    },
+    "purchaseFarm": "Purchase Farm?",
+    "@purchaseFarm": {
+        "description": "Asks user if want to purchase the farm"
+    },
+    "agroforestryFarm": "Agroforestry Farm",
+    "@agroforestryFarm": {
+        "description": "Tells farm type is agroforestry"
+    },
+    "monocultureFarm": "Monoculture Farm",
+    "@monocultureFarm": {
+        "description": "Tells farm type is monoculture"
+    },
+    "emptyFarm": "Empty Farm",
+    "@emptyFarm": {
+        "description": "Tells farm is empty"
+    },
+    "wastedLand": "Wasted Land",
+    "@wastedLand": {
+        "description": "Tells farm wasted"
+    },
+    "purchase": "Purchase",
+    "@purchase": {
+        "description": "farm menu option: purchase"
+    },
+    "health": "Health",
+    "@health": {
+        "description": "farm menu option: health"
+    },
+    "content": "Content",
+    "@content": {
+        "description": "farm menu option: content"
+    },
+    "history": "History",
+    "@history": {
+        "description": "farm menu option: history"
+    },
+    "maintain": "Maintain",
+    "@history": {
+        "description": "farm menu option: maintain"
+    },
+    "chooseASystem": "Choose a system",
+    "@chooseASystem": {
+        "description": "choose a system dialog title"
+    },
+    "monocultureCrops": "Monoculture Crops",
+    "@monocultureCrops": {
+        "description": "Monoculture Crops dialog title"
+    },
+    "farmComponents": "Farm components",
+    "@farmComponents": {
+        "description": "Farm components dialog title"
+    },
+    "buyFarm": "Buy Farm?",
+    "@buyFarm": {
+        "description": "buy farm dialog title"
+    },
+    "soilHealth": "Soil Health",
+    "@soilHealth": {
+        "description": "soilHealth dialog title"
+    },
+    "farmMaintenance": "Farm Maintenance",
+    "@farmMaintenance": {
+        "description": "farmMaintenance dialog title"
+    },
+    "farmHistory": "Farm History",
+    "@farmHistory": {
+        "description": "farmHistory dialog title"
+    },
+    "dialogFor": "Dialog for {menuOption}",
+    "@dialogFor": {
+        "description": "dialog for which menu option",
+        "placeholders": {
+            "menuOption": {
+                "type": "String",
+                "example": "buyFarm"
+            }
+        }
+    },
+    "nothingForMaintenance": "Nothing for maintenance, keep farming!",
+    "@nothingForMaintenance": {
+        "description": "Nothing in farm for maintainence message"
+    },
+    "year": "Year",
+    "@year": {
+        "description": "Year"
+    },
+    "soilHealthMoveDownReason": "Excessive user of chemical fertilizer!",
+    "@soilHealthMoveDownReason": {
+        "description": "Excessive user of chemical fertilizer"
+    },
+    "soilHealthMoveUpReason1": "Effective Agroforestry Practices",
+    "@soilHealthMoveUpReason1": {
+        "description": "Effective Agroforestry Practices"
+    },
+    "soilHealthMoveUpReason2": "Organic Fertilizer Use",
+    "@soilHealthMoveUpReason2": {
+        "description": "Organic Fertilizer Use"
+    },
+    "soilHealthMoveUpReason3": "Abundant Tree Planting",
+    "@soilHealthMoveUpReason3": {
+        "description": "Abundant Tree Planting"
+    },
+    "soilHealthMoveUpReason4": "Crop Rotation Benefits",
+    "@soilHealthMoveUpReason4": {
+        "description": "Crop Rotation Benefits"
+    },
+    "soilHealthMoveUpReason5": "Diverse Planting Strategies",
+    "@soilHealthMoveUpReason5": {
+        "description": "Diverse Planting Strategies"
+    },
+    "soilHealthMoveUpReason6": "Enhanced Microbial Activity",
+    "@soilHealthMoveUpReason6": {
+        "description": "Enhanced Microbial Activity"
+    },
+    "confirmFarmPurchase": "Are you sure you want to purchase the farm?",
+    "@confirmFarmPurchase": {
+        "description": "confirm farm purchase message"
+    },
+    "cummulativeRevenueTitle": "Cummulative Revenue over the years",
+    "@cummulativeRevenueTitle": {
+        "description": "cummulativeRevenueTitle"
+    },
+    "yield": "Yield",
+    "@yield": {
+        "description": "Yield"
+    },
+    "recurring": "Recurring",
+    "@recurring": {
+        "description": "Recurring"
+    },
+    "sold": "Sold",
+    "@sold": {
+        "description": "Sold"
+    },
+    "harvested": "Harvested",
+    "@harvested": {
+        "description": "harvested"
+    },
+    "valuePercentage": "{value} %",
+    "@valuePercentage": {
+        "description": "Some value followed by % symbol",
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "100 %"
+            }
+        }
+    },
+    "timesValue": "x{value}",
+    "@timesValue": {
+        "description": "x followed by a numerical value, representing times",
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "x6"
+            }
+        }
+    },
+    "youGet": "You get",
+    "@youGet": {
+        "description": "You get message"
+    },
+    "minCost": "Min Cost",
+    "@minCost": {
+        "description": "Min cost message"
+    },
+    "monoculture": "Monoculture",
+    "@monoculture": {
+        "description": "Monoculture"
+    },
+    "alleyCropping": "Alley Cropping",
+    "@alleyCropping": {
+        "description": "Alley Cropping"
+    },
+    "boundaryPlantation": "Boundary Planation",
+    "@boundaryPlantation": {
+        "description": "Boundary Planation"
+    },
+    "blockPlantation": "Block Planation",
+    "@blockPlantation": {
+        "description": "Block Planation"
+    },
+    "trees": "Trees",
+    "@trees": {
+        "description": "Trees"
+    },
+    "cropArea": "Crop Area",
+    "@cropArea": {
+        "description": "cropArea"
+    },
+    "cropAreaInHa": "{value} ha",
+    "@cropAreaInHa": {
+        "description": "Crop area in hecter",
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "189.34 ha"
+            }
+        }
+    },
+    "farmPurchaseFailed": "Something went wrong, couldn't purchase the farm",
+    "@farmPurchaseFailed": {
+        "description": "farmPurchaseFailed"
+    },
+    "contentPurchaseFailed": "Something went wrong, couldn't purchase selected items",
+    "@contentPurchaseFailed": {
+        "description": "contentPurchaseFailed"
+    },
+    "transactionFailed": "Transaction failed due to unknown reason",
+    "@transactionFailed": {
+        "description": "transactionFailed"
+    },
+    "insufficientFundsForFarm": "Insufficient funds to buy the farm",
+    "@insufficientFundsForFarm": {
+        "description": "insufficientFundsForFarm"
+    },
+    "insufficientFundsForFarmContent": "Insufficient funds to buy the contents for your farm",
+    "@insufficientFundsForFarmContent": {
+        "description": "insufficientFundsForFarmContent"
+    },
+    "nothingToBuy": "Nothing to buy!",
+    "@nothingToBuy": {
+        "description": "nothingToBuy"
+    },
+    "treeDiedPrematurely": "Trees were not able to survice due to lack of maintanence!",
+    "@treeDiedPrematurely": {
+        "description": "treeDiedPrematurely"
+    },
+    "farmPurchaseSuccess": "Woohoo! Bought the farm",
+    "@farmPurchaseSuccess": {
+        "description": "farmPurchaseSuccess"
+    },
+    "treeSold": "Yay! Sold the trees successfully",
+    "@treeSold": {
+        "description": "treeSold"
+    },
+    "mahagony": "Mahagony",
+    "@mahagony": {
+        "description": "mahagony tree name"
+    },
+    "neem": "Neem",
+    "@neem": {
+        "description": "neem tree name"
+    },
+    "rosewood": "Rosewood",
+    "@rosewood": {
+        "description": "rosewood tree name"
+    },
+    "teakwood": "Teakwood",
+    "@teakwood": {
+        "description": "teakwood tree name"
+    },
+    "coconut": "Coconut",
+    "@coconut": {
+        "description": "coconut tree name"
+    },
+    "jackfruit": "Jackfruit",
+    "@jackfruit": {
+        "description": "jackfruit tree name"
+    },
+    "mango": "Mango",
+    "@mango": {
+        "description": "mango tree name"
+    },
+    "maize": "Maize",
+    "@maize": {
+        "description": "maize crop name"
+    },
+    "bajra": "Bajra",
+    "@bajra": {
+        "description": "bajra crop name"
+    },
+    "wheat": "Wheat",
+    "@wheat": {
+        "description": "wheat crop name"
+    },
+    "groundnut": "Groundnut",
+    "@groundnut": {
+        "description": "groundnut crop name"
+    },
+    "pepper": "Pepper",
+    "@pepper": {
+        "description": "pepper crop name"
+    },
+    "banana": "Banana",
+    "@banana": {
+        "description": "banana crop name"
+    },
+    "chooseComponentsDialog": "Choose components dialog",
+    "@chooseComponentsDialog": {
+        "description": "chooseComponentsDialog dialog title"
+    },
+    "chooseContent": "Choose content",
+    "@chooseContent": {
+        "description": "chooseContent"
+    },
+    "monocultureInfo": "Monoculture refers to cultivation of only crops  You only get income from crops.",
+    "@monocultureInfo": {
+        "description": "information about monoculture system"
+    },
+    "alleyCropingInfo": "Alley cropping involves planting parallel rows of crops between rows of trees. This improves soil health and trees generate extra revenue from trees.",
+    "@alleyCropingInfo": {
+        "description": "information about alley cropping"
+    },
+    "boudaryPlantationInfo": "Boundary planting involves growing trees or shrubs along the edges of agricultural fields. This improves soil health and trees generate extra revenue from trees.",
+    "@boudaryPlantationInfo": {
+        "description": "information about boundary plantation"
+    },
+    "blockPlantationInfo": "Block planting involves planting trees in a block pattern within a field. This improves soil health and trees generate extra revenue from trees.",
+    "@blockPlantationInfo": {
+        "description": "information about block plantation"
+    },
+    "continueFor": "Continue for {value}",
+    "@continueFor": {
+        "description": "continue for value",
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "Continue for 10 000"
+            }
+        }
+    },
+    "chooseMaintenance": "Choose Maintenance",
+    "@chooseMaintenance": {
+        "description": "chooseMaintenance crop name"
+    },
+    "change": "CHANGE",
+    "@change": {
+        "description": "Change button label"
+    },
+    "add": "ADD",
+    "@add": {
+        "description": "add button label"
+    },
+    "remove": "REMOVE",
+    "@remove": {
+        "description": "remove button label"
+    },
+    "chooseCrop": "Choose crop",
+    "@chooseCrop": {
+        "description": "choose crop label"
+    },
+    "chooseTree": "Choose tree",
+    "@chooseTree": {
+        "description": "choose tree label"
+    },
+    "chooseFertilizer": "Choose fertilizer",
+    "@chooseFertilizer": {
+        "description": "choose fertilizer label"
+    },
+    "chooseAgroforestryLayout": "Choose Agroforestry layout",
+    "@chooseAgroforestryLayout": {
+        "description": "choose agroforestry layout label"
+    },
+    "sellTreeDialog": "Sell tree dialog",
+    "@sellTreeDialog": {
+        "description": "sellTreeDialog"
+    },
+    "sellTree": "Sell tree?",
+    "@sellTree": {
+        "description": "sell tree question, dialog box title"
+    },
+    "tree": "Tree",
+    "@tree": {
+        "description": "tree title"
+    },
+    "noTree": "No Tree",
+    "@noTree": {
+        "description": "noTree title"
+    },
+    "crop": "Crop",
+    "@crop": {
+        "description": "crop title"
+    },
+    "noCrop": "No Crop",
+    "@noCrop": {
+        "description": "noCrop title"
+    },
+    "sellAnyway": "Emh, sell anyway",
+    "@sellAnyway": {
+        "description": "sell tree button title"
+    },
+    "sellTreeTitle": "Selling now? You're overlooking future gains!",
+    "@sellTreeTitle": {
+        "description": "sellTreeTitle dialog title"
+    },
+    "xMetricTons": "{value} metric tons",
+    "@xMetricTons": {
+        "description": "xMetricTons",
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "10.45 metric tons"
+            }
+        }
+    },
+    "xKgs": "{value} kgs",
+    "@xKgs": {
+        "description": "xKgs",
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "10 kgs"
+            }
+        }
+    },
+    "years": "{value} years",
+    "@years": {
+        "description": "years",
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "10 years"
+            }
+        }
+    },
+    "days": "{value} days",
+    "@days": {
+        "description": "days",
+        "placeholders": {
+            "value": {
+                "type": "int",
+                "example": "10 days"
+            }
+        }
+    },
+    "treeSellFact": "Quick fact: In {treeAge}, your {noOfTrees} trees have zapped {co2SequestratedAmount} of CO2 from the air! Imagine, just by letting it grow for {predictedDurationInYears} more years, it'll snatch up an extra {co2SequestratePrediction} of CO2.\n\nThis isn't just good for us; it's a win for our village's climate too. Do you still wanna sell?",
+    "@treeSellFact": {
+        "description": "treeSellFact",
+        "placeholders": {
+           "treeAge": {
+                "type": "String",
+                "example": "10 years"
+           },
+           "noOfTrees": {
+                "type": "int",
+                "example": "1000 trees"
+           },
+           "co2SequestratedAmount": {
+                "type": "String",
+                "example": "200 tons"
+           },
+           "predictedDurationInYears": {
+                "type": "int",
+                "example": "3 years"
+           },
+           "co2SequestratePrediction": {
+                "type": "String",
+                "example": "400 tons"
+           }
+        }
+    },
+    "soilHealthOverTheYears": "Soil Health over the years",
+    "@soilHealthOverTheYears": {
+        "description": "soilHealthOverTheYears"
+    },
+    "maintanenceOverdue": "Maintanence overdue",
+    "@maintanenceOverdue": {
+        "description": "maintanenceOverdue text"
+    },
+    "maizeInfo": "A versatile cereal grain that serves as a staple food for humans and livestock, also used in biofuel production",
+    "@maizeInfo": {
+        "description": "maizeInfo"
+    },
+    "bajraInfo": "A drought-resistant crop known for its high energy content and ability to thrive in poor soil conditions",
+    "@bajraInfo": {
+        "description": "bajraInfo"
+    },
+    "wheatInfo": "A primary grain used worldwide, essential for making bread, pasta, and many other food products",
+    "@wheatInfo": {
+        "description": "wheatInfo"
+    },
+    "groundnutInfo": "A legume crop valued for its edible seeds, oil production, and nutritional benefits",
+    "@groundnutInfo": {
+        "description": "groundnutInfo"
+    },
+    "pepperInfo": "A spice derived from the berries of the plant Piper nigrum, known for its hot and pungent flavor",
+    "@pepperInfo": {
+        "description": "pepperInfo"
+    },
+    "bananaInfo": "A tropical fruit crop, highly valued for its sweet, nutritious fruit and versatile usage in various culinary dishes",
+    "@bananaInfo": {
+        "description": "bananaInfo"
+    },
+    "chemicalFertilizerInfo": "A synthetic fertilizer that provides essential nutrients to crops, increasing their yield and growth rate but can potentially harm the soil health",
+    "@chemicalFertilizerInfo": {
+        "description": "chemicalFertilizerInfo"
+    },
+    "organicFertilizerInfo": "A natural fertilizer that enriches the soil with organic matter, improving its structure and fertility.",
+    "@organicFertilizerInfo": {
+        "description": "organicFertilizerInfo"
+    },
+    "mahagonyInfo": "A large tropical tree known for its strong and beautiful reddish-brown wood, widely used in furniture making and cabinetry.",
+    "@mahagonyInfo": {
+        "description": "mahagonyInfo"
+    },
+    "neemInfo": "A versatile tree native to the Indian subcontinent, valued for its medicinal properties and environmental benefits.",
+    "@neemInfo": {
+        "description": "neemInfo"
+    },
+    "rosewoodInfo": "A valuable hardwood known for its rich color and grain, used in the manufacture of musical instruments and fine furniture.",
+    "@rosewoodInfo": {
+        "description": "rosewoodInfo"
+    },
+    "teakwoodInfo": "A tropical hardwood tree highly prized for its durability, water resistance, and used in shipbuilding, furniture, and outdoor constructions.",
+    "@teakwoodInfo": {
+        "description": "teakwoodInfo"
+    },
+    "coconutInfo": "A tropical palm known for its versatile fruit, used for water, milk, oil, and flesh, with significant cultural and economic importance.",
+    "@coconutInfo": {
+        "description": "coconutInfo"
+    },
+    "jackfruitInfo": "A large tropical fruit tree known for producing the largest fruit of all trees, offering a meaty texture and used in various culinary dishes.",
+    "@jackfruitInfo": {
+        "description": "jackfruitInfo"
+    },
+    "mangoInfo": "A tropical fruit tree beloved for its sweet and juicy fruit, regarded as the \"king of fruits\" and widely cultivated in many tropical regions.",
+    "@mangoInfo": {
+        "description": "mangoInfo"
+    },
+    "stats": "Stats",
+    "@stats": {
+        "description": "stats"
+    },
+    "min": "Min",
+    "@min": {
+        "description": "min"
+    },
+    "max": "Max",
+    "@max": {
+        "description": "max"
+    },
+    "farmingFor": "Farming For",
+    "@farmingFor": {
+        "description": "farmingFor"
+    },
+    "since": "Since",
+    "@since": {
+        "description": "since"
+    },
+    "revenue": "Revenue",
+    "@revenue": {
+        "description": "revenue"
+    }
+}

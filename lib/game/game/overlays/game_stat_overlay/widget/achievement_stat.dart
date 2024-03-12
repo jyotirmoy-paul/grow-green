@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../l10n/l10n.dart';
 import '../../../../../routes/navigation.dart';
 import '../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../utils/text_styles.dart';
@@ -23,7 +24,7 @@ class AchievementsStat extends StatelessWidget {
     return ButtonAnimator(
       onPressed: () {
         Utils.showNonAnimatedDialog(
-          barrierLabel: 'Achievements',
+          barrierLabel: context.l10n.achievements,
           context: Navigation.navigationKey.currentContext!,
           builder: (context) {
             return AchievementsDialog(achievementsService: achievementsService);
@@ -39,7 +40,7 @@ class AchievementsStat extends StatelessWidget {
             child: Center(
               child: StylizedText(
                 text: Text(
-                  'Achievements',
+                  context.l10n.achievements,
                   style: TextStyles.s28,
                 ),
               ),

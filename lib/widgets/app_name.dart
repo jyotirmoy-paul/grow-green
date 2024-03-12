@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import '../utils/extensions/num_extensions.dart';
 import '../utils/text_styles.dart';
 import 'stylized_text.dart';
 
 class AppName extends StatelessWidget {
-  static const appName = 'Grow Green';
-
   const AppName({super.key});
 
   @override
@@ -20,7 +19,7 @@ class AppName extends StatelessWidget {
           padding: EdgeInsets.all(10.s),
           child: StylizedText(
             text: Text(
-              appName,
+              context.l10n.appName,
               style: TextStyles.s80,
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../../../l10n/l10n.dart';
 import '../../../../../services/auth/auth.dart';
 import '../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../utils/text_styles.dart';
@@ -25,7 +26,7 @@ class ShareButton extends StatelessWidget {
         if (state is AuthLoggedIn) {
           final user = state.user;
           return GameButton.text(
-            text: "Share",
+            text: context.l10n.share,
             onTap: () {
               showShareDialog(context, user.id);
             },
@@ -41,7 +42,7 @@ class ShareButton extends StatelessWidget {
 
   void showShareDialog(BuildContext context, String id) {
     Utils.showNonAnimatedDialog(
-      barrierLabel: "Share",
+      barrierLabel: context.l10n.share,
       context: context,
       builder: (context) {
         return ShareDialog(id: id);
@@ -65,7 +66,7 @@ class ShareDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DialogContainer(
-      title: "Show your farm to world",
+      title: context.l10n.shareYourFarm,
       dialogType: DialogType.small,
       child: Center(
         child: FutureBuilder<String>(

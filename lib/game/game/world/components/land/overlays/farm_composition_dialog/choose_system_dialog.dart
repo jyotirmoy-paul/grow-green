@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../../../../l10n/l10n.dart';
 import '../../../../../../../routes/routes.dart';
 import '../../../../../../../utils/extensions/num_extensions.dart';
 import '../../../../../../../utils/utils.dart';
@@ -34,7 +35,6 @@ class _OffsetRestoration {
   }
 }
 
-/// TODO: language
 class ChooseSystemDialog extends StatefulWidget {
   final Farm farm;
   final List<FarmSystem> farmSystems;
@@ -56,16 +56,6 @@ class _ChooseSystemDialogState extends State<ChooseSystemDialog> {
     super.dispose();
   }
 
-  String _getChooseComponentsDialogTitle({
-    required FarmSystem farmSystem,
-  }) {
-    if (farmSystem is AgroforestrySystem) {
-      return 'Choose content';
-    }
-
-    return 'Choose content';
-  }
-
   void _onSystemSelected({
     required FarmSystem farmSystem,
     required BuildContext context,
@@ -77,12 +67,12 @@ class _ChooseSystemDialogState extends State<ChooseSystemDialog> {
 
     /// open choose components dialog
     final response = await Utils.showNonAnimatedDialog(
-      barrierLabel: 'Choose components dialog',
+      barrierLabel: context.l10n.chooseComponentsDialog,
       context: context,
       builder: (context) {
         return DialogContainer(
           dialogType: DialogType.large,
-          title: _getChooseComponentsDialogTitle(farmSystem: farmSystem),
+          title: context.l10n.chooseContent,
           child: ChooseComponentsDialog(
             farmContent: FarmMenuHelper.getFarmContentFromSystem(
               farmSystem: farmSystem,
