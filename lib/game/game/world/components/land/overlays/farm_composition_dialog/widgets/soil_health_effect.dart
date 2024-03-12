@@ -60,11 +60,11 @@ class _ChangeInfo extends StatelessWidget {
         Gap(6.s),
         Text(
           '${changePercentage.toStringAsFixed(2)}% ',
-          style: TextStyles.s28,
+          style: TextStyles.s24,
         ),
         Text(
           changeDurationType == ChangeDurationType.perUse ? ' per use' : ' yearly',
-          style: TextStyles.s28,
+          style: TextStyles.s24,
         ),
       ],
     );

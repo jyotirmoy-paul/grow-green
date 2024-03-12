@@ -40,13 +40,6 @@ class GameStatOverlay extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// achievements
-                AchievementsStat(
-                  achievementsService: game.gameController.achievementsService,
-                ),
-
-                Gap(10.s),
-
                 /// money
                 MoneyStat(monetaryService: game.monetaryService),
 

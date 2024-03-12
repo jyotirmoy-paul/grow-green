@@ -1,5 +1,5 @@
 abstract class GameAudioAssets {
-  static const _baseSfx = 'sfx/';
+  static const _baseSfx = 'sfx';
 
   static const tap = '$_baseSfx/tap.mp3';
   static const coinCollect = '$_baseSfx/coin_collect.mp3';

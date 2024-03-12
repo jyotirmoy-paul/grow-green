@@ -24,7 +24,7 @@ class PriceTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: size.width * 0.8,
+      width: size.width * 0.9,
       height: size.height,
       decoration: BoxDecoration(
         color: _backgroundColor,
@@ -35,7 +35,7 @@ class PriceTag extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyles.s26,
+        style: TextStyles.s24,
       ),
     );
   }

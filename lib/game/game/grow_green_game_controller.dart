@@ -106,24 +106,6 @@ class GrowGreenGameController {
     final clampedY = position.y.clamp(rectangle.top, rectangle.bottom);
 
     return Vector2(clampedX, clampedY);
-    // return clampedPosition;
-    // final halfViewPortSize = camera.viewport.size.scaled(1 / _zoom).half().toSize();
-    // final halfWorldSize = GameUtils().gameWorldSize.half().half().toSize();
-
-    // final leftBoundary = worldCenter.x - halfWorldSize.width;
-    // final rightBoundary = worldCenter.x + halfWorldSize.width;
-    // final topBoundary = worldCenter.y - halfWorldSize.height;
-    // final bottomBoundary = worldCenter.y + halfWorldSize.height;
-
-    // final l = leftBoundary + halfViewPortSize.width;
-    // final r = rightBoundary - halfViewPortSize.width;
-    // final t = topBoundary + halfViewPortSize.height;
-    // final b = bottomBoundary - halfViewPortSize.height;
-
-    // final clampedX = position.x.clamp(l < r ? l : r, l > r ? l : r);
-    // final clampedY = position.y.clamp(t < b ? t : b, t > b ? t : b);
-
-    // return Vector2(clampedX, clampedY);
   }
 
   void onScaleStart(ScaleStartInfo info) {

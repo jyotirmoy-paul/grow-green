@@ -98,7 +98,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
               final child = Opacity(
                 opacity: _opacity(model),
                 child: MenuItemFlipSkeleton(
-                  width: 360.s,
+                  width: 400.s,
                   bgColor: model.color ?? Colors.red.darken(0.3),
                   header: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -195,7 +195,7 @@ class _ChooseMaintenanceDialogState extends State<ChooseMaintenanceDialog> {
                     /// price sum
                     Text(
                       '${widget.startingDebit.formattedValue} (Crops/Trees) + ${_calculateTotalSupportCost.formattedValue} (Maintainance)',
-                      style: TextStyles.s30.copyWith(
+                      style: TextStyles.s25.copyWith(
                         color: Colors.black,
                       ),
                     ),

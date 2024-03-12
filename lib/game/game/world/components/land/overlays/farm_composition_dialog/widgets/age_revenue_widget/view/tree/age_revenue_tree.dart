@@ -61,7 +61,7 @@ class AgeRevenueTree extends StatelessWidget {
           Container(
             color: Colors.white,
             width: size.width,
-            height: 6.s,
+            height: 4.s,
           ),
           AgeTag(
             title: topImageFooter,
